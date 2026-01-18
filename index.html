@@ -133,22 +133,6 @@
         .icon-btn:active { transform: scale(0.9); }
         .icon-btn.muted { opacity: 0.5; }
 
-        /* Pet Display */
-        .pet-area {
-            display: flex; align-items: center; gap: 6px;
-            cursor: pointer; padding: 4px 8px; border-radius: 8px;
-            background: var(--card-bg);
-        }
-        .pet-area:active { transform: scale(0.95); }
-        .pet-container {
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            color: var(--primary-color); white-space: nowrap;
-        }
-        .pet-speech {
-            font-size: clamp(0.6rem, 1.8vw, 0.75rem);
-            color: var(--accent-color); opacity: 0; transition: opacity 0.2s;
-        }
-        .pet-speech.show { opacity: 1; }
 
         /* Modals */
         .modal-overlay {
@@ -159,17 +143,6 @@
         }
         .modal-overlay.show { display: flex; }
 
-        /* Pet Selector */
-        .pet-selector h2 { font-size: 1.5rem; margin-bottom: 20px; color: var(--primary-color); }
-        .pet-options { display: flex; gap: 20px; margin-bottom: 20px; }
-        .pet-option {
-            padding: 20px 30px; border-radius: 20px; background: var(--card-bg);
-            border: 3px solid var(--primary-color); cursor: pointer; text-align: center;
-        }
-        .pet-option:active { transform: scale(0.95); }
-        .pet-option.selected { border-color: var(--accent-color); background: rgba(255, 215, 0, 0.15); }
-        .pet-preview { font-size: 1.4rem; display: block; margin-bottom: 8px; color: var(--primary-color); }
-        .pet-name { font-size: 1rem; color: var(--primary-color); font-weight: bold; }
 
         /* Theme Picker */
         .theme-picker h2 { font-size: 1.8rem; margin-bottom: 10px; }
@@ -381,7 +354,6 @@
             .stat-icon { font-size: 1rem; }
             .numpad { grid-area: numpad; max-width: 180px; gap: 3px; padding: 0; margin: 0; align-self: center; }
             .numpad button { min-height: 36px; padding: 4px; font-size: 1.1rem; border-radius: 8px; }
-            .pet-container { font-size: 0.8rem; }
         }
 
         /* iPad landscape */
@@ -414,7 +386,6 @@
             .stat-icon { font-size: 2.4rem; }
             .problem { font-size: 5rem; }
             .answer-display { font-size: 3.5rem; min-height: 80px; }
-            .pet-container { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -456,10 +427,6 @@
         </div>
 
         <div class="stats">
-            <div class="pet-area" onclick="showPetSelector()">
-                <div class="pet-container" id="petContainer">(=^･ω･^=)</div>
-                <div class="pet-speech" id="petSpeech"></div>
-            </div>
             <div class="stat-item"><span class="stat-icon">⭐</span> <span id="score" class="stat-value">0</span></div>
             <div class="stat-item"><span class="stat-icon">🔥</span> <span id="streak" class="streak-value stat-value">0</span></div>
             <div class="stat-item"><span class="stat-icon">👑</span> <span id="highScore" class="stat-value">0</span></div>
@@ -479,22 +446,6 @@
             <button onclick="numPress(0)">0</button>
             <button class="submit" onclick="checkAnswer()">GO!</button>
         </div>
-    </div>
-
-    <!-- Pet Selector -->
-    <div class="modal-overlay pet-selector" id="petSelector">
-        <h2>Choose Your Pet</h2>
-        <div class="pet-options">
-            <div class="pet-option" id="petKitten" onclick="selectPet('kitten')">
-                <span class="pet-preview">(=^･ω･^=)</span>
-                <div class="pet-name">Luna</div>
-            </div>
-            <div class="pet-option" id="petBunny" onclick="selectPet('bunny')">
-                <span class="pet-preview">(/・ω・)/</span>
-                <div class="pet-name">Usagi</div>
-            </div>
-        </div>
-        <button class="close-btn" onclick="hidePetSelector()">Done</button>
     </div>
 
     <!-- Theme Picker -->
@@ -565,21 +516,6 @@
             { emoji: '🦑', name: 'Squid of Sums' }
         ];
 
-        const PETS = {
-            kitten: {
-                idle: '(=^･ω･^=)',
-                happy: '(=^･ᴗ･^=)',
-                sad: '(=^･︵･^=)',
-                phrases: { happy: ['Nya~!', 'Yay!'], sad: ['Nya...'] }
-            },
-            bunny: {
-                idle: '(/・ω・)/',
-                happy: '(/・ᴗ・)/',
-                sad: '(/・︵・)/',
-                phrases: { happy: ['Pyon~!', 'Yay!'], sad: ['Pyon...'] }
-            }
-        };
-
         let num1, num2, correctAnswer, currentOp;
         let score = 0, streak = 0, bestStreak = 0;
         let difficulty = 'easy', operation = 'add', mode = 'endless';
@@ -587,52 +523,10 @@
         let gameActive = true, isNewHighScore = false, currentInput = '';
         let soundEnabled = true, audioContext = null;
         let correctCount = 0, bossDefeated = 0;
-        let currentPet = 'kitten', speechTimeout = null;
 
         // Boss state
         let bossActive = false, bossHealth = 100, bossTimer = 30;
         let bossInterval = null, bossAnswer = '', bossCorrectAnswer;
-
-        // Pet
-        function loadPet() {
-            currentPet = localStorage.getItem('mathblaster_pet') || 'kitten';
-            document.getElementById('petContainer').textContent = PETS[currentPet].idle;
-            document.getElementById(`pet${currentPet.charAt(0).toUpperCase() + currentPet.slice(1)}`).classList.add('selected');
-        }
-
-        function selectPet(pet) {
-            document.querySelectorAll('.pet-option').forEach(p => p.classList.remove('selected'));
-            document.getElementById(`pet${pet.charAt(0).toUpperCase() + pet.slice(1)}`).classList.add('selected');
-            currentPet = pet;
-            localStorage.setItem('mathblaster_pet', pet);
-            document.getElementById('petContainer').textContent = PETS[currentPet].idle;
-            playSound('tap');
-        }
-
-        function showPetSelector() { document.getElementById('petSelector').classList.add('show'); }
-        function hidePetSelector() { document.getElementById('petSelector').classList.remove('show'); }
-
-        function petReact(reaction) {
-            const container = document.getElementById('petContainer');
-            const speech = document.getElementById('petSpeech');
-            const pet = PETS[currentPet];
-
-            if (reaction === 'happy') {
-                container.textContent = pet.happy;
-                speech.textContent = pet.phrases.happy[Math.floor(Math.random() * pet.phrases.happy.length)];
-                speech.classList.add('show');
-            } else if (reaction === 'sad') {
-                container.textContent = pet.sad;
-                speech.textContent = pet.phrases.sad[0];
-                speech.classList.add('show');
-            }
-
-            if (speechTimeout) clearTimeout(speechTimeout);
-            speechTimeout = setTimeout(() => {
-                container.textContent = pet.idle;
-                speech.classList.remove('show');
-            }, 600);
-        }
 
         // Theme
         function setTheme(theme) {
@@ -808,7 +702,6 @@
                 bossDefeated++;
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
-                    petReact('happy');
                     setTimeout(generateProblem, 200);
                 }, 1500);
             } else {
@@ -818,7 +711,6 @@
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
                     document.getElementById('bossVictory').textContent = '🎉 VICTORY! +5 bonus!';
-                    petReact('sad');
                     setTimeout(generateProblem, 200);
                 }, 1200);
             }
@@ -904,8 +796,6 @@
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;
 
-                petReact('happy');
-
                 if (score > getHighScore()) {
                     if (!isNewHighScore) { isNewHighScore = true; playSound('highscore'); }
                     setHighScore(score);
@@ -933,7 +823,6 @@
                 feedbackEl.textContent = 'Try again!';
                 feedbackEl.className = 'feedback';
                 playSound('wrong');
-                petReact('sad');
 
                 streak = 0;
                 document.getElementById('streak').textContent = 0;
@@ -1041,7 +930,6 @@
         // Init
         loadTheme();
         loadSoundPref();
-        loadPet();
         updateHighScoreDisplay();
         generateProblem();
     </script>
