@@ -2,110 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Math Blaster">
-    <meta name="theme-color" content="#0a0a0a">
+    <meta name="theme-color" content="#1a0a2e">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <title>Math Blaster</title>
     <style>
         :root {
-            --bg-color: #1a0a2e;
             --bg-gradient: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
-            --primary-color: #ff6b9d;
-            --secondary-color: #c44569;
-            --accent-color: #ffd93d;
-            --text-glow: #ff6b9d;
-            --success-color: #6bcb77;
-            --error-color: #ff6b6b;
-            --button-bg: rgba(255, 107, 157, 0.15);
+            --primary: #ff6b9d;
+            --accent: #ffd93d;
+            --success: #6bcb77;
+            --error: #ff6b6b;
             --card-bg: rgba(255, 255, 255, 0.08);
         }
+        .theme-ocean { --bg-gradient: linear-gradient(135deg, #0a1628, #1a3a5c, #2d6187); --primary: #00d9ff; --accent: #7fdbff; }
+        .theme-sunset { --bg-gradient: linear-gradient(135deg, #2d1b2e, #4a2c4a, #6b3a5b); --primary: #ff9a56; --accent: #ffcd3c; }
+        .theme-berry { --bg-gradient: linear-gradient(135deg, #1a0a1a, #2d1f3d, #4a3260); --primary: #da70d6; --accent: #ff69b4; }
+        .theme-retro { --bg-gradient: linear-gradient(135deg, #0a0a0a, #1a1a1a); --primary: #39ff14; --accent: #39ff14; --success: #39ff14; }
 
-        .theme-ocean {
-            --bg-color: #0a1628;
-            --bg-gradient: linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #2d6187 100%);
-            --primary-color: #00d9ff;
-            --secondary-color: #0099cc;
-            --accent-color: #7fdbff;
-            --text-glow: #00d9ff;
-            --success-color: #2ecc71;
-            --error-color: #ff6b6b;
-            --button-bg: rgba(0, 217, 255, 0.15);
-            --card-bg: rgba(255, 255, 255, 0.08);
-        }
-
-        .theme-sunset {
-            --bg-color: #2d1b2e;
-            --bg-gradient: linear-gradient(135deg, #2d1b2e 0%, #4a2c4a 50%, #6b3a5b 100%);
-            --primary-color: #ff9a56;
-            --secondary-color: #ff6b35;
-            --accent-color: #ffcd3c;
-            --text-glow: #ff9a56;
-            --success-color: #a8e6cf;
-            --error-color: #ff8b94;
-            --button-bg: rgba(255, 154, 86, 0.15);
-            --card-bg: rgba(255, 255, 255, 0.08);
-        }
-
-        .theme-berry {
-            --bg-color: #1a0a1a;
-            --bg-gradient: linear-gradient(135deg, #1a0a1a 0%, #2d1f3d 50%, #4a3260 100%);
-            --primary-color: #da70d6;
-            --secondary-color: #ba55d3;
-            --accent-color: #ff69b4;
-            --text-glow: #da70d6;
-            --success-color: #98fb98;
-            --error-color: #ff6b6b;
-            --button-bg: rgba(218, 112, 214, 0.15);
-            --card-bg: rgba(255, 255, 255, 0.08);
-        }
-
-        .theme-retro {
-            --bg-color: #0a0a0a;
-            --bg-gradient: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            --primary-color: #39ff14;
-            --secondary-color: #32cd32;
-            --accent-color: #39ff14;
-            --text-glow: #39ff14;
-            --success-color: #39ff14;
-            --error-color: #ff3939;
-            --button-bg: rgba(57, 255, 20, 0.1);
-            --card-bg: rgba(57, 255, 20, 0.05);
-        }
-
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
-            height: 100%; height: 100dvh; height: -webkit-fill-available;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
         }
 
         body {
             background: var(--bg-gradient);
             background-attachment: fixed;
-            color: var(--primary-color);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             display: flex;
-            flex-direction: column;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+            padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
         }
 
         .game-container {
-            flex: 1;
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            max-height: 900px;
             display: flex;
             flex-direction: column;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 2vmin;
-            overflow: hidden;
+            gap: 8px;
         }
 
         /* Top Bar */
@@ -113,117 +60,107 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1vmin;
-            flex-shrink: 0;
         }
 
         h1 {
-            font-size: clamp(1.2rem, 4vmin, 2rem);
-            text-shadow: 0 0 15px var(--text-glow);
+            font-size: 1.5rem;
+            text-shadow: 0 0 15px var(--primary);
         }
 
-        .top-buttons { display: flex; gap: 2vmin; }
+        .top-buttons { display: flex; gap: 8px; }
 
         .icon-btn {
-            width: clamp(36px, 8vmin, 48px);
-            height: clamp(36px, 8vmin, 48px);
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: var(--card-bg);
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            font-size: clamp(1rem, 3vmin, 1.4rem);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
         }
-        .icon-btn:active { transform: scale(0.9); }
+        .icon-btn:hover { opacity: 0.8; }
         .icon-btn.muted { opacity: 0.5; }
 
-        /* Settings Toggle */
+        /* Settings */
         .settings-toggle {
             display: flex;
             justify-content: center;
-            margin-bottom: 1vmin;
-            flex-shrink: 0;
         }
 
         .settings-btn {
-            padding: 1.5vmin 4vmin;
+            padding: 8px 20px;
             background: var(--card-bg);
-            border: 2px solid var(--primary-color);
+            border: 2px solid var(--primary);
             border-radius: 20px;
-            color: var(--primary-color);
-            font-size: clamp(0.75rem, 2.5vmin, 1rem);
+            color: var(--primary);
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
         }
-        .settings-btn:active { transform: scale(0.95); }
 
         .settings-panel {
             display: none;
             flex-direction: column;
-            gap: 1.5vmin;
-            padding: 2vmin;
+            gap: 10px;
+            padding: 12px;
             background: var(--card-bg);
             border-radius: 12px;
-            margin-bottom: 1vmin;
-            flex-shrink: 0;
         }
         .settings-panel.show { display: flex; }
 
         .settings-row {
             display: flex;
             justify-content: center;
-            gap: 1vmin;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
         .settings-row button {
-            padding: 1.5vmin 3vmin;
+            padding: 8px 14px;
             background: transparent;
-            border: 2px solid var(--primary-color);
+            border: 2px solid var(--primary);
             border-radius: 8px;
-            color: var(--primary-color);
-            font-size: clamp(0.7rem, 2.2vmin, 0.9rem);
+            color: var(--primary);
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
         }
         .settings-row button.active {
-            background: var(--primary-color);
-            color: var(--bg-color);
+            background: var(--primary);
+            color: #1a0a2e;
         }
-        .settings-row button:active { transform: scale(0.95); }
 
         /* Stats */
         .stats {
             display: flex;
             justify-content: center;
-            gap: clamp(15px, 5vmin, 30px);
-            padding: 1.5vmin 0;
-            flex-shrink: 0;
+            gap: 20px;
+            padding: 8px 0;
         }
 
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 1vmin;
-            font-size: clamp(1rem, 3.5vmin, 1.4rem);
+            gap: 6px;
+            font-size: 1.1rem;
             font-weight: 600;
         }
 
-        .stat-icon { font-size: clamp(1.2rem, 4vmin, 1.8rem); }
+        .stat-icon { font-size: 1.4rem; }
 
         /* Timer */
         .timer-display {
             text-align: center;
-            font-size: clamp(1.2rem, 4vmin, 1.8rem);
+            font-size: 1.3rem;
             font-weight: bold;
-            color: var(--accent-color);
-            min-height: clamp(1.5rem, 5vmin, 2rem);
-            flex-shrink: 0;
+            color: var(--accent);
+            min-height: 1.5rem;
         }
-        .timer-display.warning { color: var(--error-color); animation: pulse 0.5s infinite; }
+        .timer-display.warning { color: var(--error); animation: pulse 0.5s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* Problem Area */
@@ -233,46 +170,43 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 2vmin;
-            min-height: 0;
+            gap: 15px;
+            min-height: 200px;
         }
 
         .problem {
-            font-size: clamp(2.5rem, 12vmin, 5rem);
+            font-size: clamp(2.5rem, 10vw, 4rem);
             font-weight: bold;
             color: #ffffff;
-            text-align: center;
         }
 
         .answer-display {
-            font-size: clamp(2rem, 10vmin, 4rem);
+            font-size: clamp(2rem, 8vw, 3rem);
             font-weight: bold;
             color: #ffffff;
             background: var(--card-bg);
-            border: 3px solid var(--primary-color);
+            border: 3px solid var(--primary);
             border-radius: 12px;
-            padding: 2vmin 5vmin;
-            min-width: clamp(100px, 30vmin, 160px);
+            padding: 10px 30px;
+            min-width: 120px;
             text-align: center;
-            box-shadow: 0 0 20px var(--text-glow);
-            transition: all 0.15s;
+            box-shadow: 0 0 20px var(--primary);
         }
         .answer-display.correct {
-            border-color: var(--success-color);
-            box-shadow: 0 0 30px var(--success-color);
+            border-color: var(--success);
+            box-shadow: 0 0 30px var(--success);
             background: rgba(107, 203, 119, 0.2);
         }
 
-        .cursor { animation: blink 1s infinite; opacity: 0.7; }
-        @keyframes blink { 0%, 50% { opacity: 0.7; } 51%, 100% { opacity: 0; } }
+        .cursor { animation: blink 1s infinite; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
 
         .feedback {
-            font-size: clamp(1.2rem, 4vmin, 1.8rem);
+            font-size: 1.3rem;
             font-weight: bold;
-            min-height: clamp(1.5rem, 5vmin, 2rem);
-            text-align: center;
+            min-height: 1.5rem;
         }
-        .feedback.correct { color: var(--success-color); }
+        .feedback.correct { color: var(--success); }
 
         /* Streak Celebration */
         .streak-celebration {
@@ -280,60 +214,56 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(3rem, 15vmin, 6rem);
+            font-size: clamp(2rem, 8vw, 4rem);
             font-weight: bold;
-            color: var(--accent-color);
-            text-shadow: 0 0 30px var(--accent-color);
+            color: var(--accent);
+            text-shadow: 0 0 30px var(--accent);
             z-index: 100;
             pointer-events: none;
             opacity: 0;
         }
-        .streak-celebration.show {
-            animation: streakPop 1s ease-out forwards;
-        }
+        .streak-celebration.show { animation: streakPop 1s ease-out forwards; }
         @keyframes streakPop {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
             20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) translateY(-50px); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) translateY(-30px); }
         }
 
         /* Number Pad */
         .numpad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: clamp(6px, 1.5vmin, 12px);
+            gap: 8px;
             width: 100%;
-            max-width: min(350px, 80vmin);
+            max-width: 320px;
             margin: 0 auto;
-            padding: 1vmin 0;
-            flex-shrink: 0;
         }
 
         .numpad button {
-            aspect-ratio: 1.4;
-            font-size: clamp(1.5rem, 6vmin, 2.5rem);
+            height: 60px;
+            font-size: 1.8rem;
             font-weight: bold;
-            background: var(--button-bg);
-            border: 2px solid var(--primary-color);
-            border-radius: clamp(8px, 2vmin, 14px);
-            color: var(--primary-color);
+            background: rgba(255, 107, 157, 0.15);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            color: var(--primary);
             cursor: pointer;
-            min-height: clamp(50px, 12vmin, 75px);
         }
+        .numpad button:hover { opacity: 0.8; }
         .numpad button:active { transform: scale(0.95); }
         .numpad .delete {
             background: rgba(255, 107, 107, 0.15);
-            border-color: var(--error-color);
-            color: var(--error-color);
+            border-color: var(--error);
+            color: var(--error);
         }
         .numpad .submit {
             background: rgba(107, 203, 119, 0.2);
-            border-color: var(--success-color);
-            color: var(--success-color);
+            border-color: var(--success);
+            color: var(--success);
         }
 
         /* Modals */
-        .modal-overlay {
+        .modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95);
@@ -342,27 +272,23 @@
             align-items: center;
             justify-content: center;
             z-index: 200;
-            padding: 5vmin;
+            padding: 20px;
         }
-        .modal-overlay.show { display: flex; }
+        .modal.show { display: flex; }
 
         /* Theme Picker */
-        .theme-picker h2 { font-size: clamp(1.5rem, 5vmin, 2rem); margin-bottom: 3vmin; }
+        .theme-picker h2 { font-size: 1.5rem; margin-bottom: 15px; }
         .theme-btn {
             width: 100%;
-            max-width: 280px;
-            padding: 3vmin 5vmin;
-            margin: 1vmin 0;
+            max-width: 250px;
+            padding: 12px 20px;
+            margin: 6px 0;
             border-radius: 12px;
-            font-size: clamp(1rem, 3vmin, 1.3rem);
+            font-size: 1.1rem;
             font-weight: bold;
             border: 3px solid;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 3vmin;
         }
-        .theme-btn:active { transform: scale(0.95); }
         .theme-btn.tropical { background: linear-gradient(135deg, #1a0a2e, #16213e); border-color: #ff6b9d; color: #ff6b9d; }
         .theme-btn.ocean { background: linear-gradient(135deg, #0a1628, #1a3a5c); border-color: #00d9ff; color: #00d9ff; }
         .theme-btn.sunset { background: linear-gradient(135deg, #2d1b2e, #4a2c4a); border-color: #ff9a56; color: #ff9a56; }
@@ -370,167 +296,133 @@
         .theme-btn.retro { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); border-color: #39ff14; color: #39ff14; }
 
         .close-btn {
-            margin-top: 3vmin;
-            padding: 2vmin 6vmin;
+            margin-top: 15px;
+            padding: 10px 30px;
             background: var(--card-bg);
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
+            border: 2px solid var(--primary);
+            color: var(--primary);
             border-radius: 10px;
-            font-size: clamp(1rem, 3vmin, 1.2rem);
+            font-size: 1rem;
             cursor: pointer;
         }
 
         /* Mystery Box */
-        .mystery-box { font-size: clamp(4rem, 20vmin, 8rem); cursor: pointer; }
-        .mystery-box:active { transform: scale(0.9); }
-        .mystery-reward { font-size: clamp(2rem, 10vmin, 4rem); margin-top: 3vmin; }
-        .mystery-text { font-size: clamp(1.2rem, 4vmin, 1.8rem); margin-top: 2vmin; color: var(--accent-color); }
+        .mystery-box { font-size: 5rem; cursor: pointer; }
+        .mystery-reward { font-size: 3rem; margin-top: 20px; }
+        .mystery-text { font-size: 1.3rem; margin-top: 15px; color: var(--accent); }
 
         /* Boss Battle */
-        .boss-modal { background: rgba(0, 0, 0, 0.98); }
-        .boss-modal.show { animation: bossEntrance 0.5s ease-out; }
-        @keyframes bossEntrance {
+        .boss-modal.show { animation: bossFlash 0.5s ease-out; }
+        @keyframes bossFlash {
             0% { background: rgba(255, 0, 0, 0.8); }
-            100% { background: rgba(0, 0, 0, 0.98); }
+            100% { background: rgba(0, 0, 0, 0.95); }
         }
 
-        .boss-container { text-align: center; width: 100%; max-width: 400px; }
+        .boss-container { text-align: center; width: 100%; max-width: 350px; }
 
         .boss-title {
-            font-size: clamp(1.5rem, 5vmin, 2.5rem);
-            color: var(--error-color);
-            text-shadow: 0 0 20px var(--error-color);
-            margin-bottom: 2vmin;
-            animation: bossTitlePulse 1s infinite;
+            font-size: 1.5rem;
+            color: var(--error);
+            text-shadow: 0 0 20px var(--error);
+            margin-bottom: 15px;
+            animation: bossPulse 1s infinite;
         }
-        @keyframes bossTitlePulse {
-            0%, 100% { text-shadow: 0 0 20px var(--error-color); }
-            50% { text-shadow: 0 0 40px var(--error-color), 0 0 60px var(--error-color); }
+        @keyframes bossPulse {
+            0%, 100% { text-shadow: 0 0 20px var(--error); }
+            50% { text-shadow: 0 0 40px var(--error), 0 0 60px var(--error); }
         }
 
-        .boss-emoji {
-            font-size: clamp(4rem, 18vmin, 7rem);
-            display: block;
-            margin: 2vmin 0;
-        }
-        .boss-emoji.entrance { animation: bossEntranceAnim 0.8s ease-out; }
-        @keyframes bossEntranceAnim {
+        .boss-emoji { font-size: 5rem; display: block; margin: 15px 0; }
+        .boss-emoji.entrance { animation: bossEnter 0.8s ease-out; }
+        @keyframes bossEnter {
             0% { transform: scale(0) rotate(-180deg); opacity: 0; }
             60% { transform: scale(1.3) rotate(10deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
         }
         .boss-emoji.hit { animation: bossHit 0.3s ease-out; }
         @keyframes bossHit {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(0.8) rotate(-10deg); filter: brightness(3) hue-rotate(90deg); }
+            50% { transform: scale(0.8) rotate(-10deg); filter: brightness(3); }
         }
         .boss-emoji.defeated { animation: bossDefeat 1.5s ease-out forwards; }
         @keyframes bossDefeat {
-            0% { transform: scale(1) rotate(0deg); opacity: 1; }
             50% { transform: scale(1.5) rotate(180deg); }
             100% { transform: scale(0) rotate(720deg); opacity: 0; }
         }
 
-        .boss-name {
-            font-size: clamp(1.2rem, 4vmin, 1.8rem);
-            color: var(--error-color);
-            margin-bottom: 2vmin;
-        }
+        .boss-name { font-size: 1.2rem; color: var(--error); margin-bottom: 15px; }
 
         .boss-health-bar {
             width: 100%;
-            max-width: 250px;
-            height: clamp(15px, 4vmin, 25px);
+            max-width: 220px;
+            height: 20px;
             background: #333;
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
-            margin: 0 auto 2vmin;
-            border: 2px solid var(--error-color);
+            margin: 0 auto 15px;
+            border: 2px solid var(--error);
         }
         .boss-health-fill {
             height: 100%;
             background: linear-gradient(90deg, #ff0000, #ff6b6b);
-            transition: width 0.3s ease-out;
-            box-shadow: 0 0 10px #ff0000;
+            transition: width 0.3s;
         }
 
-        .boss-timer {
-            font-size: clamp(1.5rem, 5vmin, 2.5rem);
-            font-weight: bold;
-            color: var(--accent-color);
-            margin: 2vmin 0;
-        }
-        .boss-timer.danger {
-            color: var(--error-color);
-            animation: timerPanic 0.3s infinite;
-        }
-        @keyframes timerPanic {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
+        .boss-timer { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin: 10px 0; }
+        .boss-timer.danger { color: var(--error); animation: timerPanic 0.3s infinite; }
+        @keyframes timerPanic { 50% { transform: scale(1.1); } }
 
-        .boss-problem {
-            font-size: clamp(1.8rem, 7vmin, 3rem);
-            color: #fff;
-            margin: 2vmin 0;
-        }
-
+        .boss-problem { font-size: 1.8rem; color: #fff; margin: 15px 0; }
         .boss-answer {
-            font-size: clamp(1.5rem, 6vmin, 2.5rem);
-            padding: 2vmin 4vmin;
-            min-width: clamp(80px, 20vmin, 120px);
+            font-size: 1.5rem;
+            padding: 8px 20px;
+            min-width: 80px;
             background: var(--card-bg);
-            border: 2px solid var(--primary-color);
+            border: 2px solid var(--primary);
             border-radius: 10px;
             color: #fff;
             text-align: center;
-            margin: 0 auto 2vmin;
+            margin: 0 auto 15px;
+            display: inline-block;
         }
 
         .boss-numpad {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5vmin;
-            max-width: 300px;
+            gap: 6px;
+            max-width: 280px;
             margin: 0 auto;
         }
         .boss-numpad button {
-            font-size: clamp(1.2rem, 4vmin, 1.8rem);
-            padding: 2vmin;
-            min-height: clamp(40px, 10vmin, 55px);
-            background: var(--button-bg);
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
+            font-size: 1.2rem;
+            padding: 10px;
+            min-height: 44px;
+            background: rgba(255, 107, 157, 0.15);
+            border: 2px solid var(--primary);
+            color: var(--primary);
             border-radius: 8px;
             cursor: pointer;
         }
-        .boss-numpad button:active { transform: scale(0.95); }
-        .boss-numpad .delete { border-color: var(--error-color); color: var(--error-color); }
-        .boss-numpad .submit { border-color: var(--success-color); color: var(--success-color); }
+        .boss-numpad .delete { border-color: var(--error); color: var(--error); }
+        .boss-numpad .submit { border-color: var(--success); color: var(--success); }
 
         .boss-victory {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(2rem, 8vmin, 4rem);
+            font-size: 2.5rem;
             font-weight: bold;
-            color: var(--accent-color);
-            text-shadow: 0 0 30px var(--accent-color);
+            color: var(--accent);
+            text-shadow: 0 0 30px var(--accent);
             text-align: center;
             z-index: 10;
         }
-        .boss-victory.show { animation: victoryBurst 1s ease-out; }
-        @keyframes victoryBurst {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        .boss-victory.show { animation: victoryPop 1s ease-out; }
+        @keyframes victoryPop {
+            0% { transform: translate(-50%, -50%) scale(0); }
             50% { transform: translate(-50%, -50%) scale(1.3); }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); }
         }
-
-        .boss-reward {
-            font-size: clamp(1.5rem, 5vmin, 2rem);
-            color: var(--success-color);
-            margin-top: 2vmin;
-        }
+        .boss-reward { font-size: 1.5rem; color: var(--success); margin-top: 10px; }
 
         /* Game Over */
         .game-over {
@@ -542,100 +434,50 @@
             align-items: center;
             justify-content: center;
             z-index: 300;
-            padding: 5vmin;
+            padding: 20px;
             cursor: pointer;
         }
         .game-over.show { display: flex; }
+        .game-over h2 { font-size: 2.5rem; color: var(--accent); margin-bottom: 25px; }
+        .game-over-stats { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .final-stat { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+        .new-record { color: var(--accent); font-weight: bold; animation: recordGlow 0.5s infinite; }
+        @keyframes recordGlow { 50% { text-shadow: 0 0 20px var(--accent); } }
+        .tap-restart { font-size: 1rem; color: var(--primary); opacity: 0.7; animation: tapFade 2s infinite; }
+        @keyframes tapFade { 50% { opacity: 1; } }
 
-        .game-over h2 {
-            font-size: clamp(2rem, 8vmin, 3.5rem);
-            color: var(--accent-color);
-            margin-bottom: 4vmin;
-        }
-
-        .game-over-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 2vmin;
-            margin-bottom: 4vmin;
-        }
-
-        .final-stat {
-            font-size: clamp(1.2rem, 4vmin, 1.8rem);
-            display: flex;
-            align-items: center;
-            gap: 2vmin;
-        }
-
-        .new-record {
-            color: var(--accent-color);
-            font-weight: bold;
-            animation: recordPulse 0.5s infinite;
-        }
-        @keyframes recordPulse {
-            0%, 100% { text-shadow: 0 0 10px var(--accent-color); }
-            50% { text-shadow: 0 0 25px var(--accent-color); }
-        }
-
-        .tap-to-restart {
-            font-size: clamp(1rem, 3vmin, 1.3rem);
-            color: var(--primary-color);
-            opacity: 0.7;
-            margin-top: 4vmin;
-            animation: tapPulse 2s infinite;
-        }
-        @keyframes tapPulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        .shake { animation: shake 0.3s ease-out; }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
-        }
+        .shake { animation: shake 0.3s; }
+        @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
         .hidden { display: none !important; }
 
-        /* Landscape Mode */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .game-container {
-                flex-direction: row;
-                flex-wrap: wrap;
-                max-width: 100%;
-                padding: 1vmin 2vmin;
-            }
-            .top-bar { width: 100%; margin-bottom: 0; }
-            h1 { font-size: 1rem; }
-            .icon-btn { width: 32px; height: 32px; font-size: 0.9rem; }
-            .settings-toggle { display: none; }
-            .stats { width: 100%; padding: 0.5vmin 0; gap: 10px; }
-            .stat-item { font-size: 0.85rem; }
-            .stat-icon { font-size: 1rem; }
-            .timer-display { position: absolute; top: 1vmin; left: 50%; transform: translateX(-50%); font-size: 0.9rem; }
-            .problem-area { flex: 1; min-width: 50%; }
-            .problem { font-size: 1.8rem; }
-            .answer-display { font-size: 1.5rem; padding: 1vmin 3vmin; min-width: 80px; }
-            .feedback { font-size: 0.9rem; min-height: 1rem; }
-            .numpad { max-width: 200px; gap: 3px; }
-            .numpad button { min-height: 36px; font-size: 1.1rem; aspect-ratio: auto; }
+        /* Desktop */
+        @media (min-width: 800px) {
+            .game-container { max-height: 700px; }
+            .numpad button { height: 70px; font-size: 2rem; }
+            .problem { font-size: 4rem; }
+            .answer-display { font-size: 3rem; padding: 15px 40px; }
         }
 
-        /* Tablet Landscape */
-        @media (min-width: 768px) and (orientation: landscape) {
+        /* Landscape mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
             .game-container {
                 flex-direction: row;
                 flex-wrap: wrap;
                 max-width: 100%;
+                max-height: 100%;
             }
             .top-bar { width: 100%; }
-            .settings-toggle { width: 100%; }
-            .settings-panel { width: 100%; }
-            .stats { width: 100%; }
-            .timer-display { width: 100%; }
-            .problem-area { flex: 1; min-width: 50%; }
-            .numpad { max-width: 280px; }
+            .settings-toggle { display: none; }
+            .stats { width: 100%; padding: 4px 0; gap: 15px; }
+            .stat-item { font-size: 0.9rem; }
+            .timer-display { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); font-size: 1rem; }
+            .problem-area { flex: 1; min-width: 50%; min-height: auto; gap: 8px; }
+            .problem { font-size: 2rem; }
+            .answer-display { font-size: 1.5rem; padding: 8px 20px; min-width: 80px; }
+            .feedback { font-size: 1rem; }
+            .numpad { max-width: 180px; gap: 4px; }
+            .numpad button { height: 38px; font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -651,7 +493,7 @@
 
         <div class="settings-toggle">
             <button class="settings-btn" onclick="toggleSettings()">
-                <span id="settingsLabel">Easy + Mixed</span> ▼
+                <span id="settingsLabel">Easy • Mixed</span> ▼
             </button>
         </div>
 
@@ -675,9 +517,8 @@
         </div>
 
         <div class="stats">
-            <div class="stat-item"><span class="stat-icon">⭐</span> <span id="score">0</span></div>
-            <div class="stat-item"><span class="stat-icon">🔥</span> <span id="streak">0</span></div>
-            <div class="stat-item"><span class="stat-icon">👑</span> <span id="highScore">0</span></div>
+            <div class="stat-item"><span class="stat-icon">🥭</span> <span id="score">0</span></div>
+            <div class="stat-item"><span class="stat-icon">🍉</span> <span id="streak">0</span></div>
         </div>
 
         <div class="timer-display" id="timer"></div>
@@ -704,11 +545,10 @@
         </div>
     </div>
 
-    <!-- Streak Celebration -->
     <div class="streak-celebration" id="streakCelebration"></div>
 
     <!-- Theme Picker -->
-    <div class="modal-overlay theme-picker" id="themePicker">
+    <div class="modal theme-picker" id="themePicker">
         <h2>Pick a Theme</h2>
         <button class="theme-btn tropical" onclick="setTheme('tropical')">🌺 Tropical</button>
         <button class="theme-btn ocean" onclick="setTheme('ocean')">🌊 Ocean</button>
@@ -719,7 +559,7 @@
     </div>
 
     <!-- Mystery Box -->
-    <div class="modal-overlay" id="mysteryBoxModal">
+    <div class="modal" id="mysteryBoxModal">
         <div class="mystery-box" id="mysteryBox" onclick="openMysteryBox()">🎁</div>
         <div class="mystery-reward" id="mysteryReward"></div>
         <div class="mystery-text" id="mysteryText">Tap to open!</div>
@@ -727,7 +567,7 @@
     </div>
 
     <!-- Boss Battle -->
-    <div class="modal-overlay boss-modal" id="bossBattleModal">
+    <div class="modal boss-modal" id="bossBattleModal">
         <div class="boss-title">⚔️ BOSS BATTLE ⚔️</div>
         <div class="boss-container" id="bossContainer">
             <div class="boss-emoji" id="bossEmoji">👾</div>
@@ -737,7 +577,7 @@
             </div>
             <div class="boss-timer" id="bossTimer">30</div>
             <div class="boss-problem" id="bossProblem"></div>
-            <div class="boss-answer" id="bossAnswer"></div>
+            <div class="boss-answer" id="bossAnswer">|</div>
             <div class="boss-numpad">
                 <button onclick="bossNumPress(1)">1</button>
                 <button onclick="bossNumPress(2)">2</button>
@@ -755,7 +595,7 @@
         </div>
         <div class="boss-victory hidden" id="bossVictory">
             <div>🎉 VICTORY! 🎉</div>
-            <div class="boss-reward" id="bossReward">+10 Points!</div>
+            <div class="boss-reward" id="bossReward">+10 🥭</div>
         </div>
     </div>
 
@@ -764,13 +604,12 @@
         <h2>TIME'S UP!</h2>
         <div id="newRecordBanner"></div>
         <div class="game-over-stats">
-            <div class="final-stat"><span class="stat-icon">⭐</span> Score: <span id="finalScore">0</span></div>
-            <div class="final-stat"><span class="stat-icon">🔥</span> Best Streak: <span id="bestStreak">0</span></div>
-            <div class="final-stat"><span class="stat-icon">✓</span> Accuracy: <span id="accuracy">0%</span></div>
-            <div class="final-stat"><span class="stat-icon">📝</span> Problems: <span id="totalProblems">0</span></div>
-            <div class="final-stat"><span class="stat-icon">👑</span> High Score: <span id="finalHighScore">0</span></div>
+            <div class="final-stat">🥭 Score: <span id="finalScore">0</span></div>
+            <div class="final-stat">🍉 Best Streak: <span id="bestStreak">0</span></div>
+            <div class="final-stat">✓ Accuracy: <span id="accuracy">0%</span></div>
+            <div class="final-stat">📝 Problems: <span id="totalProblems">0</span></div>
         </div>
-        <div class="tap-to-restart">Tap anywhere to play again</div>
+        <div class="tap-restart">Tap anywhere to play again</div>
     </div>
 
     <script>
@@ -785,47 +624,41 @@
             { emoji: '👻', name: 'Ghost of Algebra' }
         ];
 
-        // Game state
         let num1, num2, correctAnswer, currentOp;
         let score = 0, streak = 0, bestStreak = 0;
         let difficulty = 'easy', operation = 'mixed', mode = 'endless';
         let timeLeft = 60, timerInterval = null;
-        let gameActive = true, isNewHighScore = false, currentInput = '';
+        let gameActive = true, currentInput = '';
         let soundEnabled = true, audioContext = null;
-        let correctCount = 0, totalAttempts = 0, bossesDefeated = 0;
+        let correctCount = 0, totalAttempts = 0;
 
-        // Boss state
         let bossActive = false, bossHealth = 100, bossTimer = 30;
         let bossInterval = null, bossAnswer = '', bossCorrectAnswer;
 
-        // Settings
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('show');
         }
 
         function updateSettingsLabel() {
-            const diffText = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
-            const opText = operation === 'mixed' ? 'Mixed' :
-                          operation === 'add' ? '+' :
-                          operation === 'subtract' ? '−' :
-                          operation === 'multiply' ? '×' : '÷';
-            document.getElementById('settingsLabel').textContent = `${diffText} • ${opText}`;
+            const diff = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+            const op = operation === 'mixed' ? 'Mixed' : operation === 'add' ? '+' : operation === 'subtract' ? '−' : operation === 'multiply' ? '×' : '÷';
+            document.getElementById('settingsLabel').textContent = `${diff} • ${op}`;
         }
 
-        // Theme
         function setTheme(theme) {
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
             localStorage.setItem('mathblaster_theme', theme);
             hideThemePicker();
         }
+
         function loadTheme() {
             const theme = localStorage.getItem('mathblaster_theme') || 'tropical';
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
         }
+
         function showThemePicker() { document.getElementById('themePicker').classList.add('show'); }
         function hideThemePicker() { document.getElementById('themePicker').classList.remove('show'); }
 
-        // Sound
         function toggleSound() {
             soundEnabled = !soundEnabled;
             const btn = document.getElementById('soundBtn');
@@ -850,61 +683,58 @@
 
         function playSound(type) {
             if (!soundEnabled) return;
-            const ctx = getAudioContext();
-            if (type === 'tap') playTone(ctx, 600, 'sine', 0.08, 0.05);
-            else if (type === 'correct') {
-                playTone(ctx, 880, 'sine', 0.12, 0.08);
-                setTimeout(() => playTone(ctx, 1100, 'sine', 0.1, 0.08), 80);
-            }
-            else if (type === 'wrong') playTone(ctx, 200, 'triangle', 0.15, 0.2);
-            else if (type === 'streak') {
-                [880, 1100, 1320, 1760].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sine', 0.12, 0.15), i * 80));
-            }
-            else if (type === 'highscore') {
-                [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sine', 0.15, 0.2), i * 100));
-            }
-            else if (type === 'gameover') {
-                [400, 350, 300, 250].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'triangle', 0.12, 0.3), i * 150));
-            }
-            else if (type === 'bonus') {
-                [800, 1000, 1200].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sine', 0.12, 0.1), i * 60));
-            }
-            else if (type === 'bossappear') {
-                [150, 200, 150, 250].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sawtooth', 0.2, 0.15), i * 120));
-            }
-            else if (type === 'bosshit') {
-                playTone(ctx, 300, 'square', 0.15, 0.1);
-                setTimeout(() => playTone(ctx, 500, 'square', 0.1, 0.08), 50);
-            }
-            else if (type === 'bosswin') {
-                [400, 500, 600, 800, 1000, 1200].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sine', 0.15, 0.15), i * 80));
-            }
+            try {
+                const ctx = getAudioContext();
+                const playTone = (freq, wave, vol, dur) => {
+                    const osc = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    osc.connect(g);
+                    g.connect(ctx.destination);
+                    osc.frequency.value = freq;
+                    osc.type = wave;
+                    g.gain.setValueAtTime(vol, ctx.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + dur);
+                    osc.start();
+                    osc.stop(ctx.currentTime + dur);
+                };
+
+                if (type === 'tap') playTone(600, 'sine', 0.08, 0.05);
+                else if (type === 'correct') {
+                    playTone(880, 'sine', 0.12, 0.08);
+                    setTimeout(() => playTone(1100, 'sine', 0.1, 0.08), 80);
+                }
+                else if (type === 'wrong') playTone(200, 'triangle', 0.15, 0.2);
+                else if (type === 'streak') {
+                    [880, 1100, 1320, 1760].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.12, 0.15), i * 80));
+                }
+                else if (type === 'bonus') {
+                    [800, 1000, 1200].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.12, 0.1), i * 60));
+                }
+                else if (type === 'bossappear') {
+                    [150, 200, 150, 250].forEach((f, i) => setTimeout(() => playTone(f, 'sawtooth', 0.2, 0.15), i * 120));
+                }
+                else if (type === 'bosshit') {
+                    playTone(300, 'square', 0.15, 0.1);
+                    setTimeout(() => playTone(500, 'square', 0.1, 0.08), 50);
+                }
+                else if (type === 'bosswin') {
+                    [400, 500, 600, 800, 1000, 1200].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.15, 0.15), i * 80));
+                }
+                else if (type === 'gameover') {
+                    [400, 350, 300, 250].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.12, 0.3), i * 150));
+                }
+            } catch (e) {}
         }
 
-        function playTone(ctx, freq, type, gain, duration) {
-            const osc = ctx.createOscillator();
-            const g = ctx.createGain();
-            osc.connect(g);
-            g.connect(ctx.destination);
-            osc.frequency.value = freq;
-            osc.type = type;
-            g.gain.setValueAtTime(gain, ctx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
-            osc.start();
-            osc.stop(ctx.currentTime + duration);
-        }
-
-        // Streak Celebration
-        function showStreakCelebration(streakNum) {
+        function showStreakCelebration(num) {
             const el = document.getElementById('streakCelebration');
-            el.textContent = `🔥 ${streakNum} STREAK! 🔥`;
+            el.textContent = `🍉 ${num} STREAK! 🍉`;
             el.classList.remove('show');
             void el.offsetWidth;
             el.classList.add('show');
             playSound('streak');
         }
 
-        // Mystery Box
         function showMysteryBox() {
             document.getElementById('mysteryReward').textContent = '';
             document.getElementById('mysteryText').textContent = 'Tap to open!';
@@ -915,15 +745,14 @@
         }
 
         function openMysteryBox() {
-            const bonus = Math.floor(Math.random() * 3) + 2; // 2-4 bonus
+            const bonus = Math.floor(Math.random() * 3) + 2;
             score += bonus;
             document.getElementById('score').textContent = score;
             document.getElementById('mysteryBox').style.display = 'none';
-            document.getElementById('mysteryReward').textContent = '⭐'.repeat(bonus);
-            document.getElementById('mysteryText').textContent = `+${bonus} bonus points!`;
+            document.getElementById('mysteryReward').textContent = '🥭'.repeat(bonus);
+            document.getElementById('mysteryText').textContent = `+${bonus} bonus!`;
             document.getElementById('mysteryCloseBtn').classList.remove('hidden');
             playSound('bonus');
-            checkHighScore();
         }
 
         function closeMysteryBox() {
@@ -931,7 +760,6 @@
             setTimeout(generateProblem, 200);
         }
 
-        // Boss Battle
         function startBossBattle() {
             bossActive = true;
             bossHealth = 100;
@@ -939,9 +767,9 @@
             bossAnswer = '';
 
             const boss = BOSSES[Math.floor(Math.random() * BOSSES.length)];
-            const bossEmoji = document.getElementById('bossEmoji');
-            bossEmoji.textContent = boss.emoji;
-            bossEmoji.className = 'boss-emoji entrance';
+            const emoji = document.getElementById('bossEmoji');
+            emoji.textContent = boss.emoji;
+            emoji.className = 'boss-emoji entrance';
             document.getElementById('bossName').textContent = boss.name;
             document.getElementById('bossHealthFill').style.width = '100%';
             document.getElementById('bossTimer').textContent = '30';
@@ -954,7 +782,7 @@
             playSound('bossappear');
 
             setTimeout(() => {
-                bossEmoji.classList.remove('entrance');
+                emoji.classList.remove('entrance');
                 generateBossProblem();
             }, 800);
 
@@ -993,7 +821,7 @@
         function bossDeletePress() {
             if (!bossActive) return;
             bossAnswer = bossAnswer.slice(0, -1);
-            document.getElementById('bossAnswer').textContent = bossAnswer + '|';
+            document.getElementById('bossAnswer').textContent = (bossAnswer || '') + '|';
         }
 
         function bossCheckAnswer() {
@@ -1002,17 +830,13 @@
             if (parseInt(bossAnswer) === bossCorrectAnswer) {
                 bossHealth -= 25;
                 document.getElementById('bossHealthFill').style.width = bossHealth + '%';
-
                 const emoji = document.getElementById('bossEmoji');
                 emoji.classList.add('hit');
                 setTimeout(() => emoji.classList.remove('hit'), 300);
                 playSound('bosshit');
 
-                if (bossHealth <= 0) {
-                    endBossBattle(true);
-                } else {
-                    generateBossProblem();
-                }
+                if (bossHealth <= 0) endBossBattle(true);
+                else generateBossProblem();
             } else {
                 bossAnswer = '';
                 document.getElementById('bossAnswer').textContent = '|';
@@ -1027,19 +851,14 @@
             if (victory) {
                 document.getElementById('bossEmoji').classList.add('defeated');
                 document.getElementById('bossContainer').style.opacity = '0.3';
-
                 const victoryEl = document.getElementById('bossVictory');
                 victoryEl.classList.remove('hidden');
                 victoryEl.classList.add('show');
-
                 playSound('bosswin');
 
-                const bonus = 10;
-                score += bonus;
+                score += 10;
                 document.getElementById('score').textContent = score;
-                document.getElementById('bossReward').textContent = `+${bonus} Points!`;
-                bossesDefeated++;
-                checkHighScore();
+                document.getElementById('bossReward').textContent = '+10 🥭';
 
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
@@ -1047,22 +866,21 @@
                     setTimeout(generateProblem, 200);
                 }, 2500);
             } else {
-                document.getElementById('bossVictory').innerHTML = '<div>💀 ESCAPED! 💀</div><div class="boss-reward">Boss fled...</div>';
+                document.getElementById('bossVictory').innerHTML = '<div>💀 ESCAPED!</div><div class="boss-reward">Boss fled...</div>';
                 document.getElementById('bossVictory').classList.remove('hidden');
                 playSound('gameover');
 
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
-                    document.getElementById('bossVictory').innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 Points!</div>';
+                    document.getElementById('bossVictory').innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 🥭</div>';
                     setTimeout(generateProblem, 200);
                 }, 1500);
             }
         }
 
-        // Game
         function updateAnswerDisplay() {
-            const display = document.getElementById('answerDisplay');
-            display.innerHTML = currentInput === '' ? '<span class="cursor">|</span>' : currentInput + '<span class="cursor">|</span>';
+            document.getElementById('answerDisplay').innerHTML =
+                currentInput === '' ? '<span class="cursor">|</span>' : currentInput + '<span class="cursor">|</span>';
         }
 
         function numPress(num) {
@@ -1077,22 +895,6 @@
             currentInput = currentInput.slice(0, -1);
             updateAnswerDisplay();
             playSound('tap');
-        }
-
-        function getHighScoreKey() { return `mathblaster_${mode}_${difficulty}_${operation}`; }
-        function getHighScore() { return parseInt(localStorage.getItem(getHighScoreKey()) || '0'); }
-        function setHighScore(s) { localStorage.setItem(getHighScoreKey(), s); }
-        function updateHighScoreDisplay() { document.getElementById('highScore').textContent = getHighScore(); }
-
-        function checkHighScore() {
-            if (score > getHighScore()) {
-                if (!isNewHighScore) {
-                    isNewHighScore = true;
-                    playSound('highscore');
-                }
-                setHighScore(score);
-                updateHighScoreDisplay();
-            }
         }
 
         function getMaxNumber() {
@@ -1152,28 +954,21 @@
 
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;
-
-                // Green flash
                 answerEl.classList.add('correct');
 
-                checkHighScore();
-
-                // Streak celebrations
-                if (streak === 5 || streak === 10 || streak === 15 || streak === 20 || streak % 10 === 0 && streak > 0) {
+                if (streak === 5 || streak === 10 || streak === 15 || streak === 20 || (streak > 20 && streak % 10 === 0)) {
                     showStreakCelebration(streak);
                 }
 
-                feedbackEl.textContent = streak >= 5 ? `🔥 ${streak} streak!` : 'Correct!';
+                feedbackEl.textContent = streak >= 5 ? `🍉 ${streak} streak!` : 'Correct!';
                 feedbackEl.className = 'feedback correct';
                 playSound('correct');
 
-                // Mystery box every 10 correct
                 if (correctCount > 0 && correctCount % 10 === 0) {
                     setTimeout(showMysteryBox, 400);
                     return;
                 }
 
-                // Boss battle every 15 correct
                 if (correctCount > 0 && correctCount % 15 === 0) {
                     setTimeout(startBossBattle, 400);
                     return;
@@ -1184,12 +979,10 @@
                 feedbackEl.textContent = 'Try again!';
                 feedbackEl.className = 'feedback';
                 playSound('wrong');
-
                 streak = 0;
                 document.getElementById('streak').textContent = 0;
                 currentInput = '';
                 updateAnswerDisplay();
-
                 document.body.classList.add('shake');
                 setTimeout(() => document.body.classList.remove('shake'), 300);
             }
@@ -1198,33 +991,25 @@
         function setDifficulty(diff) {
             difficulty = diff;
             document.querySelectorAll('.settings-row button').forEach(b => {
-                if (['easy', 'medium', 'hard'].includes(b.id)) {
-                    b.classList.toggle('active', b.id === diff);
-                }
+                if (['easy', 'medium', 'hard'].includes(b.id)) b.classList.toggle('active', b.id === diff);
             });
             updateSettingsLabel();
-            updateHighScoreDisplay();
             resetGame();
         }
 
         function setOperation(op) {
             operation = op;
             document.querySelectorAll('.settings-row button').forEach(b => {
-                if (['add', 'subtract', 'multiply', 'divide', 'mixed'].includes(b.id)) {
-                    b.classList.toggle('active', b.id === op);
-                }
+                if (['add', 'subtract', 'multiply', 'divide', 'mixed'].includes(b.id)) b.classList.toggle('active', b.id === op);
             });
             updateSettingsLabel();
-            updateHighScoreDisplay();
             resetGame();
         }
 
         function setMode(m) {
             mode = m;
             document.querySelectorAll('.settings-row button').forEach(b => {
-                if (['endless', 'timed'].includes(b.id)) {
-                    b.classList.toggle('active', b.id === m);
-                }
+                if (['endless', 'timed'].includes(b.id)) b.classList.toggle('active', b.id === m);
             });
             if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
             if (mode === 'timed') startTimer();
@@ -1232,7 +1017,6 @@
                 document.getElementById('timer').textContent = '';
                 document.getElementById('timer').classList.remove('warning');
             }
-            updateHighScoreDisplay();
             resetGame();
         }
 
@@ -1253,27 +1037,19 @@
             clearInterval(timerInterval);
 
             const acc = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
-
             document.getElementById('finalScore').textContent = score;
             document.getElementById('bestStreak').textContent = bestStreak;
             document.getElementById('accuracy').textContent = acc + '%';
             document.getElementById('totalProblems').textContent = correctCount;
-            document.getElementById('finalHighScore').textContent = getHighScore();
+            document.getElementById('newRecordBanner').textContent = '';
 
-            if (isNewHighScore) {
-                document.getElementById('newRecordBanner').textContent = '🏆 NEW HIGH SCORE! 🏆';
-                document.getElementById('newRecordBanner').className = 'new-record';
-            } else {
-                document.getElementById('newRecordBanner').textContent = '';
-            }
-
-            playSound(isNewHighScore ? 'highscore' : 'gameover');
+            playSound('gameover');
             document.getElementById('gameOver').classList.add('show');
         }
 
         function resetGame() {
             score = 0; streak = 0; bestStreak = 0;
-            gameActive = true; isNewHighScore = false;
+            gameActive = true;
             correctCount = 0; totalAttempts = 0;
 
             document.getElementById('score').textContent = 0;
@@ -1291,7 +1067,6 @@
             resetGame();
         }
 
-        // Keyboard
         document.addEventListener('keydown', function(e) {
             if (bossActive) {
                 if (e.key >= '0' && e.key <= '9') bossNumPress(e.key);
@@ -1308,19 +1083,9 @@
             else if (e.key === 'Enter') checkAnswer();
         });
 
-        // Prevent zoom
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(e) {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) e.preventDefault();
-            lastTouchEnd = now;
-        }, { passive: false });
-
-        // Init
         loadTheme();
         loadSoundPref();
         updateSettingsLabel();
-        updateHighScoreDisplay();
         generateProblem();
     </script>
 </body>
