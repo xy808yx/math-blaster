@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Math Blaster Icons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+        }
+        canvas {
+            border: 2px solid #39ff14;
+            margin: 20px;
+        }
+        button {
+            font-size: 18px;
+            padding: 15px 30px;
+            margin: 10px;
+            background: #39ff14;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2dd310;
+        }
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            text-align: left;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .instructions li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Math Blaster Icon Generator</h1>
+
+    <div>
+        <canvas id="icon192" width="192" height="192"></canvas>
+        <canvas id="icon512" width="512" height="512"></canvas>
+    </div>
+
+    <div>
+        <button onclick="download('icon192', 'icon-192.png')">Download 192x192</button>
+        <button onclick="download('icon512', 'icon-512.png')">Download 512x512</button>
+    </div>
+
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Click both download buttons above</li>
+            <li>Move the downloaded files to your math-blaster folder:<br>
+                <code>/Users/j/my-apps/math-blaster/</code></li>
+            <li>Then push to GitHub with these commands:
+                <pre style="background:#1a1a1a;padding:10px;border-radius:5px;">
+cd /Users/j/my-apps/math-blaster
+git add .
+git commit -m "Add mobile support and icons"
+git push</pre>
+            </li>
+            <li>Wait 1 minute, then refresh on your iPad!</li>
+        </ol>
+    </div>
+
+    <script>
+        function drawIcon(canvas) {
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            const scale = size / 192;
+
+            // Background
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, size, size);
+
+            // Glow effect
+            const gradient = ctx.createRadialGradient(
+                size/2, size/2, 0,
+                size/2, size/2, size/2
+            );
+            gradient.addColorStop(0, 'rgba(57, 255, 20, 0.3)');
+            gradient.addColorStop(1, 'rgba(57, 255, 20, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Main text "MB"
+            ctx.fillStyle = '#39ff14';
+            ctx.font = `bold ${72 * scale}px "Courier New", monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Text shadow/glow
+            ctx.shadowColor = '#39ff14';
+            ctx.shadowBlur = 20 * scale;
+            ctx.fillText('MB', size/2, size/2 - 10*scale);
+
+            // Small "+" symbol
+            ctx.font = `bold ${36 * scale}px "Courier New", monospace`;
+            ctx.fillText('+', size/2, size/2 + 45*scale);
+
+            ctx.shadowBlur = 0;
+        }
+
+        function download(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Draw icons on load
+        drawIcon(document.getElementById('icon192'));
+        drawIcon(document.getElementById('icon512'));
+    </script>
+</body>
+</html>
