@@ -100,10 +100,7 @@
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             padding-bottom: max(env(safe-area-inset-bottom), 10px);
             overflow: hidden;
-            transition: box-shadow 0.3s;
         }
-
-        /* Removed excessive flash animations */
 
         .game-container {
             display: flex; flex-direction: column; align-items: center;
@@ -122,9 +119,7 @@
         h1 {
             font-size: clamp(1.4rem, 5vw, 2.5rem);
             text-shadow: 0 0 20px var(--text-glow), 0 0 40px var(--text-glow);
-            animation: float 3s ease-in-out infinite;
         }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         .top-buttons { display: flex; gap: 8px; }
 
@@ -138,112 +133,50 @@
         .icon-btn:active { transform: scale(0.9); }
         .icon-btn.muted { opacity: 0.5; }
 
-        /* Pet Display - inline with stats */
+        /* Pet Display */
         .pet-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 10px;
+            display: flex; align-items: center; gap: 6px;
+            cursor: pointer; padding: 4px 8px; border-radius: 8px;
             background: var(--card-bg);
-            transition: transform 0.2s;
         }
-
-        .pet-area:active {
-            transform: scale(0.95);
-        }
-
+        .pet-area:active { transform: scale(0.95); }
         .pet-container {
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            font-family: 'Segoe UI', sans-serif;
-            color: var(--primary-color);
-            white-space: nowrap;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: var(--primary-color); white-space: nowrap;
         }
-
         .pet-speech {
-            font-size: clamp(0.65rem, 2vw, 0.8rem);
-            color: var(--accent-color);
-            opacity: 0;
-            transition: opacity 0.2s;
+            font-size: clamp(0.6rem, 1.8vw, 0.75rem);
+            color: var(--accent-color); opacity: 0; transition: opacity 0.2s;
         }
-
-        .pet-speech.show {
-            opacity: 1;
-        }
+        .pet-speech.show { opacity: 1; }
 
         /* Modals */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
             z-index: 200; padding: 20px;
         }
+        .modal-overlay.show { display: flex; }
 
         /* Pet Selector */
-        .pet-selector h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-
-        .pet-options {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
+        .pet-selector h2 { font-size: 1.5rem; margin-bottom: 20px; color: var(--primary-color); }
+        .pet-options { display: flex; gap: 20px; margin-bottom: 20px; }
         .pet-option {
-            padding: 20px 30px;
-            border-radius: 20px;
-            background: var(--card-bg);
-            border: 3px solid var(--primary-color);
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
+            padding: 20px 30px; border-radius: 20px; background: var(--card-bg);
+            border: 3px solid var(--primary-color); cursor: pointer; text-align: center;
         }
-
-        .pet-option:active {
-            transform: scale(0.95);
-        }
-
-        .pet-option.selected {
-            border-color: var(--accent-color);
-            background: rgba(255, 215, 0, 0.15);
-        }
-
-        .pet-preview {
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 8px;
-            font-family: 'Segoe UI', sans-serif;
-            color: var(--primary-color);
-        }
-
-        .pet-name {
-            font-size: 1rem;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .pet-subtitle {
-            font-size: 0.7rem;
-            color: var(--secondary-color);
-            margin-top: 5px;
-        }
+        .pet-option:active { transform: scale(0.95); }
+        .pet-option.selected { border-color: var(--accent-color); background: rgba(255, 215, 0, 0.15); }
+        .pet-preview { font-size: 1.4rem; display: block; margin-bottom: 8px; color: var(--primary-color); }
+        .pet-name { font-size: 1rem; color: var(--primary-color); font-weight: bold; }
 
         /* Theme Picker */
-        .theme-picker, .pet-selector {
-            display: none;
-        }
-        .theme-picker.show, .pet-selector.show { display: flex; }
-
         .theme-picker h2 { font-size: 1.8rem; margin-bottom: 10px; }
-
         .theme-btn {
             width: 100%; max-width: 280px; padding: 15px 25px; border-radius: 15px;
             font-size: 1.2rem; font-weight: bold; border: 3px solid;
-            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 12px;
+            cursor: pointer; display: flex; align-items: center; gap: 12px;
         }
         .theme-btn:active { transform: scale(0.95); }
         .theme-btn.tropical { background: linear-gradient(135deg, #1a0a2e, #16213e); border-color: #ff6b9d; color: #ff6b9d; }
@@ -259,214 +192,90 @@
         }
 
         /* Mystery Box */
-        .mystery-box-modal {
-            display: none;
-        }
-        .mystery-box-modal.show { display: flex; }
-
-        .mystery-box {
-            font-size: 6rem;
-            animation: boxShake 0.5s ease-in-out;
-        }
-        @keyframes boxShake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            75% { transform: rotate(10deg); }
-        }
-
-        .mystery-box.opening {
-            animation: boxOpen 0.8s ease-out forwards;
-        }
-        @keyframes boxOpen {
-            0% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.3) rotate(10deg); }
-            100% { transform: scale(0) rotate(360deg); }
-        }
-
-        .mystery-reward {
-            font-size: 3rem; margin-top: 20px;
-            animation: rewardPop 0.5s ease-out;
-        }
-        @keyframes rewardPop {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .mystery-text {
-            font-size: 1.5rem; margin-top: 15px; color: var(--accent-color);
-        }
+        .mystery-box { font-size: 5rem; cursor: pointer; }
+        .mystery-reward { font-size: 2.5rem; margin-top: 20px; }
+        .mystery-text { font-size: 1.3rem; margin-top: 15px; color: var(--accent-color); }
 
         /* Boss Battle */
-        .boss-battle-modal {
-            display: none;
-        }
-        .boss-battle-modal.show { display: flex; }
-
-        .boss-container {
-            text-align: center;
-        }
-
-        .boss-emoji {
-            font-size: 5rem;
-            animation: bossIdle 1s ease-in-out infinite;
-        }
-        @keyframes bossIdle {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1.05); }
-        }
-
-        .boss-emoji.hit {
-            animation: bossHit 0.3s ease-out;
-        }
+        .boss-container { text-align: center; }
+        .boss-emoji { font-size: 4rem; }
+        .boss-emoji.hit { animation: bossHit 0.3s ease-out; }
         @keyframes bossHit {
-            0% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(0.9); filter: brightness(2) hue-rotate(180deg); }
-            100% { transform: scale(1); filter: brightness(1); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.8); filter: brightness(2); }
         }
-
-        .boss-emoji.defeated {
-            animation: bossDefeat 1s ease-out forwards;
-        }
+        .boss-emoji.defeated { animation: bossDefeat 1s ease-out forwards; }
         @keyframes bossDefeat {
-            0% { transform: scale(1) rotate(0deg); opacity: 1; }
-            100% { transform: scale(0) rotate(720deg); opacity: 0; }
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
         }
-
-        .boss-name {
-            font-size: 1.5rem; margin: 10px 0; color: var(--error-color);
-            text-shadow: 0 0 10px var(--error-color);
-        }
-
+        .boss-name { font-size: 1.3rem; margin: 10px 0; color: var(--error-color); }
         .boss-health-bar {
-            width: 250px; height: 25px; background: #333; border-radius: 15px;
-            overflow: hidden; margin: 15px auto; border: 3px solid var(--error-color);
+            width: 200px; height: 20px; background: #333; border-radius: 10px;
+            overflow: hidden; margin: 10px auto; border: 2px solid var(--error-color);
         }
-
         .boss-health-fill {
             height: 100%; background: linear-gradient(90deg, #ff0000, #ff6b6b);
             transition: width 0.3s ease-out;
-            box-shadow: 0 0 10px #ff0000;
         }
-
-        .boss-timer {
-            font-size: 2rem; color: var(--accent-color); margin: 10px 0;
-        }
-
-        .boss-problem {
-            font-size: 2.5rem; color: #fff; margin: 20px 0;
-        }
-
-        .boss-input-row {
-            display: flex; gap: 10px; justify-content: center; align-items: center;
-        }
-
+        .boss-timer { font-size: 1.5rem; color: var(--accent-color); margin: 10px 0; }
+        .boss-problem { font-size: 2rem; color: #fff; margin: 15px 0; }
         .boss-answer {
-            font-size: 2rem; padding: 10px 20px; width: 120px;
-            background: var(--card-bg); border: 3px solid var(--primary-color);
-            border-radius: 10px; color: #fff; text-align: center;
+            font-size: 1.8rem; padding: 8px 15px; width: 100px;
+            background: var(--card-bg); border: 2px solid var(--primary-color);
+            border-radius: 8px; color: #fff; text-align: center; margin: 0 auto;
         }
-
         .boss-numpad {
             display: grid; grid-template-columns: repeat(5, 1fr);
-            gap: 8px; margin-top: 15px; max-width: 320px;
+            gap: 6px; margin-top: 15px; max-width: 280px;
         }
-
         .boss-numpad button {
-            font-size: 1.5rem; padding: 12px; min-height: 50px;
+            font-size: 1.3rem; padding: 10px; min-height: 44px;
             background: var(--button-bg); border: 2px solid var(--primary-color);
-            color: var(--primary-color); border-radius: 10px; cursor: pointer;
+            color: var(--primary-color); border-radius: 8px; cursor: pointer;
         }
-
         .boss-numpad .delete { border-color: var(--error-color); color: var(--error-color); }
         .boss-numpad .submit { border-color: var(--success-color); color: var(--success-color); grid-column: span 2; }
-
-        .boss-victory {
-            font-size: 2rem; color: var(--accent-color);
-            animation: rainbow 1s infinite;
-        }
+        .boss-victory { font-size: 1.8rem; color: var(--accent-color); margin-top: 15px; }
 
         /* Settings */
         .settings {
             display: flex; gap: clamp(4px, 1vw, 10px); flex-wrap: wrap;
             justify-content: center; width: 100%; margin-bottom: clamp(5px, 1vh, 10px);
         }
-
         .button-group {
             display: flex; gap: 3px; background: var(--card-bg); padding: 4px; border-radius: 10px;
         }
-
         button {
             font-size: clamp(0.75rem, 2.2vw, 1rem);
             padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2.5vw, 16px);
             min-height: 38px; background: transparent; border: none;
             color: var(--primary-color); cursor: pointer; border-radius: 8px;
-            font-family: inherit; font-weight: 600; transition: all 0.15s;
+            font-family: inherit; font-weight: 600;
         }
         button:active { transform: scale(0.95); }
         button.active {
             background: var(--primary-color); color: var(--bg-color);
-            text-shadow: none; box-shadow: 0 0 15px var(--text-glow);
+            box-shadow: 0 0 15px var(--text-glow);
         }
-
-        /* Fruit Basket */
-        .fruit-basket {
-            display: flex; justify-content: center; align-items: center;
-            gap: clamp(4px, 1.5vw, 10px); min-height: clamp(35px, 9vw, 50px);
-            flex-wrap: wrap; max-width: 100%; padding: 5px 0;
-        }
-
-        .fruit {
-            font-size: clamp(1.6rem, 6vw, 2.5rem);
-            animation: fruitBounce 0.5s ease-out;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-        }
-        @keyframes fruitBounce {
-            0% { transform: scale(0) rotate(-180deg); }
-            50% { transform: scale(1.4) rotate(10deg); }
-            70% { transform: scale(0.9) rotate(-5deg); }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-
-        /* Simple Level Up - just text in feedback area */
-        /* Removed: flying points, multiplier display, confetti, bonus banner */
 
         /* Timer */
         .timer-display {
-            font-size: clamp(1.4rem, 4.5vw, 2.2rem);
-            color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color);
-            min-height: clamp(1.5rem, 5vw, 2.5rem); font-weight: bold;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            color: var(--accent-color); min-height: clamp(1.5rem, 4vw, 2rem); font-weight: bold;
         }
         .timer-display.warning { color: var(--error-color); animation: pulse 0.5s infinite; }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
         /* Problem Area */
         .problem-area {
             display: flex; flex-direction: column; align-items: center;
-            gap: clamp(5px, 1.5vh, 12px); flex: 1; justify-content: center; min-height: 0;
+            gap: clamp(8px, 2vh, 15px); flex: 1; justify-content: center; min-height: 0;
         }
-
         .problem {
-            font-size: clamp(2.5rem, 11vw, 5rem); font-weight: bold;
-            color: #ffffff; text-shadow: none; -webkit-font-smoothing: antialiased;
-            animation: popIn 0.3s ease-out;
+            font-size: clamp(2.8rem, 12vw, 5rem); font-weight: bold;
+            color: #ffffff;
         }
-        .problem.bonus {
-            color: #ffd700;
-            animation: bonusGlow 0.5s ease-in-out infinite alternate;
-        }
-        @keyframes bonusGlow {
-            0% { text-shadow: 0 0 10px #ffd700, 0 0 20px #ff6b00; }
-            100% { text-shadow: 0 0 20px #ffd700, 0 0 40px #ff6b00, 0 0 60px #ff6b00; }
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
         .answer-display {
             font-size: clamp(2.2rem, 9vw, 4rem);
             min-width: clamp(100px, 35vw, 160px); min-height: clamp(50px, 11vw, 70px);
@@ -474,58 +283,46 @@
             border: 3px solid var(--primary-color);
             padding: clamp(6px, 1.5vw, 12px) clamp(12px, 3vw, 25px);
             border-radius: 15px;
-            box-shadow: 0 0 20px var(--text-glow), inset 0 0 30px rgba(255,255,255,0.05);
+            box-shadow: 0 0 20px var(--text-glow);
             display: flex; align-items: center; justify-content: center;
-            font-weight: bold; color: #ffffff; text-shadow: none;
+            font-weight: bold; color: #ffffff;
         }
-
         .answer-display .cursor { animation: blink 1s infinite; opacity: 0.7; }
         @keyframes blink { 0%, 50% { opacity: 0.7; } 51%, 100% { opacity: 0; } }
 
-        .combo {
-            font-size: clamp(1.1rem, 3.5vw, 1.7rem);
-            color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color);
-            min-height: clamp(1.3rem, 4vw, 2.2rem); font-weight: bold;
-        }
-
         .feedback {
-            font-size: clamp(1.4rem, 4.5vw, 2.5rem);
-            min-height: clamp(1.8rem, 5.5vw, 3.2rem); font-weight: bold;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            min-height: clamp(1.5rem, 5vw, 2.5rem); font-weight: bold;
         }
-        .feedback.correct { color: var(--success-color); animation: explode 0.5s ease-out; }
-        .feedback.near-miss { color: var(--accent-color); animation: shake 0.4s ease-out; }
-        @keyframes explode { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        .feedback.correct { color: var(--success-color); }
 
         /* Stats */
         .stats {
-            display: flex; gap: clamp(15px, 5vw, 30px);
-            font-size: clamp(1.1rem, 3.5vw, 1.6rem); font-weight: 600;
-            padding: clamp(8px, 2vw, 12px) 0;
+            display: flex; gap: clamp(12px, 4vw, 25px); align-items: center;
+            font-size: clamp(1rem, 3.2vw, 1.4rem); font-weight: 600;
+            padding: clamp(6px, 1.5vw, 10px) 0;
         }
-        .stat-item { display: flex; align-items: center; gap: 6px; }
-        .stat-icon { font-size: clamp(1.4rem, 4.5vw, 2rem); }
+        .stat-item { display: flex; align-items: center; gap: 4px; }
+        .stat-icon { font-size: clamp(1.2rem, 4vw, 1.8rem); }
         .stat-value { min-width: 2ch; }
-        .streak-value { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); }
-        .high-score-value { color: var(--secondary-color); text-shadow: 0 0 10px var(--secondary-color); }
+        .streak-value { color: var(--accent-color); }
 
         /* Number Pad */
         .numpad {
             display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: clamp(5px, 1.2vw, 10px); width: 100%; max-width: 300px;
+            gap: clamp(6px, 1.5vw, 12px); width: 100%; max-width: 300px;
             margin-top: auto; padding-bottom: clamp(5px, 2vh, 15px);
         }
-
         .numpad button {
             font-size: clamp(1.5rem, 6vw, 2.4rem); padding: clamp(10px, 2.5vw, 16px);
-            min-height: clamp(52px, 13vw, 70px); font-weight: bold; border-radius: 14px;
+            min-height: clamp(54px, 14vw, 72px); font-weight: bold; border-radius: 14px;
             background: var(--button-bg); border: 2px solid var(--primary-color);
             color: var(--primary-color); box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .numpad button:active { transform: scale(0.92); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .numpad button:active { transform: scale(0.92); }
         .numpad .delete { background: rgba(255, 107, 107, 0.15); border-color: var(--error-color); color: var(--error-color); }
         .numpad .submit { background: rgba(107, 203, 119, 0.2); border-color: var(--success-color); color: var(--success-color); font-size: clamp(1.2rem, 4.5vw, 1.8rem); }
 
-        /* Simple shake for wrong answers */
         .shake { animation: shake 0.3s ease-out; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -537,47 +334,30 @@
         .game-over {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
             z-index: 100; padding: 20px;
         }
+        .game-over.show { display: flex; }
         .game-over h2 {
-            font-size: clamp(1.8rem, 7vw, 3.5rem);
-            margin-bottom: clamp(15px, 4vw, 25px);
-            color: var(--accent-color); text-shadow: 0 0 20px var(--accent-color);
+            font-size: clamp(1.8rem, 7vw, 3rem); margin-bottom: 20px;
+            color: var(--accent-color);
         }
         .game-over .final-score {
-            font-size: clamp(1.2rem, 4vw, 2.2rem);
-            margin-bottom: clamp(8px, 2vw, 15px);
+            font-size: clamp(1.2rem, 4vw, 2rem); margin-bottom: 10px;
             display: flex; align-items: center; gap: 10px;
         }
-        .game-over .final-score .stat-icon { font-size: clamp(1.5rem, 5vw, 2.5rem); }
         .game-over button {
             font-size: clamp(1.1rem, 3.5vw, 1.8rem);
             padding: clamp(12px, 3vw, 18px) clamp(25px, 6vw, 40px);
-            margin-top: clamp(15px, 4vw, 25px);
-            background: var(--primary-color); color: var(--bg-color);
-            border-radius: 15px; text-shadow: none; box-shadow: 0 0 20px var(--text-glow);
+            margin-top: 20px; background: var(--primary-color); color: var(--bg-color);
+            border-radius: 15px; box-shadow: 0 0 20px var(--text-glow);
         }
-        .new-record-banner {
-            font-size: clamp(1.2rem, 4vw, 2rem); margin-bottom: 15px;
-            animation: rainbow 1s infinite;
-        }
-        @keyframes rainbow {
-            0% { color: #ff6b6b; } 25% { color: #ffd93d; }
-            50% { color: #6bcb77; } 75% { color: #00d9ff; } 100% { color: #da70d6; }
-        }
-        .final-fruits {
-            font-size: clamp(1.8rem, 6vw, 3rem); margin: 15px 0;
-            display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; max-width: 300px;
-        }
+        .new-record { color: var(--accent-color); font-weight: bold; }
 
         .hidden { display: none !important; }
 
         /* Landscape phones */
         @media (orientation: landscape) and (max-height: 500px) {
-            .pet-area { padding: 3px 6px; }
-            .pet-container { font-size: 0.9rem; }
-            .pet-speech { font-size: 0.55rem; }
             body { padding: 5px; }
             .game-container {
                 display: grid;
@@ -592,41 +372,34 @@
             .settings { grid-area: settings; margin-bottom: 0; gap: 3px; }
             .button-group { padding: 2px; gap: 2px; }
             .settings button { font-size: 0.7rem; padding: 4px 8px; min-height: 28px; }
-            .fruit-basket { display: none; }
             .timer-display { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); font-size: 1rem; min-height: auto; }
-            .problem-area { grid-area: problem; gap: 3px; justify-content: center; }
-            .problem { font-size: 1.8rem; }
+            .problem-area { grid-area: problem; gap: 5px; justify-content: center; }
+            .problem { font-size: 2rem; }
             .answer-display { font-size: 1.6rem; min-height: 40px; min-width: 100px; padding: 5px 15px; }
-            .combo { font-size: 0.85rem; min-height: 1rem; }
             .feedback { font-size: 0.9rem; min-height: 1.1rem; }
             .stats { grid-area: stats; font-size: 0.85rem; padding: 3px 0; gap: 10px; justify-content: center; }
             .stat-icon { font-size: 1rem; }
-            .stat-item { gap: 3px; }
             .numpad { grid-area: numpad; max-width: 180px; gap: 3px; padding: 0; margin: 0; align-self: center; }
             .numpad button { min-height: 36px; padding: 4px; font-size: 1.1rem; border-radius: 8px; }
+            .pet-container { font-size: 0.8rem; }
         }
 
         /* iPad landscape */
         @media (min-width: 768px) and (max-width: 1200px) and (orientation: landscape) {
-            .pet-container { font-size: 1.2rem; }
-            .pet-speech { font-size: 0.75rem; }
             .game-container {
                 display: grid;
                 grid-template-columns: 1fr auto;
-                grid-template-rows: auto auto auto 1fr auto;
-                grid-template-areas: "header header" "settings settings" "fruits fruits" "problem numpad" "stats stats";
+                grid-template-rows: auto auto 1fr auto;
+                grid-template-areas: "header header" "settings settings" "problem numpad" "stats stats";
                 padding: 15px 30px; gap: 10px; max-width: 100%; height: 100%;
             }
             .top-bar { grid-area: header; }
             h1 { font-size: 1.8rem; }
             .settings { grid-area: settings; margin-bottom: 0; }
-            .fruit-basket { grid-area: fruits; min-height: 40px; }
-            .fruit { font-size: 2rem; }
             .timer-display { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; }
-            .problem-area { grid-area: problem; gap: 8px; }
-            .problem { font-size: 3rem; }
+            .problem-area { grid-area: problem; gap: 10px; }
+            .problem { font-size: 3.5rem; }
             .answer-display { font-size: 2.5rem; min-height: 60px; padding: 10px 25px; }
-            .combo { font-size: 1.2rem; }
             .feedback { font-size: 1.4rem; }
             .stats { grid-area: stats; font-size: 1.2rem; gap: 20px; }
             .stat-icon { font-size: 1.6rem; }
@@ -636,14 +409,12 @@
 
         /* iPad portrait */
         @media (min-width: 768px) and (min-height: 900px) {
-            .pet-container { font-size: 1.4rem; }
-            .pet-speech { font-size: 0.9rem; }
             .numpad { max-width: 400px; gap: 14px; }
             .numpad button { min-height: 85px; font-size: 2.5rem; border-radius: 18px; }
-            .fruit { font-size: 3rem; }
             .stat-icon { font-size: 2.4rem; }
-            .problem { font-size: 4.5rem; }
+            .problem { font-size: 5rem; }
             .answer-display { font-size: 3.5rem; min-height: 80px; }
+            .pet-container { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -676,13 +447,11 @@
             </div>
         </div>
 
-        <div class="fruit-basket" id="fruitBasket"></div>
         <div class="timer-display" id="timer"></div>
 
         <div class="problem-area">
             <div class="problem" id="problem"></div>
             <div class="answer-display" id="answerDisplay"><span class="cursor">|</span></div>
-            <div class="combo" id="combo"></div>
             <div class="feedback" id="feedback"></div>
         </div>
 
@@ -691,10 +460,9 @@
                 <div class="pet-container" id="petContainer">(=^･ω･^=)</div>
                 <div class="pet-speech" id="petSpeech"></div>
             </div>
-            <div class="stat-item"><span class="stat-icon">⭐</span> <span id="levelDisplay" class="stat-value">1</span></div>
-            <div class="stat-item"><span class="stat-icon">🍉</span> <span id="score" class="stat-value">0</span></div>
+            <div class="stat-item"><span class="stat-icon">⭐</span> <span id="score" class="stat-value">0</span></div>
             <div class="stat-item"><span class="stat-icon">🔥</span> <span id="streak" class="streak-value stat-value">0</span></div>
-            <div class="stat-item"><span class="stat-icon">👑</span> <span id="highScore" class="high-score-value stat-value">0</span></div>
+            <div class="stat-item"><span class="stat-icon">👑</span> <span id="highScore" class="stat-value">0</span></div>
         </div>
 
         <div class="numpad">
@@ -720,12 +488,10 @@
             <div class="pet-option" id="petKitten" onclick="selectPet('kitten')">
                 <span class="pet-preview">(=^･ω･^=)</span>
                 <div class="pet-name">Luna</div>
-                <div class="pet-subtitle">Nya~!</div>
             </div>
             <div class="pet-option" id="petBunny" onclick="selectPet('bunny')">
                 <span class="pet-preview">(/・ω・)/</span>
                 <div class="pet-name">Usagi</div>
-                <div class="pet-subtitle">Pyon~!</div>
             </div>
         </div>
         <button class="close-btn" onclick="hidePetSelector()">Done</button>
@@ -744,10 +510,10 @@
 
     <!-- Mystery Box -->
     <div class="modal-overlay mystery-box-modal" id="mysteryBoxModal">
-        <div class="mystery-box" id="mysteryBox">🎁</div>
+        <div class="mystery-box" id="mysteryBox" onclick="openMysteryBox()">🎁</div>
         <div class="mystery-reward" id="mysteryReward"></div>
-        <div class="mystery-text" id="mysteryText"></div>
-        <button class="close-btn" id="mysteryCloseBtn" onclick="closeMysteryBox()">Collect!</button>
+        <div class="mystery-text" id="mysteryText">Tap to open!</div>
+        <button class="close-btn hidden" id="mysteryCloseBtn" onclick="closeMysteryBox()">Nice!</button>
     </div>
 
     <!-- Boss Battle -->
@@ -775,24 +541,21 @@
                 <button class="delete" onclick="bossDeletePress()">⌫</button>
                 <button class="submit" onclick="bossCheckAnswer()">GO!</button>
             </div>
-            <div class="boss-victory hidden" id="bossVictory">🎉 VICTORY! 🎉</div>
+            <div class="boss-victory hidden" id="bossVictory">🎉 VICTORY! +5 bonus!</div>
         </div>
     </div>
 
     <!-- Game Over -->
-    <div class="game-over hidden" id="gameOver">
+    <div class="game-over" id="gameOver">
         <h2>TIME'S UP!</h2>
-        <div class="new-record-banner hidden" id="newRecordBanner">🏆 NEW HIGH SCORE! 🏆</div>
-        <div class="final-fruits" id="finalFruits"></div>
-        <div class="final-score"><span class="stat-icon">🍉</span> Score: <span id="finalScore">0</span></div>
+        <div class="final-score" id="newRecordBanner"></div>
+        <div class="final-score"><span class="stat-icon">⭐</span> Score: <span id="finalScore">0</span></div>
         <div class="final-score"><span class="stat-icon">🔥</span> Best Streak: <span id="bestStreak">0</span></div>
-        <div class="final-score"><span class="stat-icon">⭐</span> Level: <span id="finalLevel">1</span></div>
         <div class="final-score"><span class="stat-icon">👑</span> High Score: <span id="finalHighScore">0</span></div>
         <button onclick="restartGame()">Play Again!</button>
     </div>
 
     <script>
-        const FRUITS = ['🍉', '🥭', '🍍', '🥥', '🍌', '🍊', '🍋', '🍇', '🍓', '🍑', '🥝', '🍈'];
         const BOSSES = [
             { emoji: '👾', name: 'Math Monster' },
             { emoji: '🐲', name: 'Number Dragon' },
@@ -801,62 +564,40 @@
             { emoji: '👽', name: 'Alien Brain' },
             { emoji: '🦑', name: 'Squid of Sums' }
         ];
-        const MYSTERY_REWARDS = [
-            { type: 'points', value: 3, text: '+3 Bonus Points!', emoji: '🍉🍉🍉' },
-            { type: 'points', value: 5, text: '+5 Bonus Points!', emoji: '🍉🍉🍉🍉🍉' },
-            { type: 'points', value: 10, text: '+10 MEGA POINTS!', emoji: '💎' },
-            { type: 'fruit', value: 'rare', text: 'Rare Golden Fruit!', emoji: '🌟' },
-            { type: 'streak', value: 'shield', text: 'Streak Shield! (1 free miss)', emoji: '🛡️' }
-        ];
-        // Pet Data - Cute Kaomoji Characters
+
         const PETS = {
             kitten: {
-                name: 'Luna',
                 idle: '(=^･ω･^=)',
                 happy: '(=^･ᴗ･^=)',
                 sad: '(=^･︵･^=)',
-                phrases: {
-                    happy: ['Nya~!', 'Yay!', '♪'],
-                    sad: ['Nya...', 'Again!']
-                }
+                phrases: { happy: ['Nya~!', 'Yay!'], sad: ['Nya...'] }
             },
             bunny: {
-                name: 'Usagi',
                 idle: '(/・ω・)/',
                 happy: '(/・ᴗ・)/',
                 sad: '(/・︵・)/',
-                phrases: {
-                    happy: ['Pyon~!', 'Yay!', '♪'],
-                    sad: ['Pyon...', 'Again!']
-                }
+                phrases: { happy: ['Pyon~!', 'Yay!'], sad: ['Pyon...'] }
             }
         };
 
         let num1, num2, correctAnswer, currentOp;
-        let score = 0, streak = 0, bestStreak = 0, level = 1;
+        let score = 0, streak = 0, bestStreak = 0;
         let difficulty = 'easy', operation = 'add', mode = 'endless';
         let timeLeft = 60, timerInterval = null;
         let gameActive = true, isNewHighScore = false, currentInput = '';
-        let collectedFruits = [], soundEnabled = true, isBonus = false;
-        let audioContext = null;
+        let soundEnabled = true, audioContext = null;
         let correctCount = 0, bossDefeated = 0;
-        let currentPet = 'kitten', streakShield = false;
+        let currentPet = 'kitten', speechTimeout = null;
 
-        // Boss battle state
+        // Boss state
         let bossActive = false, bossHealth = 100, bossTimer = 30;
-        let bossInterval = null, bossAnswer = '', bossNum1, bossNum2, bossCorrectAnswer;
+        let bossInterval = null, bossAnswer = '', bossCorrectAnswer;
 
-        // Pet System
-        let speechTimeout = null;
-
+        // Pet
         function loadPet() {
             currentPet = localStorage.getItem('mathblaster_pet') || 'kitten';
-            updatePetDisplay();
-            document.getElementById(`pet${currentPet.charAt(0).toUpperCase() + currentPet.slice(1)}`).classList.add('selected');
-        }
-
-        function updatePetDisplay() {
             document.getElementById('petContainer').textContent = PETS[currentPet].idle;
+            document.getElementById(`pet${currentPet.charAt(0).toUpperCase() + currentPet.slice(1)}`).classList.add('selected');
         }
 
         function selectPet(pet) {
@@ -864,65 +605,42 @@
             document.getElementById(`pet${pet.charAt(0).toUpperCase() + pet.slice(1)}`).classList.add('selected');
             currentPet = pet;
             localStorage.setItem('mathblaster_pet', pet);
-            updatePetDisplay();
+            document.getElementById('petContainer').textContent = PETS[currentPet].idle;
             playSound('tap');
         }
 
-        function showPetSelector() {
-            document.getElementById('petSelector').classList.add('show');
-        }
-
-        function hidePetSelector() {
-            document.getElementById('petSelector').classList.remove('show');
-        }
-
-        function showPetSpeech(type) {
-            const speech = document.getElementById('petSpeech');
-            const petData = PETS[currentPet];
-            const phrases = petData.phrases[type];
-            if (!phrases) return;
-
-            speech.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-            speech.classList.add('show');
-
-            if (speechTimeout) clearTimeout(speechTimeout);
-            speechTimeout = setTimeout(() => {
-                speech.classList.remove('show');
-            }, 1000);
-        }
+        function showPetSelector() { document.getElementById('petSelector').classList.add('show'); }
+        function hidePetSelector() { document.getElementById('petSelector').classList.remove('show'); }
 
         function petReact(reaction) {
             const container = document.getElementById('petContainer');
-            const petData = PETS[currentPet];
+            const speech = document.getElementById('petSpeech');
+            const pet = PETS[currentPet];
 
             if (reaction === 'happy') {
-                container.textContent = petData.happy;
-                showPetSpeech('happy');
-                setTimeout(() => {
-                    container.textContent = petData.idle;
-                }, 500);
+                container.textContent = pet.happy;
+                speech.textContent = pet.phrases.happy[Math.floor(Math.random() * pet.phrases.happy.length)];
+                speech.classList.add('show');
             } else if (reaction === 'sad') {
-                container.textContent = petData.sad;
-                showPetSpeech('sad');
-                setTimeout(() => {
-                    container.textContent = petData.idle;
-                }, 500);
-            } else {
-                container.textContent = petData.idle;
+                container.textContent = pet.sad;
+                speech.textContent = pet.phrases.sad[0];
+                speech.classList.add('show');
             }
+
+            if (speechTimeout) clearTimeout(speechTimeout);
+            speechTimeout = setTimeout(() => {
+                container.textContent = pet.idle;
+                speech.classList.remove('show');
+            }, 600);
         }
 
         // Theme
         function setTheme(theme) {
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
-            if (streak >= 5) document.body.classList.add('fever-mode');
             localStorage.setItem('mathblaster_theme', theme);
             hideThemePicker();
         }
-        function loadTheme() {
-            const saved = localStorage.getItem('mathblaster_theme') || 'tropical';
-            setTheme(saved);
-        }
+        function loadTheme() { setTheme(localStorage.getItem('mathblaster_theme') || 'tropical'); }
         function showThemePicker() { document.getElementById('themePicker').classList.add('show'); }
         function hideThemePicker() { document.getElementById('themePicker').classList.remove('show'); }
 
@@ -935,8 +653,7 @@
             localStorage.setItem('mathblaster_sound', soundEnabled);
         }
         function loadSoundPref() {
-            const saved = localStorage.getItem('mathblaster_sound');
-            if (saved === 'false') {
+            if (localStorage.getItem('mathblaster_sound') === 'false') {
                 soundEnabled = false;
                 document.getElementById('soundBtn').textContent = '🔇';
                 document.getElementById('soundBtn').classList.add('muted');
@@ -952,115 +669,62 @@
         function playSound(type) {
             if (!soundEnabled) return;
             const ctx = getAudioContext();
-
             if (type === 'tap') playTone(ctx, 600, 'sine', 0.08, 0.05);
             else if (type === 'correct') {
-                playTone(ctx, 1200, 'sine', 0.15, 0.08);
-                setTimeout(() => playTone(ctx, 1500, 'sine', 0.12, 0.08), 60);
-                setTimeout(() => playTone(ctx, 1800, 'sine', 0.1, 0.1), 120);
-            } else if (type === 'bonus') {
-                [800, 1000, 1200, 1500, 1800].forEach((freq, i) => {
-                    setTimeout(() => playTone(ctx, freq, 'sine', 0.2, 0.12), i * 80);
-                });
-            } else if (type === 'wrong') playTone(ctx, 200, 'triangle', 0.2, 0.25);
-            else if (type === 'nearmiss') {
-                playTone(ctx, 400, 'sine', 0.15, 0.15);
-                setTimeout(() => playTone(ctx, 350, 'sine', 0.1, 0.1), 100);
-            } else if (type === 'levelup') {
-                [523, 659, 784, 1047, 1319].forEach((freq, i) => {
-                    setTimeout(() => playTone(ctx, freq, 'sine', 0.2, 0.15), i * 100);
-                });
-            } else if (type === 'jackpot') {
-                for (let i = 0; i < 8; i++) {
-                    setTimeout(() => playTone(ctx, 800 + Math.random() * 800, 'sine', 0.15, 0.1), i * 60);
-                }
-            } else if (type === 'gameover') {
-                [300, 250, 200].forEach((freq, i) => {
-                    setTimeout(() => playTone(ctx, freq, 'sine', 0.2, 0.3), i * 180);
-                });
-            } else if (type === 'highscore') {
-                [523, 659, 784, 1047].forEach((freq, i) => {
-                    setTimeout(() => playTone(ctx, freq, 'sine', 0.2, 0.25), i * 120);
-                });
-            } else if (type === 'mysterybox') {
-                [400, 500, 600, 800, 1000].forEach((freq, i) => {
-                    setTimeout(() => playTone(ctx, freq, 'sine', 0.15, 0.1), i * 100);
-                });
-            } else if (type === 'bosshit') {
-                playTone(ctx, 300, 'sawtooth', 0.2, 0.1);
-                setTimeout(() => playTone(ctx, 400, 'sawtooth', 0.15, 0.1), 50);
-            } else if (type === 'bossdefeat') {
-                [600, 800, 1000, 1200, 1400, 1600].forEach((freq, i) => {
-                    setTimeout(() => playTone(ctx, freq, 'sine', 0.2, 0.15), i * 80);
-                });
-            } else if (type === 'bossappear') {
-                [200, 250, 200, 150].forEach((freq, i) => {
-                    setTimeout(() => playTone(ctx, freq, 'square', 0.2, 0.2), i * 150);
-                });
+                playTone(ctx, 1200, 'sine', 0.12, 0.08);
+                setTimeout(() => playTone(ctx, 1500, 'sine', 0.1, 0.08), 60);
+            }
+            else if (type === 'wrong') playTone(ctx, 200, 'triangle', 0.15, 0.2);
+            else if (type === 'highscore') {
+                [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sine', 0.15, 0.2), i * 100));
+            }
+            else if (type === 'gameover') {
+                [300, 250, 200].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sine', 0.15, 0.25), i * 150));
+            }
+            else if (type === 'bonus') {
+                [800, 1000, 1200].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sine', 0.12, 0.1), i * 60));
+            }
+            else if (type === 'boss') playTone(ctx, 200, 'square', 0.15, 0.3);
+            else if (type === 'bosshit') playTone(ctx, 400, 'sawtooth', 0.12, 0.1);
+            else if (type === 'bosswin') {
+                [600, 800, 1000, 1200].forEach((f, i) => setTimeout(() => playTone(ctx, f, 'sine', 0.15, 0.12), i * 70));
             }
         }
 
         function playTone(ctx, freq, type, gain, duration) {
             const osc = ctx.createOscillator();
-            const gainNode = ctx.createGain();
-            osc.connect(gainNode); gainNode.connect(ctx.destination);
+            const g = ctx.createGain();
+            osc.connect(g); g.connect(ctx.destination);
             osc.frequency.value = freq; osc.type = type;
-            gainNode.gain.setValueAtTime(gain, ctx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
-            osc.start(ctx.currentTime); osc.stop(ctx.currentTime + duration);
+            g.gain.setValueAtTime(gain, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+            osc.start(); osc.stop(ctx.currentTime + duration);
         }
 
-        // Mystery Box
+        // Mystery Box (simple: +1, +2, or +3 bonus)
         function showMysteryBox() {
-            const modal = document.getElementById('mysteryBoxModal');
-            const box = document.getElementById('mysteryBox');
-            const reward = document.getElementById('mysteryReward');
-            const text = document.getElementById('mysteryText');
-            const closeBtn = document.getElementById('mysteryCloseBtn');
-
-            box.className = 'mystery-box';
-            box.textContent = '🎁';
-            reward.textContent = '';
-            text.textContent = 'Tap to open!';
-            closeBtn.classList.add('hidden');
-            modal.classList.add('show');
-
-            playSound('mysterybox');
-
-            box.onclick = () => openMysteryBox();
+            document.getElementById('mysteryReward').textContent = '';
+            document.getElementById('mysteryText').textContent = 'Tap to open!';
+            document.getElementById('mysteryCloseBtn').classList.add('hidden');
+            document.getElementById('mysteryBox').style.display = 'block';
+            document.getElementById('mysteryBoxModal').classList.add('show');
+            playSound('bonus');
         }
 
         function openMysteryBox() {
-            const box = document.getElementById('mysteryBox');
-            const reward = document.getElementById('mysteryReward');
-            const text = document.getElementById('mysteryText');
-            const closeBtn = document.getElementById('mysteryCloseBtn');
-
-            box.classList.add('opening');
-            box.onclick = null;
-
-            const rewardData = MYSTERY_REWARDS[Math.floor(Math.random() * MYSTERY_REWARDS.length)];
-
-            setTimeout(() => {
-                box.style.display = 'none';
-                reward.textContent = rewardData.emoji;
-                text.textContent = rewardData.text;
-                closeBtn.classList.remove('hidden');
-
-                if (rewardData.type === 'points') {
-                    score += rewardData.value;
-                    document.getElementById('score').textContent = score;
-                } else if (rewardData.type === 'streak') {
-                    streakShield = true;
-                }
-
-                playSound('jackpot');
-            }, 800);
+            const bonus = Math.floor(Math.random() * 3) + 1;
+            score += bonus;
+            document.getElementById('score').textContent = score;
+            document.getElementById('mysteryBox').style.display = 'none';
+            document.getElementById('mysteryReward').textContent = '⭐'.repeat(bonus);
+            document.getElementById('mysteryText').textContent = `+${bonus} bonus!`;
+            document.getElementById('mysteryCloseBtn').classList.remove('hidden');
+            playSound('bonus');
         }
 
         function closeMysteryBox() {
             document.getElementById('mysteryBoxModal').classList.remove('show');
-            document.getElementById('mysteryBox').style.display = 'block';
+            setTimeout(generateProblem, 200);
         }
 
         // Boss Battle
@@ -1081,36 +745,29 @@
             document.getElementById('bossBattleModal').classList.add('show');
 
             generateBossProblem();
-            playSound('bossappear');
-            petReact('excited');
+            playSound('boss');
 
             bossInterval = setInterval(() => {
                 bossTimer--;
                 document.getElementById('bossTimer').textContent = bossTimer + 's';
-
-                if (bossTimer <= 0) {
-                    endBossBattle(false);
-                }
+                if (bossTimer <= 0) endBossBattle(false);
             }, 1000);
         }
 
         function generateBossProblem() {
-            const max = 12;
-            bossNum1 = Math.floor(Math.random() * max) + 1;
-            bossNum2 = Math.floor(Math.random() * max) + 1;
-            bossCorrectAnswer = bossNum1 + bossNum2;
-            document.getElementById('bossProblem').textContent = `${bossNum1} + ${bossNum2} = ?`;
+            const a = Math.floor(Math.random() * 10) + 1;
+            const b = Math.floor(Math.random() * 10) + 1;
+            bossCorrectAnswer = a + b;
+            document.getElementById('bossProblem').textContent = `${a} + ${b} = ?`;
             bossAnswer = '';
             document.getElementById('bossAnswer').textContent = '';
         }
 
         function bossNumPress(num) {
-            if (!bossActive) return;
-            if (bossAnswer.length < 4) {
-                bossAnswer += num.toString();
-                document.getElementById('bossAnswer').textContent = bossAnswer;
-                playSound('tap');
-            }
+            if (!bossActive || bossAnswer.length >= 3) return;
+            bossAnswer += num;
+            document.getElementById('bossAnswer').textContent = bossAnswer;
+            playSound('tap');
         }
 
         function bossDeletePress() {
@@ -1127,14 +784,10 @@
                 document.getElementById('bossHealthFill').style.width = bossHealth + '%';
                 document.getElementById('bossEmoji').classList.add('hit');
                 setTimeout(() => document.getElementById('bossEmoji').classList.remove('hit'), 300);
-
                 playSound('bosshit');
 
-                if (bossHealth <= 0) {
-                    endBossBattle(true);
-                } else {
-                    generateBossProblem();
-                }
+                if (bossHealth <= 0) endBossBattle(true);
+                else generateBossProblem();
             } else {
                 bossAnswer = '';
                 document.getElementById('bossAnswer').textContent = '';
@@ -1149,56 +802,39 @@
             if (victory) {
                 document.getElementById('bossEmoji').classList.add('defeated');
                 document.getElementById('bossVictory').classList.remove('hidden');
-                playSound('bossdefeat');
-
-                score += 20;
+                playSound('bosswin');
+                score += 5;
                 document.getElementById('score').textContent = score;
                 bossDefeated++;
-
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
                     petReact('happy');
-                }, 2000);
+                    setTimeout(generateProblem, 200);
+                }, 1500);
             } else {
-                document.getElementById('bossVictory').textContent = '💀 Time\'s Up! 💀';
+                document.getElementById('bossVictory').textContent = '💀 Time\'s Up!';
                 document.getElementById('bossVictory').classList.remove('hidden');
                 playSound('gameover');
-
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
-                    document.getElementById('bossVictory').textContent = '🎉 VICTORY! 🎉';
+                    document.getElementById('bossVictory').textContent = '🎉 VICTORY! +5 bonus!';
                     petReact('sad');
-                }, 1500);
+                    setTimeout(generateProblem, 200);
+                }, 1200);
             }
         }
 
-        // Simplified visual feedback - removed excessive animations
-
-        function updateFruitBasket() {
-            const basket = document.getElementById('fruitBasket');
-            const displayFruits = collectedFruits.slice(-8);
-            basket.innerHTML = displayFruits.map(f => `<span class="fruit">${f}</span>`).join('');
-        }
-
-        function addFruit() {
-            const fruit = FRUITS[Math.floor(Math.random() * FRUITS.length)];
-            collectedFruits.push(fruit);
-            updateFruitBasket();
-            return fruit;
-        }
-
+        // Game
         function updateAnswerDisplay() {
-            const display = document.getElementById('answerDisplay');
-            display.innerHTML = currentInput === '' ? '<span class="cursor">|</span>' : currentInput + '<span class="cursor">|</span>';
+            document.getElementById('answerDisplay').innerHTML =
+                currentInput === '' ? '<span class="cursor">|</span>' : currentInput + '<span class="cursor">|</span>';
         }
 
         function numPress(num) {
-            if (!gameActive || bossActive) return;
-            if (currentInput.length < 6) {
-                currentInput += num.toString();
-                updateAnswerDisplay();
-                playSound('tap');
-            }
+            if (!gameActive || bossActive || currentInput.length >= 5) return;
+            currentInput += num;
+            updateAnswerDisplay();
+            playSound('tap');
         }
 
         function deletePress() {
@@ -1210,80 +846,51 @@
 
         function getHighScoreKey() { return `mathblaster_${mode}_${difficulty}_${operation}`; }
         function getHighScore() { return parseInt(localStorage.getItem(getHighScoreKey()) || '0'); }
-        function setHighScore(newScore) { localStorage.setItem(getHighScoreKey(), newScore.toString()); }
+        function setHighScore(s) { localStorage.setItem(getHighScoreKey(), s); }
         function updateHighScoreDisplay() { document.getElementById('highScore').textContent = getHighScore(); }
 
-        // Removed particle effects for cleaner UI
-
         function getMaxNumber() {
-            switch (difficulty) {
-                case 'easy': return 10;
-                case 'medium': return 20;
-                case 'hard': return 50;
-                default: return 10;
-            }
+            return difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 50;
         }
 
         function generateProblem() {
             const max = getMaxNumber();
             const ops = operation === 'mixed' ? ['add', 'subtract', 'multiply', 'divide'] : [operation];
             currentOp = ops[Math.floor(Math.random() * ops.length)];
-
-            isBonus = level >= 2 && Math.random() < 0.1;
-
-            const problemEl = document.getElementById('problem');
+            const el = document.getElementById('problem');
 
             if (currentOp === 'add') {
                 num1 = Math.floor(Math.random() * max) + 1;
                 num2 = Math.floor(Math.random() * max) + 1;
                 correctAnswer = num1 + num2;
-                problemEl.textContent = `${num1} + ${num2} = ?`;
+                el.textContent = `${num1} + ${num2} = ?`;
             } else if (currentOp === 'subtract') {
                 num1 = Math.floor(Math.random() * max) + 1;
                 num2 = Math.floor(Math.random() * num1) + 1;
                 correctAnswer = num1 - num2;
-                problemEl.textContent = `${num1} − ${num2} = ?`;
+                el.textContent = `${num1} − ${num2} = ?`;
             } else if (currentOp === 'multiply') {
-                const multMax = difficulty === 'easy' ? 5 : (difficulty === 'medium' ? 10 : 12);
-                num1 = Math.floor(Math.random() * multMax) + 1;
-                num2 = Math.floor(Math.random() * multMax) + 1;
+                const m = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
+                num1 = Math.floor(Math.random() * m) + 1;
+                num2 = Math.floor(Math.random() * m) + 1;
                 correctAnswer = num1 * num2;
-                problemEl.textContent = `${num1} × ${num2} = ?`;
-            } else if (currentOp === 'divide') {
-                const divMax = difficulty === 'easy' ? 5 : (difficulty === 'medium' ? 10 : 12);
-                num2 = Math.floor(Math.random() * divMax) + 1;
-                correctAnswer = Math.floor(Math.random() * divMax) + 1;
+                el.textContent = `${num1} × ${num2} = ?`;
+            } else {
+                const m = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
+                num2 = Math.floor(Math.random() * m) + 1;
+                correctAnswer = Math.floor(Math.random() * m) + 1;
                 num1 = num2 * correctAnswer;
-                problemEl.textContent = `${num1} ÷ ${num2} = ?`;
+                el.textContent = `${num1} ÷ ${num2} = ?`;
             }
 
-            problemEl.classList.toggle('bonus', isBonus);
             currentInput = '';
             updateAnswerDisplay();
             document.getElementById('feedback').textContent = '';
             document.getElementById('feedback').className = 'feedback';
         }
 
-        function updateCombo() {
-            const comboEl = document.getElementById('combo');
-            if (streak >= 10) comboEl.textContent = 'x' + streak + ' streak!';
-            else if (streak >= 5) comboEl.textContent = 'x' + streak + ' combo!';
-            else if (streak >= 3) comboEl.textContent = 'x' + streak;
-            else comboEl.textContent = '';
-        }
-
-        function updateLevel() {
-            const newLevel = Math.floor(score / 10) + 1;
-            if (newLevel > level) {
-                level = newLevel;
-                document.getElementById('levelDisplay').textContent = level;
-                playSound('levelup');
-            }
-        }
-
         function checkAnswer() {
-            if (!gameActive || bossActive) return;
-            if (currentInput === '') return;
+            if (!gameActive || bossActive || currentInput === '') return;
 
             const userAnswer = parseInt(currentInput);
             const feedbackEl = document.getElementById('feedback');
@@ -1292,90 +899,55 @@
                 streak++;
                 correctCount++;
                 if (streak > bestStreak) bestStreak = streak;
-
-                let basePoints = 1;
-                const streakMultiplier = Math.floor(streak / 3);
-                let points = basePoints + streakMultiplier;
-                if (isBonus) points *= 3;
-
-                score += points;
+                score++;
 
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;
 
-                addFruit();
                 petReact('happy');
-                updateLevel();
 
-                const currentHigh = getHighScore();
-                if (score > currentHigh) {
-                    if (!isNewHighScore) {
-                        isNewHighScore = true;
-                        playSound('highscore');
-                    }
+                if (score > getHighScore()) {
+                    if (!isNewHighScore) { isNewHighScore = true; playSound('highscore'); }
                     setHighScore(score);
                     updateHighScoreDisplay();
                 }
 
-                const messages = ['YAY!', 'NICE!', 'GREAT!', 'COOL!'];
-                feedbackEl.textContent = messages[Math.floor(Math.random() * messages.length)];
+                feedbackEl.textContent = streak >= 5 ? '🔥 ' + streak + ' streak!' : 'Correct!';
                 feedbackEl.className = 'feedback correct';
-
                 playSound('correct');
-                updateCombo();
 
-                // Mystery box every 5 correct
-                if (correctCount % 5 === 0) {
-                    setTimeout(() => showMysteryBox(), 600);
+                // Mystery box every 10 correct
+                if (correctCount % 10 === 0) {
+                    setTimeout(showMysteryBox, 400);
                     return;
                 }
 
-                // Boss battle every 20 points
-                if (score > 0 && score % 20 === 0 && score > (bossDefeated * 20)) {
-                    setTimeout(() => startBossBattle(), 600);
+                // Boss battle every 15 correct
+                if (correctCount % 15 === 0 && correctCount > bossDefeated * 15) {
+                    setTimeout(startBossBattle, 400);
                     return;
                 }
 
-                setTimeout(generateProblem, 450);
+                setTimeout(generateProblem, 350);
             } else {
-                const diff = Math.abs(userAnswer - correctAnswer);
-
-                if (streakShield && streak > 0) {
-                    streakShield = false;
-                    feedbackEl.textContent = '🛡️ Shield used!';
-                    feedbackEl.className = 'feedback near-miss';
-                    playSound('nearmiss');
-                    currentInput = '';
-                    updateAnswerDisplay();
-                    return;
-                }
-
-                if (diff === 1) {
-                    feedbackEl.textContent = 'SO CLOSE! 😱';
-                    feedbackEl.className = 'feedback near-miss';
-                    playSound('nearmiss');
-                } else {
-                    feedbackEl.textContent = 'Try again!';
-                    feedbackEl.className = 'feedback';
-                    playSound('wrong');
-                }
-
-                streak = 0;
-                document.getElementById('streak').textContent = streak;
-                document.getElementById('combo').textContent = '';
-                currentInput = '';
-                updateAnswerDisplay();
-                updateFeverMode();
+                feedbackEl.textContent = 'Try again!';
+                feedbackEl.className = 'feedback';
+                playSound('wrong');
                 petReact('sad');
 
+                streak = 0;
+                document.getElementById('streak').textContent = 0;
+                currentInput = '';
+                updateAnswerDisplay();
+
                 document.body.classList.add('shake');
-                setTimeout(() => document.body.classList.remove('shake'), 400);
+                setTimeout(() => document.body.classList.remove('shake'), 300);
             }
         }
 
         function setDifficulty(diff) {
             difficulty = diff;
-            document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(diff).classList.add('active');
             updateHighScoreDisplay();
             resetGame();
@@ -1383,7 +955,7 @@
 
         function setOperation(op) {
             operation = op;
-            document.querySelectorAll('.op-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(op).classList.add('active');
             updateHighScoreDisplay();
             resetGame();
@@ -1391,17 +963,11 @@
 
         function setMode(m) {
             mode = m;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(m).classList.add('active');
-
             if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-
             if (mode === 'timed') startTimer();
-            else {
-                document.getElementById('timer').textContent = '';
-                document.getElementById('timer').classList.remove('warning');
-            }
-
+            else { document.getElementById('timer').textContent = ''; document.getElementById('timer').classList.remove('warning'); }
             updateHighScoreDisplay();
             resetGame();
         }
@@ -1409,11 +975,9 @@
         function startTimer() {
             timeLeft = 60;
             document.getElementById('timer').textContent = '⏱️ ' + timeLeft + 's';
-
             timerInterval = setInterval(() => {
                 timeLeft--;
                 document.getElementById('timer').textContent = '⏱️ ' + timeLeft + 's';
-
                 if (timeLeft <= 10) document.getElementById('timer').classList.add('warning');
                 if (timeLeft <= 0) endGame();
             }, 1000);
@@ -1422,51 +986,32 @@
         function endGame() {
             gameActive = false;
             clearInterval(timerInterval);
-            document.body.classList.remove('fever-mode');
 
             document.getElementById('finalScore').textContent = score;
             document.getElementById('bestStreak').textContent = bestStreak;
-            document.getElementById('finalLevel').textContent = level;
             document.getElementById('finalHighScore').textContent = getHighScore();
+            document.getElementById('newRecordBanner').textContent = isNewHighScore ? '🏆 NEW HIGH SCORE!' : '';
+            document.getElementById('newRecordBanner').className = isNewHighScore ? 'final-score new-record' : 'final-score';
 
-            const finalFruits = document.getElementById('finalFruits');
-            const displayFruits = collectedFruits.slice(-12);
-            finalFruits.innerHTML = displayFruits.map(f => `<span>${f}</span>`).join('');
-
-            if (isNewHighScore) {
-                document.getElementById('newRecordBanner').classList.remove('hidden');
-                playSound('highscore');
-            } else {
-                document.getElementById('newRecordBanner').classList.add('hidden');
-                playSound('gameover');
-            }
-
-            document.getElementById('gameOver').classList.remove('hidden');
+            playSound(isNewHighScore ? 'highscore' : 'gameover');
+            document.getElementById('gameOver').classList.add('show');
         }
 
         function resetGame() {
-            score = 0; streak = 0; bestStreak = 0; level = 1;
-            gameActive = true; isNewHighScore = false; isBonus = false;
-            collectedFruits = []; correctCount = 0; streakShield = false;
+            score = 0; streak = 0; bestStreak = 0;
+            gameActive = true; isNewHighScore = false;
+            correctCount = 0;
 
-            document.getElementById('score').textContent = score;
-            document.getElementById('streak').textContent = streak;
-            document.getElementById('levelDisplay').textContent = '1';
-            document.getElementById('combo').textContent = '';
+            document.getElementById('score').textContent = 0;
+            document.getElementById('streak').textContent = 0;
             document.getElementById('feedback').textContent = '';
-            document.getElementById('feedback').className = 'feedback';
-            document.getElementById('fruitBasket').innerHTML = '';
-            document.body.classList.remove('fever-mode');
 
-            petReact('idle');
             generateProblem();
         }
 
         function restartGame() {
-            document.getElementById('gameOver').classList.add('hidden');
+            document.getElementById('gameOver').classList.remove('show');
             document.getElementById('timer').classList.remove('warning');
-            document.getElementById('newRecordBanner').classList.add('hidden');
-
             if (mode === 'timed') startTimer();
             resetGame();
         }
@@ -1474,15 +1019,14 @@
         // Keyboard
         document.addEventListener('keydown', function(e) {
             if (bossActive) {
-                if (e.key >= '0' && e.key <= '9') bossNumPress(parseInt(e.key));
-                else if (e.key === 'Backspace' || e.key === 'Delete') { e.preventDefault(); bossDeletePress(); }
+                if (e.key >= '0' && e.key <= '9') bossNumPress(e.key);
+                else if (e.key === 'Backspace') { e.preventDefault(); bossDeletePress(); }
                 else if (e.key === 'Enter') bossCheckAnswer();
                 return;
             }
-
             if (!gameActive) return;
-            if (e.key >= '0' && e.key <= '9') numPress(parseInt(e.key));
-            else if (e.key === 'Backspace' || e.key === 'Delete') { e.preventDefault(); deletePress(); }
+            if (e.key >= '0' && e.key <= '9') numPress(e.key);
+            else if (e.key === 'Backspace') { e.preventDefault(); deletePress(); }
             else if (e.key === 'Enter') checkAnswer();
         });
 
