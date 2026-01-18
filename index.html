@@ -241,7 +241,7 @@
             width: 100%;
             max-width: 300px;
             margin: 0 auto;
-            padding-bottom: 10px;
+            padding-bottom: 70px;
         }
 
         .numpad button {
@@ -456,12 +456,18 @@
 
         .hidden { display: none !important; }
 
-        /* Desktop */
+        /* Desktop - no extra bottom padding needed */
         @media (min-width: 800px) {
             .game-container { max-height: 700px; }
+            .numpad { padding-bottom: 10px; }
             .numpad button { height: 70px; font-size: 2rem; }
             .problem { font-size: 4rem; }
             .answer-display { font-size: 3rem; padding: 15px 40px; }
+        }
+
+        /* Standalone PWA mode - no extra bottom padding needed */
+        @media (display-mode: standalone) {
+            .numpad { padding-bottom: 10px; }
         }
 
         /* Landscape mobile */
@@ -481,7 +487,7 @@
             .problem { font-size: 2rem; }
             .answer-display { font-size: 1.5rem; padding: 8px 20px; min-width: 80px; }
             .feedback { font-size: 1rem; }
-            .numpad { max-width: 180px; gap: 4px; }
+            .numpad { max-width: 180px; gap: 4px; padding-bottom: 10px; }
             .numpad button { height: 38px; font-size: 1.1rem; }
         }
     </style>
