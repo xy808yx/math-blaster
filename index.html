@@ -156,6 +156,110 @@
 
         .stat-icon { font-size: 1.4rem; }
 
+        /* Progress Bars */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 0 10px;
+        }
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+        .progress-bar {
+            width: 60px;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .progress-fill.mystery { background: linear-gradient(90deg, #ffd93d, #ff6b9d); }
+        .progress-fill.boss { background: linear-gradient(90deg, #ff6b6b, #ff0000); }
+
+        /* Combo Multiplier */
+        .combo-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .combo-display.active { opacity: 1; animation: comboPulse 0.5s infinite; }
+        @keyframes comboPulse { 50% { transform: scale(1.1); } }
+
+        /* Power-ups */
+        .powerups-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            min-height: 36px;
+        }
+        .powerup-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: all 0.2s;
+        }
+        .powerup-btn.available { opacity: 1; animation: powerupGlow 1s infinite; }
+        .powerup-btn.available:hover { transform: scale(1.1); }
+        .powerup-btn.used { opacity: 0.2; cursor: not-allowed; }
+        @keyframes powerupGlow { 50% { box-shadow: 0 0 15px var(--accent); } }
+
+        /* Achievements Toast */
+        .achievement-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: linear-gradient(135deg, #ffd93d, #ff6b9d);
+            color: #1a0a2e;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1rem;
+            z-index: 400;
+            transition: transform 0.4s ease-out;
+            box-shadow: 0 4px 20px rgba(255, 217, 61, 0.4);
+        }
+        .achievement-toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Achievements Modal */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 350px;
+            margin: 20px auto;
+        }
+        .achievement-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .achievement-item.unlocked { border-color: var(--accent); }
+        .achievement-item.locked { opacity: 0.4; }
+        .achievement-emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
+        .achievement-name { font-size: 0.75rem; color: var(--primary); }
+
         /* Timer */
         .timer-display {
             text-align: center;
@@ -498,6 +602,7 @@
             <h1>MATH BLASTER</h1>
             <div class="top-buttons">
                 <button class="icon-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
+                <button class="icon-btn" onclick="showAchievements()">🏆</button>
                 <button class="icon-btn" onclick="showThemePicker()">🎨</button>
             </div>
         </div>
@@ -531,6 +636,25 @@
             <div class="stat-item"><span class="stat-icon">🥭</span> <span id="score">0</span></div>
             <div class="stat-item"><span class="stat-icon">🍉</span> <span id="streak">0</span></div>
         </div>
+
+        <div class="progress-container">
+            <div class="progress-item">
+                <span>🎁</span>
+                <div class="progress-bar"><div class="progress-fill mystery" id="mysteryProgress" style="width: 0%"></div></div>
+            </div>
+            <div class="progress-item">
+                <span>👾</span>
+                <div class="progress-bar"><div class="progress-fill boss" id="bossProgress" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <div class="powerups-bar">
+            <button class="powerup-btn" id="powerupHint" onclick="usePowerup('hint')" title="Hint">💡</button>
+            <button class="powerup-btn" id="powerupDouble" onclick="usePowerup('double')" title="Double Points">2️⃣</button>
+            <button class="powerup-btn" id="powerupSkip" onclick="usePowerup('skip')" title="Skip">⏭️</button>
+        </div>
+
+        <div class="combo-display" id="comboDisplay">x1</div>
 
         <div class="timer-display" id="timer"></div>
 
@@ -623,6 +747,16 @@
         <div class="tap-restart">Tap anywhere to play again</div>
     </div>
 
+    <!-- Achievements Modal -->
+    <div class="modal" id="achievementsModal">
+        <h2 style="color: var(--accent);">🏆 Achievements</h2>
+        <div class="achievements-grid" id="achievementsGrid"></div>
+        <button class="close-btn" onclick="hideAchievements()">Done</button>
+    </div>
+
+    <!-- Achievement Toast -->
+    <div class="achievement-toast" id="achievementToast"></div>
+
     <script>
         const BOSSES = [
             { emoji: '👾', name: 'Math Monster' },
@@ -645,6 +779,34 @@
 
         let bossActive = false, bossHealth = 100, bossTimer = 30;
         let bossInterval = null, bossAnswer = '', bossCorrectAnswer;
+
+        // Combo system
+        let lastAnswerTime = 0;
+        let comboMultiplier = 1;
+        let comboTimeout = null;
+
+        // Power-ups
+        let powerups = { hint: 0, double: 0, skip: 0 };
+        let doublePointsActive = false;
+
+        // Achievements
+        const ACHIEVEMENTS = [
+            { id: 'first_correct', emoji: '🌟', name: 'First Star', desc: 'Get your first answer right' },
+            { id: 'streak_5', emoji: '🔥', name: 'On Fire', desc: 'Get a 5 streak' },
+            { id: 'streak_10', emoji: '💥', name: 'Blazing', desc: 'Get a 10 streak' },
+            { id: 'streak_20', emoji: '🌋', name: 'Unstoppable', desc: 'Get a 20 streak' },
+            { id: 'score_25', emoji: '🥉', name: 'Bronze Math', desc: 'Score 25 points' },
+            { id: 'score_50', emoji: '🥈', name: 'Silver Math', desc: 'Score 50 points' },
+            { id: 'score_100', emoji: '🥇', name: 'Gold Math', desc: 'Score 100 points' },
+            { id: 'boss_slayer', emoji: '⚔️', name: 'Boss Slayer', desc: 'Defeat a boss' },
+            { id: 'speed_demon', emoji: '⚡', name: 'Speed Demon', desc: 'Get a 3x combo' },
+            { id: 'collector', emoji: '🎁', name: 'Collector', desc: 'Open 3 mystery boxes' },
+            { id: 'powerup_user', emoji: '💪', name: 'Powered Up', desc: 'Use a power-up' },
+            { id: 'perfectionist', emoji: '💯', name: 'Perfectionist', desc: '100% accuracy in timed mode' }
+        ];
+        let unlockedAchievements = [];
+        let mysteryBoxesOpened = 0;
+        let bossesDefeated = 0;
 
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('show');
@@ -737,6 +899,132 @@
             } catch (e) {}
         }
 
+        // Progress bars
+        function updateProgressBars() {
+            const mysteryProgress = (correctCount % 10) / 10 * 100;
+            const bossProgress = (correctCount % 15) / 15 * 100;
+            document.getElementById('mysteryProgress').style.width = mysteryProgress + '%';
+            document.getElementById('bossProgress').style.width = bossProgress + '%';
+        }
+
+        // Combo system
+        function updateCombo() {
+            const now = Date.now();
+            const timeSinceLastAnswer = now - lastAnswerTime;
+
+            if (lastAnswerTime > 0 && timeSinceLastAnswer < 2000) {
+                comboMultiplier = Math.min(comboMultiplier + 1, 5);
+            } else if (timeSinceLastAnswer >= 3000) {
+                comboMultiplier = 1;
+            }
+
+            lastAnswerTime = now;
+
+            const comboEl = document.getElementById('comboDisplay');
+            if (comboMultiplier > 1) {
+                comboEl.textContent = `x${comboMultiplier}`;
+                comboEl.classList.add('active');
+                checkAchievement('speed_demon', comboMultiplier >= 3);
+            } else {
+                comboEl.classList.remove('active');
+            }
+
+            clearTimeout(comboTimeout);
+            comboTimeout = setTimeout(() => {
+                comboMultiplier = 1;
+                comboEl.classList.remove('active');
+            }, 3000);
+        }
+
+        // Power-ups
+        function updatePowerupButtons() {
+            ['hint', 'double', 'skip'].forEach(type => {
+                const btn = document.getElementById('powerup' + type.charAt(0).toUpperCase() + type.slice(1));
+                btn.classList.toggle('available', powerups[type] > 0);
+                btn.classList.toggle('used', powerups[type] === 0);
+            });
+        }
+
+        function usePowerup(type) {
+            if (powerups[type] <= 0 || !gameActive || bossActive) return;
+
+            powerups[type]--;
+            updatePowerupButtons();
+            checkAchievement('powerup_user', true);
+            playSound('bonus');
+
+            if (type === 'hint') {
+                // Show first digit of answer
+                const hint = String(correctAnswer).charAt(0);
+                document.getElementById('feedback').textContent = `Hint: starts with ${hint}...`;
+                document.getElementById('feedback').className = 'feedback correct';
+            } else if (type === 'double') {
+                doublePointsActive = true;
+                document.getElementById('feedback').textContent = '2x points active!';
+                document.getElementById('feedback').className = 'feedback correct';
+            } else if (type === 'skip') {
+                correctCount++;
+                updateProgressBars();
+                generateProblem();
+            }
+        }
+
+        function grantRandomPowerup() {
+            const types = ['hint', 'double', 'skip'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            powerups[type]++;
+            updatePowerupButtons();
+            return type;
+        }
+
+        // Achievements
+        function loadAchievements() {
+            const saved = localStorage.getItem('mathblaster_achievements');
+            if (saved) unlockedAchievements = JSON.parse(saved);
+        }
+
+        function saveAchievements() {
+            localStorage.setItem('mathblaster_achievements', JSON.stringify(unlockedAchievements));
+        }
+
+        function checkAchievement(id, condition) {
+            if (condition && !unlockedAchievements.includes(id)) {
+                unlockAchievement(id);
+            }
+        }
+
+        function unlockAchievement(id) {
+            if (unlockedAchievements.includes(id)) return;
+
+            unlockedAchievements.push(id);
+            saveAchievements();
+
+            const achievement = ACHIEVEMENTS.find(a => a.id === id);
+            if (achievement) {
+                const toast = document.getElementById('achievementToast');
+                toast.textContent = `${achievement.emoji} ${achievement.name} unlocked!`;
+                toast.classList.add('show');
+                playSound('streak');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+        }
+
+        function showAchievements() {
+            const grid = document.getElementById('achievementsGrid');
+            grid.innerHTML = ACHIEVEMENTS.map(a => {
+                const unlocked = unlockedAchievements.includes(a.id);
+                return `<div class="achievement-item ${unlocked ? 'unlocked' : 'locked'}">
+                    <span class="achievement-emoji">${unlocked ? a.emoji : '🔒'}</span>
+                    <span class="achievement-name">${a.name}</span>
+                </div>`;
+            }).join('');
+            document.getElementById('achievementsModal').classList.add('show');
+        }
+
+        function hideAchievements() {
+            document.getElementById('achievementsModal').classList.remove('show');
+        }
+
         function showStreakCelebration(num) {
             const el = document.getElementById('streakCelebration');
             el.textContent = `🍉 ${num} STREAK! 🍉`;
@@ -756,12 +1044,26 @@
         }
 
         function openMysteryBox() {
-            const bonus = Math.floor(Math.random() * 3) + 2;
-            score += bonus;
-            document.getElementById('score').textContent = score;
+            mysteryBoxesOpened++;
+            checkAchievement('collector', mysteryBoxesOpened >= 3);
+
             document.getElementById('mysteryBox').style.display = 'none';
-            document.getElementById('mysteryReward').textContent = '🥭'.repeat(bonus);
-            document.getElementById('mysteryText').textContent = `+${bonus} bonus!`;
+
+            // 50% chance for power-up, 50% chance for bonus points
+            if (Math.random() < 0.5) {
+                const type = grantRandomPowerup();
+                const icons = { hint: '💡', double: '2️⃣', skip: '⏭️' };
+                const names = { hint: 'Hint', double: 'Double Points', skip: 'Skip' };
+                document.getElementById('mysteryReward').textContent = icons[type];
+                document.getElementById('mysteryText').textContent = `Got ${names[type]}!`;
+            } else {
+                const bonus = Math.floor(Math.random() * 3) + 2;
+                score += bonus;
+                document.getElementById('score').textContent = score;
+                document.getElementById('mysteryReward').textContent = '🥭'.repeat(bonus);
+                document.getElementById('mysteryText').textContent = `+${bonus} bonus!`;
+            }
+
             document.getElementById('mysteryCloseBtn').classList.remove('hidden');
             playSound('bonus');
         }
@@ -879,6 +1181,9 @@
             clearInterval(bossInterval);
 
             if (victory) {
+                bossesDefeated++;
+                checkAchievement('boss_slayer', true);
+
                 document.getElementById('bossEmoji').classList.add('defeated');
                 document.getElementById('bossContainer').style.opacity = '0.3';
                 const victoryEl = document.getElementById('bossVictory');
@@ -980,27 +1285,47 @@
                 streak++;
                 correctCount++;
                 if (streak > bestStreak) bestStreak = streak;
-                score++;
+
+                // Combo multiplier
+                updateCombo();
+                let points = doublePointsActive ? 2 : 1;
+                points *= comboMultiplier;
+                score += points;
+                doublePointsActive = false;
 
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;
                 answerEl.classList.add('correct');
+                updateProgressBars();
+
+                // Check achievements
+                checkAchievement('first_correct', correctCount >= 1);
+                checkAchievement('streak_5', streak >= 5);
+                checkAchievement('streak_10', streak >= 10);
+                checkAchievement('streak_20', streak >= 20);
+                checkAchievement('score_25', score >= 25);
+                checkAchievement('score_50', score >= 50);
+                checkAchievement('score_100', score >= 100);
 
                 if (streak === 5 || streak === 10 || streak === 15 || streak === 20 || (streak > 20 && streak % 10 === 0)) {
                     showStreakCelebration(streak);
                 }
 
-                feedbackEl.textContent = streak >= 5 ? `🍉 ${streak} streak!` : 'Correct!';
+                let feedbackText = streak >= 5 ? `🍉 ${streak} streak!` : 'Correct!';
+                if (comboMultiplier > 1) feedbackText += ` x${comboMultiplier}`;
+                if (points > 1) feedbackText += ` (+${points})`;
+                feedbackEl.textContent = feedbackText;
                 feedbackEl.className = 'feedback correct';
                 playSound('correct');
 
-                if (correctCount > 0 && correctCount % 10 === 0) {
-                    setTimeout(showMysteryBox, 400);
+                // Boss every 15, Mystery box every 10 (but not when boss triggers)
+                if (correctCount > 0 && correctCount % 15 === 0) {
+                    setTimeout(startBossBattle, 400);
                     return;
                 }
 
-                if (correctCount > 0 && correctCount % 15 === 0) {
-                    setTimeout(startBossBattle, 400);
+                if (correctCount > 0 && correctCount % 10 === 0) {
+                    setTimeout(showMysteryBox, 400);
                     return;
                 }
 
@@ -1010,6 +1335,8 @@
                 feedbackEl.className = 'feedback';
                 playSound('wrong');
                 streak = 0;
+                comboMultiplier = 1;
+                document.getElementById('comboDisplay').classList.remove('active');
                 document.getElementById('streak').textContent = 0;
                 currentInput = '';
                 updateAnswerDisplay();
@@ -1073,6 +1400,11 @@
             document.getElementById('totalProblems').textContent = correctCount;
             document.getElementById('newRecordBanner').textContent = '';
 
+            // Check perfectionist achievement (100% accuracy with at least 10 problems in timed mode)
+            if (mode === 'timed' && acc === 100 && correctCount >= 10) {
+                checkAchievement('perfectionist', true);
+            }
+
             playSound('gameover');
             document.getElementById('gameOver').classList.add('show');
         }
@@ -1081,6 +1413,21 @@
             score = 0; streak = 0; bestStreak = 0;
             gameActive = true;
             correctCount = 0; totalAttempts = 0;
+            mysteryBoxesOpened = 0;
+            bossesDefeated = 0;
+
+            // Reset combo
+            comboMultiplier = 1;
+            lastAnswerTime = 0;
+            document.getElementById('comboDisplay').classList.remove('active');
+
+            // Reset power-ups
+            powerups = { hint: 0, double: 0, skip: 0 };
+            doublePointsActive = false;
+            updatePowerupButtons();
+
+            // Reset progress bars
+            updateProgressBars();
 
             document.getElementById('score').textContent = 0;
             document.getElementById('streak').textContent = 0;
@@ -1115,7 +1462,9 @@
 
         loadTheme();
         loadSoundPref();
+        loadAchievements();
         updateSettingsLabel();
+        updatePowerupButtons();
         generateProblem();
     </script>
 </body>
