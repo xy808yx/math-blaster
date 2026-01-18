@@ -796,16 +796,35 @@
         }
 
         function generateBossProblem() {
-            const a = Math.floor(Math.random() * 12) + 1;
-            const b = Math.floor(Math.random() * 12) + 1;
-            const ops = ['+', '-', '×'];
-            const op = ops[Math.floor(Math.random() * ops.length)];
+            const max = getMaxNumber();
+            const ops = operation === 'mixed' ? ['add', 'subtract', 'multiply', 'divide'] : [operation];
+            const currentBossOp = ops[Math.floor(Math.random() * ops.length)];
+            let num1, num2, display;
 
-            if (op === '+') bossCorrectAnswer = a + b;
-            else if (op === '-') bossCorrectAnswer = Math.max(a, b) - Math.min(a, b);
-            else bossCorrectAnswer = a * b;
+            if (currentBossOp === 'add') {
+                num1 = Math.floor(Math.random() * max) + 1;
+                num2 = Math.floor(Math.random() * max) + 1;
+                bossCorrectAnswer = num1 + num2;
+                display = `${num1} + ${num2}`;
+            } else if (currentBossOp === 'subtract') {
+                num1 = Math.floor(Math.random() * max) + 1;
+                num2 = Math.floor(Math.random() * num1) + 1;
+                bossCorrectAnswer = num1 - num2;
+                display = `${num1} − ${num2}`;
+            } else if (currentBossOp === 'multiply') {
+                const m = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
+                num1 = Math.floor(Math.random() * m) + 1;
+                num2 = Math.floor(Math.random() * m) + 1;
+                bossCorrectAnswer = num1 * num2;
+                display = `${num1} × ${num2}`;
+            } else {
+                const m = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
+                num2 = Math.floor(Math.random() * m) + 1;
+                bossCorrectAnswer = Math.floor(Math.random() * m) + 1;
+                num1 = num2 * bossCorrectAnswer;
+                display = `${num1} ÷ ${num2}`;
+            }
 
-            const display = op === '-' ? `${Math.max(a,b)} − ${Math.min(a,b)}` : `${a} ${op} ${b}`;
             document.getElementById('bossProblem').textContent = `${display} = ?`;
             bossAnswer = '';
             document.getElementById('bossAnswer').textContent = '|';
