@@ -2,13 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Math Blaster">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <title>Math Blaster</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
         }
 
         body {
@@ -16,60 +29,76 @@
             color: #39ff14;
             font-family: 'Courier New', monospace;
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+            height: 100%;
+            padding: clamp(10px, 2vh, 20px);
             overflow: hidden;
         }
 
         h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
             text-shadow: 0 0 20px #39ff14, 0 0 40px #39ff14, 0 0 60px #39ff14;
+            margin-bottom: clamp(5px, 1vh, 15px);
         }
 
         .settings {
             display: flex;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
+            gap: clamp(0.5rem, 2vw, 2rem);
             flex-wrap: wrap;
             justify-content: center;
+            width: 100%;
         }
 
         .setting-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.3rem;
         }
 
         .setting-label {
-            font-size: 1.2rem;
+            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
         }
 
         .button-group {
             display: flex;
-            gap: 0.5rem;
+            gap: clamp(3px, 1vw, 8px);
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         button {
-            font-size: 1.2rem;
-            padding: 8px 16px;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px);
+            min-height: 44px;
+            min-width: 44px;
             background-color: #1a1a1a;
             border: 2px solid #39ff14;
             color: #39ff14;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             font-family: 'Courier New', monospace;
             text-shadow: 0 0 5px #39ff14;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
 
-        button:hover {
+        button:active {
+            transform: scale(0.95);
             background-color: #2a2a2a;
-            box-shadow: 0 0 15px #39ff14;
         }
 
         button.active {
@@ -80,11 +109,10 @@
         }
 
         .timer-display {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
             color: #ff3939;
             text-shadow: 0 0 10px #ff3939, 0 0 20px #ff3939;
-            min-height: 3rem;
+            min-height: clamp(2rem, 6vw, 3rem);
         }
 
         .timer-display.warning {
@@ -96,47 +124,58 @@
             50% { opacity: 0.5; }
         }
 
-        .problem {
-            font-size: 4.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .answer-row {
+        .problem-area {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            gap: clamp(5px, 1vh, 15px);
         }
 
-        input {
-            font-size: 3.5rem;
-            width: 180px;
+        .problem {
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+        }
+
+        .answer-display {
+            font-size: clamp(2.5rem, 10vw, 4rem);
+            min-width: clamp(120px, 40vw, 200px);
+            min-height: clamp(50px, 12vw, 80px);
             text-align: center;
             background-color: #1a1a1a;
             border: 4px solid #39ff14;
-            color: #39ff14;
-            padding: 10px;
+            padding: clamp(8px, 2vw, 15px) clamp(15px, 4vw, 30px);
             border-radius: 10px;
-            outline: none;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px #39ff14;
             box-shadow: 0 0 20px #39ff14;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        input:focus {
-            box-shadow: 0 0 30px #39ff14, 0 0 50px #39ff14;
+        .answer-display .cursor {
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .combo {
+            font-size: clamp(1rem, 3vw, 1.8rem);
+            color: #ff39ff;
+            text-shadow: 0 0 10px #ff39ff, 0 0 20px #ff39ff;
+            min-height: clamp(1.5rem, 4vw, 2.5rem);
         }
 
         .feedback {
-            font-size: 3rem;
-            margin-top: 1.5rem;
-            min-height: 4rem;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            min-height: clamp(2rem, 6vw, 4rem);
         }
 
         .stats {
             display: flex;
-            gap: 2rem;
-            margin-top: 1.5rem;
-            font-size: 1.5rem;
+            gap: clamp(1rem, 4vw, 2rem);
+            font-size: clamp(1rem, 3vw, 1.5rem);
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -163,39 +202,40 @@
             80% { transform: translateX(10px); }
         }
 
-        .game-over {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Number Pad */
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(6px, 1.5vw, 12px);
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+            max-width: 320px;
+            margin-top: auto;
         }
 
-        .game-over h2 {
-            font-size: 4rem;
-            margin-bottom: 2rem;
+        .numpad button {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            padding: clamp(12px, 3vw, 20px);
+            min-height: clamp(55px, 14vw, 75px);
+            font-weight: bold;
+            border-radius: 12px;
+        }
+
+        .numpad .zero {
+            grid-column: span 1;
+        }
+
+        .numpad .delete {
+            background-color: #331a1a;
+            border-color: #ff3939;
             color: #ff3939;
-            text-shadow: 0 0 20px #ff3939, 0 0 40px #ff3939;
+            text-shadow: 0 0 5px #ff3939;
         }
 
-        .game-over .final-score {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .game-over button {
-            font-size: 2rem;
-            padding: 15px 30px;
-        }
-
-        .hidden {
-            display: none !important;
+        .numpad .submit {
+            background-color: #1a331a;
+            border-color: #39ff14;
+            color: #39ff14;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
         }
 
         .streak {
@@ -211,7 +251,7 @@
         .particle {
             position: fixed;
             pointer-events: none;
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 4vw, 2rem);
             animation: particle-fly 1s ease-out forwards;
         }
 
@@ -226,17 +266,7 @@
             }
         }
 
-        .combo {
-            font-size: 1.8rem;
-            color: #ff39ff;
-            text-shadow: 0 0 10px #ff39ff, 0 0 20px #ff39ff;
-            min-height: 2.5rem;
-            margin-top: 0.5rem;
-        }
-
         .new-high-score {
-            color: #39ffff;
-            text-shadow: 0 0 20px #39ffff, 0 0 40px #39ffff;
             animation: rainbow 1s infinite;
         }
 
@@ -248,63 +278,207 @@
             100% { color: #ff39ff; text-shadow: 0 0 20px #ff39ff; }
         }
 
+        /* Game Over Overlay */
+        .game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .game-over h2 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            margin-bottom: clamp(1rem, 4vw, 2rem);
+            color: #ff3939;
+            text-shadow: 0 0 20px #ff3939, 0 0 40px #ff3939;
+        }
+
+        .game-over .final-score {
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            margin-bottom: clamp(0.5rem, 2vw, 1.5rem);
+        }
+
+        .game-over button {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            padding: clamp(12px, 3vw, 20px) clamp(24px, 6vw, 40px);
+            margin-top: clamp(10px, 3vw, 20px);
+        }
+
         .new-record-banner {
-            font-size: 2rem;
+            font-size: clamp(1.2rem, 4vw, 2rem);
             margin-bottom: 1rem;
             animation: rainbow 0.5s infinite;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Landscape mode on phones */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .game-container {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            h1 {
+                width: 100%;
+                font-size: 1.5rem;
+                margin-bottom: 5px;
+            }
+
+            .settings {
+                width: 100%;
+                gap: 10px;
+            }
+
+            .setting-group {
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .setting-label {
+                display: none;
+            }
+
+            .problem-area {
+                flex: 1;
+                min-width: 200px;
+            }
+
+            .problem {
+                font-size: 2rem;
+            }
+
+            .answer-display {
+                font-size: 2rem;
+                min-height: 50px;
+                padding: 8px 20px;
+            }
+
+            .numpad {
+                flex: 1;
+                max-width: 250px;
+                gap: 4px;
+            }
+
+            .numpad button {
+                min-height: 45px;
+                padding: 8px;
+                font-size: 1.3rem;
+            }
+
+            .stats {
+                width: 100%;
+                font-size: 0.9rem;
+            }
+
+            .timer-display {
+                font-size: 1.2rem;
+                min-height: 1.5rem;
+            }
+
+            .combo, .feedback {
+                font-size: 1rem;
+                min-height: 1.2rem;
+            }
+        }
+
+        /* iPad / Tablet */
+        @media (min-width: 768px) and (min-height: 600px) {
+            .numpad {
+                max-width: 400px;
+                gap: 15px;
+            }
+
+            .numpad button {
+                min-height: 85px;
+                font-size: 2.5rem;
+                border-radius: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>MATH BLASTER</h1>
+    <div class="game-container">
+        <h1>MATH BLASTER</h1>
 
-    <div class="settings">
-        <div class="setting-group">
-            <span class="setting-label">Difficulty</span>
-            <div class="button-group">
-                <button id="easy" class="diff-btn active" onclick="setDifficulty('easy')">Easy</button>
-                <button id="medium" class="diff-btn" onclick="setDifficulty('medium')">Medium</button>
-                <button id="hard" class="diff-btn" onclick="setDifficulty('hard')">Hard</button>
+        <div class="settings">
+            <div class="setting-group">
+                <span class="setting-label">Difficulty</span>
+                <div class="button-group">
+                    <button id="easy" class="diff-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button id="medium" class="diff-btn" onclick="setDifficulty('medium')">Med</button>
+                    <button id="hard" class="diff-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+            </div>
+            <div class="setting-group">
+                <span class="setting-label">Operation</span>
+                <div class="button-group">
+                    <button id="add" class="op-btn active" onclick="setOperation('add')">+</button>
+                    <button id="subtract" class="op-btn" onclick="setOperation('subtract')">−</button>
+                    <button id="multiply" class="op-btn" onclick="setOperation('multiply')">×</button>
+                    <button id="divide" class="op-btn" onclick="setOperation('divide')">÷</button>
+                    <button id="mixed" class="op-btn" onclick="setOperation('mixed')">Mix</button>
+                </div>
+            </div>
+            <div class="setting-group">
+                <span class="setting-label">Mode</span>
+                <div class="button-group">
+                    <button id="endless" class="mode-btn active" onclick="setMode('endless')">Free</button>
+                    <button id="timed" class="mode-btn" onclick="setMode('timed')">60s</button>
+                </div>
             </div>
         </div>
-        <div class="setting-group">
-            <span class="setting-label">Operation</span>
-            <div class="button-group">
-                <button id="add" class="op-btn active" onclick="setOperation('add')">+</button>
-                <button id="subtract" class="op-btn" onclick="setOperation('subtract')">−</button>
-                <button id="multiply" class="op-btn" onclick="setOperation('multiply')">×</button>
-                <button id="divide" class="op-btn" onclick="setOperation('divide')">÷</button>
-                <button id="mixed" class="op-btn" onclick="setOperation('mixed')">Mix</button>
-            </div>
-        </div>
-        <div class="setting-group">
-            <span class="setting-label">Mode</span>
-            <div class="button-group">
-                <button id="endless" class="mode-btn active" onclick="setMode('endless')">Endless</button>
-                <button id="timed" class="mode-btn" onclick="setMode('timed')">60s</button>
-            </div>
-        </div>
-    </div>
 
-    <div class="timer-display" id="timer"></div>
-    <div class="problem" id="problem"></div>
-    <div class="answer-row">
-        <input type="number" id="answer" autofocus>
-    </div>
-    <div class="combo" id="combo"></div>
-    <div class="feedback" id="feedback"></div>
-    <div class="stats">
-        <div>Score: <span id="score">0</span></div>
-        <div>Streak: <span id="streak" class="streak">0</span> 🔥</div>
-        <div>Best: <span id="highScore" class="high-score">0</span> 👑</div>
+        <div class="timer-display" id="timer"></div>
+
+        <div class="problem-area">
+            <div class="problem" id="problem"></div>
+            <div class="answer-display" id="answerDisplay"><span class="cursor">|</span></div>
+            <div class="combo" id="combo"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div class="stats">
+            <div>Score: <span id="score">0</span></div>
+            <div>Streak: <span id="streak" class="streak">0</span></div>
+            <div>Best: <span id="highScore" class="high-score">0</span></div>
+        </div>
+
+        <div class="numpad">
+            <button onclick="numPress(1)">1</button>
+            <button onclick="numPress(2)">2</button>
+            <button onclick="numPress(3)">3</button>
+            <button onclick="numPress(4)">4</button>
+            <button onclick="numPress(5)">5</button>
+            <button onclick="numPress(6)">6</button>
+            <button onclick="numPress(7)">7</button>
+            <button onclick="numPress(8)">8</button>
+            <button onclick="numPress(9)">9</button>
+            <button class="delete" onclick="deletePress()">DEL</button>
+            <button class="zero" onclick="numPress(0)">0</button>
+            <button class="submit" onclick="checkAnswer()">GO</button>
+        </div>
     </div>
 
     <div class="game-over hidden" id="gameOver">
         <h2>TIME'S UP!</h2>
-        <div class="new-record-banner hidden" id="newRecordBanner">🏆 NEW HIGH SCORE! 🏆</div>
+        <div class="new-record-banner hidden" id="newRecordBanner">NEW HIGH SCORE!</div>
         <div class="final-score">Final Score: <span id="finalScore">0</span></div>
-        <div class="final-score">Best Streak: <span id="bestStreak">0</span> 🔥</div>
-        <div class="final-score">High Score: <span id="finalHighScore">0</span> 👑</div>
+        <div class="final-score">Best Streak: <span id="bestStreak">0</span></div>
+        <div class="final-score">High Score: <span id="finalHighScore">0</span></div>
         <button onclick="restartGame()">Play Again</button>
     </div>
 
@@ -320,8 +494,43 @@
         let timerInterval = null;
         let gameActive = true;
         let isNewHighScore = false;
+        let currentInput = '';
 
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let audioContext = null;
+
+        function getAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            return audioContext;
+        }
+
+        function updateAnswerDisplay() {
+            const display = document.getElementById('answerDisplay');
+            if (currentInput === '') {
+                display.innerHTML = '<span class="cursor">|</span>';
+            } else {
+                display.innerHTML = currentInput + '<span class="cursor">|</span>';
+            }
+        }
+
+        function numPress(num) {
+            if (!gameActive) return;
+            if (currentInput.length < 6) {
+                currentInput += num.toString();
+                updateAnswerDisplay();
+                playSound('tap');
+            }
+        }
+
+        function deletePress() {
+            if (!gameActive) return;
+            currentInput = currentInput.slice(0, -1);
+            updateAnswerDisplay();
+        }
 
         function getHighScoreKey() {
             return `mathblaster_${mode}_${difficulty}_${operation}`;
@@ -340,76 +549,84 @@
         }
 
         function playSound(type) {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+            const ctx = getAudioContext();
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
 
             oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            gainNode.connect(ctx.destination);
 
-            if (type === 'correct') {
+            if (type === 'tap') {
+                oscillator.frequency.value = 600;
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+                oscillator.start(ctx.currentTime);
+                oscillator.stop(ctx.currentTime + 0.05);
+            } else if (type === 'correct') {
                 oscillator.frequency.value = 880;
                 oscillator.type = 'square';
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+                oscillator.start(ctx.currentTime);
+                oscillator.stop(ctx.currentTime + 0.2);
 
                 if (streak >= 3) {
                     setTimeout(() => {
-                        const osc2 = audioContext.createOscillator();
-                        const gain2 = audioContext.createGain();
+                        const osc2 = ctx.createOscillator();
+                        const gain2 = ctx.createGain();
                         osc2.connect(gain2);
-                        gain2.connect(audioContext.destination);
+                        gain2.connect(ctx.destination);
                         osc2.frequency.value = 1100 + (streak * 50);
                         osc2.type = 'square';
-                        gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
-                        gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-                        osc2.start(audioContext.currentTime);
-                        osc2.stop(audioContext.currentTime + 0.15);
+                        gain2.gain.setValueAtTime(0.2, ctx.currentTime);
+                        gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                        osc2.start(ctx.currentTime);
+                        osc2.stop(ctx.currentTime + 0.15);
                     }, 100);
                 }
             } else if (type === 'wrong') {
                 oscillator.frequency.value = 200;
                 oscillator.type = 'sawtooth';
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                oscillator.start(ctx.currentTime);
+                oscillator.stop(ctx.currentTime + 0.3);
             } else if (type === 'gameover') {
                 [200, 150, 100].forEach((freq, i) => {
                     setTimeout(() => {
-                        const osc = audioContext.createOscillator();
-                        const gain = audioContext.createGain();
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
                         osc.connect(gain);
-                        gain.connect(audioContext.destination);
+                        gain.connect(ctx.destination);
                         osc.frequency.value = freq;
                         osc.type = 'square';
-                        gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                        osc.start(audioContext.currentTime);
-                        osc.stop(audioContext.currentTime + 0.3);
+                        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                        osc.start(ctx.currentTime);
+                        osc.stop(ctx.currentTime + 0.3);
                     }, i * 200);
                 });
             } else if (type === 'highscore') {
                 [523, 659, 784, 1047].forEach((freq, i) => {
                     setTimeout(() => {
-                        const osc = audioContext.createOscillator();
-                        const gain = audioContext.createGain();
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
                         osc.connect(gain);
-                        gain.connect(audioContext.destination);
+                        gain.connect(ctx.destination);
                         osc.frequency.value = freq;
                         osc.type = 'square';
-                        gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                        osc.start(audioContext.currentTime);
-                        osc.stop(audioContext.currentTime + 0.3);
+                        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                        osc.start(ctx.currentTime);
+                        osc.stop(ctx.currentTime + 0.3);
                     }, i * 150);
                 });
             }
         }
 
         function createParticles(emoji, count) {
-            const answerEl = document.getElementById('answer');
+            const answerEl = document.getElementById('answerDisplay');
             const rect = answerEl.getBoundingClientRect();
 
             for (let i = 0; i < count; i++) {
@@ -462,7 +679,8 @@
                 document.getElementById('problem').textContent = `${num1} ÷ ${num2} = ?`;
             }
 
-            document.getElementById('answer').value = '';
+            currentInput = '';
+            updateAnswerDisplay();
             document.getElementById('feedback').textContent = '';
             document.getElementById('feedback').classList.remove('correct');
         }
@@ -470,13 +688,13 @@
         function updateCombo() {
             const comboEl = document.getElementById('combo');
             if (streak >= 10) {
-                comboEl.textContent = '🔥 UNSTOPPABLE! 🔥';
+                comboEl.textContent = 'UNSTOPPABLE!';
             } else if (streak >= 7) {
-                comboEl.textContent = '⚡ ON FIRE! ⚡';
+                comboEl.textContent = 'ON FIRE!';
             } else if (streak >= 5) {
-                comboEl.textContent = '💥 AWESOME! 💥';
+                comboEl.textContent = 'AWESOME!';
             } else if (streak >= 3) {
-                comboEl.textContent = '✨ COMBO x' + streak + '! ✨';
+                comboEl.textContent = 'COMBO x' + streak + '!';
             } else {
                 comboEl.textContent = '';
             }
@@ -484,8 +702,9 @@
 
         function checkAnswer() {
             if (!gameActive) return;
+            if (currentInput === '') return;
 
-            const userAnswer = parseInt(document.getElementById('answer').value);
+            const userAnswer = parseInt(currentInput);
 
             if (userAnswer === correctAnswer) {
                 streak++;
@@ -497,20 +716,19 @@
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;
 
-                // Check for new high score
                 const currentHigh = getHighScore();
                 if (score > currentHigh) {
                     if (!isNewHighScore) {
                         isNewHighScore = true;
                         playSound('highscore');
-                        createParticles('👑', 10);
+                        createParticles('⭐', 10);
                         document.getElementById('highScore').classList.add('new-high-score');
                     }
                     setHighScore(score);
                     updateHighScoreDisplay();
                 }
 
-                const messages = ['BOOM! 🚀', 'YEAH! ⭐', 'NICE! 💫', 'WOW! 🎯', 'SUPER! 🌟'];
+                const messages = ['BOOM!', 'YEAH!', 'NICE!', 'WOW!', 'SUPER!'];
                 const msg = messages[Math.floor(Math.random() * messages.length)];
                 document.getElementById('feedback').textContent = msg;
                 document.getElementById('feedback').classList.add('correct');
@@ -519,13 +737,14 @@
                 createParticles('⭐', 3 + Math.min(streak, 7));
                 updateCombo();
 
-                setTimeout(generateProblem, 800);
+                setTimeout(generateProblem, 600);
             } else {
                 streak = 0;
                 document.getElementById('streak').textContent = streak;
                 document.getElementById('feedback').textContent = 'Try again!';
                 document.getElementById('combo').textContent = '';
-                document.getElementById('answer').value = '';
+                currentInput = '';
+                updateAnswerDisplay();
 
                 playSound('wrong');
                 document.body.classList.add('shake');
@@ -572,11 +791,11 @@
 
         function startTimer() {
             timeLeft = 60;
-            document.getElementById('timer').textContent = '⏱️ ' + timeLeft + 's';
+            document.getElementById('timer').textContent = timeLeft + 's';
 
             timerInterval = setInterval(() => {
                 timeLeft--;
-                document.getElementById('timer').textContent = '⏱️ ' + timeLeft + 's';
+                document.getElementById('timer').textContent = timeLeft + 's';
 
                 if (timeLeft <= 10) {
                     document.getElementById('timer').classList.add('warning');
@@ -633,14 +852,26 @@
             }
 
             resetGame();
-            document.getElementById('answer').focus();
         }
 
-        document.getElementById('answer').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
+        // Keyboard support for desktop
+        document.addEventListener('keydown', function(e) {
+            if (!gameActive) return;
+
+            if (e.key >= '0' && e.key <= '9') {
+                numPress(parseInt(e.key));
+            } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                deletePress();
+            } else if (e.key === 'Enter') {
                 checkAnswer();
             }
         });
+
+        // Prevent zoom on double tap
+        document.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.target.click();
+        }, { passive: false });
 
         updateHighScoreDisplay();
         generateProblem();
