@@ -722,29 +722,111 @@
 
         .hidden { display: none !important; }
 
-        /* Landscape */
-        @media (orientation: landscape) and (max-height: 450px) {
-            .game-container {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-                padding: 8px;
-                gap: 8px;
+        /* Landscape on phones */
+        @media (orientation: landscape) and (max-height: 500px) {
+            body {
+                padding: 5px;
             }
-            .top-bar { width: 100%; }
-            h1 { font-size: 1.3rem; }
-            .settings { width: 100%; margin-bottom: 5px; }
-            .fruit-basket { min-height: 28px; }
-            .fruit { font-size: 1.4rem; }
-            .problem-area { flex: 1; min-width: 180px; gap: 5px; }
-            .problem { font-size: 2rem; }
-            .answer-display { font-size: 1.8rem; min-height: 45px; padding: 6px 15px; }
-            .numpad { flex: 1; max-width: 220px; gap: 4px; padding-bottom: 5px; }
-            .numpad button { min-height: 42px; padding: 6px; font-size: 1.3rem; }
-            .stats { font-size: 0.9rem; width: 100%; }
-            .stat-icon { font-size: 1.2rem; }
-            .timer-display { font-size: 1.1rem; min-height: 1.3rem; }
-            .combo, .feedback { font-size: 1rem; min-height: 1.1rem; }
+
+            .game-container {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-template-rows: auto auto 1fr auto;
+                grid-template-areas:
+                    "header header"
+                    "settings settings"
+                    "problem numpad"
+                    "stats stats";
+                padding: 5px 10px;
+                gap: 5px;
+                max-width: 100%;
+                height: 100%;
+            }
+
+            .top-bar {
+                grid-area: header;
+                margin-bottom: 0;
+            }
+
+            h1 { font-size: 1.2rem; }
+
+            .icon-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+
+            .settings {
+                grid-area: settings;
+                margin-bottom: 0;
+                gap: 3px;
+            }
+
+            .button-group { padding: 2px; gap: 2px; }
+
+            .settings button {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+                min-height: 28px;
+            }
+
+            .fruit-basket {
+                display: none;
+            }
+
+            .timer-display {
+                position: absolute;
+                top: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 1rem;
+                min-height: auto;
+            }
+
+            .problem-area {
+                grid-area: problem;
+                gap: 3px;
+                justify-content: center;
+            }
+
+            .problem { font-size: 1.8rem; }
+
+            .answer-display {
+                font-size: 1.6rem;
+                min-height: 40px;
+                min-width: 100px;
+                padding: 5px 15px;
+            }
+
+            .combo { font-size: 0.85rem; min-height: 1rem; }
+            .feedback { font-size: 0.9rem; min-height: 1.1rem; }
+
+            .stats {
+                grid-area: stats;
+                font-size: 0.85rem;
+                padding: 3px 0;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .stat-icon { font-size: 1rem; }
+            .stat-item { gap: 3px; }
+
+            .numpad {
+                grid-area: numpad;
+                max-width: 180px;
+                gap: 3px;
+                padding: 0;
+                margin: 0;
+                align-self: center;
+            }
+
+            .numpad button {
+                min-height: 36px;
+                padding: 4px;
+                font-size: 1.1rem;
+                border-radius: 8px;
+            }
         }
 
         /* iPad */
