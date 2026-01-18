@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Blaster</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #39ff14;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px #39ff14, 0 0 40px #39ff14, 0 0 60px #39ff14;
+        }
+
+        .settings {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setting-label {
+            font-size: 1.2rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        button {
+            font-size: 1.2rem;
+            padding: 8px 16px;
+            background-color: #1a1a1a;
+            border: 2px solid #39ff14;
+            color: #39ff14;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #39ff14;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: #2a2a2a;
+            box-shadow: 0 0 15px #39ff14;
+        }
+
+        button.active {
+            background-color: #39ff14;
+            color: #0a0a0a;
+            text-shadow: none;
+            box-shadow: 0 0 20px #39ff14;
+        }
+
+        .timer-display {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ff3939;
+            text-shadow: 0 0 10px #ff3939, 0 0 20px #ff3939;
+            min-height: 3rem;
+        }
+
+        .timer-display.warning {
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .problem {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .answer-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        input {
+            font-size: 3.5rem;
+            width: 180px;
+            text-align: center;
+            background-color: #1a1a1a;
+            border: 4px solid #39ff14;
+            color: #39ff14;
+            padding: 10px;
+            border-radius: 10px;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px #39ff14;
+            box-shadow: 0 0 20px #39ff14;
+        }
+
+        input:focus {
+            box-shadow: 0 0 30px #39ff14, 0 0 50px #39ff14;
+        }
+
+        .feedback {
+            font-size: 3rem;
+            margin-top: 1.5rem;
+            min-height: 4rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            font-size: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .correct {
+            animation: explode 0.5s ease-out;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-20px); }
+            40% { transform: translateX(20px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+        }
+
+        .game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .game-over h2 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            color: #ff3939;
+            text-shadow: 0 0 20px #ff3939, 0 0 40px #ff3939;
+        }
+
+        .game-over .final-score {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .game-over button {
+            font-size: 2rem;
+            padding: 15px 30px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .streak {
+            color: #ffff39;
+            text-shadow: 0 0 10px #ffff39, 0 0 20px #ffff39;
+        }
+
+        .high-score {
+            color: #39ffff;
+            text-shadow: 0 0 10px #39ffff, 0 0 20px #39ffff;
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            animation: particle-fly 1s ease-out forwards;
+        }
+
+        @keyframes particle-fly {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(0);
+            }
+        }
+
+        .combo {
+            font-size: 1.8rem;
+            color: #ff39ff;
+            text-shadow: 0 0 10px #ff39ff, 0 0 20px #ff39ff;
+            min-height: 2.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .new-high-score {
+            color: #39ffff;
+            text-shadow: 0 0 20px #39ffff, 0 0 40px #39ffff;
+            animation: rainbow 1s infinite;
+        }
+
+        @keyframes rainbow {
+            0% { color: #ff3939; text-shadow: 0 0 20px #ff3939; }
+            25% { color: #ffff39; text-shadow: 0 0 20px #ffff39; }
+            50% { color: #39ff14; text-shadow: 0 0 20px #39ff14; }
+            75% { color: #39ffff; text-shadow: 0 0 20px #39ffff; }
+            100% { color: #ff39ff; text-shadow: 0 0 20px #ff39ff; }
+        }
+
+        .new-record-banner {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: rainbow 0.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <h1>MATH BLASTER</h1>
+
+    <div class="settings">
+        <div class="setting-group">
+            <span class="setting-label">Difficulty</span>
+            <div class="button-group">
+                <button id="easy" class="diff-btn active" onclick="setDifficulty('easy')">Easy</button>
+                <button id="medium" class="diff-btn" onclick="setDifficulty('medium')">Medium</button>
+                <button id="hard" class="diff-btn" onclick="setDifficulty('hard')">Hard</button>
+            </div>
+        </div>
+        <div class="setting-group">
+            <span class="setting-label">Operation</span>
+            <div class="button-group">
+                <button id="add" class="op-btn active" onclick="setOperation('add')">+</button>
+                <button id="subtract" class="op-btn" onclick="setOperation('subtract')">−</button>
+                <button id="multiply" class="op-btn" onclick="setOperation('multiply')">×</button>
+                <button id="divide" class="op-btn" onclick="setOperation('divide')">÷</button>
+                <button id="mixed" class="op-btn" onclick="setOperation('mixed')">Mix</button>
+            </div>
+        </div>
+        <div class="setting-group">
+            <span class="setting-label">Mode</span>
+            <div class="button-group">
+                <button id="endless" class="mode-btn active" onclick="setMode('endless')">Endless</button>
+                <button id="timed" class="mode-btn" onclick="setMode('timed')">60s</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="timer-display" id="timer"></div>
+    <div class="problem" id="problem"></div>
+    <div class="answer-row">
+        <input type="number" id="answer" autofocus>
+    </div>
+    <div class="combo" id="combo"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="stats">
+        <div>Score: <span id="score">0</span></div>
+        <div>Streak: <span id="streak" class="streak">0</span> 🔥</div>
+        <div>Best: <span id="highScore" class="high-score">0</span> 👑</div>
+    </div>
+
+    <div class="game-over hidden" id="gameOver">
+        <h2>TIME'S UP!</h2>
+        <div class="new-record-banner hidden" id="newRecordBanner">🏆 NEW HIGH SCORE! 🏆</div>
+        <div class="final-score">Final Score: <span id="finalScore">0</span></div>
+        <div class="final-score">Best Streak: <span id="bestStreak">0</span> 🔥</div>
+        <div class="final-score">High Score: <span id="finalHighScore">0</span> 👑</div>
+        <button onclick="restartGame()">Play Again</button>
+    </div>
+
+    <script>
+        let num1, num2, correctAnswer, currentOp;
+        let score = 0;
+        let streak = 0;
+        let bestStreak = 0;
+        let difficulty = 'easy';
+        let operation = 'add';
+        let mode = 'endless';
+        let timeLeft = 60;
+        let timerInterval = null;
+        let gameActive = true;
+        let isNewHighScore = false;
+
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function getHighScoreKey() {
+            return `mathblaster_${mode}_${difficulty}_${operation}`;
+        }
+
+        function getHighScore() {
+            return parseInt(localStorage.getItem(getHighScoreKey()) || '0');
+        }
+
+        function setHighScore(newScore) {
+            localStorage.setItem(getHighScoreKey(), newScore.toString());
+        }
+
+        function updateHighScoreDisplay() {
+            document.getElementById('highScore').textContent = getHighScore();
+        }
+
+        function playSound(type) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            if (type === 'correct') {
+                oscillator.frequency.value = 880;
+                oscillator.type = 'square';
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+
+                if (streak >= 3) {
+                    setTimeout(() => {
+                        const osc2 = audioContext.createOscillator();
+                        const gain2 = audioContext.createGain();
+                        osc2.connect(gain2);
+                        gain2.connect(audioContext.destination);
+                        osc2.frequency.value = 1100 + (streak * 50);
+                        osc2.type = 'square';
+                        gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                        osc2.start(audioContext.currentTime);
+                        osc2.stop(audioContext.currentTime + 0.15);
+                    }, 100);
+                }
+            } else if (type === 'wrong') {
+                oscillator.frequency.value = 200;
+                oscillator.type = 'sawtooth';
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } else if (type === 'gameover') {
+                [200, 150, 100].forEach((freq, i) => {
+                    setTimeout(() => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.frequency.value = freq;
+                        osc.type = 'square';
+                        gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        osc.start(audioContext.currentTime);
+                        osc.stop(audioContext.currentTime + 0.3);
+                    }, i * 200);
+                });
+            } else if (type === 'highscore') {
+                [523, 659, 784, 1047].forEach((freq, i) => {
+                    setTimeout(() => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.frequency.value = freq;
+                        osc.type = 'square';
+                        gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        osc.start(audioContext.currentTime);
+                        osc.stop(audioContext.currentTime + 0.3);
+                    }, i * 150);
+                });
+            }
+        }
+
+        function createParticles(emoji, count) {
+            const answerEl = document.getElementById('answer');
+            const rect = answerEl.getBoundingClientRect();
+
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = emoji;
+                particle.style.left = (rect.left + rect.width / 2 + (Math.random() - 0.5) * 100) + 'px';
+                particle.style.top = (rect.top + (Math.random() - 0.5) * 50) + 'px';
+                document.body.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function getMaxNumber() {
+            switch (difficulty) {
+                case 'easy': return 10;
+                case 'medium': return 20;
+                case 'hard': return 50;
+                default: return 10;
+            }
+        }
+
+        function generateProblem() {
+            const max = getMaxNumber();
+            const ops = operation === 'mixed' ? ['add', 'subtract', 'multiply', 'divide'] : [operation];
+            currentOp = ops[Math.floor(Math.random() * ops.length)];
+
+            if (currentOp === 'add') {
+                num1 = Math.floor(Math.random() * max) + 1;
+                num2 = Math.floor(Math.random() * max) + 1;
+                correctAnswer = num1 + num2;
+                document.getElementById('problem').textContent = `${num1} + ${num2} = ?`;
+            } else if (currentOp === 'subtract') {
+                num1 = Math.floor(Math.random() * max) + 1;
+                num2 = Math.floor(Math.random() * num1) + 1;
+                correctAnswer = num1 - num2;
+                document.getElementById('problem').textContent = `${num1} − ${num2} = ?`;
+            } else if (currentOp === 'multiply') {
+                const multMax = difficulty === 'easy' ? 5 : (difficulty === 'medium' ? 10 : 12);
+                num1 = Math.floor(Math.random() * multMax) + 1;
+                num2 = Math.floor(Math.random() * multMax) + 1;
+                correctAnswer = num1 * num2;
+                document.getElementById('problem').textContent = `${num1} × ${num2} = ?`;
+            } else if (currentOp === 'divide') {
+                const divMax = difficulty === 'easy' ? 5 : (difficulty === 'medium' ? 10 : 12);
+                num2 = Math.floor(Math.random() * divMax) + 1;
+                correctAnswer = Math.floor(Math.random() * divMax) + 1;
+                num1 = num2 * correctAnswer;
+                document.getElementById('problem').textContent = `${num1} ÷ ${num2} = ?`;
+            }
+
+            document.getElementById('answer').value = '';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').classList.remove('correct');
+        }
+
+        function updateCombo() {
+            const comboEl = document.getElementById('combo');
+            if (streak >= 10) {
+                comboEl.textContent = '🔥 UNSTOPPABLE! 🔥';
+            } else if (streak >= 7) {
+                comboEl.textContent = '⚡ ON FIRE! ⚡';
+            } else if (streak >= 5) {
+                comboEl.textContent = '💥 AWESOME! 💥';
+            } else if (streak >= 3) {
+                comboEl.textContent = '✨ COMBO x' + streak + '! ✨';
+            } else {
+                comboEl.textContent = '';
+            }
+        }
+
+        function checkAnswer() {
+            if (!gameActive) return;
+
+            const userAnswer = parseInt(document.getElementById('answer').value);
+
+            if (userAnswer === correctAnswer) {
+                streak++;
+                if (streak > bestStreak) bestStreak = streak;
+
+                const bonus = Math.floor(streak / 3);
+                score += 1 + bonus;
+
+                document.getElementById('score').textContent = score;
+                document.getElementById('streak').textContent = streak;
+
+                // Check for new high score
+                const currentHigh = getHighScore();
+                if (score > currentHigh) {
+                    if (!isNewHighScore) {
+                        isNewHighScore = true;
+                        playSound('highscore');
+                        createParticles('👑', 10);
+                        document.getElementById('highScore').classList.add('new-high-score');
+                    }
+                    setHighScore(score);
+                    updateHighScoreDisplay();
+                }
+
+                const messages = ['BOOM! 🚀', 'YEAH! ⭐', 'NICE! 💫', 'WOW! 🎯', 'SUPER! 🌟'];
+                const msg = messages[Math.floor(Math.random() * messages.length)];
+                document.getElementById('feedback').textContent = msg;
+                document.getElementById('feedback').classList.add('correct');
+
+                playSound('correct');
+                createParticles('⭐', 3 + Math.min(streak, 7));
+                updateCombo();
+
+                setTimeout(generateProblem, 800);
+            } else {
+                streak = 0;
+                document.getElementById('streak').textContent = streak;
+                document.getElementById('feedback').textContent = 'Try again!';
+                document.getElementById('combo').textContent = '';
+                document.getElementById('answer').value = '';
+
+                playSound('wrong');
+                document.body.classList.add('shake');
+                setTimeout(() => document.body.classList.remove('shake'), 400);
+            }
+        }
+
+        function setDifficulty(level) {
+            difficulty = level;
+            document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(level).classList.add('active');
+            updateHighScoreDisplay();
+            resetGame();
+        }
+
+        function setOperation(op) {
+            operation = op;
+            document.querySelectorAll('.op-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(op).classList.add('active');
+            updateHighScoreDisplay();
+            resetGame();
+        }
+
+        function setMode(m) {
+            mode = m;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(m).classList.add('active');
+
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            if (mode === 'timed') {
+                startTimer();
+            } else {
+                document.getElementById('timer').textContent = '';
+                document.getElementById('timer').classList.remove('warning');
+            }
+
+            updateHighScoreDisplay();
+            resetGame();
+        }
+
+        function startTimer() {
+            timeLeft = 60;
+            document.getElementById('timer').textContent = '⏱️ ' + timeLeft + 's';
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = '⏱️ ' + timeLeft + 's';
+
+                if (timeLeft <= 10) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(timerInterval);
+
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('bestStreak').textContent = bestStreak;
+            document.getElementById('finalHighScore').textContent = getHighScore();
+
+            if (isNewHighScore) {
+                document.getElementById('newRecordBanner').classList.remove('hidden');
+                playSound('highscore');
+            } else {
+                document.getElementById('newRecordBanner').classList.add('hidden');
+                playSound('gameover');
+            }
+
+            document.getElementById('gameOver').classList.remove('hidden');
+        }
+
+        function resetGame() {
+            score = 0;
+            streak = 0;
+            bestStreak = 0;
+            gameActive = true;
+            isNewHighScore = false;
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('combo').textContent = '';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('highScore').classList.remove('new-high-score');
+
+            generateProblem();
+        }
+
+        function restartGame() {
+            document.getElementById('gameOver').classList.add('hidden');
+            document.getElementById('timer').classList.remove('warning');
+            document.getElementById('newRecordBanner').classList.add('hidden');
+
+            if (mode === 'timed') {
+                startTimer();
+            }
+
+            resetGame();
+            document.getElementById('answer').focus();
+        }
+
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        updateHighScoreDisplay();
+        generateProblem();
+    </script>
+</body>
+</html>
