@@ -103,33 +103,7 @@
             transition: box-shadow 0.3s;
         }
 
-        body.fever-mode {
-            box-shadow: inset 0 0 60px var(--accent-color), inset 0 0 120px rgba(255, 215, 0, 0.3);
-            animation: feverPulse 0.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes feverPulse {
-            0% { box-shadow: inset 0 0 40px var(--accent-color), inset 0 0 80px rgba(255, 215, 0, 0.2); }
-            100% { box-shadow: inset 0 0 80px var(--accent-color), inset 0 0 150px rgba(255, 215, 0, 0.4); }
-        }
-
-        .screen-flash {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%);
-            pointer-events: none; z-index: 1000;
-            animation: flashIn 0.3s ease-out forwards;
-        }
-        @keyframes flashIn { 0% { opacity: 1; } 100% { opacity: 0; } }
-
-        .jackpot-flash {
-            background: radial-gradient(circle, rgba(255,215,0,0.6) 0%, rgba(255,107,157,0.3) 50%, transparent 70%);
-            animation: jackpotFlash 0.5s ease-out forwards;
-        }
-        @keyframes jackpotFlash {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-            100% { opacity: 0; transform: scale(1); }
-        }
+        /* Removed excessive flash animations */
 
         .game-container {
             display: flex; flex-direction: column; align-items: center;
@@ -164,94 +138,38 @@
         .icon-btn:active { transform: scale(0.9); }
         .icon-btn.muted { opacity: 0.5; }
 
-        /* Clean Pet Display */
+        /* Pet Display - inline with stats */
         .pet-area {
-            position: fixed;
-            bottom: 100px;
-            left: 15px;
-            z-index: 50;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            transition: transform 0.2s;
+        }
+
+        .pet-area:active {
+            transform: scale(0.95);
+        }
+
+        .pet-container {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--primary-color);
+            white-space: nowrap;
         }
 
         .pet-speech {
-            background: rgba(255, 182, 193, 0.95);
-            color: #c44569;
-            font-size: 0.75rem;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 12px;
-            white-space: nowrap;
+            font-size: clamp(0.65rem, 2vw, 0.8rem);
+            color: var(--accent-color);
             opacity: 0;
-            transform: translateY(5px);
-            transition: all 0.2s ease-out;
+            transition: opacity 0.2s;
         }
 
         .pet-speech.show {
             opacity: 1;
-            transform: translateY(0);
-        }
-
-        .pet-container {
-            font-size: 2.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-            line-height: 1;
-        }
-
-        .pet-container:active {
-            transform: scale(0.9);
-        }
-
-        .pet-container.happy {
-            animation: petBounce 0.4s ease-out;
-        }
-
-        .pet-container.sad {
-            animation: petDroop 0.4s ease-out;
-        }
-
-        .pet-container.idle {
-            animation: petFloat 3s ease-in-out infinite;
-        }
-
-        .pet-container.excited {
-            animation: petWiggle 0.2s ease-in-out infinite;
-        }
-
-        @keyframes petBounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-15px) scale(1.1); }
-        }
-
-        @keyframes petDroop {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(5px) scale(0.95); }
-        }
-
-        @keyframes petFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        @keyframes petWiggle {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
-        }
-
-        .pet-particle {
-            position: fixed;
-            pointer-events: none;
-            font-size: 1rem;
-            z-index: 49;
-            animation: particleUp 0.8s ease-out forwards;
-        }
-
-        @keyframes particleUp {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-40px) scale(0.5); }
         }
 
         /* Modals */
@@ -295,9 +213,11 @@
         }
 
         .pet-preview {
-            font-size: 3rem;
+            font-size: 1.5rem;
             display: block;
             margin-bottom: 8px;
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--primary-color);
         }
 
         .pet-name {
@@ -508,76 +428,8 @@
             100% { transform: scale(1) rotate(0deg); }
         }
 
-        /* Level Up */
-        .level-up {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(2rem, 8vw, 4rem); font-weight: bold;
-            color: var(--accent-color);
-            text-shadow: 0 0 30px var(--accent-color), 0 0 60px var(--accent-color);
-            z-index: 500; pointer-events: none;
-            animation: levelUpAnim 1.2s ease-out forwards;
-        }
-        @keyframes levelUpAnim {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-            20% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
-            40% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
-        }
-
-        /* Bonus Banner */
-        .bonus-banner {
-            position: fixed; top: 30%; left: 50%; transform: translateX(-50%);
-            font-size: clamp(1.5rem, 6vw, 3rem); font-weight: bold;
-            color: #ffd700; text-shadow: 0 0 20px #ffd700, 0 0 40px #ff6b00;
-            z-index: 400; pointer-events: none;
-            animation: bonusPop 0.8s ease-out forwards;
-        }
-        @keyframes bonusPop {
-            0% { transform: translateX(-50%) scale(0) rotate(-10deg); opacity: 0; }
-            40% { transform: translateX(-50%) scale(1.2) rotate(5deg); opacity: 1; }
-            60% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
-            100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 0; }
-        }
-
-        /* Multiplier */
-        .multiplier {
-            position: fixed; top: 25%; right: 10%;
-            font-size: clamp(2rem, 8vw, 4rem); font-weight: bold;
-            color: var(--accent-color); text-shadow: 0 0 20px var(--accent-color);
-            z-index: 300; pointer-events: none;
-            animation: multiplierPulse 0.4s ease-out;
-        }
-        @keyframes multiplierPulse {
-            0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
-            50% { transform: scale(1.3) rotate(5deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-        .multiplier.fade-out { animation: multiplierFade 0.3s ease-out forwards; }
-        @keyframes multiplierFade { 0% { opacity: 1; } 100% { opacity: 0; } }
-
-        /* Flying Points */
-        .flying-points {
-            position: fixed; font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: bold;
-            color: var(--accent-color); text-shadow: 0 0 15px var(--accent-color);
-            z-index: 400; pointer-events: none;
-            animation: flyToScore 0.8s ease-in forwards;
-        }
-        @keyframes flyToScore {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0; transform: scale(0.5) translateY(-100px); }
-        }
-
-        /* Confetti */
-        .confetti {
-            position: fixed; pointer-events: none; z-index: 600;
-            font-size: clamp(1.5rem, 4vw, 2rem);
-        }
-        @keyframes confettiFall {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
+        /* Simple Level Up - just text in feedback area */
+        /* Removed: flying points, multiplier display, confetti, bonus banner */
 
         /* Timer */
         .timer-display {
@@ -673,24 +525,12 @@
         .numpad .delete { background: rgba(255, 107, 107, 0.15); border-color: var(--error-color); color: var(--error-color); }
         .numpad .submit { background: rgba(107, 203, 119, 0.2); border-color: var(--success-color); color: var(--success-color); font-size: clamp(1.2rem, 4.5vw, 1.8rem); }
 
-        /* Particles */
-        .particle {
-            position: fixed; pointer-events: none;
-            font-size: clamp(1.8rem, 6vw, 3rem);
-            animation: particle-fly 1s ease-out forwards; z-index: 50;
-        }
-        @keyframes particle-fly {
-            0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
-            100% { opacity: 0; transform: translateY(-120px) scale(0.5) rotate(360deg); }
-        }
-
-        .shake { animation: shake 0.4s ease-out; }
+        /* Simple shake for wrong answers */
+        .shake { animation: shake 0.3s ease-out; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-15px); }
-            40% { transform: translateX(15px); }
-            60% { transform: translateX(-10px); }
-            80% { transform: translateX(10px); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
         }
 
         /* Game Over */
@@ -735,9 +575,9 @@
 
         /* Landscape phones */
         @media (orientation: landscape) and (max-height: 500px) {
-            .pet-area { bottom: 50px; left: 5px; }
-            .pet-container { font-size: 1.5rem; }
-            .pet-speech { font-size: 0.55rem; padding: 3px 6px; }
+            .pet-area { padding: 3px 6px; }
+            .pet-container { font-size: 0.9rem; }
+            .pet-speech { font-size: 0.55rem; }
             body { padding: 5px; }
             .game-container {
                 display: grid;
@@ -768,9 +608,8 @@
 
         /* iPad landscape */
         @media (min-width: 768px) and (max-width: 1200px) and (orientation: landscape) {
-            .pet-area { bottom: 80px; left: 20px; }
-            .pet-container { font-size: 2.2rem; }
-            .pet-speech { font-size: 0.8rem; }
+            .pet-container { font-size: 1.2rem; }
+            .pet-speech { font-size: 0.75rem; }
             .game-container {
                 display: grid;
                 grid-template-columns: 1fr auto;
@@ -797,9 +636,8 @@
 
         /* iPad portrait */
         @media (min-width: 768px) and (min-height: 900px) {
-            .pet-area { bottom: 150px; left: 20px; }
-            .pet-container { font-size: 3rem; }
-            .pet-speech { font-size: 0.9rem; padding: 5px 12px; }
+            .pet-container { font-size: 1.4rem; }
+            .pet-speech { font-size: 0.9rem; }
             .numpad { max-width: 400px; gap: 14px; }
             .numpad button { min-height: 85px; font-size: 2.5rem; border-radius: 18px; }
             .fruit { font-size: 3rem; }
@@ -810,12 +648,6 @@
     </style>
 </head>
 <body>
-    <!-- Pet -->
-    <div class="pet-area" onclick="showPetSelector()">
-        <div class="pet-speech" id="petSpeech"></div>
-        <div class="pet-container idle" id="petContainer">🐱</div>
-    </div>
-
     <div class="game-container">
         <div class="top-bar">
             <h1>MATH BLASTER</h1>
@@ -855,6 +687,10 @@
         </div>
 
         <div class="stats">
+            <div class="pet-area" onclick="showPetSelector()">
+                <div class="pet-container" id="petContainer">(=^･ω･^=)</div>
+                <div class="pet-speech" id="petSpeech"></div>
+            </div>
             <div class="stat-item"><span class="stat-icon">⭐</span> <span id="levelDisplay" class="stat-value">1</span></div>
             <div class="stat-item"><span class="stat-icon">🍉</span> <span id="score" class="stat-value">0</span></div>
             <div class="stat-item"><span class="stat-icon">🔥</span> <span id="streak" class="streak-value stat-value">0</span></div>
@@ -882,12 +718,12 @@
         <h2>Choose Your Pet</h2>
         <div class="pet-options">
             <div class="pet-option" id="petKitten" onclick="selectPet('kitten')">
-                <span class="pet-preview">🐱</span>
+                <span class="pet-preview">(=^･ω･^=)</span>
                 <div class="pet-name">Luna</div>
                 <div class="pet-subtitle">Nya~!</div>
             </div>
             <div class="pet-option" id="petBunny" onclick="selectPet('bunny')">
-                <span class="pet-preview">🐰</span>
+                <span class="pet-preview">(/・ω・)/</span>
                 <div class="pet-name">Usagi</div>
                 <div class="pet-subtitle">Pyon~!</div>
             </div>
@@ -957,7 +793,6 @@
 
     <script>
         const FRUITS = ['🍉', '🥭', '🍍', '🥥', '🍌', '🍊', '🍋', '🍇', '🍓', '🍑', '🥝', '🍈'];
-        const CONFETTI = ['🎉', '🎊', '✨', '⭐', '💫', '🌟', '💎', '🏆'];
         const BOSSES = [
             { emoji: '👾', name: 'Math Monster' },
             { emoji: '🐲', name: 'Number Dragon' },
@@ -973,38 +808,28 @@
             { type: 'fruit', value: 'rare', text: 'Rare Golden Fruit!', emoji: '🌟' },
             { type: 'streak', value: 'shield', text: 'Streak Shield! (1 free miss)', emoji: '🛡️' }
         ];
-        // Pet Data
+        // Pet Data - Cute Kaomoji Characters
         const PETS = {
             kitten: {
                 name: 'Luna',
-                emoji: '🐱',
-                happy: '😺',
-                sad: '😿',
-                excited: '😸',
+                idle: '(=^･ω･^=)',
+                happy: '(=^･ᴗ･^=)',
+                sad: '(=^･︵･^=)',
                 phrases: {
-                    happy: ['Nya~!', 'Yay!', 'Sugoi!'],
-                    sad: ['Nya...', 'Try again!'],
-                    excited: ['Amazing!', 'Wow!']
+                    happy: ['Nya~!', 'Yay!', '♪'],
+                    sad: ['Nya...', 'Again!']
                 }
             },
             bunny: {
                 name: 'Usagi',
-                emoji: '🐰',
-                happy: '🐇',
-                sad: '🐰',
-                excited: '🐇',
+                idle: '(/・ω・)/',
+                happy: '(/・ᴗ・)/',
+                sad: '(/・︵・)/',
                 phrases: {
-                    happy: ['Pyon~!', 'Yay!', 'Great!'],
-                    sad: ['Pyon...', 'One more!'],
-                    excited: ['Sparkle!', 'Wow!']
+                    happy: ['Pyon~!', 'Yay!', '♪'],
+                    sad: ['Pyon...', 'Again!']
                 }
             }
-        };
-
-        const PET_PARTICLES = {
-            happy: ['💖', '✨', '⭐'],
-            sad: ['💧'],
-            excited: ['⭐', '✨', '💫']
         };
 
         let num1, num2, correctAnswer, currentOp;
@@ -1013,7 +838,7 @@
         let timeLeft = 60, timerInterval = null;
         let gameActive = true, isNewHighScore = false, currentInput = '';
         let collectedFruits = [], soundEnabled = true, isBonus = false;
-        let multiplierTimeout = null, audioContext = null;
+        let audioContext = null;
         let correctCount = 0, bossDefeated = 0;
         let currentPet = 'kitten', streakShield = false;
 
@@ -1031,7 +856,7 @@
         }
 
         function updatePetDisplay() {
-            document.getElementById('petContainer').textContent = PETS[currentPet].emoji;
+            document.getElementById('petContainer').textContent = PETS[currentPet].idle;
         }
 
         function selectPet(pet) {
@@ -1063,60 +888,27 @@
             if (speechTimeout) clearTimeout(speechTimeout);
             speechTimeout = setTimeout(() => {
                 speech.classList.remove('show');
-            }, 1200);
-        }
-
-        function spawnPetParticles(type) {
-            const petArea = document.querySelector('.pet-area');
-            const rect = petArea.getBoundingClientRect();
-            const particles = PET_PARTICLES[type] || PET_PARTICLES.happy;
-
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.className = 'pet-particle';
-                    particle.textContent = particles[Math.floor(Math.random() * particles.length)];
-                    particle.style.left = (rect.left + rect.width / 2 + (Math.random() - 0.5) * 40) + 'px';
-                    particle.style.top = rect.top + 'px';
-                    document.body.appendChild(particle);
-                    setTimeout(() => particle.remove(), 800);
-                }, i * 80);
-            }
+            }, 1000);
         }
 
         function petReact(reaction) {
             const container = document.getElementById('petContainer');
             const petData = PETS[currentPet];
 
-            container.className = 'pet-container';
-
             if (reaction === 'happy') {
                 container.textContent = petData.happy;
-                container.classList.add('happy');
                 showPetSpeech('happy');
-                spawnPetParticles('happy');
                 setTimeout(() => {
-                    container.textContent = petData.emoji;
-                    container.classList.remove('happy');
-                    container.classList.add('idle');
-                }, 400);
+                    container.textContent = petData.idle;
+                }, 500);
             } else if (reaction === 'sad') {
                 container.textContent = petData.sad;
-                container.classList.add('sad');
                 showPetSpeech('sad');
                 setTimeout(() => {
-                    container.textContent = petData.emoji;
-                    container.classList.remove('sad');
-                    container.classList.add('idle');
-                }, 400);
-            } else if (reaction === 'excited') {
-                container.textContent = petData.excited;
-                container.classList.add('excited');
-                showPetSpeech('excited');
-                spawnPetParticles('excited');
+                    container.textContent = petData.idle;
+                }, 500);
             } else {
-                container.textContent = petData.emoji;
-                container.classList.add('idle');
+                container.textContent = petData.idle;
             }
         }
 
@@ -1263,7 +1055,6 @@
                 }
 
                 playSound('jackpot');
-                triggerConfetti(20);
             }, 800);
         }
 
@@ -1359,7 +1150,6 @@
                 document.getElementById('bossEmoji').classList.add('defeated');
                 document.getElementById('bossVictory').classList.remove('hidden');
                 playSound('bossdefeat');
-                triggerConfetti(30);
 
                 score += 20;
                 document.getElementById('score').textContent = score;
@@ -1382,82 +1172,7 @@
             }
         }
 
-        // Visual Effects
-        function screenFlash(isJackpot = false) {
-            const flash = document.createElement('div');
-            flash.className = isJackpot ? 'screen-flash jackpot-flash' : 'screen-flash';
-            document.body.appendChild(flash);
-            setTimeout(() => flash.remove(), isJackpot ? 500 : 300);
-        }
-
-        function showMultiplier(mult) {
-            const existing = document.querySelector('.multiplier');
-            if (existing) existing.remove();
-            if (multiplierTimeout) clearTimeout(multiplierTimeout);
-
-            const el = document.createElement('div');
-            el.className = 'multiplier';
-            el.textContent = `x${mult}!`;
-            document.body.appendChild(el);
-
-            multiplierTimeout = setTimeout(() => {
-                el.classList.add('fade-out');
-                setTimeout(() => el.remove(), 300);
-            }, 1500);
-        }
-
-        function showFlyingPoints(points, startEl) {
-            const rect = startEl.getBoundingClientRect();
-            const el = document.createElement('div');
-            el.className = 'flying-points';
-            el.textContent = `+${points}`;
-            el.style.left = rect.left + rect.width / 2 + 'px';
-            el.style.top = rect.top + 'px';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 800);
-        }
-
-        function showLevelUp(newLevel) {
-            const el = document.createElement('div');
-            el.className = 'level-up';
-            el.textContent = `⭐ LEVEL ${newLevel}! ⭐`;
-            document.body.appendChild(el);
-            playSound('levelup');
-            setTimeout(() => el.remove(), 1200);
-        }
-
-        function showBonusBanner() {
-            const el = document.createElement('div');
-            el.className = 'bonus-banner';
-            el.textContent = '💎 BONUS! 3x POINTS! 💎';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 800);
-        }
-
-        function triggerConfetti(count = 20) {
-            for (let i = 0; i < count; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.textContent = CONFETTI[Math.floor(Math.random() * CONFETTI.length)];
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.top = '-50px';
-                    confetti.style.animation = `confettiFall ${1.5 + Math.random()}s ease-out forwards`;
-                    document.body.appendChild(confetti);
-                    setTimeout(() => confetti.remove(), 2500);
-                }, i * 50);
-            }
-        }
-
-        function updateFeverMode() {
-            if (streak >= 5) {
-                document.body.classList.add('fever-mode');
-                petReact('excited');
-            } else {
-                document.body.classList.remove('fever-mode');
-                petReact('idle');
-            }
-        }
+        // Simplified visual feedback - removed excessive animations
 
         function updateFruitBasket() {
             const basket = document.getElementById('fruitBasket');
@@ -1498,19 +1213,7 @@
         function setHighScore(newScore) { localStorage.setItem(getHighScoreKey(), newScore.toString()); }
         function updateHighScoreDisplay() { document.getElementById('highScore').textContent = getHighScore(); }
 
-        function createParticles(emoji, count) {
-            const answerEl = document.getElementById('answerDisplay');
-            const rect = answerEl.getBoundingClientRect();
-            for (let i = 0; i < count; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.textContent = emoji;
-                particle.style.left = (rect.left + rect.width / 2 + (Math.random() - 0.5) * 100) + 'px';
-                particle.style.top = (rect.top + (Math.random() - 0.5) * 50) + 'px';
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1000);
-            }
-        }
+        // Removed particle effects for cleaner UI
 
         function getMaxNumber() {
             switch (difficulty) {
@@ -1527,10 +1230,6 @@
             currentOp = ops[Math.floor(Math.random() * ops.length)];
 
             isBonus = level >= 2 && Math.random() < 0.1;
-            if (isBonus) {
-                showBonusBanner();
-                playSound('bonus');
-            }
 
             const problemEl = document.getElementById('problem');
 
@@ -1567,11 +1266,9 @@
 
         function updateCombo() {
             const comboEl = document.getElementById('combo');
-            if (streak >= 15) comboEl.textContent = '🌟 LEGENDARY! 🌟';
-            else if (streak >= 10) comboEl.textContent = '💎 UNSTOPPABLE! 💎';
-            else if (streak >= 7) comboEl.textContent = '⚡ ON FIRE! ⚡';
-            else if (streak >= 5) comboEl.textContent = '✨ AWESOME! ✨';
-            else if (streak >= 3) comboEl.textContent = '🎯 x' + streak + ' COMBO!';
+            if (streak >= 10) comboEl.textContent = 'x' + streak + ' streak!';
+            else if (streak >= 5) comboEl.textContent = 'x' + streak + ' combo!';
+            else if (streak >= 3) comboEl.textContent = 'x' + streak;
             else comboEl.textContent = '';
         }
 
@@ -1580,8 +1277,7 @@
             if (newLevel > level) {
                 level = newLevel;
                 document.getElementById('levelDisplay').textContent = level;
-                showLevelUp(level);
-                triggerConfetti(15);
+                playSound('levelup');
             }
         }
 
@@ -1607,20 +1303,8 @@
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;
 
-                screenFlash(streak >= 10);
-                const fruit = addFruit();
-                createParticles(fruit, 3 + Math.min(streak, 7));
-                showFlyingPoints(points, document.getElementById('answerDisplay'));
+                addFruit();
                 petReact('happy');
-
-                if (streakMultiplier >= 1) showMultiplier(streakMultiplier + 1);
-
-                if (streak === 10 || streak === 20 || streak === 30) {
-                    playSound('jackpot');
-                    triggerConfetti(30);
-                }
-
-                updateFeverMode();
                 updateLevel();
 
                 const currentHigh = getHighScore();
@@ -1628,13 +1312,12 @@
                     if (!isNewHighScore) {
                         isNewHighScore = true;
                         playSound('highscore');
-                        createParticles('👑', 8);
                     }
                     setHighScore(score);
                     updateHighScoreDisplay();
                 }
 
-                const messages = ['YAY!', 'NICE!', 'WOW!', 'COOL!', 'GREAT!', 'SUPER!', 'PERFECT!'];
+                const messages = ['YAY!', 'NICE!', 'GREAT!', 'COOL!'];
                 feedbackEl.textContent = messages[Math.floor(Math.random() * messages.length)];
                 feedbackEl.className = 'feedback correct';
 
@@ -1753,7 +1436,6 @@
             if (isNewHighScore) {
                 document.getElementById('newRecordBanner').classList.remove('hidden');
                 playSound('highscore');
-                triggerConfetti(40);
             } else {
                 document.getElementById('newRecordBanner').classList.add('hidden');
                 playSound('gameover');
