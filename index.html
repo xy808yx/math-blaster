@@ -1153,15 +1153,38 @@
         let mysteryBoxesOpened = 0;
         let bossesDefeated = 0;
 
-        // Haptic feedback
+        // Haptic feedback - works on Android via Vibration API, iOS via AudioContext workaround
+        let hapticContext = null;
         function haptic(type) {
-            if (!navigator.vibrate) return;
+            // Try Vibration API first (Android)
+            if (navigator.vibrate) {
+                try {
+                    if (type === 'light') navigator.vibrate(10);
+                    else if (type === 'medium') navigator.vibrate(25);
+                    else if (type === 'heavy') navigator.vibrate([50, 30, 50]);
+                    else if (type === 'success') navigator.vibrate([10, 50, 20]);
+                    else if (type === 'error') navigator.vibrate([50, 50, 50]);
+                    return;
+                } catch (e) {}
+            }
+
+            // iOS fallback using AudioContext (triggers Taptic Engine on some iOS versions)
             try {
-                if (type === 'light') navigator.vibrate(10);
-                else if (type === 'medium') navigator.vibrate(25);
-                else if (type === 'heavy') navigator.vibrate([50, 30, 50]);
-                else if (type === 'success') navigator.vibrate([10, 50, 20]);
-                else if (type === 'error') navigator.vibrate([50, 50, 50]);
+                if (!hapticContext) {
+                    hapticContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const oscillator = hapticContext.createOscillator();
+                const gain = hapticContext.createGain();
+                oscillator.connect(gain);
+                gain.connect(hapticContext.destination);
+
+                // Very short, low-frequency pulse
+                oscillator.frequency.value = 10;
+                gain.gain.value = 0.001; // Nearly silent
+
+                const duration = type === 'light' ? 0.01 : type === 'medium' ? 0.02 : 0.03;
+                oscillator.start(hapticContext.currentTime);
+                oscillator.stop(hapticContext.currentTime + duration);
             } catch (e) {}
         }
 
