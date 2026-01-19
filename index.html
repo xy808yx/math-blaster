@@ -288,6 +288,36 @@
         .achievement-emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
         .achievement-name { font-size: 0.75rem; color: var(--primary); }
 
+        /* Level Display */
+        .level-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        .level-num { min-width: 45px; }
+        .xp-bar {
+            width: 60px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            transition: width 0.3s;
+        }
+
+        /* Locked theme */
+        .theme-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .theme-btn.locked:hover { opacity: 0.5; }
+
         /* Timer */
         .timer-display {
             text-align: center;
@@ -894,7 +924,7 @@
 
     <div class="game-container">
         <div class="top-bar">
-            <h1>MATH BLASTER</h1>
+            <div class="level-display" id="levelDisplay">Lv.1</div>
             <div class="top-buttons">
                 <button class="icon-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
                 <button class="icon-btn" onclick="showAchievements()">🏆</button>
@@ -923,7 +953,8 @@
             </div>
             <div class="settings-row">
                 <button id="endless" class="active" onclick="setMode('endless')">Free Play</button>
-                <button id="timed" onclick="setMode('timed')">60 Seconds</button>
+                <button id="timed" onclick="setMode('timed')">60 Sec</button>
+                <button id="speed" onclick="setMode('speed')">⚡ Speed</button>
             </div>
         </div>
 
@@ -980,11 +1011,7 @@
     <!-- Theme Picker -->
     <div class="modal theme-picker" id="themePicker">
         <h2>Pick a Theme</h2>
-        <button class="theme-btn tropical" onclick="setTheme('tropical')">🌺 Tropical</button>
-        <button class="theme-btn ocean" onclick="setTheme('ocean')">🌊 Ocean</button>
-        <button class="theme-btn sunset" onclick="setTheme('sunset')">🌅 Sunset</button>
-        <button class="theme-btn berry" onclick="setTheme('berry')">🍇 Berry</button>
-        <button class="theme-btn retro" onclick="setTheme('retro')">👾 Retro</button>
+        <div id="themeButtons"></div>
         <button class="close-btn" onclick="hideThemePicker()">Done</button>
     </div>
 
@@ -1057,16 +1084,31 @@
     <div class="achievement-toast" id="achievementToast"></div>
 
     <script>
+        // Bosses with unlock levels
         const BOSSES = [
-            { svg: 'boss-tiki', name: 'Tiki Mask' },
-            { svg: 'boss-crab', name: 'Coconut Crab' },
-            { svg: 'boss-puffer', name: 'Pufferfish' },
-            { svg: 'boss-jelly', name: 'Jellyfish' },
-            { svg: 'boss-bird', name: 'Tropical Bird' },
-            { svg: 'boss-shark', name: 'Surfing Shark' },
-            { svg: 'boss-volcano', name: 'Volcano Spirit' },
-            { svg: 'boss-coconut', name: 'Coconut Monster' }
+            { svg: 'boss-tiki', name: 'Tiki Mask', unlockLevel: 1 },
+            { svg: 'boss-crab', name: 'Coconut Crab', unlockLevel: 1 },
+            { svg: 'boss-puffer', name: 'Pufferfish', unlockLevel: 3 },
+            { svg: 'boss-jelly', name: 'Jellyfish', unlockLevel: 5 },
+            { svg: 'boss-bird', name: 'Tropical Bird', unlockLevel: 7 },
+            { svg: 'boss-shark', name: 'Surfing Shark', unlockLevel: 10 },
+            { svg: 'boss-volcano', name: 'Volcano Spirit', unlockLevel: 12 },
+            { svg: 'boss-coconut', name: 'Coconut Monster', unlockLevel: 15 }
         ];
+
+        // Themes with unlock levels
+        const THEMES = [
+            { id: 'tropical', name: '🌺 Tropical', unlockLevel: 1 },
+            { id: 'ocean', name: '🌊 Ocean', unlockLevel: 3 },
+            { id: 'sunset', name: '🌅 Sunset', unlockLevel: 6 },
+            { id: 'berry', name: '🍇 Berry', unlockLevel: 9 },
+            { id: 'retro', name: '👾 Retro', unlockLevel: 12 }
+        ];
+
+        // XP and Level system
+        let playerXP = 0;
+        let playerLevel = 1;
+        const XP_PER_LEVEL = 100; // XP needed per level
 
         let num1, num2, correctAnswer, currentOp;
         let score = 0, streak = 0, bestStreak = 0;
@@ -1101,11 +1143,27 @@
             { id: 'speed_demon', emoji: '⚡', name: 'Speed Demon', desc: 'Get a 3x combo' },
             { id: 'collector', emoji: '🎁', name: 'Collector', desc: 'Open 3 mystery boxes' },
             { id: 'powerup_user', emoji: '💪', name: 'Powered Up', desc: 'Use a power-up' },
-            { id: 'perfectionist', emoji: '💯', name: 'Perfectionist', desc: '100% accuracy in timed mode' }
+            { id: 'perfectionist', emoji: '💯', name: 'Perfectionist', desc: '100% accuracy in timed mode' },
+            { id: 'speed_round_10', emoji: '🏃', name: 'Quick Thinker', desc: 'Solve 10+ in speed round' },
+            { id: 'speed_round_20', emoji: '🚀', name: 'Lightning Fast', desc: 'Solve 20+ in speed round' },
+            { id: 'level_5', emoji: '📈', name: 'Rising Star', desc: 'Reach level 5' },
+            { id: 'level_10', emoji: '🌟', name: 'Math Master', desc: 'Reach level 10' }
         ];
         let unlockedAchievements = [];
         let mysteryBoxesOpened = 0;
         let bossesDefeated = 0;
+
+        // Haptic feedback
+        function haptic(type) {
+            if (!navigator.vibrate) return;
+            try {
+                if (type === 'light') navigator.vibrate(10);
+                else if (type === 'medium') navigator.vibrate(25);
+                else if (type === 'heavy') navigator.vibrate([50, 30, 50]);
+                else if (type === 'success') navigator.vibrate([10, 50, 20]);
+                else if (type === 'error') navigator.vibrate([50, 50, 50]);
+            } catch (e) {}
+        }
 
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('show');
@@ -1114,10 +1172,68 @@
         function updateSettingsLabel() {
             const diff = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
             const op = operation === 'mixed' ? 'Mixed' : operation === 'add' ? '+' : operation === 'subtract' ? '−' : operation === 'multiply' ? '×' : '÷';
-            document.getElementById('settingsLabel').textContent = `${diff} • ${op}`;
+            const modeLabel = mode === 'speed' ? '⚡' : mode === 'timed' ? '⏱️' : '∞';
+            document.getElementById('settingsLabel').textContent = `${diff} • ${op} • ${modeLabel}`;
+        }
+
+        // XP and Level System
+        function loadProgression() {
+            playerXP = parseInt(localStorage.getItem('mathblaster_xp') || '0');
+            playerLevel = Math.floor(playerXP / XP_PER_LEVEL) + 1;
+            updateLevelDisplay();
+        }
+
+        function saveProgression() {
+            localStorage.setItem('mathblaster_xp', playerXP.toString());
+        }
+
+        function gainXP(amount) {
+            const oldLevel = playerLevel;
+            playerXP += amount;
+            playerLevel = Math.floor(playerXP / XP_PER_LEVEL) + 1;
+            saveProgression();
+            updateLevelDisplay();
+
+            if (playerLevel > oldLevel) {
+                showLevelUp(playerLevel);
+                checkAchievement('level_5', playerLevel >= 5);
+                checkAchievement('level_10', playerLevel >= 10);
+            }
+        }
+
+        function updateLevelDisplay() {
+            const levelEl = document.getElementById('levelDisplay');
+            if (levelEl) {
+                const xpInLevel = playerXP % XP_PER_LEVEL;
+                const progress = (xpInLevel / XP_PER_LEVEL) * 100;
+                levelEl.innerHTML = `<span class="level-num">Lv.${playerLevel}</span><div class="xp-bar"><div class="xp-fill" style="width:${progress}%"></div></div>`;
+            }
+        }
+
+        function showLevelUp(level) {
+            const toast = document.getElementById('achievementToast');
+            toast.textContent = `🎉 Level Up! You're now Level ${level}!`;
+            toast.classList.add('show');
+            playSound('streak');
+            haptic('heavy');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function isThemeUnlocked(themeId) {
+            const theme = THEMES.find(t => t.id === themeId);
+            return theme ? playerLevel >= theme.unlockLevel : false;
+        }
+
+        function getUnlockedBosses() {
+            return BOSSES.filter(b => playerLevel >= b.unlockLevel);
         }
 
         function setTheme(theme) {
+            if (!isThemeUnlocked(theme)) {
+                const t = THEMES.find(th => th.id === theme);
+                alert(`Unlock ${t.name} at Level ${t.unlockLevel}!`);
+                return;
+            }
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
             localStorage.setItem('mathblaster_theme', theme);
             hideThemePicker();
@@ -1125,10 +1241,24 @@
 
         function loadTheme() {
             const theme = localStorage.getItem('mathblaster_theme') || 'tropical';
-            document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
+            if (isThemeUnlocked(theme)) {
+                document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
+            } else {
+                document.body.className = '';
+            }
         }
 
-        function showThemePicker() { document.getElementById('themePicker').classList.add('show'); }
+        function showThemePicker() {
+            const container = document.getElementById('themeButtons');
+            if (container) {
+                container.innerHTML = THEMES.map(t => {
+                    const unlocked = playerLevel >= t.unlockLevel;
+                    const lockIcon = unlocked ? '' : ` 🔒 Lv.${t.unlockLevel}`;
+                    return `<button class="theme-btn ${t.id} ${!unlocked ? 'locked' : ''}" onclick="setTheme('${t.id}')">${t.name}${lockIcon}</button>`;
+                }).join('');
+            }
+            document.getElementById('themePicker').classList.add('show');
+        }
         function hideThemePicker() { document.getElementById('themePicker').classList.remove('show'); }
 
         function toggleSound() {
@@ -1383,7 +1513,8 @@
             bossTimer = 30;
             bossAnswer = '';
 
-            const boss = BOSSES[Math.floor(Math.random() * BOSSES.length)];
+            const availableBosses = getUnlockedBosses();
+            const boss = availableBosses[Math.floor(Math.random() * availableBosses.length)];
             const bossEmojiEl = document.getElementById('bossEmoji');
             const bossUseEl = document.getElementById('bossUse');
             bossUseEl.setAttribute('href', '#' + boss.svg);
@@ -1453,12 +1584,14 @@
             bossAnswer += num;
             document.getElementById('bossAnswer').textContent = bossAnswer + '|';
             playSound('tap');
+            haptic('light');
         }
 
         function bossDeletePress() {
             if (!bossActive) return;
             bossAnswer = bossAnswer.slice(0, -1);
             document.getElementById('bossAnswer').textContent = (bossAnswer || '') + '|';
+            haptic('light');
         }
 
         function bossCheckAnswer() {
@@ -1471,6 +1604,7 @@
                 emoji.classList.add('hit');
                 setTimeout(() => emoji.classList.remove('hit'), 300);
                 playSound('bosshit');
+                haptic('medium');
 
                 if (bossHealth <= 0) endBossBattle(true);
                 else generateBossProblem();
@@ -1478,6 +1612,7 @@
                 bossAnswer = '';
                 document.getElementById('bossAnswer').textContent = '|';
                 playSound('wrong');
+                haptic('error');
             }
         }
 
@@ -1495,6 +1630,8 @@
                 victoryEl.classList.remove('hidden');
                 victoryEl.classList.add('show');
                 playSound('bosswin');
+                haptic('heavy');
+                gainXP(10); // Bonus XP for defeating boss
 
                 score += 10;
                 document.getElementById('score').textContent = score;
@@ -1528,6 +1665,7 @@
             currentInput += num;
             updateAnswerDisplay();
             playSound('tap');
+            haptic('light');
         }
 
         function deletePress() {
@@ -1535,6 +1673,7 @@
             currentInput = currentInput.slice(0, -1);
             updateAnswerDisplay();
             playSound('tap');
+            haptic('light');
         }
 
         function getMaxNumber() {
@@ -1622,6 +1761,8 @@
                 feedbackEl.textContent = feedbackText;
                 feedbackEl.className = 'feedback correct';
                 playSound('correct');
+                haptic('success');
+                gainXP(points); // Gain XP based on points earned
 
                 // Boss every 15, Mystery box every 10 (but not when boss triggers)
                 if (correctCount > 0 && correctCount % 15 === 0) {
@@ -1639,6 +1780,7 @@
                 feedbackEl.textContent = 'Try again!';
                 feedbackEl.className = 'feedback';
                 playSound('wrong');
+                haptic('error');
                 streak = 0;
                 comboMultiplier = 1;
                 document.getElementById('comboDisplay').classList.remove('active');
@@ -1671,15 +1813,28 @@
         function setMode(m) {
             mode = m;
             document.querySelectorAll('.settings-row button').forEach(b => {
-                if (['endless', 'timed'].includes(b.id)) b.classList.toggle('active', b.id === m);
+                if (['endless', 'timed', 'speed'].includes(b.id)) b.classList.toggle('active', b.id === m);
             });
             if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
             if (mode === 'timed') startTimer();
+            else if (mode === 'speed') startSpeedRound();
             else {
                 document.getElementById('timer').textContent = '';
                 document.getElementById('timer').classList.remove('warning');
             }
             resetGame();
+        }
+
+        function startSpeedRound() {
+            timeLeft = 30;
+            document.getElementById('timer').textContent = '⚡ 30';
+            document.getElementById('timer').classList.remove('warning');
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = '⚡ ' + timeLeft;
+                if (timeLeft <= 10) document.getElementById('timer').classList.add('warning');
+                if (timeLeft <= 0) endGame();
+            }, 1000);
         }
 
         function startTimer() {
@@ -1710,6 +1865,13 @@
                 checkAchievement('perfectionist', true);
             }
 
+            // Check speed round achievements
+            if (mode === 'speed') {
+                checkAchievement('speed_round_10', correctCount >= 10);
+                checkAchievement('speed_round_20', correctCount >= 20);
+            }
+
+            haptic('heavy');
             playSound('gameover');
             document.getElementById('gameOver').classList.add('show');
         }
@@ -1768,6 +1930,7 @@
         loadTheme();
         loadSoundPref();
         loadAchievements();
+        loadProgression();
         updateSettingsLabel();
         updatePowerupButtons();
         generateProblem();
