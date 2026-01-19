@@ -1775,270 +1775,354 @@
         generateProblem();
 
         // ============================================
-        // THREE.JS 3D TROPICAL OCEAN ENVIRONMENT
+        // THREE.JS PIXEL ART LANIKAI BEACH SCENE
         // ============================================
         (function initThreeJS() {
             const canvas = document.getElementById('three-canvas');
             const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: false }); // No AA for pixel look
 
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setPixelRatio(1); // Force low resolution for pixel art
 
-            // Ocean colors
-            const deepBlue = 0x0a4a6e;
-            const lightBlue = 0x1a8cba;
-            const sandColor = 0xf4d9a0;
+            // Pixel art color palette (limited colors)
+            const colors = {
+                sky: 0x87ceeb,
+                skyHorizon: 0xffecd2,
+                sun: 0xffd93d,
+                sunGlow: 0xffaa00,
+                oceanDeep: 0x1a8cba,
+                oceanMid: 0x40c4dc,
+                oceanLight: 0x7fdbff,
+                oceanFoam: 0xffffff,
+                sand: 0xf4d9a0,
+                sandDark: 0xe8c890,
+                palmTrunk: 0x8b5a2b,
+                palmLeaf: 0x228b22,
+                palmLeafLight: 0x32cd32,
+                island: 0x2d5a2d,
+                islandDark: 0x1a3a1a,
+                cloud: 0xffffff,
+                cloudShadow: 0xe8e8e8
+            };
 
-            // Create gradient background (underwater feel)
-            scene.background = new THREE.Color(deepBlue);
-            scene.fog = new THREE.FogExp2(deepBlue, 0.015);
+            // Sky gradient using a large box
+            scene.background = new THREE.Color(colors.sky);
 
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0x4488aa, 0.6);
+            // Lighting - simple for flat shading
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
             scene.add(ambientLight);
 
-            const sunLight = new THREE.DirectionalLight(0xffffaa, 0.8);
-            sunLight.position.set(5, 10, 5);
+            const sunLight = new THREE.DirectionalLight(0xffffee, 0.8);
+            sunLight.position.set(0, 10, -20);
             scene.add(sunLight);
 
-            // Point lights for magical feel
-            const pointLight1 = new THREE.PointLight(0xff6b9d, 0.5, 50);
-            pointLight1.position.set(-10, 5, -10);
-            scene.add(pointLight1);
-
-            const pointLight2 = new THREE.PointLight(0x00ffaa, 0.5, 50);
-            pointLight2.position.set(10, 3, -15);
-            scene.add(pointLight2);
-
-            // Sandy ocean floor
-            const floorGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
-            const floorMaterial = new THREE.MeshStandardMaterial({
-                color: sandColor,
-                roughness: 0.9,
-                metalness: 0.1
-            });
-            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-            floor.rotation.x = -Math.PI / 2;
-            floor.position.y = -8;
-            scene.add(floor);
-
-            // Wavy water surface
-            const waterGeometry = new THREE.PlaneGeometry(100, 100, 100, 100);
-            const waterMaterial = new THREE.MeshStandardMaterial({
-                color: lightBlue,
-                transparent: true,
-                opacity: 0.4,
-                roughness: 0.1,
-                metalness: 0.3,
-                side: THREE.DoubleSide
-            });
-            const water = new THREE.Mesh(waterGeometry, waterMaterial);
-            water.rotation.x = -Math.PI / 2;
-            water.position.y = 8;
-            scene.add(water);
-
-            // Bubbles
-            const bubbles = [];
-            const bubbleGeometry = new THREE.SphereGeometry(0.15, 8, 8);
-            const bubbleMaterial = new THREE.MeshStandardMaterial({
-                color: 0xffffff,
-                transparent: true,
-                opacity: 0.6,
-                roughness: 0.1,
-                metalness: 0.9
-            });
-
-            for (let i = 0; i < 50; i++) {
-                const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
-                bubble.position.set(
-                    (Math.random() - 0.5) * 40,
-                    Math.random() * 20 - 10,
-                    (Math.random() - 0.5) * 40 - 10
-                );
-                bubble.userData = {
-                    speed: 0.02 + Math.random() * 0.03,
-                    wobble: Math.random() * Math.PI * 2
-                };
-                bubbles.push(bubble);
-                scene.add(bubble);
+            // Helper to create flat-shaded material
+            function pixelMat(color) {
+                return new THREE.MeshLambertMaterial({
+                    color: color,
+                    flatShading: true
+                });
             }
 
-            // Coral/seaweed clusters
-            const coralColors = [0xff6b9d, 0xff9a56, 0xda70d6, 0x00d9ff, 0x6bcb77];
-            const corals = [];
+            // ===== SUN =====
+            const sunGeo = new THREE.BoxGeometry(4, 4, 0.5);
+            const sun = new THREE.Mesh(sunGeo, pixelMat(colors.sun));
+            sun.position.set(8, 12, -50);
+            scene.add(sun);
 
-            for (let i = 0; i < 20; i++) {
-                const coralGroup = new THREE.Group();
-                const baseColor = coralColors[Math.floor(Math.random() * coralColors.length)];
+            // Sun glow (larger box behind)
+            const sunGlowGeo = new THREE.BoxGeometry(6, 6, 0.3);
+            const sunGlow = new THREE.Mesh(sunGlowGeo, new THREE.MeshBasicMaterial({
+                color: colors.sunGlow,
+                transparent: true,
+                opacity: 0.5
+            }));
+            sunGlow.position.set(8, 12, -51);
+            scene.add(sunGlow);
 
-                // Create coral branches
-                for (let j = 0; j < 5; j++) {
-                    const height = 1 + Math.random() * 2;
-                    const coralGeometry = new THREE.CylinderGeometry(0.1, 0.3, height, 8);
-                    const coralMaterial = new THREE.MeshStandardMaterial({
-                        color: baseColor,
-                        roughness: 0.7,
-                        metalness: 0.2
-                    });
-                    const coral = new THREE.Mesh(coralGeometry, coralMaterial);
-                    coral.position.set(
-                        (Math.random() - 0.5) * 1.5,
-                        height / 2,
-                        (Math.random() - 0.5) * 1.5
+            // ===== OCEAN (layered planes for depth) =====
+            const oceanWidth = 200;
+            const oceanDepth = 100;
+
+            // Deep ocean
+            const oceanDeepGeo = new THREE.BoxGeometry(oceanWidth, 1, oceanDepth);
+            const oceanDeep = new THREE.Mesh(oceanDeepGeo, pixelMat(colors.oceanDeep));
+            oceanDeep.position.set(0, -2, -60);
+            scene.add(oceanDeep);
+
+            // Mid ocean with wave segments
+            const waveSegments = [];
+            for (let z = 0; z < 8; z++) {
+                const waveGeo = new THREE.BoxGeometry(oceanWidth, 0.5, 8);
+                const waveColor = z < 3 ? colors.oceanDeep : z < 5 ? colors.oceanMid : colors.oceanLight;
+                const wave = new THREE.Mesh(waveGeo, pixelMat(waveColor));
+                wave.position.set(0, -1.5 + z * 0.1, -50 + z * 6);
+                wave.userData = { baseY: wave.position.y, offset: z * 0.5 };
+                waveSegments.push(wave);
+                scene.add(wave);
+            }
+
+            // Foam/shore waves
+            const foamGeo = new THREE.BoxGeometry(oceanWidth, 0.3, 3);
+            const foam = new THREE.Mesh(foamGeo, pixelMat(colors.oceanFoam));
+            foam.position.set(0, -1, 0);
+            scene.add(foam);
+
+            // ===== BEACH =====
+            const beachGeo = new THREE.BoxGeometry(oceanWidth, 2, 30);
+            const beach = new THREE.Mesh(beachGeo, pixelMat(colors.sand));
+            beach.position.set(0, -2, 15);
+            scene.add(beach);
+
+            // Beach texture (darker sand patches)
+            for (let i = 0; i < 15; i++) {
+                const patchGeo = new THREE.BoxGeometry(
+                    1 + Math.random() * 3,
+                    0.1,
+                    1 + Math.random() * 2
+                );
+                const patch = new THREE.Mesh(patchGeo, pixelMat(colors.sandDark));
+                patch.position.set(
+                    (Math.random() - 0.5) * 40,
+                    -0.9,
+                    5 + Math.random() * 20
+                );
+                scene.add(patch);
+            }
+
+            // ===== MOKULUA ISLANDS (Lanikai's twin islands) =====
+            function createIsland(x, z, scale) {
+                const islandGroup = new THREE.Group();
+
+                // Main mountain shape (stacked boxes for pixel look)
+                const heights = [2, 3.5, 4.5, 3, 1.5];
+                const widths = [4, 3, 2, 2.5, 3.5];
+                heights.forEach((h, i) => {
+                    const blockGeo = new THREE.BoxGeometry(widths[i] * scale, h * scale, widths[i] * scale * 0.8);
+                    const block = new THREE.Mesh(blockGeo, pixelMat(i % 2 === 0 ? colors.island : colors.islandDark));
+                    block.position.set(
+                        (i - 2) * scale * 0.8,
+                        h * scale / 2 - 1,
+                        0
                     );
-                    coral.rotation.x = (Math.random() - 0.5) * 0.3;
-                    coral.rotation.z = (Math.random() - 0.5) * 0.3;
-                    coralGroup.add(coral);
+                    islandGroup.add(block);
+                });
+
+                islandGroup.position.set(x, -1, z);
+                return islandGroup;
+            }
+
+            const island1 = createIsland(-15, -45, 1.2);
+            const island2 = createIsland(-8, -50, 0.9);
+            scene.add(island1);
+            scene.add(island2);
+
+            // ===== PALM TREES =====
+            function createPalmTree(x, z, height) {
+                const palmGroup = new THREE.Group();
+
+                // Trunk (stacked boxes)
+                const trunkSegments = Math.floor(height / 1.5);
+                for (let i = 0; i < trunkSegments; i++) {
+                    const segGeo = new THREE.BoxGeometry(0.6 - i * 0.05, 1.5, 0.6 - i * 0.05);
+                    const seg = new THREE.Mesh(segGeo, pixelMat(colors.palmTrunk));
+                    seg.position.set(
+                        Math.sin(i * 0.3) * 0.2,
+                        i * 1.4 + 0.7,
+                        0
+                    );
+                    seg.rotation.z = Math.sin(i * 0.5) * 0.1;
+                    palmGroup.add(seg);
                 }
 
-                coralGroup.position.set(
-                    (Math.random() - 0.5) * 50,
-                    -8,
-                    (Math.random() - 0.5) * 30 - 15
-                );
-                corals.push(coralGroup);
-                scene.add(coralGroup);
+                // Palm fronds (flat boxes angled outward)
+                const frondCount = 7;
+                for (let i = 0; i < frondCount; i++) {
+                    const angle = (i / frondCount) * Math.PI * 2;
+                    const frondGeo = new THREE.BoxGeometry(0.4, 0.15, 3);
+                    const frondColor = i % 2 === 0 ? colors.palmLeaf : colors.palmLeafLight;
+                    const frond = new THREE.Mesh(frondGeo, pixelMat(frondColor));
+                    frond.position.set(
+                        Math.cos(angle) * 1.2,
+                        height - 0.5,
+                        Math.sin(angle) * 1.2 - 1
+                    );
+                    frond.rotation.x = 0.5;
+                    frond.rotation.y = angle;
+                    frond.rotation.z = 0.3;
+                    frond.userData = { baseRotZ: frond.rotation.z, angle: angle };
+                    palmGroup.add(frond);
+                }
+
+                // Coconuts
+                for (let i = 0; i < 3; i++) {
+                    const coconutGeo = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+                    const coconut = new THREE.Mesh(coconutGeo, pixelMat(0x8b4513));
+                    coconut.position.set(
+                        Math.cos(i * 2) * 0.3,
+                        height - 1.2,
+                        Math.sin(i * 2) * 0.3
+                    );
+                    palmGroup.add(coconut);
+                }
+
+                palmGroup.position.set(x, -1, z);
+                return palmGroup;
             }
 
-            // Tropical fish
-            const fish = [];
-            const fishColors = [0xff6b9d, 0xffd93d, 0x00d9ff, 0xff9a56, 0x6bcb77];
+            const palms = [];
+            // Left side palms
+            palms.push(createPalmTree(-12, 8, 8));
+            palms.push(createPalmTree(-18, 12, 10));
+            palms.push(createPalmTree(-22, 6, 7));
+            // Right side palms
+            palms.push(createPalmTree(14, 10, 9));
+            palms.push(createPalmTree(20, 8, 11));
+            palms.push(createPalmTree(10, 15, 6));
 
-            for (let i = 0; i < 15; i++) {
-                const fishGroup = new THREE.Group();
-                const fishColor = fishColors[Math.floor(Math.random() * fishColors.length)];
+            palms.forEach(p => scene.add(p));
 
-                // Body
-                const bodyGeometry = new THREE.SphereGeometry(0.4, 8, 6);
-                bodyGeometry.scale(1.5, 1, 0.6);
-                const bodyMaterial = new THREE.MeshStandardMaterial({
-                    color: fishColor,
-                    roughness: 0.3,
-                    metalness: 0.5
+            // ===== CLOUDS =====
+            function createCloud(x, y, z, scale) {
+                const cloudGroup = new THREE.Group();
+                const puffs = [
+                    { x: 0, y: 0, z: 0, s: 1 },
+                    { x: 1.2, y: 0.2, z: 0, s: 0.8 },
+                    { x: -1, y: 0.1, z: 0, s: 0.7 },
+                    { x: 0.5, y: 0.5, z: 0, s: 0.6 },
+                    { x: -0.5, y: 0.4, z: 0, s: 0.5 }
+                ];
+
+                puffs.forEach(p => {
+                    const puffGeo = new THREE.BoxGeometry(2 * p.s * scale, 1 * p.s * scale, 1 * p.s * scale);
+                    const puff = new THREE.Mesh(puffGeo, pixelMat(colors.cloud));
+                    puff.position.set(p.x * scale, p.y * scale, p.z * scale);
+                    cloudGroup.add(puff);
                 });
-                const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-                fishGroup.add(body);
 
-                // Tail
-                const tailGeometry = new THREE.ConeGeometry(0.3, 0.5, 4);
-                const tail = new THREE.Mesh(tailGeometry, bodyMaterial);
-                tail.rotation.z = Math.PI / 2;
-                tail.position.x = -0.7;
-                fishGroup.add(tail);
-
-                // Eye
-                const eyeGeometry = new THREE.SphereGeometry(0.1, 6, 6);
-                const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-                const eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-                eye.position.set(0.4, 0.15, 0.25);
-                fishGroup.add(eye);
-
-                const pupil = new THREE.Mesh(
-                    new THREE.SphereGeometry(0.05, 6, 6),
-                    new THREE.MeshStandardMaterial({ color: 0x000000 })
-                );
-                pupil.position.set(0.45, 0.15, 0.28);
-                fishGroup.add(pupil);
-
-                fishGroup.position.set(
-                    (Math.random() - 0.5) * 40,
-                    Math.random() * 10 - 5,
-                    (Math.random() - 0.5) * 30 - 15
-                );
-                fishGroup.userData = {
-                    speed: 0.01 + Math.random() * 0.02,
-                    amplitude: 1 + Math.random() * 2,
-                    offset: Math.random() * Math.PI * 2,
-                    direction: Math.random() > 0.5 ? 1 : -1
-                };
-                fishGroup.rotation.y = fishGroup.userData.direction > 0 ? 0 : Math.PI;
-                fish.push(fishGroup);
-                scene.add(fishGroup);
+                cloudGroup.position.set(x, y, z);
+                cloudGroup.userData = { baseX: x, speed: 0.01 + Math.random() * 0.02 };
+                return cloudGroup;
             }
 
-            // Light rays from surface
-            const rayGeometry = new THREE.CylinderGeometry(0.1, 2, 20, 8, 1, true);
-            const rayMaterial = new THREE.MeshBasicMaterial({
-                color: 0xffffaa,
-                transparent: true,
-                opacity: 0.1,
-                side: THREE.DoubleSide
-            });
+            const clouds = [];
+            clouds.push(createCloud(-20, 15, -40, 2));
+            clouds.push(createCloud(15, 18, -45, 1.5));
+            clouds.push(createCloud(-5, 20, -50, 2.5));
+            clouds.push(createCloud(25, 14, -35, 1.8));
+            clouds.forEach(c => scene.add(c));
 
-            const rays = [];
+            // ===== BIRDS (simple V shapes) =====
+            const birds = [];
             for (let i = 0; i < 5; i++) {
-                const ray = new THREE.Mesh(rayGeometry, rayMaterial);
-                ray.position.set(
-                    (Math.random() - 0.5) * 30,
-                    5,
-                    -15 + Math.random() * 10
+                const birdGroup = new THREE.Group();
+                const wingGeo = new THREE.BoxGeometry(0.8, 0.1, 0.3);
+                const wingMat = pixelMat(0x333333);
+
+                const leftWing = new THREE.Mesh(wingGeo, wingMat);
+                leftWing.position.set(-0.3, 0, 0);
+                leftWing.rotation.z = 0.3;
+                birdGroup.add(leftWing);
+
+                const rightWing = new THREE.Mesh(wingGeo, wingMat);
+                rightWing.position.set(0.3, 0, 0);
+                rightWing.rotation.z = -0.3;
+                birdGroup.add(rightWing);
+
+                birdGroup.position.set(
+                    (Math.random() - 0.5) * 40,
+                    10 + Math.random() * 8,
+                    -30 + Math.random() * 10
                 );
-                ray.rotation.x = 0.1;
-                ray.rotation.z = (Math.random() - 0.5) * 0.3;
-                rays.push(ray);
-                scene.add(ray);
+                birdGroup.userData = {
+                    speed: 0.02 + Math.random() * 0.03,
+                    flapOffset: Math.random() * Math.PI * 2
+                };
+                birds.push(birdGroup);
+                scene.add(birdGroup);
             }
 
-            // Camera position
-            camera.position.set(0, 0, 10);
-            camera.lookAt(0, 0, -10);
+            // ===== BEACH ITEMS =====
+            // Surfboard
+            const surfboardGeo = new THREE.BoxGeometry(0.5, 0.15, 2.5);
+            const surfboard = new THREE.Mesh(surfboardGeo, pixelMat(0xff6b9d));
+            surfboard.position.set(5, -0.8, 12);
+            surfboard.rotation.y = 0.3;
+            scene.add(surfboard);
+
+            // Beach umbrella
+            const umbrellaGroup = new THREE.Group();
+            const poleGeo = new THREE.BoxGeometry(0.2, 4, 0.2);
+            const pole = new THREE.Mesh(poleGeo, pixelMat(0x8b4513));
+            pole.position.set(0, 1, 0);
+            umbrellaGroup.add(pole);
+
+            const canopyGeo = new THREE.BoxGeometry(3, 0.3, 3);
+            const canopy = new THREE.Mesh(canopyGeo, pixelMat(0xff9a56));
+            canopy.position.set(0, 3, 0);
+            umbrellaGroup.add(canopy);
+            umbrellaGroup.position.set(-5, -1, 18);
+            scene.add(umbrellaGroup);
+
+            // Camera position (beach view looking at ocean)
+            camera.position.set(0, 3, 25);
+            camera.lookAt(0, 2, -20);
 
             // Animation
             let time = 0;
 
             function animate() {
                 requestAnimationFrame(animate);
-                time += 0.01;
+                time += 0.02;
 
-                // Animate water surface
-                const waterPositions = water.geometry.attributes.position;
-                for (let i = 0; i < waterPositions.count; i++) {
-                    const x = waterPositions.getX(i);
-                    const z = waterPositions.getZ(i);
-                    waterPositions.setY(i, Math.sin(x * 0.3 + time) * 0.3 + Math.cos(z * 0.3 + time) * 0.3);
-                }
-                waterPositions.needsUpdate = true;
-
-                // Animate bubbles
-                bubbles.forEach(bubble => {
-                    bubble.position.y += bubble.userData.speed;
-                    bubble.position.x += Math.sin(time * 2 + bubble.userData.wobble) * 0.01;
-                    if (bubble.position.y > 10) {
-                        bubble.position.y = -10;
-                        bubble.position.x = (Math.random() - 0.5) * 40;
-                    }
+                // Animate waves
+                waveSegments.forEach((wave, i) => {
+                    wave.position.y = wave.userData.baseY + Math.sin(time + wave.userData.offset) * 0.15;
                 });
 
-                // Animate fish
-                fish.forEach(f => {
-                    f.position.x += f.userData.speed * f.userData.direction;
-                    f.position.y += Math.sin(time * 2 + f.userData.offset) * 0.01;
+                // Animate foam
+                foam.position.z = Math.sin(time * 0.5) * 1.5;
+                foam.scale.x = 1 + Math.sin(time) * 0.1;
 
-                    // Wrap around
-                    if (f.userData.direction > 0 && f.position.x > 25) {
-                        f.position.x = -25;
-                    } else if (f.userData.direction < 0 && f.position.x < -25) {
-                        f.position.x = 25;
-                    }
-
-                    // Subtle tail wiggle
-                    f.rotation.y = (f.userData.direction > 0 ? 0 : Math.PI) + Math.sin(time * 5) * 0.1;
+                // Animate clouds
+                clouds.forEach(cloud => {
+                    cloud.position.x += cloud.userData.speed;
+                    if (cloud.position.x > 50) cloud.position.x = -50;
                 });
 
-                // Animate light rays
-                rays.forEach((ray, i) => {
-                    ray.material.opacity = 0.05 + Math.sin(time + i) * 0.03;
+                // Animate birds
+                birds.forEach(bird => {
+                    bird.position.x += bird.userData.speed;
+                    bird.position.y += Math.sin(time * 3 + bird.userData.flapOffset) * 0.02;
+                    if (bird.position.x > 30) bird.position.x = -30;
+
+                    // Wing flap
+                    const flap = Math.sin(time * 8 + bird.userData.flapOffset) * 0.3;
+                    bird.children[0].rotation.z = 0.3 + flap;
+                    bird.children[1].rotation.z = -0.3 - flap;
+                });
+
+                // Animate palm fronds (gentle sway)
+                palms.forEach(palm => {
+                    palm.children.forEach(child => {
+                        if (child.userData.baseRotZ !== undefined) {
+                            child.rotation.z = child.userData.baseRotZ + Math.sin(time + child.userData.angle) * 0.1;
+                        }
+                    });
                 });
 
                 // Gentle camera sway
-                camera.position.x = Math.sin(time * 0.3) * 0.5;
-                camera.position.y = Math.cos(time * 0.2) * 0.3;
+                camera.position.x = Math.sin(time * 0.2) * 0.3;
+                camera.position.y = 3 + Math.cos(time * 0.15) * 0.2;
 
-                // Animate point lights
-                pointLight1.position.x = Math.sin(time * 0.5) * 15;
-                pointLight2.position.z = -15 + Math.cos(time * 0.3) * 5;
+                // Sun glow pulse
+                sunGlow.scale.set(
+                    1 + Math.sin(time) * 0.1,
+                    1 + Math.sin(time) * 0.1,
+                    1
+                );
 
                 renderer.render(scene, camera);
             }
