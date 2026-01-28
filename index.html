@@ -66,20 +66,20 @@
 
         .game-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 380px;
             height: auto;
             max-height: calc(100% - 20px);
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            background: var(--container-bg);
+            gap: 5px;
+            background: rgba(26, 10, 46, 0.75);
             border-radius: 20px;
-            padding: 15px;
-            padding-bottom: 25px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            padding: 12px;
+            padding-bottom: 20px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             overflow: hidden;
             margin-bottom: env(safe-area-inset-bottom, 0px);
         }
@@ -273,24 +273,27 @@
         .achievement-toast.show { transform: translateX(-50%) translateY(0); }
 
         /* Achievements Modal */
+        #achievementsModal { padding-top: 30px; padding-bottom: 30px; }
+        #achievementsModal h2 { margin-bottom: 15px; }
         .achievements-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            max-width: 350px;
-            margin: 20px auto;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 360px;
+            margin: 0 auto 20px;
+            width: 100%;
         }
         .achievement-item {
             text-align: center;
-            padding: 15px 10px;
+            padding: 10px 5px;
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 10px;
             border: 2px solid rgba(255,255,255,0.1);
         }
         .achievement-item.unlocked { border-color: var(--accent); }
         .achievement-item.locked { opacity: 0.4; }
-        .achievement-emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
-        .achievement-name { font-size: 0.75rem; color: var(--primary); }
+        .achievement-emoji { font-size: 1.5rem; display: block; margin-bottom: 3px; }
+        .achievement-name { font-size: 0.65rem; color: var(--primary); line-height: 1.2; }
 
         /* Level Display */
         .level-display {
@@ -441,14 +444,20 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             z-index: 200;
             padding: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .modal.show { display: flex; }
 
         /* Theme Picker */
-        .theme-picker h2 { font-size: 1.5rem; margin-bottom: 15px; }
+        .theme-picker { padding-top: 40px; padding-bottom: 40px; }
+        .theme-picker h2 { font-size: 1.3rem; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+        .theme-picker h2:first-child { margin-top: 0; }
+        #themeButtons, #sceneButtons { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        #prestigeSection { text-align: center; width: 100%; max-width: 280px; }
         .theme-btn {
             width: 100%;
             max-width: 250px;
@@ -465,6 +474,12 @@
         .theme-btn.sunset { background: linear-gradient(135deg, #2d1b2e, #4a2c4a); border-color: #ff9a56; color: #ff9a56; }
         .theme-btn.berry { background: linear-gradient(135deg, #1a0a1a, #2d1f3d); border-color: #da70d6; color: #da70d6; }
         .theme-btn.retro { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); border-color: #39ff14; color: #39ff14; }
+        .theme-btn.scene-btn { background: linear-gradient(135deg, #1a2a3a, #2a3a4a); border-color: #7fdbff; color: #fff; font-size: 1rem; }
+        .theme-btn.scene-btn.active { border-color: #ffd93d; box-shadow: 0 0 10px rgba(255, 217, 61, 0.5); }
+
+        /* Prestige stars */
+        .prestige-stars { color: #ffd93d; margin-right: 5px; text-shadow: 0 0 5px rgba(255, 217, 61, 0.8); animation: prestigeGlow 2s ease-in-out infinite; }
+        @keyframes prestigeGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
 
         .close-btn {
             margin-top: 15px;
@@ -575,6 +590,48 @@
         }
         .boss-numpad .delete { border-color: var(--error); color: var(--error); }
         .boss-numpad .submit { border-color: var(--success); color: var(--success); }
+
+        /* Boss ability system */
+        .ability-flash {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent), 0 2px 4px rgba(0,0,0,0.5);
+            animation: abilityPop 1.5s ease-out forwards;
+            z-index: 10;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        @keyframes abilityPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            30% { transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -70%) scale(1); }
+        }
+
+        .boss-info-card {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--error);
+            border-radius: 12px;
+            padding: 10px 15px;
+            font-size: 0.85rem;
+            color: #fff;
+            text-align: left;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 5;
+            max-width: 90%;
+        }
+        .boss-info-card.show { opacity: 1; }
+        .boss-ability-icon { margin-right: 6px; }
 
         .boss-victory {
             position: absolute;
@@ -924,6 +981,322 @@
             <rect x="18" y="4" width="4" height="2" fill="#66bb6a"/>
             <rect x="14" y="1" width="4" height="1" fill="#81c784"/>
         </symbol>
+
+        <!-- ===== NEW EXPANSION BOSSES ===== -->
+
+        <!-- Octopus Boss -->
+        <symbol id="boss-octopus" viewBox="0 0 32 32">
+            <!-- Body -->
+            <rect x="10" y="6" width="12" height="12" fill="#9b59b6"/>
+            <rect x="8" y="8" width="16" height="8" fill="#8e44ad"/>
+            <!-- Eyes -->
+            <rect x="11" y="9" width="4" height="4" fill="#fff"/>
+            <rect x="17" y="9" width="4" height="4" fill="#fff"/>
+            <rect x="12" y="10" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="18" y="10" width="2" height="2" fill="#1a1a1a"/>
+            <!-- Smile -->
+            <rect x="13" y="14" width="6" height="2" fill="#7b2d8e"/>
+            <!-- Tentacles -->
+            <rect x="4" y="18" width="3" height="8" fill="#9b59b6"/>
+            <rect x="8" y="18" width="3" height="10" fill="#8e44ad"/>
+            <rect x="12" y="18" width="3" height="8" fill="#9b59b6"/>
+            <rect x="17" y="18" width="3" height="10" fill="#8e44ad"/>
+            <rect x="21" y="18" width="3" height="8" fill="#9b59b6"/>
+            <rect x="25" y="18" width="3" height="6" fill="#8e44ad"/>
+            <!-- Suction cups -->
+            <rect x="5" y="20" width="1" height="1" fill="#e8d4f0"/>
+            <rect x="9" y="22" width="1" height="1" fill="#e8d4f0"/>
+            <rect x="13" y="20" width="1" height="1" fill="#e8d4f0"/>
+            <rect x="18" y="24" width="1" height="1" fill="#e8d4f0"/>
+            <rect x="22" y="20" width="1" height="1" fill="#e8d4f0"/>
+        </symbol>
+
+        <!-- Sea Turtle Boss -->
+        <symbol id="boss-turtle" viewBox="0 0 32 32">
+            <!-- Shell -->
+            <rect x="8" y="10" width="16" height="12" fill="#2e7d32"/>
+            <rect x="10" y="8" width="12" height="2" fill="#388e3c"/>
+            <rect x="10" y="22" width="12" height="2" fill="#1b5e20"/>
+            <!-- Shell pattern -->
+            <rect x="10" y="12" width="4" height="4" fill="#1b5e20"/>
+            <rect x="14" y="12" width="4" height="4" fill="#388e3c"/>
+            <rect x="18" y="12" width="4" height="4" fill="#1b5e20"/>
+            <rect x="12" y="16" width="4" height="4" fill="#388e3c"/>
+            <rect x="16" y="16" width="4" height="4" fill="#1b5e20"/>
+            <!-- Head -->
+            <rect x="24" y="13" width="6" height="6" fill="#81c784"/>
+            <rect x="27" y="15" width="2" height="2" fill="#1a1a1a"/>
+            <!-- Flippers -->
+            <rect x="4" y="12" width="4" height="3" fill="#81c784"/>
+            <rect x="4" y="17" width="4" height="3" fill="#81c784"/>
+            <rect x="24" y="20" width="4" height="3" fill="#81c784"/>
+            <!-- Cute blush -->
+            <rect x="25" y="17" width="2" height="1" fill="#a5d6a7" opacity="0.7"/>
+        </symbol>
+
+        <!-- Hermit Crab Boss -->
+        <symbol id="boss-hermitcrab" viewBox="0 0 32 32">
+            <!-- Shell -->
+            <rect x="12" y="8" width="12" height="14" fill="#ff9800"/>
+            <rect x="14" y="6" width="8" height="2" fill="#ffb74d"/>
+            <rect x="14" y="22" width="8" height="2" fill="#f57c00"/>
+            <!-- Shell spiral pattern -->
+            <rect x="16" y="10" width="4" height="4" fill="#f57c00"/>
+            <rect x="18" y="14" width="4" height="4" fill="#ffb74d"/>
+            <rect x="14" y="16" width="4" height="4" fill="#f57c00"/>
+            <!-- Crab body peeking out -->
+            <rect x="4" y="14" width="8" height="8" fill="#ff5722"/>
+            <!-- Eyes on stalks -->
+            <rect x="4" y="10" width="2" height="4" fill="#ff5722"/>
+            <rect x="10" y="10" width="2" height="4" fill="#ff5722"/>
+            <rect x="3" y="8" width="4" height="3" fill="#fff"/>
+            <rect x="9" y="8" width="4" height="3" fill="#fff"/>
+            <rect x="4" y="9" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="10" y="9" width="2" height="2" fill="#1a1a1a"/>
+            <!-- Claws -->
+            <rect x="2" y="18" width="4" height="4" fill="#ff5722"/>
+            <rect x="0" y="19" width="2" height="2" fill="#ff7043"/>
+        </symbol>
+
+        <!-- Starfish Boss -->
+        <symbol id="boss-starfish" viewBox="0 0 32 32">
+            <!-- 5-pointed star body -->
+            <rect x="14" y="2" width="4" height="8" fill="#ff7043"/>
+            <rect x="2" y="12" width="8" height="4" fill="#ff7043"/>
+            <rect x="22" y="12" width="8" height="4" fill="#ff7043"/>
+            <rect x="6" y="22" width="6" height="6" fill="#ff7043"/>
+            <rect x="20" y="22" width="6" height="6" fill="#ff7043"/>
+            <!-- Center body -->
+            <rect x="10" y="10" width="12" height="12" fill="#ff5722"/>
+            <!-- Face -->
+            <rect x="11" y="13" width="3" height="3" fill="#1a1a1a"/>
+            <rect x="18" y="13" width="3" height="3" fill="#1a1a1a"/>
+            <rect x="11" y="13" width="1" height="1" fill="#fff"/>
+            <rect x="18" y="13" width="1" height="1" fill="#fff"/>
+            <rect x="14" y="17" width="4" height="2" fill="#d84315"/>
+            <!-- Bumps texture -->
+            <rect x="15" y="4" width="2" height="2" fill="#ffab91"/>
+            <rect x="4" y="13" width="2" height="2" fill="#ffab91"/>
+            <rect x="26" y="13" width="2" height="2" fill="#ffab91"/>
+        </symbol>
+
+        <!-- Pirate Captain Boss -->
+        <symbol id="boss-pirate" viewBox="0 0 32 32">
+            <!-- Head -->
+            <rect x="10" y="10" width="12" height="14" fill="#ffcc80"/>
+            <!-- Bandana -->
+            <rect x="8" y="6" width="16" height="6" fill="#d32f2f"/>
+            <rect x="10" y="4" width="12" height="2" fill="#c62828"/>
+            <rect x="22" y="10" width="4" height="2" fill="#d32f2f"/>
+            <!-- Eyepatch -->
+            <rect x="17" y="14" width="4" height="4" fill="#1a1a1a"/>
+            <rect x="21" y="13" width="2" height="1" fill="#1a1a1a"/>
+            <!-- Good eye -->
+            <rect x="11" y="14" width="4" height="4" fill="#fff"/>
+            <rect x="12" y="15" width="2" height="2" fill="#1a1a1a"/>
+            <!-- Beard -->
+            <rect x="10" y="20" width="12" height="6" fill="#5d4037"/>
+            <rect x="12" y="26" width="8" height="2" fill="#4e342e"/>
+            <!-- Smile under beard -->
+            <rect x="13" y="19" width="6" height="1" fill="#d84315"/>
+            <!-- Hat skull -->
+            <rect x="14" y="2" width="4" height="2" fill="#fff"/>
+        </symbol>
+
+        <!-- Mermaid Boss -->
+        <symbol id="boss-mermaid" viewBox="0 0 32 32">
+            <!-- Hair -->
+            <rect x="8" y="2" width="16" height="10" fill="#4fc3f7"/>
+            <rect x="6" y="6" width="2" height="10" fill="#29b6f6"/>
+            <rect x="24" y="6" width="2" height="10" fill="#29b6f6"/>
+            <!-- Face -->
+            <rect x="10" y="6" width="12" height="10" fill="#ffcc80"/>
+            <!-- Eyes -->
+            <rect x="11" y="9" width="3" height="3" fill="#fff"/>
+            <rect x="18" y="9" width="3" height="3" fill="#fff"/>
+            <rect x="12" y="10" width="2" height="2" fill="#4fc3f7"/>
+            <rect x="19" y="10" width="2" height="2" fill="#4fc3f7"/>
+            <!-- Blush -->
+            <rect x="10" y="12" width="2" height="1" fill="#ffab91" opacity="0.7"/>
+            <rect x="20" y="12" width="2" height="1" fill="#ffab91" opacity="0.7"/>
+            <!-- Smile -->
+            <rect x="14" y="13" width="4" height="2" fill="#e57373"/>
+            <!-- Shell top -->
+            <rect x="10" y="16" width="5" height="4" fill="#e91e63"/>
+            <rect x="17" y="16" width="5" height="4" fill="#e91e63"/>
+            <!-- Tail -->
+            <rect x="10" y="20" width="12" height="6" fill="#26c6da"/>
+            <rect x="8" y="26" width="6" height="4" fill="#00bcd4"/>
+            <rect x="18" y="26" width="6" height="4" fill="#00bcd4"/>
+            <!-- Scales -->
+            <rect x="12" y="22" width="2" height="2" fill="#4dd0e1"/>
+            <rect x="16" y="22" width="2" height="2" fill="#4dd0e1"/>
+        </symbol>
+
+        <!-- Stingray Boss -->
+        <symbol id="boss-stingray" viewBox="0 0 32 32">
+            <!-- Body (diamond shape) -->
+            <rect x="6" y="12" width="20" height="8" fill="#607d8b"/>
+            <rect x="10" y="8" width="12" height="4" fill="#78909c"/>
+            <rect x="10" y="20" width="12" height="4" fill="#546e7a"/>
+            <rect x="14" y="6" width="4" height="2" fill="#78909c"/>
+            <!-- Eyes -->
+            <rect x="10" y="10" width="4" height="4" fill="#fff"/>
+            <rect x="18" y="10" width="4" height="4" fill="#fff"/>
+            <rect x="11" y="11" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="19" y="11" width="2" height="2" fill="#1a1a1a"/>
+            <!-- Tail -->
+            <rect x="14" y="24" width="4" height="4" fill="#455a64"/>
+            <rect x="15" y="28" width="2" height="4" fill="#37474f"/>
+            <!-- Stinger -->
+            <rect x="15" y="30" width="2" height="2" fill="#ff5722"/>
+            <!-- Belly pattern -->
+            <rect x="12" y="14" width="8" height="4" fill="#90a4ae"/>
+            <!-- Smile -->
+            <rect x="13" y="16" width="6" height="1" fill="#455a64"/>
+        </symbol>
+
+        <!-- Pelican Boss -->
+        <symbol id="boss-pelican" viewBox="0 0 32 32">
+            <!-- Body -->
+            <rect x="12" y="12" width="12" height="12" fill="#eceff1"/>
+            <rect x="10" y="14" width="2" height="8" fill="#cfd8dc"/>
+            <!-- Head -->
+            <rect x="12" y="4" width="10" height="8" fill="#fff"/>
+            <!-- Eyes -->
+            <rect x="14" y="6" width="3" height="3" fill="#1a1a1a"/>
+            <rect x="14" y="6" width="1" height="1" fill="#fff"/>
+            <!-- Beak pouch -->
+            <rect x="20" y="6" width="10" height="8" fill="#ff9800"/>
+            <rect x="22" y="14" width="6" height="4" fill="#ffb74d"/>
+            <!-- Beak top -->
+            <rect x="22" y="4" width="8" height="2" fill="#f57c00"/>
+            <!-- Wings -->
+            <rect x="4" y="14" width="8" height="6" fill="#cfd8dc"/>
+            <rect x="6" y="20" width="4" height="2" fill="#90a4ae"/>
+            <!-- Feet -->
+            <rect x="14" y="24" width="4" height="4" fill="#ff9800"/>
+            <rect x="18" y="24" width="4" height="4" fill="#ff9800"/>
+            <!-- Cute feather tuft -->
+            <rect x="16" y="2" width="2" height="2" fill="#fff"/>
+        </symbol>
+
+        <!-- Whale Boss -->
+        <symbol id="boss-whale" viewBox="0 0 32 32">
+            <!-- Body -->
+            <rect x="4" y="10" width="24" height="14" fill="#1976d2"/>
+            <rect x="6" y="8" width="20" height="2" fill="#2196f3"/>
+            <rect x="6" y="24" width="20" height="2" fill="#1565c0"/>
+            <!-- Head -->
+            <rect x="2" y="12" width="4" height="10" fill="#2196f3"/>
+            <!-- Eye -->
+            <rect x="4" y="14" width="3" height="3" fill="#fff"/>
+            <rect x="5" y="15" width="2" height="2" fill="#1a1a1a"/>
+            <!-- Spout -->
+            <rect x="10" y="2" width="2" height="6" fill="#90caf9"/>
+            <rect x="8" y="2" width="2" height="3" fill="#64b5f6"/>
+            <rect x="12" y="2" width="2" height="3" fill="#64b5f6"/>
+            <!-- Belly -->
+            <rect x="8" y="18" width="16" height="6" fill="#bbdefb"/>
+            <!-- Tail -->
+            <rect x="26" y="8" width="4" height="6" fill="#1976d2"/>
+            <rect x="26" y="18" width="4" height="6" fill="#1976d2"/>
+            <!-- Smile -->
+            <rect x="4" y="20" width="4" height="2" fill="#0d47a1"/>
+        </symbol>
+
+        <!-- Sea Serpent Boss -->
+        <symbol id="boss-serpent" viewBox="0 0 32 32">
+            <!-- Wavy body segments -->
+            <rect x="2" y="14" width="6" height="8" fill="#4caf50"/>
+            <rect x="8" y="10" width="6" height="8" fill="#66bb6a"/>
+            <rect x="14" y="14" width="6" height="8" fill="#4caf50"/>
+            <rect x="20" y="10" width="6" height="8" fill="#66bb6a"/>
+            <!-- Head -->
+            <rect x="24" y="6" width="8" height="10" fill="#43a047"/>
+            <!-- Eyes -->
+            <rect x="26" y="8" width="4" height="4" fill="#fff"/>
+            <rect x="27" y="9" width="2" height="2" fill="#ff5722"/>
+            <!-- Fangs -->
+            <rect x="26" y="14" width="2" height="3" fill="#fff"/>
+            <rect x="30" y="14" width="2" height="3" fill="#fff"/>
+            <!-- Spines -->
+            <rect x="4" y="12" width="2" height="2" fill="#81c784"/>
+            <rect x="10" y="8" width="2" height="2" fill="#81c784"/>
+            <rect x="16" y="12" width="2" height="2" fill="#81c784"/>
+            <rect x="22" y="8" width="2" height="2" fill="#81c784"/>
+            <rect x="28" y="4" width="2" height="2" fill="#81c784"/>
+            <!-- Tail -->
+            <rect x="0" y="16" width="2" height="4" fill="#388e3c"/>
+        </symbol>
+
+        <!-- Treasure Mimic Boss -->
+        <symbol id="boss-mimic" viewBox="0 0 32 32">
+            <!-- Chest body -->
+            <rect x="4" y="14" width="24" height="14" fill="#8d6e63"/>
+            <rect x="6" y="16" width="20" height="10" fill="#a1887f"/>
+            <!-- Chest lid (open) -->
+            <rect x="4" y="8" width="24" height="6" fill="#6d4c41"/>
+            <rect x="6" y="10" width="20" height="2" fill="#8d6e63"/>
+            <!-- Teeth (top) -->
+            <rect x="6" y="12" width="3" height="3" fill="#fff"/>
+            <rect x="11" y="12" width="3" height="3" fill="#fff"/>
+            <rect x="18" y="12" width="3" height="3" fill="#fff"/>
+            <rect x="23" y="12" width="3" height="3" fill="#fff"/>
+            <!-- Teeth (bottom) -->
+            <rect x="8" y="14" width="3" height="3" fill="#fff"/>
+            <rect x="14" y="14" width="4" height="3" fill="#fff"/>
+            <rect x="21" y="14" width="3" height="3" fill="#fff"/>
+            <!-- Evil eyes -->
+            <rect x="8" y="4" width="5" height="5" fill="#ff5722"/>
+            <rect x="19" y="4" width="5" height="5" fill="#ff5722"/>
+            <rect x="9" y="5" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="20" y="5" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="10" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="21" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <!-- Gold coins inside -->
+            <rect x="10" y="18" width="4" height="4" fill="#ffd700"/>
+            <rect x="16" y="20" width="4" height="4" fill="#ffc107"/>
+            <!-- Lock (broken) -->
+            <rect x="14" y="24" width="4" height="3" fill="#5d4037"/>
+        </symbol>
+
+        <!-- Kraken Boss -->
+        <symbol id="boss-kraken" viewBox="0 0 32 32">
+            <!-- Head -->
+            <rect x="10" y="2" width="12" height="14" fill="#4a148c"/>
+            <rect x="8" y="6" width="16" height="8" fill="#6a1b9a"/>
+            <!-- Eyes (menacing) -->
+            <rect x="10" y="6" width="5" height="5" fill="#ff5722"/>
+            <rect x="17" y="6" width="5" height="5" fill="#ff5722"/>
+            <rect x="11" y="7" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="18" y="7" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="12" y="8" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="19" y="8" width="1" height="1" fill="#1a1a1a"/>
+            <!-- Beak -->
+            <rect x="14" y="12" width="4" height="4" fill="#1a1a1a"/>
+            <!-- Tentacles (8 of them) -->
+            <rect x="0" y="16" width="3" height="10" fill="#4a148c"/>
+            <rect x="4" y="18" width="3" height="12" fill="#6a1b9a"/>
+            <rect x="8" y="16" width="3" height="10" fill="#4a148c"/>
+            <rect x="12" y="18" width="3" height="12" fill="#6a1b9a"/>
+            <rect x="17" y="16" width="3" height="10" fill="#4a148c"/>
+            <rect x="21" y="18" width="3" height="12" fill="#6a1b9a"/>
+            <rect x="25" y="16" width="3" height="10" fill="#4a148c"/>
+            <rect x="29" y="18" width="3" height="8" fill="#6a1b9a"/>
+            <!-- Suction cups -->
+            <rect x="1" y="20" width="1" height="1" fill="#ce93d8"/>
+            <rect x="5" y="24" width="1" height="1" fill="#ce93d8"/>
+            <rect x="9" y="20" width="1" height="1" fill="#ce93d8"/>
+            <rect x="13" y="26" width="1" height="1" fill="#ce93d8"/>
+            <rect x="18" y="20" width="1" height="1" fill="#ce93d8"/>
+            <rect x="22" y="24" width="1" height="1" fill="#ce93d8"/>
+            <rect x="26" y="20" width="1" height="1" fill="#ce93d8"/>
+            <!-- Crown (boss of the sea) -->
+            <rect x="12" y="0" width="8" height="2" fill="#ffd700"/>
+            <rect x="14" y="-1" width="2" height="1" fill="#ffc107"/>
+            <rect x="18" y="-1" width="2" height="1" fill="#ffc107"/>
+        </symbol>
     </svg>
 
     <div class="game-container">
@@ -938,16 +1311,11 @@
 
         <div class="settings-toggle">
             <button class="settings-btn" onclick="toggleSettings()">
-                <span id="settingsLabel">Easy • Mixed</span> ▼
+                <span id="settingsLabel">Mixed • ∞ Free</span> ▼
             </button>
         </div>
 
         <div class="settings-panel" id="settingsPanel">
-            <div class="settings-row">
-                <button id="easy" class="active" onclick="setDifficulty('easy')">Easy</button>
-                <button id="medium" onclick="setDifficulty('medium')">Medium</button>
-                <button id="hard" onclick="setDifficulty('hard')">Hard</button>
-            </div>
             <div class="settings-row">
                 <button id="add" onclick="setOperation('add')">+</button>
                 <button id="subtract" onclick="setOperation('subtract')">−</button>
@@ -1016,6 +1384,9 @@
     <div class="modal theme-picker" id="themePicker">
         <h2>Pick a Theme</h2>
         <div id="themeButtons"></div>
+        <h2 style="margin-top:20px;">🏝️ Beach Scene</h2>
+        <div id="sceneButtons"></div>
+        <div id="prestigeSection" style="margin-top:20px;"></div>
         <button class="close-btn" onclick="hideThemePicker()">Done</button>
     </div>
 
@@ -1033,6 +1404,7 @@
     <div class="modal boss-modal" id="bossBattleModal">
         <div class="boss-title">⚔️ BOSS BATTLE ⚔️</div>
         <div class="boss-container" id="bossContainer">
+            <div class="boss-info-card" id="bossInfoCard"></div>
             <div class="boss-emoji" id="bossEmoji">
                 <svg class="pixel-boss" style="width:100px;height:100px;"><use href="#boss-tiki" id="bossUse"/></svg>
             </div>
@@ -1089,15 +1461,55 @@
 
     <script>
         // Bosses with unlock levels
+        // Tiers: 'basic' = original stats, 'simple' = stat variations, 'ability' = single ability, 'elite' = multi-ability
         const BOSSES = [
-            { svg: 'boss-tiki', name: 'Tiki Mask', unlockLevel: 1 },
-            { svg: 'boss-crab', name: 'Coconut Crab', unlockLevel: 1 },
-            { svg: 'boss-puffer', name: 'Pufferfish', unlockLevel: 3 },
-            { svg: 'boss-jelly', name: 'Jellyfish', unlockLevel: 5 },
-            { svg: 'boss-bird', name: 'Tropical Bird', unlockLevel: 7 },
-            { svg: 'boss-shark', name: 'Surfing Shark', unlockLevel: 10 },
-            { svg: 'boss-volcano', name: 'Volcano Spirit', unlockLevel: 12 },
-            { svg: 'boss-coconut', name: 'Coconut Monster', unlockLevel: 15 }
+            // Original bosses (basic tier)
+            { svg: 'boss-tiki', name: 'Tiki Mask', unlockLevel: 1, tier: 'basic' },
+            { svg: 'boss-crab', name: 'Coconut Crab', unlockLevel: 1, tier: 'basic' },
+            { svg: 'boss-puffer', name: 'Pufferfish', unlockLevel: 3, tier: 'basic' },
+            { svg: 'boss-jelly', name: 'Jellyfish', unlockLevel: 5, tier: 'basic' },
+            { svg: 'boss-bird', name: 'Tropical Bird', unlockLevel: 7, tier: 'basic' },
+            { svg: 'boss-shark', name: 'Surfing Shark', unlockLevel: 10, tier: 'basic' },
+            { svg: 'boss-volcano', name: 'Volcano Spirit', unlockLevel: 12, tier: 'basic' },
+            { svg: 'boss-coconut', name: 'Coconut Monster', unlockLevel: 15, tier: 'basic' },
+
+            // NEW: Simple tier (L16-25) - stat variations only
+            { svg: 'boss-octopus', name: 'Octopus', unlockLevel: 16, tier: 'simple', hp: 120, time: 28 },
+            { svg: 'boss-turtle', name: 'Sea Turtle', unlockLevel: 18, tier: 'simple', hp: 140, time: 35 },
+            { svg: 'boss-hermitcrab', name: 'Hermit Crab', unlockLevel: 20, tier: 'simple', hp: 100, time: 25 },
+            { svg: 'boss-starfish', name: 'Starfish', unlockLevel: 23, tier: 'simple', hp: 150, time: 32 },
+
+            // NEW: Ability tier (L26-40) - single special ability
+            { svg: 'boss-pirate', name: 'Pirate Captain', unlockLevel: 26, tier: 'ability',
+              ability: { type: 'shield', trigger: 'start', charges: 1, desc: 'Blocks first hit' } },
+            { svg: 'boss-mermaid', name: 'Mermaid', unlockLevel: 30, tier: 'ability',
+              ability: { type: 'heal', trigger: 'hp50', amount: 25, desc: 'Heals at 50% HP' } },
+            { svg: 'boss-stingray', name: 'Stingray', unlockLevel: 34, tier: 'ability',
+              ability: { type: 'enrage', trigger: 'hp25', speedBoost: 1.5, desc: 'Timer speeds up below 25% HP' } },
+            { svg: 'boss-pelican', name: 'Pelican', unlockLevel: 38, tier: 'ability',
+              ability: { type: 'dodge', trigger: 'random', chance: 0.2, desc: '20% chance to dodge' } },
+
+            // NEW: Elite tier (L41+) - multiple abilities or complex mechanics
+            { svg: 'boss-whale', name: 'Whale', unlockLevel: 42, tier: 'elite', hp: 200, time: 40,
+              abilities: [
+                { type: 'shield', trigger: 'start', charges: 2, desc: 'Blocks 2 hits' },
+                { type: 'heal', trigger: 'hp25', amount: 50, desc: 'Big heal at 25% HP' }
+              ] },
+            { svg: 'boss-serpent', name: 'Sea Serpent', unlockLevel: 48, tier: 'elite', hp: 180, time: 35,
+              abilities: [
+                { type: 'enrage', trigger: 'hp50', speedBoost: 1.3, desc: 'Gets faster at 50% HP' },
+                { type: 'dodge', trigger: 'random', chance: 0.15, desc: '15% dodge chance' }
+              ] },
+            { svg: 'boss-mimic', name: 'Treasure Mimic', unlockLevel: 55, tier: 'elite', hp: 150, time: 30,
+              abilities: [
+                { type: 'confuse', trigger: 'random', chance: 0.25, desc: 'Scrambles numbers sometimes' }
+              ] },
+            { svg: 'boss-kraken', name: 'Kraken', unlockLevel: 60, tier: 'elite', hp: 250, time: 45,
+              abilities: [
+                { type: 'shield', trigger: 'start', charges: 3, desc: 'Blocks 3 hits' },
+                { type: 'heal', trigger: 'hp50', amount: 50, desc: 'Heals at 50% HP' },
+                { type: 'enrage', trigger: 'hp25', speedBoost: 2, desc: 'Double speed below 25% HP' }
+              ] }
         ];
 
         // Themes with unlock levels
@@ -1108,6 +1520,32 @@
             { id: 'berry', name: '🍇 Berry', unlockLevel: 9 },
             { id: 'retro', name: '👾 Retro', unlockLevel: 12 }
         ];
+
+        // Scene variations (3D background cosmetic changes)
+        const SCENE_VARIATIONS = [
+            { id: 'beach', name: 'Sunny Beach', emoji: '🏖️', unlockLevel: 1 },
+            { id: 'sunset', name: 'Sunset Paradise', emoji: '🌅', unlockLevel: 20,
+              colors: { sky: 0xff7e5f, skyHorizon: 0xffcc80, sun: 0xff4500, sunGlow: 0xff6b00,
+                       oceanDeep: 0x2c3e50, oceanMid: 0x4a6fa5, oceanLight: 0x7a9cc6 } },
+            { id: 'night', name: 'Moonlit Night', emoji: '🌙', unlockLevel: 30,
+              colors: { sky: 0x0a0a2a, skyHorizon: 0x1a1a4a, sun: 0xf5f5dc, sunGlow: 0xccccaa,
+                       oceanDeep: 0x0a1628, oceanMid: 0x152238, oceanLight: 0x203348 },
+              extras: ['stars', 'moon'] },
+            { id: 'stormy', name: 'Stormy Seas', emoji: '🌧️', unlockLevel: 40,
+              colors: { sky: 0x4a4a5a, skyHorizon: 0x5a5a6a, sun: 0x888888, sunGlow: 0x666666,
+                       oceanDeep: 0x2a3a4a, oceanMid: 0x3a4a5a, oceanLight: 0x5a6a7a },
+              extras: ['rain', 'darkClouds'] },
+            { id: 'snowy', name: 'Winter Beach', emoji: '❄️', unlockLevel: 50,
+              colors: { sky: 0xd0e8f0, skyHorizon: 0xe8f4f8, sun: 0xfff8dc, sunGlow: 0xfff0c0,
+                       sand: 0xffffff, sandDark: 0xe8e8e8,
+                       oceanDeep: 0x3a6a8a, oceanMid: 0x5a8aaa, oceanLight: 0x8abacc },
+              extras: ['snowflakes'] },
+            { id: 'sakura', name: 'Cherry Blossom', emoji: '🌸', unlockLevel: 60,
+              colors: { sky: 0xffc0cb, skyHorizon: 0xffe4e8, sun: 0xffdd55, sunGlow: 0xffcc33,
+                       palmLeaf: 0xff69b4, palmLeafLight: 0xff8dc7 },
+              extras: ['petals'] }
+        ];
+        let currentSceneId = 'beach';
 
         // XP and Level system
         let playerXP = 0;
@@ -1124,6 +1562,22 @@
 
         let bossActive = false, bossHealth = 100, bossTimer = 30;
         let bossInterval = null, bossAnswer = '', bossCorrectAnswer;
+        // NEW: Boss ability system state
+        let bossMaxHealth = 100, bossTimerSpeed = 1;
+        let bossCurrentBoss = null;
+        let bossAbilityState = {
+            shieldCharges: 0,
+            hasHealed: false,
+            hasEnraged: false,
+            dodgeChance: 0,
+            confuseChance: 0,
+            usedAbilities: [] // Track which abilities were used for achievements
+        };
+
+        // Adaptive difficulty (hidden from players)
+        let accuracyHistory = []; // Last 100 answers
+        const ACCURACY_WINDOW = 100;
+        let difficultyModifier = 0; // -2 to +2 range
 
         // Combo system
         let lastAnswerTime = 0;
@@ -1134,28 +1588,78 @@
         let powerups = { hint: 0, double: 0, skip: 0 };
         let doublePointsActive = false;
 
-        // Achievements
+        // Achievements - now with tiered achievements that STACK (collect all tiers)
         const ACHIEVEMENTS = [
-            { id: 'first_correct', emoji: '🌟', name: 'First Star', desc: 'Get your first answer right' },
-            { id: 'streak_5', emoji: '🔥', name: 'On Fire', desc: 'Get a 5 streak' },
-            { id: 'streak_10', emoji: '💥', name: 'Blazing', desc: 'Get a 10 streak' },
-            { id: 'streak_20', emoji: '🌋', name: 'Unstoppable', desc: 'Get a 20 streak' },
-            { id: 'score_25', emoji: '🥉', name: 'Bronze Math', desc: 'Score 25 points' },
-            { id: 'score_50', emoji: '🥈', name: 'Silver Math', desc: 'Score 50 points' },
-            { id: 'score_100', emoji: '🥇', name: 'Gold Math', desc: 'Score 100 points' },
-            { id: 'boss_slayer', emoji: '⚔️', name: 'Boss Slayer', desc: 'Defeat a boss' },
-            { id: 'speed_demon', emoji: '⚡', name: 'Speed Demon', desc: 'Get a 3x combo' },
-            { id: 'collector', emoji: '🎁', name: 'Collector', desc: 'Open 3 mystery boxes' },
-            { id: 'powerup_user', emoji: '💪', name: 'Powered Up', desc: 'Use a power-up' },
-            { id: 'perfectionist', emoji: '💯', name: 'Perfectionist', desc: '100% accuracy in timed mode' },
-            { id: 'speed_round_10', emoji: '🏃', name: 'Quick Thinker', desc: 'Solve 10+ in speed round' },
-            { id: 'speed_round_20', emoji: '🚀', name: 'Lightning Fast', desc: 'Solve 20+ in speed round' },
-            { id: 'level_5', emoji: '📈', name: 'Rising Star', desc: 'Reach level 5' },
-            { id: 'level_10', emoji: '🌟', name: 'Math Master', desc: 'Reach level 10' }
+            // Original achievements
+            { id: 'first_correct', emoji: '🌟', name: 'First Star', desc: 'Get your first answer right', category: 'basic' },
+            { id: 'boss_slayer', emoji: '⚔️', name: 'Boss Slayer', desc: 'Defeat a boss', category: 'basic' },
+            { id: 'speed_demon', emoji: '⚡', name: 'Speed Demon', desc: 'Get a 3x combo', category: 'basic' },
+            { id: 'collector', emoji: '🎁', name: 'Collector', desc: 'Open 3 mystery boxes', category: 'basic' },
+            { id: 'powerup_user', emoji: '💪', name: 'Powered Up', desc: 'Use a power-up', category: 'basic' },
+            { id: 'perfectionist', emoji: '💯', name: 'Perfectionist', desc: '100% accuracy in timed mode', category: 'basic' },
+            { id: 'speed_round_10', emoji: '🏃', name: 'Quick Thinker', desc: 'Solve 10+ in speed round', category: 'basic' },
+            { id: 'speed_round_20', emoji: '🚀', name: 'Lightning Fast', desc: 'Solve 20+ in speed round', category: 'basic' },
+
+            // TIERED: Streak achievements (all stack)
+            { id: 'streak_5', emoji: '🔥', name: 'Streak 5', desc: '5 in a row', category: 'streak', tier: 1 },
+            { id: 'streak_10', emoji: '🔥', name: 'Streak 10', desc: '10 in a row', category: 'streak', tier: 2 },
+            { id: 'streak_20', emoji: '💥', name: 'Streak 20', desc: '20 in a row', category: 'streak', tier: 3 },
+            { id: 'streak_50', emoji: '🌋', name: 'Streak 50', desc: '50 in a row', category: 'streak', tier: 4 },
+            { id: 'streak_100', emoji: '☄️', name: 'Streak 100', desc: '100 in a row', category: 'streak', tier: 5 },
+            { id: 'streak_250', emoji: '🌠', name: 'Streak 250', desc: '250 in a row!', category: 'streak', tier: 6 },
+
+            // TIERED: Score achievements (all stack)
+            { id: 'score_25', emoji: '🥉', name: 'Score 25', desc: 'Reach 25 points', category: 'score', tier: 1 },
+            { id: 'score_50', emoji: '🥈', name: 'Score 50', desc: 'Reach 50 points', category: 'score', tier: 2 },
+            { id: 'score_100', emoji: '🥇', name: 'Score 100', desc: 'Reach 100 points', category: 'score', tier: 3 },
+            { id: 'score_250', emoji: '🏆', name: 'Score 250', desc: 'Reach 250 points', category: 'score', tier: 4 },
+            { id: 'score_500', emoji: '👑', name: 'Score 500', desc: 'Reach 500 points', category: 'score', tier: 5 },
+
+            // TIERED: Level achievements (all stack)
+            { id: 'level_5', emoji: '📈', name: 'Level 5', desc: 'Reach level 5', category: 'level', tier: 1 },
+            { id: 'level_10', emoji: '📊', name: 'Level 10', desc: 'Reach level 10', category: 'level', tier: 2 },
+            { id: 'level_25', emoji: '🌟', name: 'Level 25', desc: 'Reach level 25', category: 'level', tier: 3 },
+            { id: 'level_50', emoji: '⭐', name: 'Level 50', desc: 'Reach level 50', category: 'level', tier: 4 },
+            { id: 'level_100', emoji: '🌙', name: 'Level 100', desc: 'Reach level 100', category: 'level', tier: 5 },
+
+            // TIERED: Boss achievements (all stack)
+            { id: 'bosses_5', emoji: '⚔️', name: '5 Bosses', desc: 'Defeat 5 bosses', category: 'boss', tier: 1 },
+            { id: 'bosses_15', emoji: '⚔️', name: '15 Bosses', desc: 'Defeat 15 bosses', category: 'boss', tier: 2 },
+            { id: 'bosses_30', emoji: '🗡️', name: '30 Bosses', desc: 'Defeat 30 bosses', category: 'boss', tier: 3 },
+            { id: 'bosses_50', emoji: '🗡️', name: '50 Bosses', desc: 'Defeat 50 bosses', category: 'boss', tier: 4 },
+            { id: 'bosses_100', emoji: '👹', name: '100 Bosses', desc: 'Defeat 100 bosses', category: 'boss', tier: 5 },
+
+            // NEW: Collection achievements
+            { id: 'scene_all', emoji: '🎨', name: 'Scene Collector', desc: 'Unlock all scene variations', category: 'collection' },
+            { id: 'boss_unique_all', emoji: '🦑', name: 'Boss Hunter', desc: 'Defeat every unique boss', category: 'collection' },
+            { id: 'theme_all', emoji: '🌈', name: 'Theme Master', desc: 'Unlock all color themes', category: 'collection' },
+
+            // NEW: Ability survivor achievements
+            { id: 'ability_shield', emoji: '🛡️', name: 'Shield Breaker', desc: 'Beat a shielded boss', category: 'ability' },
+            { id: 'ability_heal', emoji: '💚', name: 'Heal Stopper', desc: 'Beat a healing boss', category: 'ability' },
+            { id: 'ability_enrage', emoji: '😤', name: 'Rage Survivor', desc: 'Beat an enraged boss', category: 'ability' },
+            { id: 'ability_dodge', emoji: '💨', name: 'Dodge Master', desc: 'Beat a dodging boss', category: 'ability' },
+            { id: 'ability_confuse', emoji: '😵', name: 'Clear Mind', desc: 'Beat a confusing boss', category: 'ability' },
+
+            // NEW: Prestige achievement
+            { id: 'prestige_1', emoji: '⭐', name: 'New Game+', desc: 'Complete a prestige reset', category: 'prestige' }
         ];
         let unlockedAchievements = [];
         let mysteryBoxesOpened = 0;
         let bossesDefeated = 0;
+
+        // Cumulative stats for tiered achievements (persisted)
+        let cumulativeStats = {
+            totalScore: 0,
+            maxStreak: 0,
+            bossesDefeated: 0,
+            uniqueBossesDefeated: {},
+            scenesUnlocked: ['beach'],
+            themesUnlocked: ['tropical']
+        };
+
+        // Prestige system
+        let prestigeCount = 0;
 
         // Haptic feedback - works on Android via Vibration API, iOS via AudioContext workaround
         let hapticContext = null;
@@ -1197,10 +1701,9 @@
         }
 
         function updateSettingsLabel() {
-            const diff = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
             const op = operation === 'mixed' ? 'Mixed' : operation === 'add' ? '+' : operation === 'subtract' ? '−' : operation === 'multiply' ? '×' : '÷';
-            const modeLabel = mode === 'speed' ? '⚡' : mode === 'timed' ? '⏱️' : '∞';
-            document.getElementById('settingsLabel').textContent = `${diff} • ${op} • ${modeLabel}`;
+            const modeLabel = mode === 'speed' ? '⚡ Speed' : mode === 'timed' ? '⏱️ 60s' : '∞ Free';
+            document.getElementById('settingsLabel').textContent = `${op} • ${modeLabel}`;
         }
 
         // XP and Level System
@@ -1225,6 +1728,9 @@
                 showLevelUp(playerLevel);
                 checkAchievement('level_5', playerLevel >= 5);
                 checkAchievement('level_10', playerLevel >= 10);
+                checkAchievement('level_25', playerLevel >= 25);
+                checkAchievement('level_50', playerLevel >= 50);
+                checkAchievement('level_100', playerLevel >= 100);
             }
         }
 
@@ -1233,7 +1739,8 @@
             if (levelEl) {
                 const xpInLevel = playerXP % XP_PER_LEVEL;
                 const progress = (xpInLevel / XP_PER_LEVEL) * 100;
-                levelEl.innerHTML = `<span class="level-num">Lv.${playerLevel}</span><div class="xp-bar"><div class="xp-fill" style="width:${progress}%"></div></div>`;
+                const prestigeStars = prestigeCount > 0 ? '<span class="prestige-stars">' + '⭐'.repeat(Math.min(prestigeCount, 5)) + (prestigeCount > 5 ? `+${prestigeCount - 5}` : '') + '</span>' : '';
+                levelEl.innerHTML = `${prestigeStars}<span class="level-num">Lv.${playerLevel}</span><div class="xp-bar"><div class="xp-fill" style="width:${progress}%"></div></div>`;
             }
         }
 
@@ -1284,9 +1791,75 @@
                     return `<button class="theme-btn ${t.id} ${!unlocked ? 'locked' : ''}" onclick="setTheme('${t.id}')">${t.name}${lockIcon}</button>`;
                 }).join('');
             }
+            // Scene buttons
+            const sceneContainer = document.getElementById('sceneButtons');
+            if (sceneContainer) {
+                sceneContainer.innerHTML = SCENE_VARIATIONS.map(s => {
+                    const unlocked = playerLevel >= s.unlockLevel;
+                    const active = currentSceneId === s.id;
+                    const lockIcon = unlocked ? '' : ` 🔒 Lv.${s.unlockLevel}`;
+                    return `<button class="theme-btn scene-btn ${!unlocked ? 'locked' : ''} ${active ? 'active' : ''}" onclick="setScene('${s.id}')">${s.emoji} ${s.name}${lockIcon}</button>`;
+                }).join('');
+            }
+            // Prestige section
+            const prestigeSection = document.getElementById('prestigeSection');
+            if (prestigeSection) {
+                const uniqueBosses = Object.keys(cumulativeStats.uniqueBossesDefeated).length;
+                const totalBosses = BOSSES.length;
+                const canDo = canPrestige();
+                const progress = Math.min(100, (uniqueBosses / totalBosses) * 100);
+                prestigeSection.innerHTML = `
+                    <h2>⭐ New Game+</h2>
+                    <p style="font-size:0.9rem;margin:8px 0;opacity:0.8;">Defeat all ${totalBosses} unique bosses to unlock!</p>
+                    <div style="background:#333;border-radius:8px;height:20px;margin:10px 0;overflow:hidden;">
+                        <div style="background:linear-gradient(90deg,#ffd93d,#ff9a56);height:100%;width:${progress}%;transition:width 0.3s;"></div>
+                    </div>
+                    <p style="font-size:0.85rem;margin-bottom:10px;">${uniqueBosses}/${totalBosses} bosses defeated</p>
+                    <button class="theme-btn ${canDo ? '' : 'locked'}" onclick="doPrestige()" style="background:linear-gradient(135deg,#2d1b2e,#4a2c4a);border-color:${canDo ? '#ffd93d' : '#666'};color:${canDo ? '#ffd93d' : '#888'};">
+                        ${canDo ? '⭐ Start New Game+ ⭐' : '🔒 Keep Defeating Bosses!'}
+                    </button>
+                    ${prestigeCount > 0 ? `<p style="font-size:0.85rem;margin-top:10px;color:#ffd93d;">Current Prestige: ${'⭐'.repeat(Math.min(prestigeCount, 5))}${prestigeCount > 5 ? ` +${prestigeCount - 5}` : ''}</p>` : ''}
+                `;
+            }
             document.getElementById('themePicker').classList.add('show');
         }
         function hideThemePicker() { document.getElementById('themePicker').classList.remove('show'); }
+
+        function isSceneUnlocked(sceneId) {
+            const scene = SCENE_VARIATIONS.find(s => s.id === sceneId);
+            return scene ? playerLevel >= scene.unlockLevel : false;
+        }
+
+        function setScene(sceneId) {
+            if (!isSceneUnlocked(sceneId)) {
+                const scene = SCENE_VARIATIONS.find(s => s.id === sceneId);
+                alert(`Unlock ${scene.name} at Level ${scene.unlockLevel}!`);
+                return;
+            }
+            currentSceneId = sceneId;
+            localStorage.setItem('mathblaster_scene', sceneId);
+            // Track scene unlock
+            if (!cumulativeStats.scenesUnlocked.includes(sceneId)) {
+                cumulativeStats.scenesUnlocked.push(sceneId);
+                saveCumulativeStats();
+                // Check scene collector achievement
+                if (cumulativeStats.scenesUnlocked.length >= SCENE_VARIATIONS.length) {
+                    checkAchievement('scene_all', true);
+                }
+            }
+            // Reload scene - dispatch event for Three.js to pick up
+            window.dispatchEvent(new CustomEvent('sceneChange', { detail: sceneId }));
+            showThemePicker(); // Refresh buttons
+        }
+
+        function loadScene() {
+            const savedScene = localStorage.getItem('mathblaster_scene') || 'beach';
+            if (isSceneUnlocked(savedScene)) {
+                currentSceneId = savedScene;
+            } else {
+                currentSceneId = 'beach';
+            }
+        }
 
         function toggleSound() {
             soundEnabled = !soundEnabled;
@@ -1534,26 +2107,128 @@
             setTimeout(generateProblem, 200);
         }
 
+        // Boss ability helper functions
+        function getBossAbilities(boss) {
+            if (boss.abilities) return boss.abilities;
+            if (boss.ability) return [boss.ability];
+            return [];
+        }
+
+        function showAbilityFlash(text) {
+            const flash = document.createElement('div');
+            flash.className = 'ability-flash';
+            flash.textContent = text;
+            document.getElementById('bossContainer').appendChild(flash);
+            setTimeout(() => flash.remove(), 1500);
+            haptic('medium');
+        }
+
+        function applyBossAbilities(trigger) {
+            const abilities = getBossAbilities(bossCurrentBoss);
+            abilities.filter(a => a.trigger === trigger).forEach(ability => {
+                switch (ability.type) {
+                    case 'shield':
+                        bossAbilityState.shieldCharges = ability.charges;
+                        bossAbilityState.usedAbilities.push('shield');
+                        showAbilityFlash(`🛡️ SHIELDED! (${ability.charges})`);
+                        break;
+                    case 'heal':
+                        const healAmount = ability.amount || 25;
+                        bossHealth = Math.min(bossMaxHealth, bossHealth + healAmount);
+                        document.getElementById('bossHealthFill').style.width = (bossHealth / bossMaxHealth * 100) + '%';
+                        bossAbilityState.usedAbilities.push('heal');
+                        showAbilityFlash(`💚 HEALED +${healAmount}!`);
+                        break;
+                    case 'enrage':
+                        bossTimerSpeed = ability.speedBoost || 1.5;
+                        bossAbilityState.usedAbilities.push('enrage');
+                        showAbilityFlash('😤 ENRAGED!');
+                        break;
+                    case 'dodge':
+                        bossAbilityState.dodgeChance = ability.chance || 0.2;
+                        bossAbilityState.usedAbilities.push('dodge');
+                        break;
+                    case 'confuse':
+                        bossAbilityState.confuseChance = ability.chance || 0.25;
+                        bossAbilityState.usedAbilities.push('confuse');
+                        break;
+                }
+            });
+        }
+
+        function showBossInfoCard(boss) {
+            const abilities = getBossAbilities(boss);
+            if (abilities.length === 0) return;
+
+            const infoCard = document.getElementById('bossInfoCard');
+            if (!infoCard) return;
+
+            const abilityIcons = {
+                shield: '🛡️',
+                heal: '💚',
+                enrage: '😤',
+                dodge: '💨',
+                confuse: '😵'
+            };
+
+            infoCard.innerHTML = abilities.map(a =>
+                `<span class="boss-ability-icon">${abilityIcons[a.type] || '⚡'}</span>${a.desc || a.type}`
+            ).join('<br>');
+            infoCard.classList.add('show');
+            setTimeout(() => infoCard.classList.remove('show'), 2500);
+        }
+
         function startBossBattle() {
             bossActive = true;
-            bossHealth = 100;
-            bossTimer = 30;
             bossAnswer = '';
 
             const availableBosses = getUnlockedBosses();
             const boss = availableBosses[Math.floor(Math.random() * availableBosses.length)];
+            bossCurrentBoss = boss;
+
+            // Set boss-specific stats with defaults
+            bossMaxHealth = boss.hp || 100;
+            bossHealth = bossMaxHealth;
+            bossTimer = boss.time || 30;
+            bossTimerSpeed = 1;
+
+            // Reset ability state
+            bossAbilityState = {
+                shieldCharges: 0,
+                hasHealed: false,
+                hasEnraged: false,
+                dodgeChance: 0,
+                confuseChance: 0,
+                usedAbilities: []
+            };
+
+            // Apply start-trigger abilities
+            applyBossAbilities('start');
+
+            // Apply random-trigger abilities (dodge, confuse)
+            const abilities = getBossAbilities(boss);
+            abilities.filter(a => a.trigger === 'random').forEach(ability => {
+                if (ability.type === 'dodge') bossAbilityState.dodgeChance = ability.chance;
+                if (ability.type === 'confuse') bossAbilityState.confuseChance = ability.chance;
+            });
+
             const bossEmojiEl = document.getElementById('bossEmoji');
             const bossUseEl = document.getElementById('bossUse');
             bossUseEl.setAttribute('href', '#' + boss.svg);
             bossEmojiEl.className = 'boss-emoji entrance';
             document.getElementById('bossName').textContent = boss.name;
             document.getElementById('bossHealthFill').style.width = '100%';
-            document.getElementById('bossTimer').textContent = '30';
+            document.getElementById('bossTimer').textContent = bossTimer;
             document.getElementById('bossTimer').classList.remove('danger');
             document.getElementById('bossAnswer').textContent = '|';
             document.getElementById('bossVictory').classList.add('hidden');
             document.getElementById('bossContainer').style.opacity = '1';
             document.getElementById('bossBattleModal').classList.add('show');
+
+            // Show ability info for ability/elite tier bosses
+            if (boss.tier === 'ability' || boss.tier === 'elite') {
+                showBossInfoCard(boss);
+            }
 
             playSound('bossappear');
 
@@ -1562,10 +2237,16 @@
                 generateBossProblem();
             }, 800);
 
+            // Timer with enrage speed support
+            let timerAccumulator = 0;
             bossInterval = setInterval(() => {
-                bossTimer--;
+                timerAccumulator += bossTimerSpeed;
+                while (timerAccumulator >= 1) {
+                    bossTimer--;
+                    timerAccumulator -= 1;
+                }
                 const timerEl = document.getElementById('bossTimer');
-                timerEl.textContent = bossTimer;
+                timerEl.textContent = Math.ceil(bossTimer);
                 if (bossTimer <= 10) timerEl.classList.add('danger');
                 if (bossTimer <= 0) endBossBattle(false);
             }, 1000);
@@ -1625,13 +2306,48 @@
             if (!bossActive || bossAnswer === '') return;
 
             if (parseInt(bossAnswer) === bossCorrectAnswer) {
-                bossHealth -= 25;
-                document.getElementById('bossHealthFill').style.width = bossHealth + '%';
+                // Check dodge first
+                if (bossAbilityState.dodgeChance > 0 && Math.random() < bossAbilityState.dodgeChance) {
+                    showAbilityFlash('💨 DODGED!');
+                    playSound('tap');
+                    bossAnswer = '';
+                    document.getElementById('bossAnswer').textContent = '|';
+                    generateBossProblem();
+                    return;
+                }
+
+                // Check shield
+                if (bossAbilityState.shieldCharges > 0) {
+                    bossAbilityState.shieldCharges--;
+                    showAbilityFlash(`🛡️ BLOCKED! (${bossAbilityState.shieldCharges} left)`);
+                    playSound('tap');
+                    bossAnswer = '';
+                    document.getElementById('bossAnswer').textContent = '|';
+                    generateBossProblem();
+                    return;
+                }
+
+                // Calculate damage based on boss HP
+                const damage = 25;
+                bossHealth -= damage;
+                const hpPercent = (bossHealth / bossMaxHealth) * 100;
+                document.getElementById('bossHealthFill').style.width = hpPercent + '%';
+
                 const emoji = document.getElementById('bossEmoji');
                 emoji.classList.add('hit');
                 setTimeout(() => emoji.classList.remove('hit'), 300);
                 playSound('bosshit');
                 haptic('medium');
+
+                // Check HP-triggered abilities
+                if (hpPercent <= 50 && !bossAbilityState.hasHealed) {
+                    bossAbilityState.hasHealed = true;
+                    applyBossAbilities('hp50');
+                }
+                if (hpPercent <= 25 && !bossAbilityState.hasEnraged) {
+                    bossAbilityState.hasEnraged = true;
+                    applyBossAbilities('hp25');
+                }
 
                 if (bossHealth <= 0) endBossBattle(true);
                 else generateBossProblem();
@@ -1649,7 +2365,42 @@
 
             if (victory) {
                 bossesDefeated++;
+                cumulativeStats.bossesDefeated++;
+
+                // Track unique boss defeated
+                if (bossCurrentBoss) {
+                    cumulativeStats.uniqueBossesDefeated[bossCurrentBoss.svg] = true;
+                }
+                saveCumulativeStats();
+
+                // Check achievements
                 checkAchievement('boss_slayer', true);
+                checkAchievement('bosses_5', cumulativeStats.bossesDefeated >= 5);
+                checkAchievement('bosses_15', cumulativeStats.bossesDefeated >= 15);
+                checkAchievement('bosses_30', cumulativeStats.bossesDefeated >= 30);
+                checkAchievement('bosses_50', cumulativeStats.bossesDefeated >= 50);
+                checkAchievement('bosses_100', cumulativeStats.bossesDefeated >= 100);
+
+                // Check Boss Hunter achievement (defeated all unique bosses)
+                const uniqueCount = Object.keys(cumulativeStats.uniqueBossesDefeated).length;
+                checkAchievement('boss_unique_all', uniqueCount >= BOSSES.length);
+
+                // Check ability survivor achievements
+                if (bossAbilityState.usedAbilities.includes('shield')) {
+                    checkAchievement('ability_shield', true);
+                }
+                if (bossAbilityState.usedAbilities.includes('heal')) {
+                    checkAchievement('ability_heal', true);
+                }
+                if (bossAbilityState.usedAbilities.includes('enrage')) {
+                    checkAchievement('ability_enrage', true);
+                }
+                if (bossAbilityState.usedAbilities.includes('dodge')) {
+                    checkAchievement('ability_dodge', true);
+                }
+                if (bossAbilityState.usedAbilities.includes('confuse')) {
+                    checkAchievement('ability_confuse', true);
+                }
 
                 document.getElementById('bossEmoji').classList.add('defeated');
                 document.getElementById('bossContainer').style.opacity = '0.3';
@@ -1682,6 +2433,63 @@
             }
         }
 
+        // Save/load cumulative stats
+        function loadCumulativeStats() {
+            const saved = localStorage.getItem('mathblaster_stats');
+            if (saved) {
+                cumulativeStats = { ...cumulativeStats, ...JSON.parse(saved) };
+            }
+        }
+
+        function saveCumulativeStats() {
+            localStorage.setItem('mathblaster_stats', JSON.stringify(cumulativeStats));
+        }
+
+        // Prestige system
+        function loadPrestige() {
+            prestigeCount = parseInt(localStorage.getItem('mathblaster_prestige') || '0');
+            updateLevelDisplay();
+        }
+
+        function savePrestige() {
+            localStorage.setItem('mathblaster_prestige', prestigeCount.toString());
+        }
+
+        function canPrestige() {
+            // Can prestige after defeating all unique bosses
+            const uniqueCount = Object.keys(cumulativeStats.uniqueBossesDefeated).length;
+            return uniqueCount >= BOSSES.length;
+        }
+
+        function doPrestige() {
+            if (!canPrestige()) {
+                const remaining = BOSSES.length - Object.keys(cumulativeStats.uniqueBossesDefeated).length;
+                alert(`Defeat ${remaining} more unique bosses to unlock New Game+!`);
+                return;
+            }
+
+            if (!confirm('Start New Game+? Your XP will reset to 0, but you keep all achievements, unlocks, and themes!')) {
+                return;
+            }
+
+            prestigeCount++;
+            playerXP = 0;
+            playerLevel = 1;
+
+            savePrestige();
+            saveProgression();
+            updateLevelDisplay();
+
+            checkAchievement('prestige_1', true);
+
+            const toast = document.getElementById('achievementToast');
+            toast.textContent = `⭐ NEW GAME+ ${prestigeCount}! ⭐`;
+            toast.classList.add('show');
+            playSound('bosswin');
+            haptic('heavy');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
         function updateAnswerDisplay() {
             document.getElementById('answerDisplay').innerHTML =
                 currentInput === '' ? '<span class="cursor">|</span>' : currentInput + '<span class="cursor">|</span>';
@@ -1704,38 +2512,267 @@
         }
 
         function getMaxNumber() {
-            return difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 50;
+            const base = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 50;
+            // Apply adaptive difficulty modifier (hidden from player)
+            // difficultyModifier ranges from -2 to +2, affects max by +/- 20%
+            const adjusted = Math.round(base * (1 + difficultyModifier * 0.1));
+            return Math.max(5, Math.min(base * 2, adjusted)); // Clamp between 5 and 2x base
+        }
+
+        // Adaptive difficulty - hidden from players
+        function trackAccuracy(isCorrect) {
+            accuracyHistory.push(isCorrect ? 1 : 0);
+            if (accuracyHistory.length > ACCURACY_WINDOW) {
+                accuracyHistory.shift();
+            }
+            // Adjust difficulty every 20 answers
+            if (accuracyHistory.length >= 20 && accuracyHistory.length % 20 === 0) {
+                adjustDifficulty();
+            }
+            // Save periodically
+            if (accuracyHistory.length % 10 === 0) {
+                saveAdaptiveDifficulty();
+            }
+        }
+
+        function adjustDifficulty() {
+            if (accuracyHistory.length < 20) return;
+            const recentAccuracy = accuracyHistory.slice(-20).reduce((a, b) => a + b, 0) / 20;
+            // Slowly adjust based on performance
+            if (recentAccuracy > 0.9 && difficultyModifier < 2) {
+                difficultyModifier = Math.min(2, difficultyModifier + 0.2);
+            } else if (recentAccuracy < 0.6 && difficultyModifier > -2) {
+                difficultyModifier = Math.max(-2, difficultyModifier - 0.2);
+            }
+        }
+
+        function saveAdaptiveDifficulty() {
+            localStorage.setItem('mathblaster_adaptive', JSON.stringify({
+                history: accuracyHistory.slice(-ACCURACY_WINDOW),
+                modifier: difficultyModifier
+            }));
+        }
+
+        function loadAdaptiveDifficulty() {
+            try {
+                const saved = localStorage.getItem('mathblaster_adaptive');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    accuracyHistory = data.history || [];
+                    difficultyModifier = data.modifier || 0;
+                }
+            } catch (e) {}
+        }
+
+        // ============================================
+        // SPACED REPETITION SYSTEM (SM-2 Algorithm)
+        // ============================================
+
+        // Fact database - generated once, SM-2 state stored in localStorage
+        let mathFacts = [];
+        let currentFact = null;
+        let problemStartTime = 0;
+
+        // Generate all math facts on first load
+        function generateMathFacts() {
+            const facts = [];
+
+            // Addition: 1+1 to 12+12 (use smaller num first to avoid duplicates)
+            for (let a = 1; a <= 12; a++) {
+                for (let b = a; b <= 12; b++) {
+                    facts.push({
+                        id: `add_${a}_${b}`,
+                        op: 'add',
+                        num1: a,
+                        num2: b,
+                        answer: a + b
+                    });
+                }
+            }
+
+            // Subtraction: results 0-20, minuend up to 20
+            for (let result = 0; result <= 12; result++) {
+                for (let subtrahend = 1; subtrahend <= 12; subtrahend++) {
+                    const minuend = result + subtrahend;
+                    if (minuend <= 20) {
+                        facts.push({
+                            id: `sub_${minuend}_${subtrahend}`,
+                            op: 'subtract',
+                            num1: minuend,
+                            num2: subtrahend,
+                            answer: result
+                        });
+                    }
+                }
+            }
+
+            // Multiplication: 1x1 to 12x12 (use smaller num first to avoid duplicates)
+            for (let a = 1; a <= 12; a++) {
+                for (let b = a; b <= 12; b++) {
+                    facts.push({
+                        id: `mul_${a}_${b}`,
+                        op: 'multiply',
+                        num1: a,
+                        num2: b,
+                        answer: a * b
+                    });
+                }
+            }
+
+            // Division: corresponding to multiplication facts
+            for (let divisor = 1; divisor <= 12; divisor++) {
+                for (let quotient = 1; quotient <= 12; quotient++) {
+                    const dividend = divisor * quotient;
+                    facts.push({
+                        id: `div_${dividend}_${divisor}`,
+                        op: 'divide',
+                        num1: dividend,
+                        num2: divisor,
+                        answer: quotient
+                    });
+                }
+            }
+
+            return facts;
+        }
+
+        // Initialize fact database with SM-2 defaults
+        function initializeFactDatabase() {
+            mathFacts = generateMathFacts();
+            const savedState = loadFactState();
+
+            // Apply saved SM-2 state to facts
+            mathFacts.forEach(fact => {
+                if (savedState[fact.id]) {
+                    Object.assign(fact, savedState[fact.id]);
+                } else {
+                    // Default SM-2 state for new facts
+                    fact.ef = 2.5;           // Easiness factor
+                    fact.interval = 1;       // Days until next review
+                    fact.repetitions = 0;    // Successful reviews in a row
+                    fact.nextReview = Date.now(); // Due now
+                    fact.lastReview = null;
+                }
+            });
+        }
+
+        // Load SM-2 state from localStorage
+        function loadFactState() {
+            try {
+                const saved = localStorage.getItem('mathblaster_facts_sm2');
+                return saved ? JSON.parse(saved) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        // Save SM-2 state to localStorage
+        function saveFactState() {
+            const state = {};
+            mathFacts.forEach(fact => {
+                state[fact.id] = {
+                    ef: fact.ef,
+                    interval: fact.interval,
+                    repetitions: fact.repetitions,
+                    nextReview: fact.nextReview,
+                    lastReview: fact.lastReview
+                };
+            });
+            localStorage.setItem('mathblaster_facts_sm2', JSON.stringify(state));
+        }
+
+        // SM-2 Algorithm: Update fact after answer
+        function updateFactSM2(fact, grade) {
+            // grade: 0=wrong, 3=correct-slow, 4=correct-good, 5=correct-fast
+
+            if (grade < 3) {
+                // Failed - reset to beginning
+                fact.repetitions = 0;
+                fact.interval = 1;
+            } else {
+                // Success - increase interval
+                if (fact.repetitions === 0) {
+                    fact.interval = 1;
+                } else if (fact.repetitions === 1) {
+                    fact.interval = 6;
+                } else {
+                    fact.interval = Math.round(fact.interval * fact.ef);
+                }
+                fact.repetitions++;
+            }
+
+            // Update easiness factor (never below 1.3)
+            fact.ef = Math.max(1.3, fact.ef + (0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02)));
+
+            // Set next review date
+            fact.nextReview = Date.now() + (fact.interval * 24 * 60 * 60 * 1000);
+            fact.lastReview = Date.now();
+
+            // Save state
+            saveFactState();
+        }
+
+        // Calculate grade based on correctness and response time
+        function calculateGrade(isCorrect, responseTimeMs) {
+            if (!isCorrect) return 0;
+            if (responseTimeMs < 2000) return 5;  // Fast & correct (under 2s)
+            if (responseTimeMs < 4000) return 4;  // Good (2-4s)
+            return 3;  // Correct but slow (over 4s)
+        }
+
+        // Get facts filtered by current operation
+        function getFactsForOperation(op) {
+            if (op === 'mixed') return mathFacts;
+            const opMap = { add: 'add', subtract: 'subtract', multiply: 'multiply', divide: 'divide' };
+            return mathFacts.filter(f => f.op === opMap[op]);
+        }
+
+        // Select next fact using spaced repetition
+        function selectNextFact() {
+            const now = Date.now();
+            const facts = getFactsForOperation(operation);
+
+            // Priority 1: Due facts (nextReview <= now), sorted by hardest first
+            const dueFacts = facts.filter(f => f.nextReview <= now);
+            if (dueFacts.length > 0) {
+                // Sort by lowest EF (hardest), then oldest review
+                dueFacts.sort((a, b) => a.ef - b.ef || a.nextReview - b.nextReview);
+                // Add some randomness among the hardest facts
+                const hardest = dueFacts.filter(f => f.ef <= dueFacts[0].ef + 0.3);
+                return hardest[Math.floor(Math.random() * hardest.length)];
+            }
+
+            // Priority 2: New facts (never reviewed) - introduce gradually
+            const newFacts = facts.filter(f => f.repetitions === 0);
+            if (newFacts.length > 0) {
+                return newFacts[Math.floor(Math.random() * Math.min(5, newFacts.length))];
+            }
+
+            // Priority 3: All facts reviewed - pick soonest upcoming
+            facts.sort((a, b) => a.nextReview - b.nextReview);
+            return facts[0];
         }
 
         function generateProblem() {
-            const max = getMaxNumber();
-            const ops = operation === 'mixed' ? ['add', 'subtract', 'multiply', 'divide'] : [operation];
-            currentOp = ops[Math.floor(Math.random() * ops.length)];
-            const el = document.getElementById('problem');
+            // Use spaced repetition to select the next fact
+            currentFact = selectNextFact();
+            problemStartTime = Date.now();
 
-            if (currentOp === 'add') {
-                num1 = Math.floor(Math.random() * max) + 1;
-                num2 = Math.floor(Math.random() * max) + 1;
-                correctAnswer = num1 + num2;
-                el.textContent = `${num1} + ${num2}`;
-            } else if (currentOp === 'subtract') {
-                num1 = Math.floor(Math.random() * max) + 1;
-                num2 = Math.floor(Math.random() * num1) + 1;
-                correctAnswer = num1 - num2;
-                el.textContent = `${num1} − ${num2}`;
-            } else if (currentOp === 'multiply') {
-                const m = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
-                num1 = Math.floor(Math.random() * m) + 1;
-                num2 = Math.floor(Math.random() * m) + 1;
-                correctAnswer = num1 * num2;
-                el.textContent = `${num1} × ${num2}`;
-            } else {
-                const m = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
-                num2 = Math.floor(Math.random() * m) + 1;
-                correctAnswer = Math.floor(Math.random() * m) + 1;
-                num1 = num2 * correctAnswer;
-                el.textContent = `${num1} ÷ ${num2}`;
+            // Set problem variables from the selected fact
+            num1 = currentFact.num1;
+            num2 = currentFact.num2;
+            correctAnswer = currentFact.answer;
+            currentOp = currentFact.op;
+
+            // Sometimes swap num1 and num2 for variety (except subtraction/division)
+            if ((currentOp === 'add' || currentOp === 'multiply') && Math.random() > 0.5) {
+                [num1, num2] = [num2, num1];
             }
+
+            // Display the problem
+            const el = document.getElementById('problem');
+            const opSymbols = { add: '+', subtract: '−', multiply: '×', divide: '÷' };
+            el.textContent = `${num1} ${opSymbols[currentOp]} ${num2}`;
 
             currentInput = '';
             updateAnswerDisplay();
@@ -1753,6 +2790,15 @@
             const answerEl = document.getElementById('answerDisplay');
 
             if (userAnswer === correctAnswer) {
+                trackAccuracy(true); // Adaptive difficulty tracking
+
+                // SM-2 spaced repetition update
+                if (currentFact) {
+                    const responseTime = Date.now() - problemStartTime;
+                    const grade = calculateGrade(true, responseTime);
+                    updateFactSM2(currentFact, grade);
+                }
+
                 streak++;
                 correctCount++;
                 if (streak > bestStreak) bestStreak = streak;
@@ -1769,14 +2815,26 @@
                 answerEl.classList.add('correct');
                 updateProgressBars();
 
-                // Check achievements
+                // Check achievements (including tiered achievements that stack)
                 checkAchievement('first_correct', correctCount >= 1);
+                // Streak tiers
                 checkAchievement('streak_5', streak >= 5);
                 checkAchievement('streak_10', streak >= 10);
                 checkAchievement('streak_20', streak >= 20);
+                checkAchievement('streak_25', streak >= 25);
+                checkAchievement('streak_50', streak >= 50);
+                checkAchievement('streak_100', streak >= 100);
+                // Score tiers
                 checkAchievement('score_25', score >= 25);
                 checkAchievement('score_50', score >= 50);
                 checkAchievement('score_100', score >= 100);
+                checkAchievement('score_250', score >= 250);
+                checkAchievement('score_500', score >= 500);
+                // Update cumulative stats
+                if (streak > cumulativeStats.maxStreak) {
+                    cumulativeStats.maxStreak = streak;
+                }
+                cumulativeStats.totalScore = Math.max(cumulativeStats.totalScore, score);
 
                 if (streak === 5 || streak === 10 || streak === 15 || streak === 20 || (streak > 20 && streak % 10 === 0)) {
                     showStreakCelebration(streak);
@@ -1804,6 +2862,13 @@
 
                 setTimeout(generateProblem, 400);
             } else {
+                trackAccuracy(false); // Adaptive difficulty tracking
+
+                // SM-2 spaced repetition update - wrong answer resets the fact
+                if (currentFact) {
+                    updateFactSM2(currentFact, 0); // Grade 0 = failed
+                }
+
                 feedbackEl.textContent = 'Try again!';
                 feedbackEl.className = 'feedback';
                 playSound('wrong');
@@ -1958,6 +3023,11 @@
         loadSoundPref();
         loadAchievements();
         loadProgression();
+        loadCumulativeStats();
+        loadPrestige();
+        loadScene();
+        loadAdaptiveDifficulty();
+        initializeFactDatabase(); // Initialize spaced repetition fact database
         updateSettingsLabel();
         updatePowerupButtons();
         generateProblem();
@@ -1974,8 +3044,11 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(1); // Force low resolution for pixel art
 
-            // Pixel art color palette (limited colors)
-            const colors = {
+            // Get current scene variation
+            const currentSceneVar = SCENE_VARIATIONS.find(s => s.id === currentSceneId) || SCENE_VARIATIONS[0];
+
+            // Pixel art color palette (limited colors) - merged with scene variation colors
+            const defaultColors = {
                 sky: 0x87ceeb,
                 skyHorizon: 0xffecd2,
                 sun: 0xffd93d,
@@ -1994,6 +3067,7 @@
                 cloud: 0xffffff,
                 cloudShadow: 0xe8e8e8
             };
+            const colors = { ...defaultColors, ...(currentSceneVar.colors || {}) };
 
             // Sky gradient using a large box
             scene.background = new THREE.Color(colors.sky);
@@ -2254,6 +3328,104 @@
             umbrellaGroup.position.set(-5, -1, 18);
             scene.add(umbrellaGroup);
 
+            // ===== SCENE EXTRAS (based on scene variation) =====
+            const sceneExtras = { stars: [], moon: null, particles: [], darkClouds: [] };
+            const extras = currentSceneVar.extras || [];
+
+            // Stars (for night scene)
+            if (extras.includes('stars')) {
+                for (let i = 0; i < 60; i++) {
+                    const starGeo = new THREE.BoxGeometry(0.15, 0.15, 0.1);
+                    const star = new THREE.Mesh(starGeo, new THREE.MeshBasicMaterial({ color: 0xffffff }));
+                    star.position.set(
+                        (Math.random() - 0.5) * 80,
+                        5 + Math.random() * 20,
+                        -40 - Math.random() * 20
+                    );
+                    star.userData = { twinkleOffset: Math.random() * Math.PI * 2 };
+                    sceneExtras.stars.push(star);
+                    scene.add(star);
+                }
+            }
+
+            // Moon (for night scene)
+            if (extras.includes('moon')) {
+                const moonGeo = new THREE.BoxGeometry(5, 5, 0.5);
+                const moon = new THREE.Mesh(moonGeo, pixelMat(colors.sun)); // Uses sunColor which is moon color in night mode
+                moon.position.set(-10, 15, -52);
+                sceneExtras.moon = moon;
+                scene.add(moon);
+            }
+
+            // Snowflakes (for winter scene)
+            if (extras.includes('snowflakes')) {
+                for (let i = 0; i < 80; i++) {
+                    const snowGeo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+                    const snow = new THREE.Mesh(snowGeo, new THREE.MeshBasicMaterial({ color: 0xffffff }));
+                    snow.position.set(
+                        (Math.random() - 0.5) * 60,
+                        Math.random() * 30,
+                        (Math.random() - 0.5) * 60
+                    );
+                    snow.userData = { fallSpeed: 0.02 + Math.random() * 0.03, sway: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(snow);
+                    scene.add(snow);
+                }
+            }
+
+            // Rain (for stormy scene)
+            if (extras.includes('rain')) {
+                for (let i = 0; i < 120; i++) {
+                    const rainGeo = new THREE.BoxGeometry(0.05, 0.4, 0.05);
+                    const rain = new THREE.Mesh(rainGeo, new THREE.MeshBasicMaterial({ color: 0x8888aa, transparent: true, opacity: 0.7 }));
+                    rain.position.set(
+                        (Math.random() - 0.5) * 60,
+                        Math.random() * 30,
+                        (Math.random() - 0.5) * 60
+                    );
+                    rain.userData = { fallSpeed: 0.3 + Math.random() * 0.2 };
+                    sceneExtras.particles.push(rain);
+                    scene.add(rain);
+                }
+            }
+
+            // Dark clouds (for stormy scene)
+            if (extras.includes('darkClouds')) {
+                for (let i = 0; i < 5; i++) {
+                    const darkCloud = createCloud(
+                        (Math.random() - 0.5) * 60,
+                        12 + Math.random() * 6,
+                        -35 - Math.random() * 15,
+                        2 + Math.random()
+                    );
+                    darkCloud.children.forEach(child => {
+                        child.material = pixelMat(0x4a4a5a);
+                    });
+                    sceneExtras.darkClouds.push(darkCloud);
+                    scene.add(darkCloud);
+                }
+            }
+
+            // Petals (for sakura scene)
+            if (extras.includes('petals')) {
+                for (let i = 0; i < 50; i++) {
+                    const petalGeo = new THREE.BoxGeometry(0.25, 0.1, 0.15);
+                    const petal = new THREE.Mesh(petalGeo, new THREE.MeshBasicMaterial({ color: 0xffb7c5 }));
+                    petal.position.set(
+                        (Math.random() - 0.5) * 50,
+                        Math.random() * 25,
+                        (Math.random() - 0.5) * 50
+                    );
+                    petal.userData = {
+                        fallSpeed: 0.015 + Math.random() * 0.02,
+                        sway: Math.random() * Math.PI * 2,
+                        rotSpeed: (Math.random() - 0.5) * 0.1
+                    };
+                    sceneExtras.particles.push(petal);
+                    scene.add(petal);
+                }
+            }
+
             // Camera position (beach view looking at ocean)
             camera.position.set(0, 3, 25);
             camera.lookAt(0, 2, -20);
@@ -2312,6 +3484,38 @@
                     1
                 );
 
+                // Animate scene extras
+                // Stars twinkling
+                sceneExtras.stars.forEach(star => {
+                    const twinkle = Math.sin(time * 3 + star.userData.twinkleOffset);
+                    star.material.opacity = 0.5 + twinkle * 0.5;
+                    star.scale.setScalar(0.8 + twinkle * 0.4);
+                });
+
+                // Particles (snow, rain, petals)
+                sceneExtras.particles.forEach(p => {
+                    p.position.y -= p.userData.fallSpeed;
+                    if (p.userData.sway !== undefined) {
+                        p.position.x += Math.sin(time + p.userData.sway) * 0.01;
+                    }
+                    if (p.userData.rotSpeed !== undefined) {
+                        p.rotation.y += p.userData.rotSpeed;
+                        p.rotation.x += p.userData.rotSpeed * 0.5;
+                    }
+                    // Reset when fallen below ground
+                    if (p.position.y < -2) {
+                        p.position.y = 30;
+                        p.position.x = (Math.random() - 0.5) * 60;
+                        p.position.z = (Math.random() - 0.5) * 60;
+                    }
+                });
+
+                // Dark clouds drift
+                sceneExtras.darkClouds.forEach(cloud => {
+                    cloud.position.x += 0.015;
+                    if (cloud.position.x > 40) cloud.position.x = -40;
+                });
+
                 renderer.render(scene, camera);
             }
 
@@ -2320,6 +3524,11 @@
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // Listen for scene changes - reload page to apply new scene
+            window.addEventListener('sceneChange', () => {
+                location.reload();
             });
 
             animate();
