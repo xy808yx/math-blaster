@@ -2451,8 +2451,8 @@
             // Auto-solve the current problem
             setTimeout(() => {
                 if (gameActive && !bossActive) {
-                    userAnswer = String(correctAnswer);
-                    document.getElementById('answerDisplay').textContent = userAnswer;
+                    currentInput = String(correctAnswer);
+                    document.getElementById('answerDisplay').textContent = currentInput;
                     checkAnswer();
                 }
             }, 300);
@@ -3689,7 +3689,7 @@
 
         function isCostumeUnlocked(costume) {
             if (costume.unlockLevel) {
-                return level >= costume.unlockLevel;
+                return playerLevel >= costume.unlockLevel;
             }
             if (costume.unlockType === 'achievement') {
                 return unlockedAchievements.includes(costume.unlockId);
