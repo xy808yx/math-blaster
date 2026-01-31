@@ -231,28 +231,91 @@
         .combo-display.active { opacity: 1; animation: comboPulse 0.5s infinite; }
         @keyframes comboPulse { 50% { transform: scale(1.1); } }
 
-        /* Power-ups */
-        .powerups-bar {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            min-height: 36px;
+        /* Auto-Helper Effects */
+        .auto-helper-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 500;
         }
-        .powerup-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--card-bg);
-            border: 2px solid var(--accent);
-            font-size: 1.2rem;
-            cursor: pointer;
-            opacity: 0.4;
-            transition: all 0.2s;
+        .lightning-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: #FFD93D;
+            text-shadow: 0 0 30px #FFD93D, 0 0 60px #FF6B9D;
+            animation: lightningStrike 0.6s ease-out forwards;
+            z-index: 501;
         }
-        .powerup-btn.available { opacity: 1; animation: powerupGlow 1s infinite; }
-        .powerup-btn.available:hover { transform: scale(1.1); }
-        .powerup-btn.used { opacity: 0.2; cursor: not-allowed; }
-        @keyframes powerupGlow { 50% { box-shadow: 0 0 15px var(--accent); } }
+        @keyframes lightningStrike {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+            40% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) translateY(-30px); }
+        }
+        .time-freeze-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, rgba(100,200,255,0.15) 0%, transparent 70%);
+            animation: freezePulse 0.5s ease-out;
+            pointer-events: none;
+            z-index: 500;
+        }
+        @keyframes freezePulse {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+        .ice-crystal {
+            position: absolute;
+            font-size: 2rem;
+            animation: crystalFloat 5s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes crystalFloat {
+            0% { opacity: 0; transform: scale(0); }
+            20% { opacity: 1; transform: scale(1); }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+        .timer-display.frozen {
+            color: #64C8FF !important;
+            text-shadow: 0 0 20px #64C8FF;
+            animation: timerFreezePulse 0.5s infinite;
+        }
+        @keyframes timerFreezePulse {
+            50% { transform: scale(1.1); text-shadow: 0 0 30px #64C8FF; }
+        }
+        .helper-message {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(255,107,157,0.9), rgba(255,217,61,0.9));
+            color: #1a0a2e;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            z-index: 510;
+            animation: helperMessagePop 2.5s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes helperMessagePop {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-20px) scale(0.8); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.05); }
+            25% { transform: translateX(-50%) scale(1); }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+        }
 
         /* Achievements Toast */
         .achievement-toast {
@@ -324,6 +387,112 @@
             cursor: not-allowed;
         }
         .theme-btn.locked:hover { opacity: 0.5; }
+
+        /* Mango Avatar (tappable for costume modal) */
+        .mango-avatar {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 48px;
+            height: 48px;
+        }
+        .mango-avatar:hover { transform: scale(1.1); }
+        .mango-avatar:active { transform: scale(0.95); }
+        .mango-avatar .costume-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Costume Modal */
+        .costume-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 600;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .costume-modal.show { display: flex; }
+        .costume-modal-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .costume-modal-header h2 { color: var(--accent); margin: 0 0 10px 0; }
+        .costume-preview {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .costume-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .costume-tab {
+            padding: 8px 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .costume-tab.active {
+            background: var(--primary);
+            color: #1a0a2e;
+        }
+        .costume-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .costume-item {
+            aspect-ratio: 1;
+            background: var(--card-bg);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 8px;
+        }
+        .costume-item:hover { border-color: var(--primary); transform: scale(1.05); }
+        .costume-item.equipped { border-color: var(--accent); background: rgba(255,217,61,0.2); }
+        .costume-item.locked { opacity: 0.4; cursor: not-allowed; }
+        .costume-item.locked:hover { transform: none; border-color: rgba(255,255,255,0.2); }
+        .costume-item .costume-icon { font-size: 2rem; margin-bottom: 4px; }
+        .costume-item .costume-name { font-size: 0.65rem; color: var(--text); text-align: center; }
+        .costume-item .costume-unlock { font-size: 0.55rem; color: var(--primary); }
+        .costume-more {
+            text-align: center;
+            color: var(--accent);
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+        .costume-done-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: var(--accent);
+            border: none;
+            border-radius: 25px;
+            color: #1a0a2e;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: center;
+        }
 
         /* Timer */
         .timer-display {
@@ -535,6 +704,109 @@
             100% { transform: scale(0) rotate(720deg); opacity: 0; }
         }
 
+        /* Coconut Projectile */
+        .coconut-projectile {
+            position: absolute;
+            font-size: 2.5rem;
+            z-index: 20;
+            pointer-events: none;
+            animation: coconutFly 0.4s ease-out forwards;
+        }
+        @keyframes coconutFly {
+            0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
+            20% { transform: translateY(-30px) rotate(180deg) scale(1); opacity: 1; }
+            80% { transform: translateY(-120px) rotate(540deg) scale(1); opacity: 1; }
+            100% { transform: translateY(-150px) rotate(720deg) scale(0.8); opacity: 0; }
+        }
+
+        /* Boss Phase Indicators */
+        .boss-emoji.phase-75 { filter: brightness(1.1); }
+        .boss-emoji.phase-50 { filter: brightness(1.2) hue-rotate(10deg); }
+        .boss-emoji.phase-25 { filter: brightness(1.3) hue-rotate(20deg); animation: bossRage 0.2s infinite; }
+        @keyframes bossRage {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        /* Boss Speech Bubble */
+        .boss-speech {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: speechPop 2.5s ease-out forwards;
+            z-index: 25;
+        }
+        .boss-speech::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+        @keyframes speechPop {
+            0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.8); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.05); }
+            25% { transform: translateX(-50%) scale(1); }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Enhanced Victory Effects */
+        .boss-container.victory-basic { animation: victoryBasic 1.5s ease-out; }
+        .boss-container.victory-simple { animation: victorySimple 2s ease-out; }
+        .boss-container.victory-ability { animation: victoryAbility 2.5s ease-out; }
+        .boss-container.victory-elite { animation: victoryElite 3.5s ease-out; }
+        @keyframes victoryBasic {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        @keyframes victorySimple {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        @keyframes victoryAbility {
+            0% { transform: scale(1) rotate(0); }
+            25% { transform: scale(1.15) rotate(-3deg); }
+            50% { transform: scale(1.1) rotate(3deg); }
+            75% { transform: scale(1.05) rotate(-2deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+        @keyframes victoryElite {
+            0% { transform: scale(1) rotate(0); filter: brightness(1); }
+            20% { transform: scale(1.2) rotate(-5deg); filter: brightness(1.5); }
+            40% { transform: scale(1.1) rotate(5deg); filter: brightness(1.3); }
+            60% { transform: scale(1.15) rotate(-3deg); filter: brightness(1.4); }
+            80% { transform: scale(1.05) rotate(2deg); filter: brightness(1.2); }
+            100% { transform: scale(1) rotate(0); filter: brightness(1); }
+        }
+
+        /* Confetti burst for elite victories */
+        .victory-confetti {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: confettiFall 2s ease-out forwards;
+        }
+        @keyframes confettiFall {
+            0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(100px) rotate(360deg); }
+        }
+
         .boss-name { font-size: 1.2rem; color: var(--error); margin-bottom: 15px; }
 
         .boss-health-bar {
@@ -573,9 +845,9 @@
 
         .boss-numpad {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 6px;
-            max-width: 280px;
+            max-width: 300px;
             margin: 0 auto;
         }
         .boss-numpad button {
@@ -1301,6 +1573,12 @@
 
     <div class="game-container">
         <div class="top-bar">
+            <div class="mango-avatar" id="mangoAvatar" onclick="openCostumeModal()" title="Dress up your mango!">
+                <svg class="pixel-mango" style="width:48px;height:48px;"><use href="#pixel-mango"/></svg>
+                <div class="costume-layer" id="costumeHatLayer"></div>
+                <div class="costume-layer" id="costumeOutfitLayer"></div>
+                <div class="costume-layer" id="costumeAccessoryLayer"></div>
+            </div>
             <div class="level-display" id="levelDisplay">Lv.1</div>
             <div class="top-buttons">
                 <button class="icon-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
@@ -1346,11 +1624,8 @@
             </div>
         </div>
 
-        <div class="powerups-bar">
-            <button class="powerup-btn" id="powerupHint" onclick="usePowerup('hint')" title="Hint">💡</button>
-            <button class="powerup-btn" id="powerupDouble" onclick="usePowerup('double')" title="Double Points">2️⃣</button>
-            <button class="powerup-btn" id="powerupSkip" onclick="usePowerup('skip')" title="Skip">⏭️</button>
-        </div>
+        <!-- Auto-helper overlay (for visual effects) -->
+        <div class="auto-helper-overlay" id="autoHelperOverlay"></div>
 
         <div class="combo-display" id="comboDisplay">x1</div>
 
@@ -1393,7 +1668,7 @@
     <!-- Mystery Box -->
     <div class="modal" id="mysteryBoxModal">
         <div class="mystery-box" id="mysteryBox" onclick="openMysteryBox()">
-            <svg class="pixel-box" style="width:120px;height:120px;cursor:pointer;"><use href="#pixel-mysterybox"/></svg>
+            <svg class="pixel-box" style="width:240px;height:240px;cursor:pointer;"><use href="#pixel-mysterybox"/></svg>
         </div>
         <div class="mystery-reward" id="mysteryReward"></div>
         <div class="mystery-text" id="mysteryText">Tap to open!</div>
@@ -1406,7 +1681,7 @@
         <div class="boss-container" id="bossContainer">
             <div class="boss-info-card" id="bossInfoCard"></div>
             <div class="boss-emoji" id="bossEmoji">
-                <svg class="pixel-boss" style="width:100px;height:100px;"><use href="#boss-tiki" id="bossUse"/></svg>
+                <svg class="pixel-boss" style="width:200px;height:200px;"><use href="#boss-tiki" id="bossUse"/></svg>
             </div>
             <div class="boss-name" id="bossName">Tiki Mask</div>
             <div class="boss-health-bar">
@@ -1425,8 +1700,8 @@
                 <button onclick="bossNumPress(7)">7</button>
                 <button onclick="bossNumPress(8)">8</button>
                 <button onclick="bossNumPress(9)">9</button>
-                <button onclick="bossNumPress(0)">0</button>
                 <button class="delete" onclick="bossDeletePress()">⌫</button>
+                <button onclick="bossNumPress(0)">0</button>
                 <button class="submit" onclick="bossCheckAnswer()">GO</button>
             </div>
         </div>
@@ -1458,6 +1733,24 @@
 
     <!-- Achievement Toast -->
     <div class="achievement-toast" id="achievementToast"></div>
+
+    <!-- Costume Modal -->
+    <div class="costume-modal" id="costumeModal">
+        <div class="costume-modal-header">
+            <h2>Dress Up!</h2>
+            <div class="costume-preview" id="costumePreview">
+                <svg class="pixel-mango" style="width:120px;height:120px;"><use href="#pixel-mango"/></svg>
+            </div>
+        </div>
+        <div class="costume-tabs">
+            <button class="costume-tab active" onclick="showCostumeTab('hats')">Hats</button>
+            <button class="costume-tab" onclick="showCostumeTab('outfits')">Outfits</button>
+            <button class="costume-tab" onclick="showCostumeTab('accessories')">Accessories</button>
+        </div>
+        <div class="costume-grid" id="costumeGrid"></div>
+        <div class="costume-more" id="costumeMore"></div>
+        <button class="costume-done-btn" onclick="closeCostumeModal()">Done</button>
+    </div>
 
     <script>
         // Bosses with unlock levels
@@ -1521,29 +1814,148 @@
             { id: 'retro', name: '👾 Retro', unlockLevel: 12 }
         ];
 
+        // Boss personality phrases for key bosses
+        const BOSS_PHRASES = {
+            'boss-kraken': {
+                intro: ['Release the Kraken!', 'You dare challenge me?', 'Face the deep!'],
+                hit: ['Argh!', 'That stings!', 'Lucky shot!'],
+                lowHp: ['You cannot defeat the sea!', 'I will not fall!'],
+                defeat: ['The depths... call me...', 'Impossible!']
+            },
+            'boss-pirate': {
+                intro: ['Ahoy, matey!', 'Prepare to be boarded!', 'X marks the spot!'],
+                hit: ['Shiver me timbers!', 'Blimey!', 'Arrr!'],
+                lowHp: ['I never surrender!', 'Fight to the last!'],
+                defeat: ['Walk the plank...', 'Curse ye!']
+            },
+            'boss-shark': {
+                intro: ['Time to hunt!', 'I smell fear!', 'Dinner time!'],
+                hit: ['Ouch!', 'Sharp!', 'Not bad!'],
+                lowHp: ["You'll need a bigger boat!", 'Still hungry!'],
+                defeat: ['Swimming away...', 'Until next time!']
+            },
+            'boss-mermaid': {
+                intro: ['Care to swim?', 'The ocean is mine!', 'Catch me if you can!'],
+                hit: ['Hey!', 'Rude!', 'Watch it!'],
+                lowHp: ['The sea protects me!', 'Not so fast!'],
+                defeat: ['Back to the depths...', 'You won... this time!']
+            },
+            'boss-whale': {
+                intro: ['SPLASH!', 'Here I come!', 'Making waves!'],
+                hit: ['BONK!', 'Ow!', 'That tickled!'],
+                lowHp: ['Getting serious now!', "Can't stop me!"],
+                defeat: ['Whale... this is awkward!', 'Good game!']
+            },
+            'boss-serpent': {
+                intro: ['Hisss!', 'Coils of doom!', 'Fear the serpent!'],
+                hit: ['Sssstop!', 'That hurt!', 'Sssscratched!'],
+                lowHp: ['My venom awaits!', 'Ssstill dangerous!'],
+                defeat: ['Ssslithering away...', 'Cursssed!']
+            }
+        };
+
+        // Costume definitions (15-20 items)
+        const COSTUMES = {
+            hats: [
+                { id: 'hat-none', name: 'None', icon: '❌', unlockLevel: 1 },
+                { id: 'hat-pirate', name: 'Pirate Hat', icon: '🏴‍☠️', unlockLevel: 5 },
+                { id: 'hat-crown', name: 'Crown', icon: '👑', unlockLevel: 15 },
+                { id: 'hat-flower', name: 'Flower', icon: '🌺', unlockType: 'achievement', unlockId: 'streak_10', unlockHint: 'Get 10 streak' },
+                { id: 'hat-wizard', name: 'Wizard Hat', icon: '🧙', unlockType: 'boss', unlockId: 'boss-kraken', unlockHint: 'Beat Kraken' },
+                { id: 'hat-santa', name: 'Santa Hat', icon: '🎅', unlockLevel: 25 },
+                { id: 'hat-party', name: 'Party Hat', icon: '🥳', unlockLevel: 35 }
+            ],
+            outfits: [
+                { id: 'outfit-none', name: 'None', icon: '❌', unlockLevel: 1 },
+                { id: 'outfit-bowtie', name: 'Bow Tie', icon: '🎀', unlockLevel: 8 },
+                { id: 'outfit-cape', name: 'Cape', icon: '🦸', unlockType: 'achievement', unlockId: 'boss_slayer', unlockHint: 'Defeat a boss' },
+                { id: 'outfit-lei', name: 'Lei', icon: '🌸', unlockLevel: 12 },
+                { id: 'outfit-armor', name: 'Armor', icon: '🛡️', unlockType: 'boss', unlockId: 'boss-pirate', unlockHint: 'Beat Pirate Captain' },
+                { id: 'outfit-tuxedo', name: 'Tuxedo', icon: '🤵', unlockLevel: 30 },
+                { id: 'outfit-superhero', name: 'Superhero', icon: '🦹', unlockLevel: 45 }
+            ],
+            accessories: [
+                { id: 'acc-none', name: 'None', icon: '❌', unlockLevel: 1 },
+                { id: 'acc-sunglasses', name: 'Sunglasses', icon: '😎', unlockLevel: 3 },
+                { id: 'acc-monocle', name: 'Monocle', icon: '🧐', unlockLevel: 20 },
+                { id: 'acc-wand', name: 'Magic Wand', icon: '🪄', unlockType: 'achievement', unlockId: 'score_100', unlockHint: 'Score 100' },
+                { id: 'acc-shield', name: 'Shield', icon: '🛡️', unlockType: 'boss', unlockId: 'boss-whale', unlockHint: 'Beat Whale' },
+                { id: 'acc-balloon', name: 'Balloon', icon: '🎈', unlockLevel: 10 },
+                { id: 'acc-sword', name: 'Sword', icon: '⚔️', unlockLevel: 40 }
+            ]
+        };
+
+        // Equipped costumes state
+        let equippedCostumes = { hat: 'hat-none', outfit: 'outfit-none', accessory: 'acc-none' };
+        let currentCostumeTab = 'hats';
+
         // Scene variations (3D background cosmetic changes)
         const SCENE_VARIATIONS = [
+            // Original scenes
             { id: 'beach', name: 'Sunny Beach', emoji: '🏖️', unlockLevel: 1 },
+
+            // New location: Rocky Tide Pools (L15)
+            { id: 'tidepools', name: 'Rocky Tide Pools', emoji: '🪨', unlockLevel: 15,
+              colors: { sky: 0x87ceeb, skyHorizon: 0xb0e0e6, sun: 0xffd700, sunGlow: 0xffa500,
+                       sand: 0x808080, sandDark: 0x606060,
+                       oceanDeep: 0x006994, oceanMid: 0x1ca9c9, oceanLight: 0x40e0d0 },
+              extras: ['rocks', 'tidepools', 'crabs'] },
+
             { id: 'sunset', name: 'Sunset Paradise', emoji: '🌅', unlockLevel: 20,
               colors: { sky: 0xff7e5f, skyHorizon: 0xffcc80, sun: 0xff4500, sunGlow: 0xff6b00,
                        oceanDeep: 0x2c3e50, oceanMid: 0x4a6fa5, oceanLight: 0x7a9cc6 } },
+
+            // New location: Beach Boardwalk (L25)
+            { id: 'boardwalk', name: 'Beach Boardwalk', emoji: '🎡', unlockLevel: 25,
+              colors: { sky: 0x4a90d9, skyHorizon: 0x87ceeb, sun: 0xffd700, sunGlow: 0xffb347,
+                       sand: 0xf4a460, sandDark: 0xd2691e },
+              extras: ['ferrisWheel', 'stringLights', 'boardwalk'] },
+
             { id: 'night', name: 'Moonlit Night', emoji: '🌙', unlockLevel: 30,
               colors: { sky: 0x0a0a2a, skyHorizon: 0x1a1a4a, sun: 0xf5f5dc, sunGlow: 0xccccaa,
                        oceanDeep: 0x0a1628, oceanMid: 0x152238, oceanLight: 0x203348 },
               extras: ['stars', 'moon'] },
+
+            // New location: Underwater View (L35)
+            { id: 'underwater', name: 'Underwater View', emoji: '🐠', unlockLevel: 35,
+              colors: { sky: 0x0077be, skyHorizon: 0x00a3cc, sun: 0x87ceeb, sunGlow: 0xadd8e6,
+                       oceanDeep: 0x001f3f, oceanMid: 0x003366, oceanLight: 0x0066cc },
+              extras: ['fish', 'bubbles', 'caustics', 'seaweed'] },
+
             { id: 'stormy', name: 'Stormy Seas', emoji: '🌧️', unlockLevel: 40,
               colors: { sky: 0x4a4a5a, skyHorizon: 0x5a5a6a, sun: 0x888888, sunGlow: 0x666666,
                        oceanDeep: 0x2a3a4a, oceanMid: 0x3a4a5a, oceanLight: 0x5a6a7a },
               extras: ['rain', 'darkClouds'] },
+
+            // New location: Treehouse Cove (L45)
+            { id: 'treehouse', name: 'Treehouse Cove', emoji: '🏠', unlockLevel: 45,
+              colors: { sky: 0x87ceeb, skyHorizon: 0xc1e4c1, sun: 0xffd700, sunGlow: 0xffa500,
+                       palmLeaf: 0x228b22, palmLeafLight: 0x32cd32 },
+              extras: ['treehouse', 'vines', 'parrots'] },
+
             { id: 'snowy', name: 'Winter Beach', emoji: '❄️', unlockLevel: 50,
               colors: { sky: 0xd0e8f0, skyHorizon: 0xe8f4f8, sun: 0xfff8dc, sunGlow: 0xfff0c0,
                        sand: 0xffffff, sandDark: 0xe8e8e8,
                        oceanDeep: 0x3a6a8a, oceanMid: 0x5a8aaa, oceanLight: 0x8abacc },
               extras: ['snowflakes'] },
+
+            // Seasonal: Spooky Beach (L55)
+            { id: 'spooky', name: 'Spooky Beach', emoji: '🎃', unlockLevel: 55,
+              colors: { sky: 0x2d1b4e, skyHorizon: 0x4a2c7a, sun: 0xff8c00, sunGlow: 0xff4500,
+                       sand: 0x3d2817, sandDark: 0x2b1810,
+                       oceanDeep: 0x1a0a2e, oceanMid: 0x2d1b4e, oceanLight: 0x4a2c7a },
+              extras: ['pumpkins', 'bats', 'ghosts'] },
+
             { id: 'sakura', name: 'Cherry Blossom', emoji: '🌸', unlockLevel: 60,
               colors: { sky: 0xffc0cb, skyHorizon: 0xffe4e8, sun: 0xffdd55, sunGlow: 0xffcc33,
                        palmLeaf: 0xff69b4, palmLeafLight: 0xff8dc7 },
-              extras: ['petals'] }
+              extras: ['petals'] },
+
+            // Seasonal: Summer Party (L65)
+            { id: 'party', name: 'Summer Party', emoji: '🎉', unlockLevel: 65,
+              colors: { sky: 0x4169e1, skyHorizon: 0x87ceeb, sun: 0xffd700, sunGlow: 0xff69b4,
+                       sand: 0xfaebd7, sandDark: 0xdeb887 },
+              extras: ['balloons', 'confetti', 'tikitorches', 'festivalLights'] }
         ];
         let currentSceneId = 'beach';
 
@@ -1584,9 +1996,18 @@
         let comboMultiplier = 1;
         let comboTimeout = null;
 
-        // Power-ups
-        let powerups = { hint: 0, double: 0, skip: 0 };
-        let doublePointsActive = false;
+        // Auto-Helper System (replaces manual power-ups)
+        let struggleState = {
+            problemStartTime: 0,
+            wrongAttemptsOnProblem: 0,
+            lastStreakLoss: 0,
+            playerSkillLevel: 0.5,  // Adaptive 0-1
+            lastAutoHelperTime: 0,
+            accuracyHistory: [],    // Last 20 answers
+            timeFrozen: false,
+            freezeEndTime: 0
+        };
+        let doublePointsActive = false; // Keep for compatibility
 
         // Achievements - now with tiered achievements that STACK (collect all tiers)
         const ACHIEVEMENTS = [
@@ -1965,45 +2386,147 @@
             }, 3000);
         }
 
-        // Power-ups
-        function updatePowerupButtons() {
-            ['hint', 'double', 'skip'].forEach(type => {
-                const btn = document.getElementById('powerup' + type.charAt(0).toUpperCase() + type.slice(1));
-                btn.classList.toggle('available', powerups[type] > 0);
-                btn.classList.toggle('used', powerups[type] === 0);
-            });
-        }
+        // Auto-Helper System (struggle detection + automatic helpers)
+        function checkStruggleAndHelp() {
+            if (!gameActive || bossActive) return;
 
-        function usePowerup(type) {
-            if (powerups[type] <= 0 || !gameActive || bossActive) return;
+            const now = Date.now();
+            const timeSinceHelper = now - struggleState.lastAutoHelperTime;
 
-            powerups[type]--;
-            updatePowerupButtons();
-            checkAchievement('powerup_user', true);
-            playSound('bonus');
+            // Calculate adaptive cooldown based on skill level
+            // Struggling players: 30-40s, skilled players: 90s+
+            const baseCooldown = 60000;
+            const minCooldown = 30000;
+            const maxCooldown = 120000;
+            const cooldown = minCooldown + (struggleState.playerSkillLevel * (maxCooldown - minCooldown));
 
-            if (type === 'hint') {
-                // Show first digit of answer
-                const hint = String(correctAnswer).charAt(0);
-                document.getElementById('feedback').textContent = `Hint: starts with ${hint}...`;
-                document.getElementById('feedback').className = 'feedback correct';
-            } else if (type === 'double') {
-                doublePointsActive = true;
-                document.getElementById('feedback').textContent = '2x points active!';
-                document.getElementById('feedback').className = 'feedback correct';
-            } else if (type === 'skip') {
-                correctCount++;
-                updateProgressBars();
-                generateProblem();
+            if (timeSinceHelper < cooldown) return;
+
+            // Count struggle signals
+            let struggleSignals = 0;
+
+            // Signal 1: 5+ seconds idle on current problem
+            const idleTime = now - struggleState.problemStartTime;
+            if (idleTime > 5000) struggleSignals++;
+
+            // Signal 2: 2+ wrong answers on same problem
+            if (struggleState.wrongAttemptsOnProblem >= 2) struggleSignals++;
+
+            // Signal 3: Lost streak within last 30 seconds
+            if (struggleState.lastStreakLoss > 0 && (now - struggleState.lastStreakLoss) < 30000) struggleSignals++;
+
+            // Need 2+ signals to trigger helper
+            if (struggleSignals >= 2) {
+                triggerAutoHelper();
             }
         }
 
+        function triggerAutoHelper() {
+            // Choose between auto-solve and time freeze
+            const helperType = Math.random() < 0.5 ? 'autoSolve' : 'timeFreeze';
+
+            struggleState.lastAutoHelperTime = Date.now();
+            playSound('bonus');
+            checkAchievement('powerup_user', true);
+
+            if (helperType === 'autoSolve') {
+                triggerAutoSolve();
+            } else {
+                triggerTimeFreeze();
+            }
+        }
+
+        function triggerAutoSolve() {
+            const overlay = document.getElementById('autoHelperOverlay');
+
+            // Show lightning effect
+            const lightning = document.createElement('div');
+            lightning.className = 'lightning-effect';
+            lightning.textContent = '⚡';
+            overlay.appendChild(lightning);
+
+            // Show helper message
+            showHelperMessage('Magic solved it!');
+
+            // Auto-solve the current problem
+            setTimeout(() => {
+                if (gameActive && !bossActive) {
+                    userAnswer = String(correctAnswer);
+                    document.getElementById('answerDisplay').textContent = userAnswer;
+                    checkAnswer();
+                }
+            }, 300);
+
+            // Clean up effect
+            setTimeout(() => lightning.remove(), 600);
+        }
+
+        function triggerTimeFreeze() {
+            const overlay = document.getElementById('autoHelperOverlay');
+            const timerEl = document.getElementById('timer');
+
+            // Show freeze effect
+            const freezeEffect = document.createElement('div');
+            freezeEffect.className = 'time-freeze-effect';
+            overlay.appendChild(freezeEffect);
+
+            // Add ice crystals
+            for (let i = 0; i < 6; i++) {
+                const crystal = document.createElement('div');
+                crystal.className = 'ice-crystal';
+                crystal.textContent = '❄️';
+                crystal.style.left = (10 + Math.random() * 80) + '%';
+                crystal.style.top = (10 + Math.random() * 80) + '%';
+                overlay.appendChild(crystal);
+                setTimeout(() => crystal.remove(), 5000);
+            }
+
+            // Freeze timer for 5 seconds
+            struggleState.timeFrozen = true;
+            struggleState.freezeEndTime = Date.now() + 5000;
+            timerEl.classList.add('frozen');
+
+            showHelperMessage('Time frozen! 5 seconds bonus!');
+
+            // Unfreeze after 5 seconds
+            setTimeout(() => {
+                struggleState.timeFrozen = false;
+                timerEl.classList.remove('frozen');
+                freezeEffect.remove();
+            }, 5000);
+        }
+
+        function showHelperMessage(text) {
+            const msg = document.createElement('div');
+            msg.className = 'helper-message';
+            msg.textContent = text;
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 2500);
+        }
+
+        function updatePlayerSkillLevel(wasCorrect) {
+            // Track last 20 answers
+            struggleState.accuracyHistory.push(wasCorrect);
+            if (struggleState.accuracyHistory.length > 20) {
+                struggleState.accuracyHistory.shift();
+            }
+
+            // Calculate skill level from recent accuracy
+            if (struggleState.accuracyHistory.length >= 5) {
+                const correctCount = struggleState.accuracyHistory.filter(x => x).length;
+                struggleState.playerSkillLevel = correctCount / struggleState.accuracyHistory.length;
+            }
+        }
+
+        function resetProblemStruggleState() {
+            struggleState.problemStartTime = Date.now();
+            struggleState.wrongAttemptsOnProblem = 0;
+        }
+
+        // Legacy function for mystery box compatibility
         function grantRandomPowerup() {
-            const types = ['hint', 'double', 'skip'];
-            const type = types[Math.floor(Math.random() * types.length)];
-            powerups[type]++;
-            updatePowerupButtons();
-            return type;
+            // Now mystery boxes always give bonus points instead
+            return 'bonus';
         }
 
         // Achievements
@@ -2078,25 +2601,17 @@
 
             document.getElementById('mysteryBox').style.display = 'none';
 
-            // 50% chance for power-up, 50% chance for bonus points
-            if (Math.random() < 0.5) {
-                const type = grantRandomPowerup();
-                const icons = { hint: '💡', double: '2️⃣', skip: '⏭️' };
-                const names = { hint: 'Hint', double: 'Double Points', skip: 'Skip' };
-                document.getElementById('mysteryReward').textContent = icons[type];
-                document.getElementById('mysteryText').textContent = `Got ${names[type]}!`;
-            } else {
-                const bonus = Math.floor(Math.random() * 3) + 2;
-                score += bonus;
-                document.getElementById('score').textContent = score;
-                // Show pixel art mangoes
-                let mangoHTML = '';
-                for (let i = 0; i < bonus; i++) {
-                    mangoHTML += '<svg class="pixel-mango" style="width:40px;height:40px;display:inline-block;"><use href="#pixel-mango"/></svg>';
-                }
-                document.getElementById('mysteryReward').innerHTML = mangoHTML;
-                document.getElementById('mysteryText').textContent = `+${bonus} bonus!`;
+            // Mystery boxes now always give bonus points (no manual power-ups)
+            const bonus = Math.floor(Math.random() * 4) + 2; // 2-5 bonus points
+            score += bonus;
+            document.getElementById('score').textContent = score;
+            // Show pixel art mangoes
+            let mangoHTML = '';
+            for (let i = 0; i < bonus; i++) {
+                mangoHTML += '<svg class="pixel-mango" style="width:80px;height:80px;display:inline-block;"><use href="#pixel-mango"/></svg>';
             }
+            document.getElementById('mysteryReward').innerHTML = mangoHTML;
+            document.getElementById('mysteryText').textContent = `+${bonus} bonus!`;
 
             document.getElementById('mysteryCloseBtn').classList.remove('hidden');
             playSound('bonus');
@@ -2121,6 +2636,85 @@
             document.getElementById('bossContainer').appendChild(flash);
             setTimeout(() => flash.remove(), 1500);
             haptic('medium');
+        }
+
+        // Coconut projectile attack
+        function fireCoconutProjectile() {
+            const container = document.getElementById('bossContainer');
+            const coconut = document.createElement('div');
+            coconut.className = 'coconut-projectile';
+            coconut.textContent = '🥥';
+            coconut.style.left = '50%';
+            coconut.style.bottom = '100px';
+            coconut.style.transform = 'translateX(-50%)';
+            container.appendChild(coconut);
+            setTimeout(() => coconut.remove(), 400);
+        }
+
+        // Boss speech bubble
+        function showBossSpeech(category) {
+            if (!bossCurrentBoss) return;
+            const phrases = BOSS_PHRASES[bossCurrentBoss.svg];
+            if (!phrases || !phrases[category]) return;
+
+            const phraseList = phrases[category];
+            const phrase = phraseList[Math.floor(Math.random() * phraseList.length)];
+
+            const container = document.getElementById('bossEmoji');
+            const existing = container.querySelector('.boss-speech');
+            if (existing) existing.remove();
+
+            const bubble = document.createElement('div');
+            bubble.className = 'boss-speech';
+            bubble.textContent = phrase;
+            container.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 2500);
+        }
+
+        // Update boss phase based on HP
+        function updateBossPhase(hpPercent) {
+            const emoji = document.getElementById('bossEmoji');
+            emoji.classList.remove('phase-75', 'phase-50', 'phase-25');
+
+            if (hpPercent <= 25) {
+                emoji.classList.add('phase-25');
+                if (!bossAbilityState.shownRagePhrase) {
+                    bossAbilityState.shownRagePhrase = true;
+                    showBossSpeech('lowHp');
+                    showAbilityFlash('ENRAGED!');
+                }
+            } else if (hpPercent <= 50) {
+                emoji.classList.add('phase-50');
+            } else if (hpPercent <= 75) {
+                emoji.classList.add('phase-75');
+            }
+        }
+
+        // Victory celebration based on boss tier
+        function playVictoryCelebration(tier) {
+            const container = document.getElementById('bossContainer');
+            container.classList.add('victory-' + tier);
+
+            // Elite bosses get confetti
+            if (tier === 'elite') {
+                const confettiEmojis = ['🎉', '🎊', '⭐', '✨', '🌟', '💫'];
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'victory-confetti';
+                        confetti.textContent = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
+                        confetti.style.left = (10 + Math.random() * 80) + '%';
+                        confetti.style.top = (Math.random() * 40) + '%';
+                        confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+                        container.appendChild(confetti);
+                        setTimeout(() => confetti.remove(), 2500);
+                    }, i * 100);
+                }
+            }
+
+            // Get victory duration based on tier
+            const durations = { basic: 1500, simple: 2000, ability: 2500, elite: 3500 };
+            return durations[tier] || 2000;
         }
 
         function applyBossAbilities(trigger) {
@@ -2199,8 +2793,13 @@
                 hasEnraged: false,
                 dodgeChance: 0,
                 confuseChance: 0,
-                usedAbilities: []
+                usedAbilities: [],
+                shownRagePhrase: false
             };
+
+            // Clear any previous phase classes
+            document.getElementById('bossEmoji').classList.remove('phase-75', 'phase-50', 'phase-25');
+            document.getElementById('bossContainer').classList.remove('victory-basic', 'victory-simple', 'victory-ability', 'victory-elite');
 
             // Apply start-trigger abilities
             applyBossAbilities('start');
@@ -2234,6 +2833,8 @@
 
             setTimeout(() => {
                 bossEmojiEl.classList.remove('entrance');
+                // Show intro speech for bosses with personality
+                showBossSpeech('intro');
                 generateBossProblem();
             }, 800);
 
@@ -2327,6 +2928,9 @@
                     return;
                 }
 
+                // Fire coconut projectile!
+                fireCoconutProjectile();
+
                 // Calculate damage based on boss HP
                 const damage = 25;
                 bossHealth -= damage;
@@ -2338,6 +2942,14 @@
                 setTimeout(() => emoji.classList.remove('hit'), 300);
                 playSound('bosshit');
                 haptic('medium');
+
+                // Show hit reaction speech occasionally
+                if (Math.random() < 0.3) {
+                    showBossSpeech('hit');
+                }
+
+                // Update phase visual based on HP
+                updateBossPhase(hpPercent);
 
                 // Check HP-triggered abilities
                 if (hpPercent <= 50 && !bossAbilityState.hasHealed) {
@@ -2402,6 +3014,9 @@
                     checkAchievement('ability_confuse', true);
                 }
 
+                // Show defeat speech
+                showBossSpeech('defeat');
+
                 document.getElementById('bossEmoji').classList.add('defeated');
                 document.getElementById('bossContainer').style.opacity = '0.3';
                 const victoryEl = document.getElementById('bossVictory');
@@ -2415,11 +3030,15 @@
                 document.getElementById('score').textContent = score;
                 document.getElementById('bossReward').innerHTML = '+10 <svg class="pixel-mango" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-mango"/></svg>';
 
+                // Play tiered victory celebration
+                const tier = bossCurrentBoss.tier || 'basic';
+                const victoryDuration = playVictoryCelebration(tier);
+
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
                     victoryEl.classList.remove('show');
                     setTimeout(generateProblem, 200);
-                }, 2500);
+                }, victoryDuration);
             } else {
                 document.getElementById('bossVictory').innerHTML = '<div>💀 ESCAPED!</div><div class="boss-reward">Boss fled...</div>';
                 document.getElementById('bossVictory').classList.remove('hidden');
@@ -2758,6 +3377,9 @@
             currentFact = selectNextFact();
             problemStartTime = Date.now();
 
+            // Reset struggle state for new problem
+            resetProblemStruggleState();
+
             // Set problem variables from the selected fact
             num1 = currentFact.num1;
             num2 = currentFact.num2;
@@ -2791,6 +3413,7 @@
 
             if (userAnswer === correctAnswer) {
                 trackAccuracy(true); // Adaptive difficulty tracking
+                updatePlayerSkillLevel(true); // Update auto-helper skill tracking
 
                 // SM-2 spaced repetition update
                 if (currentFact) {
@@ -2863,6 +3486,13 @@
                 setTimeout(generateProblem, 400);
             } else {
                 trackAccuracy(false); // Adaptive difficulty tracking
+                updatePlayerSkillLevel(false); // Update auto-helper skill tracking
+
+                // Track struggle for auto-helper
+                struggleState.wrongAttemptsOnProblem++;
+                if (streak > 0) {
+                    struggleState.lastStreakLoss = Date.now();
+                }
 
                 // SM-2 spaced repetition update - wrong answer resets the fact
                 if (currentFact) {
@@ -2881,6 +3511,9 @@
                 updateAnswerDisplay();
                 document.body.classList.add('shake');
                 setTimeout(() => document.body.classList.remove('shake'), 300);
+
+                // Check if player is struggling and needs help
+                checkStruggleAndHelp();
             }
         }
 
@@ -2922,10 +3555,17 @@
             document.getElementById('timer').textContent = '⚡ 30';
             document.getElementById('timer').classList.remove('warning');
             timerInterval = setInterval(() => {
-                timeLeft--;
+                // Don't decrement if time is frozen
+                if (!struggleState.timeFrozen) {
+                    timeLeft--;
+                }
                 document.getElementById('timer').textContent = '⚡ ' + timeLeft;
                 if (timeLeft <= 10) document.getElementById('timer').classList.add('warning');
                 if (timeLeft <= 0) endGame();
+                // Periodically check for idle struggle
+                if (gameActive && !bossActive) {
+                    checkStruggleAndHelp();
+                }
             }, 1000);
         }
 
@@ -2934,10 +3574,17 @@
             document.getElementById('timer').textContent = '⏱️ 60';
             document.getElementById('timer').classList.remove('warning');
             timerInterval = setInterval(() => {
-                timeLeft--;
+                // Don't decrement if time is frozen
+                if (!struggleState.timeFrozen) {
+                    timeLeft--;
+                }
                 document.getElementById('timer').textContent = '⏱️ ' + timeLeft;
                 if (timeLeft <= 10) document.getElementById('timer').classList.add('warning');
                 if (timeLeft <= 0) endGame();
+                // Periodically check for idle struggle (every second)
+                if (gameActive && !bossActive) {
+                    checkStruggleAndHelp();
+                }
             }, 1000);
         }
 
@@ -2980,10 +3627,18 @@
             lastAnswerTime = 0;
             document.getElementById('comboDisplay').classList.remove('active');
 
-            // Reset power-ups
-            powerups = { hint: 0, double: 0, skip: 0 };
+            // Reset auto-helper struggle state
+            struggleState = {
+                problemStartTime: Date.now(),
+                wrongAttemptsOnProblem: 0,
+                lastStreakLoss: 0,
+                playerSkillLevel: 0.5,
+                lastAutoHelperTime: 0,
+                accuracyHistory: [],
+                timeFrozen: false,
+                freezeEndTime: 0
+            };
             doublePointsActive = false;
-            updatePowerupButtons();
 
             // Reset progress bars
             updateProgressBars();
@@ -3019,6 +3674,143 @@
             else if (e.key === 'Enter') checkAnswer();
         });
 
+        // Costume System Functions
+        function loadCostumes() {
+            const saved = localStorage.getItem('mathblaster_costumes');
+            if (saved) {
+                equippedCostumes = JSON.parse(saved);
+            }
+            updateCostumeDisplay();
+        }
+
+        function saveCostumes() {
+            localStorage.setItem('mathblaster_costumes', JSON.stringify(equippedCostumes));
+        }
+
+        function isCostumeUnlocked(costume) {
+            if (costume.unlockLevel) {
+                return level >= costume.unlockLevel;
+            }
+            if (costume.unlockType === 'achievement') {
+                return unlockedAchievements.includes(costume.unlockId);
+            }
+            if (costume.unlockType === 'boss') {
+                return cumulativeStats.uniqueBossesDefeated && cumulativeStats.uniqueBossesDefeated[costume.unlockId];
+            }
+            return true;
+        }
+
+        function openCostumeModal() {
+            document.getElementById('costumeModal').classList.add('show');
+            showCostumeTab('hats');
+            updateCostumePreview();
+        }
+
+        function closeCostumeModal() {
+            document.getElementById('costumeModal').classList.remove('show');
+        }
+
+        function showCostumeTab(tab) {
+            currentCostumeTab = tab;
+            document.querySelectorAll('.costume-tab').forEach(t => {
+                t.classList.toggle('active', t.textContent.toLowerCase() === tab);
+            });
+            renderCostumeGrid();
+        }
+
+        function renderCostumeGrid() {
+            const grid = document.getElementById('costumeGrid');
+            const more = document.getElementById('costumeMore');
+            const items = COSTUMES[currentCostumeTab] || [];
+            const equippedKey = currentCostumeTab === 'hats' ? 'hat' :
+                               currentCostumeTab === 'outfits' ? 'outfit' : 'accessory';
+
+            let unlockedItems = [];
+            let lockedItems = [];
+            let hiddenCount = 0;
+
+            items.forEach(item => {
+                if (isCostumeUnlocked(item)) {
+                    unlockedItems.push(item);
+                } else {
+                    lockedItems.push(item);
+                }
+            });
+
+            // Show all unlocked + next 2-3 locked items
+            const visibleLocked = lockedItems.slice(0, 3);
+            hiddenCount = lockedItems.length - visibleLocked.length;
+
+            grid.innerHTML = '';
+            [...unlockedItems, ...visibleLocked].forEach(item => {
+                const isUnlocked = isCostumeUnlocked(item);
+                const isEquipped = equippedCostumes[equippedKey] === item.id;
+                const div = document.createElement('div');
+                div.className = 'costume-item' + (isEquipped ? ' equipped' : '') + (!isUnlocked ? ' locked' : '');
+                div.innerHTML = `
+                    <div class="costume-icon">${item.icon}</div>
+                    <div class="costume-name">${item.name}</div>
+                    ${!isUnlocked ? `<div class="costume-unlock">${item.unlockHint || ('Lv.' + item.unlockLevel)}</div>` : ''}
+                `;
+                if (isUnlocked) {
+                    div.onclick = () => equipCostume(equippedKey, item.id);
+                }
+                grid.appendChild(div);
+            });
+
+            more.textContent = hiddenCount > 0 ? `+${hiddenCount} more to discover!` : '';
+        }
+
+        function equipCostume(type, id) {
+            equippedCostumes[type] = id;
+            saveCostumes();
+            renderCostumeGrid();
+            updateCostumePreview();
+            updateCostumeDisplay();
+            playSound('tap');
+        }
+
+        function updateCostumePreview() {
+            const preview = document.getElementById('costumePreview');
+            const hat = COSTUMES.hats.find(h => h.id === equippedCostumes.hat);
+            const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
+            const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
+
+            let overlayHTML = '';
+            if (hat && hat.id !== 'hat-none') {
+                overlayHTML += `<div style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:2.5rem;">${hat.icon}</div>`;
+            }
+            if (outfit && outfit.id !== 'outfit-none') {
+                overlayHTML += `<div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:2rem;">${outfit.icon}</div>`;
+            }
+            if (acc && acc.id !== 'acc-none') {
+                overlayHTML += `<div style="position:absolute;top:35px;right:5px;font-size:1.8rem;">${acc.icon}</div>`;
+            }
+
+            preview.innerHTML = `
+                <svg class="pixel-mango" style="width:120px;height:120px;"><use href="#pixel-mango"/></svg>
+                ${overlayHTML}
+            `;
+        }
+
+        function updateCostumeDisplay() {
+            // Update the mango avatar in the top bar
+            const hatLayer = document.getElementById('costumeHatLayer');
+            const outfitLayer = document.getElementById('costumeOutfitLayer');
+            const accLayer = document.getElementById('costumeAccessoryLayer');
+
+            const hat = COSTUMES.hats.find(h => h.id === equippedCostumes.hat);
+            const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
+            const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
+
+            hatLayer.innerHTML = hat && hat.id !== 'hat-none' ?
+                `<div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:1.2rem;">${hat.icon}</div>` : '';
+            outfitLayer.innerHTML = outfit && outfit.id !== 'outfit-none' ?
+                `<div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:0.9rem;">${outfit.icon}</div>` : '';
+            accLayer.innerHTML = acc && acc.id !== 'acc-none' ?
+                `<div style="position:absolute;top:15px;right:0;font-size:0.8rem;">${acc.icon}</div>` : '';
+        }
+
         loadTheme();
         loadSoundPref();
         loadAchievements();
@@ -3027,9 +3819,10 @@
         loadPrestige();
         loadScene();
         loadAdaptiveDifficulty();
+        loadCostumes(); // Load saved costumes
         initializeFactDatabase(); // Initialize spaced repetition fact database
         updateSettingsLabel();
-        updatePowerupButtons();
+        resetProblemStruggleState(); // Initialize auto-helper state
         generateProblem();
 
         // ============================================
@@ -3426,6 +4219,170 @@
                 }
             }
 
+            // Fish (for underwater scene)
+            if (extras.includes('fish')) {
+                for (let i = 0; i < 15; i++) {
+                    const fishGroup = new THREE.Group();
+                    const bodyGeo = new THREE.BoxGeometry(0.8, 0.4, 0.3);
+                    const fishColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90];
+                    const fishColor = fishColors[Math.floor(Math.random() * fishColors.length)];
+                    const body = new THREE.Mesh(bodyGeo, new THREE.MeshBasicMaterial({ color: fishColor }));
+                    const tailGeo = new THREE.BoxGeometry(0.3, 0.5, 0.2);
+                    const tail = new THREE.Mesh(tailGeo, new THREE.MeshBasicMaterial({ color: fishColor }));
+                    tail.position.x = -0.5;
+                    fishGroup.add(body);
+                    fishGroup.add(tail);
+                    fishGroup.position.set(
+                        (Math.random() - 0.5) * 40,
+                        Math.random() * 10 - 5,
+                        (Math.random() - 0.5) * 30
+                    );
+                    fishGroup.userData = { speed: 0.02 + Math.random() * 0.03, sway: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(fishGroup);
+                    scene.add(fishGroup);
+                }
+            }
+
+            // Bubbles (for underwater scene)
+            if (extras.includes('bubbles')) {
+                for (let i = 0; i < 40; i++) {
+                    const bubbleGeo = new THREE.SphereGeometry(0.1 + Math.random() * 0.15, 4, 4);
+                    const bubble = new THREE.Mesh(bubbleGeo, new THREE.MeshBasicMaterial({ color: 0xaaddff, transparent: true, opacity: 0.5 }));
+                    bubble.position.set(
+                        (Math.random() - 0.5) * 50,
+                        Math.random() * 20 - 10,
+                        (Math.random() - 0.5) * 40
+                    );
+                    bubble.userData = { riseSpeed: 0.02 + Math.random() * 0.03, sway: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(bubble);
+                    scene.add(bubble);
+                }
+            }
+
+            // Bats (for spooky scene)
+            if (extras.includes('bats')) {
+                for (let i = 0; i < 8; i++) {
+                    const batGroup = new THREE.Group();
+                    const bodyGeo = new THREE.BoxGeometry(0.3, 0.2, 0.2);
+                    const body = new THREE.Mesh(bodyGeo, new THREE.MeshBasicMaterial({ color: 0x1a1a1a }));
+                    const wingGeo = new THREE.BoxGeometry(0.4, 0.15, 0.1);
+                    const leftWing = new THREE.Mesh(wingGeo, new THREE.MeshBasicMaterial({ color: 0x2d2d2d }));
+                    const rightWing = new THREE.Mesh(wingGeo, new THREE.MeshBasicMaterial({ color: 0x2d2d2d }));
+                    leftWing.position.set(-0.35, 0, 0);
+                    rightWing.position.set(0.35, 0, 0);
+                    batGroup.add(body);
+                    batGroup.add(leftWing);
+                    batGroup.add(rightWing);
+                    batGroup.position.set(
+                        (Math.random() - 0.5) * 40,
+                        8 + Math.random() * 10,
+                        (Math.random() - 0.5) * 30
+                    );
+                    batGroup.userData = { speed: 0.03 + Math.random() * 0.02, flapOffset: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(batGroup);
+                    scene.add(batGroup);
+                }
+            }
+
+            // Ghosts (for spooky scene)
+            if (extras.includes('ghosts')) {
+                for (let i = 0; i < 4; i++) {
+                    const ghostGeo = new THREE.BoxGeometry(1.2, 1.8, 0.5);
+                    const ghost = new THREE.Mesh(ghostGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 }));
+                    ghost.position.set(
+                        (Math.random() - 0.5) * 30,
+                        3 + Math.random() * 5,
+                        -20 - Math.random() * 20
+                    );
+                    ghost.userData = { bobSpeed: 0.5 + Math.random() * 0.5, bobOffset: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(ghost);
+                    scene.add(ghost);
+                }
+            }
+
+            // Pumpkins (for spooky scene)
+            if (extras.includes('pumpkins')) {
+                for (let i = 0; i < 6; i++) {
+                    const pumpkinGeo = new THREE.BoxGeometry(1, 0.8, 1);
+                    const pumpkin = new THREE.Mesh(pumpkinGeo, new THREE.MeshBasicMaterial({ color: 0xff6600 }));
+                    pumpkin.position.set(
+                        (Math.random() - 0.5) * 20,
+                        -0.6,
+                        10 + Math.random() * 10
+                    );
+                    scene.add(pumpkin);
+                }
+            }
+
+            // Balloons (for party scene)
+            if (extras.includes('balloons')) {
+                for (let i = 0; i < 12; i++) {
+                    const balloonGeo = new THREE.SphereGeometry(0.5, 6, 6);
+                    const balloonColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90, 0xdda0dd];
+                    const balloon = new THREE.Mesh(balloonGeo, new THREE.MeshBasicMaterial({ color: balloonColors[i % balloonColors.length] }));
+                    balloon.position.set(
+                        (Math.random() - 0.5) * 40,
+                        5 + Math.random() * 15,
+                        (Math.random() - 0.5) * 30
+                    );
+                    balloon.userData = { floatSpeed: 0.01 + Math.random() * 0.01, sway: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(balloon);
+                    scene.add(balloon);
+                }
+            }
+
+            // Confetti (for party scene)
+            if (extras.includes('confetti')) {
+                for (let i = 0; i < 60; i++) {
+                    const confettiGeo = new THREE.BoxGeometry(0.15, 0.15, 0.02);
+                    const confettiColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90];
+                    const confetti = new THREE.Mesh(confettiGeo, new THREE.MeshBasicMaterial({ color: confettiColors[Math.floor(Math.random() * confettiColors.length)] }));
+                    confetti.position.set(
+                        (Math.random() - 0.5) * 50,
+                        Math.random() * 25,
+                        (Math.random() - 0.5) * 40
+                    );
+                    confetti.userData = { fallSpeed: 0.01 + Math.random() * 0.02, sway: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.2 };
+                    sceneExtras.particles.push(confetti);
+                    scene.add(confetti);
+                }
+            }
+
+            // Crabs (for tide pools scene)
+            if (extras.includes('crabs')) {
+                for (let i = 0; i < 5; i++) {
+                    const crabGeo = new THREE.BoxGeometry(0.4, 0.2, 0.5);
+                    const crab = new THREE.Mesh(crabGeo, new THREE.MeshBasicMaterial({ color: 0xff4500 }));
+                    crab.position.set(
+                        (Math.random() - 0.5) * 15,
+                        -0.8,
+                        12 + Math.random() * 8
+                    );
+                    crab.userData = { walkSpeed: 0.01 + Math.random() * 0.01, walkDir: Math.random() > 0.5 ? 1 : -1 };
+                    sceneExtras.particles.push(crab);
+                    scene.add(crab);
+                }
+            }
+
+            // Parrots (for treehouse scene)
+            if (extras.includes('parrots')) {
+                for (let i = 0; i < 4; i++) {
+                    const parrotGroup = new THREE.Group();
+                    const bodyGeo = new THREE.BoxGeometry(0.5, 0.6, 0.4);
+                    const parrotColors = [0x00cc00, 0xff0000, 0x0088ff, 0xffff00];
+                    const body = new THREE.Mesh(bodyGeo, new THREE.MeshBasicMaterial({ color: parrotColors[i % parrotColors.length] }));
+                    parrotGroup.add(body);
+                    parrotGroup.position.set(
+                        (Math.random() - 0.5) * 20,
+                        6 + Math.random() * 8,
+                        (Math.random() - 0.5) * 15
+                    );
+                    parrotGroup.userData = { bobOffset: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(parrotGroup);
+                    scene.add(parrotGroup);
+                }
+            }
+
             // Camera position (beach view looking at ocean)
             camera.position.set(0, 3, 25);
             camera.lookAt(0, 2, -20);
@@ -3492,21 +4449,68 @@
                     star.scale.setScalar(0.8 + twinkle * 0.4);
                 });
 
-                // Particles (snow, rain, petals)
+                // Particles (snow, rain, petals, fish, bats, balloons, etc.)
                 sceneExtras.particles.forEach(p => {
-                    p.position.y -= p.userData.fallSpeed;
+                    // Falling particles (snow, rain, petals, confetti)
+                    if (p.userData.fallSpeed) {
+                        p.position.y -= p.userData.fallSpeed;
+                        if (p.position.y < -2) {
+                            p.position.y = 30;
+                            p.position.x = (Math.random() - 0.5) * 60;
+                            p.position.z = (Math.random() - 0.5) * 60;
+                        }
+                    }
+                    // Rising particles (bubbles)
+                    if (p.userData.riseSpeed) {
+                        p.position.y += p.userData.riseSpeed;
+                        if (p.position.y > 20) {
+                            p.position.y = -10;
+                            p.position.x = (Math.random() - 0.5) * 50;
+                        }
+                    }
+                    // Floating particles (balloons)
+                    if (p.userData.floatSpeed) {
+                        p.position.y += p.userData.floatSpeed;
+                        if (p.position.y > 25) {
+                            p.position.y = 3;
+                            p.position.x = (Math.random() - 0.5) * 40;
+                        }
+                    }
+                    // Horizontal swimming (fish)
+                    if (p.userData.speed && !p.userData.flapOffset) {
+                        p.position.x += p.userData.speed;
+                        if (p.position.x > 25) p.position.x = -25;
+                        if (p.position.x < -25) p.position.x = 25;
+                    }
+                    // Flying with flapping (bats)
+                    if (p.userData.flapOffset) {
+                        p.position.x += p.userData.speed;
+                        p.position.y += Math.sin(time * 2 + p.userData.flapOffset) * 0.02;
+                        if (p.position.x > 25) p.position.x = -25;
+                        // Wing flap for bats
+                        if (p.children && p.children.length >= 3) {
+                            const flap = Math.sin(time * 10 + p.userData.flapOffset) * 0.5;
+                            p.children[1].rotation.z = flap;
+                            p.children[2].rotation.z = -flap;
+                        }
+                    }
+                    // Bobbing (ghosts, parrots)
+                    if (p.userData.bobSpeed) {
+                        p.position.y += Math.sin(time * p.userData.bobSpeed + p.userData.bobOffset) * 0.02;
+                    }
+                    // Walking (crabs)
+                    if (p.userData.walkSpeed) {
+                        p.position.x += p.userData.walkSpeed * p.userData.walkDir;
+                        if (Math.abs(p.position.x) > 10) p.userData.walkDir *= -1;
+                    }
+                    // Sway animation
                     if (p.userData.sway !== undefined) {
                         p.position.x += Math.sin(time + p.userData.sway) * 0.01;
                     }
+                    // Rotation animation
                     if (p.userData.rotSpeed !== undefined) {
                         p.rotation.y += p.userData.rotSpeed;
                         p.rotation.x += p.userData.rotSpeed * 0.5;
-                    }
-                    // Reset when fallen below ground
-                    if (p.position.y < -2) {
-                        p.position.y = 30;
-                        p.position.x = (Math.random() - 0.5) * 60;
-                        p.position.z = (Math.random() - 0.5) * 60;
                     }
                 });
 
