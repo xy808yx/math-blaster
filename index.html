@@ -187,6 +187,10 @@
         .pixel-watermelon { image-rendering: pixelated; }
         .pixel-box { image-rendering: pixelated; }
         .pixel-boss { image-rendering: pixelated; }
+        .pixel-coin { image-rendering: pixelated; }
+        .pixel-fire { image-rendering: pixelated; }
+        .pixel-chest { image-rendering: pixelated; }
+        .pixel-shop { image-rendering: pixelated; }
 
         /* Progress Bars */
         .progress-container {
@@ -476,6 +480,9 @@
         .costume-item .costume-icon { font-size: 2rem; margin-bottom: 4px; }
         .costume-item .costume-name { font-size: 0.65rem; color: var(--text); text-align: center; }
         .costume-item .costume-unlock { font-size: 0.55rem; color: var(--primary); }
+        .costume-item .costume-price { font-size: 0.6rem; color: var(--accent); }
+        .costume-item.owned { border-color: var(--success); background: rgba(107,203,119,0.2); }
+        .costume-item .avatar-svg { width: 48px; height: 48px; }
         .costume-more {
             text-align: center;
             color: var(--accent);
@@ -1031,6 +1038,110 @@
             <rect x="5" y="5" width="1" height="1" fill="#fff"/>
             <rect x="9" y="5" width="1" height="1" fill="#fff"/>
             <rect x="7" y="8" width="2" height="1" fill="#ff4d6d"/>
+        </symbol>
+
+        <!-- Gold Coin -->
+        <symbol id="pixel-coin" viewBox="0 0 16 16">
+            <!-- Coin body -->
+            <rect x="4" y="2" width="8" height="1" fill="#b8860b"/>
+            <rect x="3" y="3" width="10" height="1" fill="#ffd700"/>
+            <rect x="2" y="4" width="12" height="8" fill="#ffd700"/>
+            <rect x="3" y="12" width="10" height="1" fill="#ffd700"/>
+            <rect x="4" y="13" width="8" height="1" fill="#b8860b"/>
+            <!-- Inner darker ring -->
+            <rect x="4" y="4" width="1" height="8" fill="#daa520"/>
+            <rect x="11" y="4" width="1" height="8" fill="#daa520"/>
+            <rect x="5" y="3" width="6" height="1" fill="#daa520"/>
+            <rect x="5" y="12" width="6" height="1" fill="#daa520"/>
+            <!-- Dollar sign or star center -->
+            <rect x="7" y="5" width="2" height="1" fill="#b8860b"/>
+            <rect x="6" y="6" width="1" height="1" fill="#b8860b"/>
+            <rect x="7" y="7" width="2" height="1" fill="#b8860b"/>
+            <rect x="9" y="8" width="1" height="1" fill="#b8860b"/>
+            <rect x="7" y="9" width="2" height="1" fill="#b8860b"/>
+            <!-- Shine highlight -->
+            <rect x="4" y="5" width="2" height="1" fill="#fff8dc"/>
+            <rect x="3" y="6" width="1" height="2" fill="#fff8dc"/>
+        </symbol>
+
+        <!-- Fire/Flame for streak -->
+        <symbol id="pixel-fire" viewBox="0 0 16 16">
+            <!-- Outer orange flame -->
+            <rect x="7" y="1" width="2" height="1" fill="#ff4500"/>
+            <rect x="6" y="2" width="4" height="1" fill="#ff4500"/>
+            <rect x="5" y="3" width="6" height="2" fill="#ff6600"/>
+            <rect x="4" y="5" width="8" height="2" fill="#ff6600"/>
+            <rect x="3" y="7" width="10" height="3" fill="#ff8c00"/>
+            <rect x="4" y="10" width="8" height="2" fill="#ff8c00"/>
+            <rect x="5" y="12" width="6" height="2" fill="#ffa500"/>
+            <rect x="6" y="14" width="4" height="2" fill="#ffa500"/>
+            <!-- Inner yellow core -->
+            <rect x="7" y="4" width="2" height="1" fill="#ffd700"/>
+            <rect x="6" y="5" width="4" height="2" fill="#ffd700"/>
+            <rect x="5" y="7" width="6" height="2" fill="#ffff00"/>
+            <rect x="6" y="9" width="4" height="2" fill="#ffd700"/>
+            <rect x="7" y="11" width="2" height="2" fill="#ffa500"/>
+        </symbol>
+
+        <!-- Treasure Chest (closed) -->
+        <symbol id="pixel-treasure-chest" viewBox="0 0 16 16">
+            <!-- Chest body -->
+            <rect x="2" y="7" width="12" height="8" fill="#8b4513"/>
+            <rect x="3" y="8" width="10" height="6" fill="#a0522d"/>
+            <!-- Lid -->
+            <rect x="1" y="5" width="14" height="2" fill="#654321"/>
+            <rect x="2" y="4" width="12" height="1" fill="#8b4513"/>
+            <!-- Metal bands -->
+            <rect x="2" y="7" width="12" height="1" fill="#b8860b"/>
+            <rect x="2" y="11" width="12" height="1" fill="#b8860b"/>
+            <!-- Lock -->
+            <rect x="7" y="8" width="2" height="3" fill="#ffd700"/>
+            <rect x="6" y="9" width="4" height="1" fill="#b8860b"/>
+        </symbol>
+
+        <!-- Treasure Chest (open) -->
+        <symbol id="pixel-treasure-chest-open" viewBox="0 0 16 16">
+            <!-- Chest body -->
+            <rect x="2" y="9" width="12" height="6" fill="#8b4513"/>
+            <rect x="3" y="10" width="10" height="4" fill="#a0522d"/>
+            <!-- Open lid (tilted back) -->
+            <rect x="1" y="3" width="14" height="2" fill="#654321"/>
+            <rect x="2" y="2" width="12" height="1" fill="#8b4513"/>
+            <rect x="2" y="5" width="12" height="1" fill="#654321"/>
+            <!-- Inside glow -->
+            <rect x="4" y="10" width="8" height="3" fill="#ffd700"/>
+            <rect x="5" y="11" width="6" height="1" fill="#ffff00"/>
+            <!-- Coins peeking out -->
+            <rect x="4" y="9" width="2" height="1" fill="#ffd700"/>
+            <rect x="7" y="8" width="2" height="2" fill="#ffd700"/>
+            <rect x="10" y="9" width="2" height="1" fill="#ffd700"/>
+            <!-- Sparkles -->
+            <rect x="3" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="12" y="4" width="1" height="1" fill="#fff"/>
+            <rect x="8" y="1" width="1" height="1" fill="#fff"/>
+        </symbol>
+
+        <!-- Shop Icon -->
+        <symbol id="pixel-shop" viewBox="0 0 16 16">
+            <!-- Awning -->
+            <rect x="1" y="3" width="14" height="3" fill="#ff6b6b"/>
+            <rect x="1" y="3" width="2" height="3" fill="#ff8888"/>
+            <rect x="5" y="3" width="2" height="3" fill="#ff8888"/>
+            <rect x="9" y="3" width="2" height="3" fill="#ff8888"/>
+            <rect x="13" y="3" width="2" height="3" fill="#ff8888"/>
+            <!-- Awning top -->
+            <rect x="2" y="2" width="12" height="1" fill="#cc5555"/>
+            <!-- Store front -->
+            <rect x="2" y="6" width="12" height="8" fill="#f5deb3"/>
+            <rect x="3" y="7" width="10" height="6" fill="#ffe4c4"/>
+            <!-- Door -->
+            <rect x="6" y="9" width="4" height="5" fill="#8b4513"/>
+            <rect x="9" y="11" width="1" height="1" fill="#ffd700"/>
+            <!-- Window -->
+            <rect x="3" y="7" width="2" height="2" fill="#87ceeb"/>
+            <rect x="11" y="7" width="2" height="2" fill="#87ceeb"/>
+            <!-- Sign -->
+            <rect x="5" y="1" width="6" height="1" fill="#ffd700"/>
         </symbol>
 
         <!-- Tiki Mystery Box -->
@@ -1609,8 +1720,14 @@
         </div>
 
         <div class="stats">
-            <div class="stat-item"><span class="stat-icon"><svg class="pixel-mango"><use href="#pixel-mango"/></svg></span> <span id="score">0</span></div>
-            <div class="stat-item"><span class="stat-icon"><svg class="pixel-watermelon"><use href="#pixel-watermelon"/></svg></span> <span id="streak">0</span></div>
+            <div class="stat-item" id="coinStat" onclick="openShopModal()" style="cursor:pointer;">
+                <span class="stat-icon"><svg class="pixel-coin"><use href="#pixel-coin"/></svg></span>
+                <span id="score">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon"><svg class="pixel-fire"><use href="#pixel-fire"/></svg></span>
+                <span id="streak">0</span>
+            </div>
         </div>
 
         <div class="progress-container">
@@ -1707,7 +1824,7 @@
         </div>
         <div class="boss-victory hidden" id="bossVictory">
             <div>🎉 VICTORY! 🎉</div>
-            <div class="boss-reward" id="bossReward">+10 <svg class="pixel-mango" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-mango"/></svg></div>
+            <div class="boss-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>
         </div>
     </div>
 
@@ -1716,8 +1833,8 @@
         <h2>TIME'S UP!</h2>
         <div id="newRecordBanner"></div>
         <div class="game-over-stats">
-            <div class="final-stat"><svg class="pixel-mango" style="width:24px;height:24px;vertical-align:middle;"><use href="#pixel-mango"/></svg> Score: <span id="finalScore">0</span></div>
-            <div class="final-stat"><svg class="pixel-watermelon" style="width:24px;height:24px;vertical-align:middle;"><use href="#pixel-watermelon"/></svg> Best Streak: <span id="bestStreak">0</span></div>
+            <div class="final-stat"><svg class="pixel-coin" style="width:24px;height:24px;vertical-align:middle;"><use href="#pixel-coin"/></svg> Score: <span id="finalScore">0</span></div>
+            <div class="final-stat"><svg class="pixel-fire" style="width:24px;height:24px;vertical-align:middle;"><use href="#pixel-fire"/></svg> Best Streak: <span id="bestStreak">0</span></div>
             <div class="final-stat">✓ Accuracy: <span id="accuracy">0%</span></div>
             <div class="final-stat">📝 Problems: <span id="totalProblems">0</span></div>
         </div>
@@ -1743,6 +1860,7 @@
             </div>
         </div>
         <div class="costume-tabs">
+            <button class="costume-tab" onclick="showCostumeTab('avatars')">Avatar</button>
             <button class="costume-tab active" onclick="showCostumeTab('hats')">Hats</button>
             <button class="costume-tab" onclick="showCostumeTab('outfits')">Outfits</button>
             <button class="costume-tab" onclick="showCostumeTab('accessories')">Accessories</button>
@@ -1750,6 +1868,23 @@
         <div class="costume-grid" id="costumeGrid"></div>
         <div class="costume-more" id="costumeMore"></div>
         <button class="costume-done-btn" onclick="closeCostumeModal()">Done</button>
+    </div>
+
+    <!-- Shop Modal -->
+    <div class="costume-modal" id="shopModal">
+        <div class="costume-modal-header">
+            <h2>🏪 Shop</h2>
+            <div class="shop-coins" style="font-size:1.2rem;margin-top:10px;">
+                <svg class="pixel-coin" style="width:24px;height:24px;vertical-align:middle;"><use href="#pixel-coin"/></svg>
+                <span id="shopCoinDisplay">0</span>
+            </div>
+        </div>
+        <div class="costume-tabs">
+            <button class="costume-tab active" onclick="showShopTab('costumes')">Costumes</button>
+            <button class="costume-tab" onclick="showShopTab('powerups')">Power-Ups</button>
+        </div>
+        <div class="costume-grid" id="shopGrid"></div>
+        <button class="costume-done-btn" onclick="closeShopModal()">Done</button>
     </div>
 
     <script>
@@ -1804,6 +1939,30 @@
                 { type: 'enrage', trigger: 'hp25', speedBoost: 2, desc: 'Double speed below 25% HP' }
               ] }
         ];
+
+        // Boss loot tables (variable coin rewards + costume drop chances)
+        const BOSS_LOOT = {
+            'boss-tiki': { coins: { min: 8, max: 12 }, costumes: [] },
+            'boss-crab': { coins: { min: 8, max: 12 }, costumes: [] },
+            'boss-puffer': { coins: { min: 10, max: 14 }, costumes: [] },
+            'boss-jelly': { coins: { min: 10, max: 14 }, costumes: [] },
+            'boss-bird': { coins: { min: 12, max: 16 }, costumes: [] },
+            'boss-shark': { coins: { min: 12, max: 18 }, costumes: ['hat-pirate'] },
+            'boss-volcano': { coins: { min: 14, max: 18 }, costumes: [] },
+            'boss-coconut': { coins: { min: 14, max: 18 }, costumes: [] },
+            'boss-octopus': { coins: { min: 15, max: 20 }, costumes: [] },
+            'boss-turtle': { coins: { min: 16, max: 22 }, costumes: [] },
+            'boss-hermitcrab': { coins: { min: 15, max: 20 }, costumes: [] },
+            'boss-starfish': { coins: { min: 18, max: 24 }, costumes: [] },
+            'boss-pirate': { coins: { min: 20, max: 28 }, costumes: ['outfit-armor'] },
+            'boss-mermaid': { coins: { min: 22, max: 30 }, costumes: ['hat-flower'] },
+            'boss-stingray': { coins: { min: 24, max: 32 }, costumes: [] },
+            'boss-pelican': { coins: { min: 24, max: 32 }, costumes: [] },
+            'boss-whale': { coins: { min: 30, max: 40 }, costumes: ['acc-shield'] },
+            'boss-serpent': { coins: { min: 32, max: 42 }, costumes: [] },
+            'boss-mimic': { coins: { min: 35, max: 50 }, costumes: ['hat-crown'] },
+            'boss-kraken': { coins: { min: 40, max: 60 }, costumes: ['hat-wizard'] }
+        };
 
         // Themes with unlock levels
         const THEMES = [
@@ -1888,6 +2047,47 @@
         // Equipped costumes state
         let equippedCostumes = { hat: 'hat-none', outfit: 'outfit-none', accessory: 'acc-none' };
         let currentCostumeTab = 'hats';
+
+        // Avatar system
+        const AVATARS = {
+            mango: { id: 'mango', name: 'Mango', svgId: 'pixel-mango', unlocked: true },
+            watermelon: { id: 'watermelon', name: 'Watermelon', svgId: 'pixel-watermelon', unlocked: true }
+        };
+        let selectedAvatar = 'mango';
+
+        // Shop costumes (purchased with coins)
+        const SHOP_COSTUMES = {
+            hats: [
+                { id: 'hat-chef', name: 'Chef Hat', icon: '👨‍🍳', price: 250 },
+                { id: 'hat-cowboy', name: 'Cowboy Hat', icon: '🤠', price: 400 },
+                { id: 'hat-astronaut', name: 'Space Helmet', icon: '🧑‍🚀', price: 800 }
+            ],
+            outfits: [
+                { id: 'outfit-chef', name: 'Chef Coat', icon: '👔', price: 350 },
+                { id: 'outfit-knight', name: 'Knight Armor', icon: '🛡️', price: 600 }
+            ],
+            accessories: [
+                { id: 'acc-guitar', name: 'Guitar', icon: '🎸', price: 300 },
+                { id: 'acc-scepter', name: 'Royal Scepter', icon: '👑', price: 500 }
+            ]
+        };
+
+        // Power-ups (purchased and consumable)
+        const POWER_UPS = {
+            celebration: { id: 'celebration', name: 'Celebration Dance', price: 75, desc: 'Avatar dances 30s', icon: '💃' },
+            golden: { id: 'golden', name: 'Golden Problems', price: 100, desc: 'Next 5 = 2x coins', icon: '✨' },
+            boss_summon: { id: 'boss_summon', name: 'Boss Summoner', price: 150, desc: 'Instant boss battle', icon: '👹' },
+            mystery_magnet: { id: 'mystery_magnet', name: 'Mystery Magnet', price: 50, desc: '2x faster mystery box', icon: '🧲' }
+        };
+
+        let ownedPowerUps = { celebration: 0, golden: 0, boss_summon: 0, mystery_magnet: 0 };
+        let purchasedShopItems = [];
+        let activePowerUps = {
+            celebration: false,
+            golden: { active: false, remaining: 0 },
+            mystery_magnet: false
+        };
+        let unlockedBossDrops = [];
 
         // Scene variations (3D background cosmetic changes)
         const SCENE_VARIATIONS = [
@@ -2351,7 +2551,9 @@
 
         // Progress bars
         function updateProgressBars() {
-            const mysteryProgress = (correctCount % 10) / 10 * 100;
+            // Mystery magnet power-up: threshold is 5 instead of 10
+            const mysteryThreshold = activePowerUps.mystery_magnet ? 5 : 10;
+            const mysteryProgress = (correctCount % mysteryThreshold) / mysteryThreshold * 100;
             const bossProgress = (correctCount % 15) / 15 * 100;
             document.getElementById('mysteryProgress').style.width = mysteryProgress + '%';
             document.getElementById('bossProgress').style.width = bossProgress + '%';
@@ -2579,7 +2781,7 @@
 
         function showStreakCelebration(num) {
             const el = document.getElementById('streakCelebration');
-            el.textContent = `🍉 ${num} STREAK! 🍉`;
+            el.textContent = `🔥 ${num} STREAK! 🔥`;
             el.classList.remove('show');
             void el.offsetWidth;
             el.classList.add('show');
@@ -2587,6 +2789,10 @@
         }
 
         function showMysteryBox() {
+            // Disable mystery magnet after use
+            if (activePowerUps.mystery_magnet) {
+                activePowerUps.mystery_magnet = false;
+            }
             document.getElementById('mysteryReward').textContent = '';
             document.getElementById('mysteryText').textContent = 'Tap to open!';
             document.getElementById('mysteryCloseBtn').classList.add('hidden');
@@ -2601,16 +2807,17 @@
 
             document.getElementById('mysteryBox').style.display = 'none';
 
-            // Mystery boxes now always give bonus points (no manual power-ups)
-            const bonus = Math.floor(Math.random() * 4) + 2; // 2-5 bonus points
+            // Mystery boxes now always give bonus coins (no manual power-ups)
+            const bonus = Math.floor(Math.random() * 4) + 2; // 2-5 bonus coins
             score += bonus;
+            saveCoins();
             document.getElementById('score').textContent = score;
-            // Show pixel art mangoes
-            let mangoHTML = '';
+            // Show coins with treasure chest animation
+            let coinHTML = '<svg class="pixel-chest" style="width:80px;height:80px;display:inline-block;"><use href="#pixel-treasure-chest-open"/></svg><br>';
             for (let i = 0; i < bonus; i++) {
-                mangoHTML += '<svg class="pixel-mango" style="width:80px;height:80px;display:inline-block;"><use href="#pixel-mango"/></svg>';
+                coinHTML += '<svg class="pixel-coin" style="width:40px;height:40px;display:inline-block;margin:2px;"><use href="#pixel-coin"/></svg>';
             }
-            document.getElementById('mysteryReward').innerHTML = mangoHTML;
+            document.getElementById('mysteryReward').innerHTML = coinHTML;
             document.getElementById('mysteryText').textContent = `+${bonus} bonus!`;
 
             document.getElementById('mysteryCloseBtn').classList.remove('hidden');
@@ -3026,9 +3233,27 @@
                 haptic('heavy');
                 gainXP(10); // Bonus XP for defeating boss
 
-                score += 10;
+                // Get boss loot (variable coin reward + possible costume drop)
+                const loot = BOSS_LOOT[bossCurrentBoss.svg] || { coins: { min: 10, max: 15 }, costumes: [] };
+                const coinReward = Math.floor(Math.random() * (loot.coins.max - loot.coins.min + 1)) + loot.coins.min;
+                score += coinReward;
+                saveCoins();
                 document.getElementById('score').textContent = score;
-                document.getElementById('bossReward').innerHTML = '+10 <svg class="pixel-mango" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-mango"/></svg>';
+
+                let rewardHTML = `+${coinReward} <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg>`;
+
+                // 75% chance of costume drop if available and not already owned
+                if (loot.costumes.length > 0 && Math.random() < 0.75) {
+                    const availableCostumes = loot.costumes.filter(c => !unlockedBossDrops.includes(c));
+                    if (availableCostumes.length > 0) {
+                        const droppedCostume = availableCostumes[Math.floor(Math.random() * availableCostumes.length)];
+                        unlockedBossDrops.push(droppedCostume);
+                        saveBossDrops();
+                        rewardHTML += '<br><span style="color:var(--success);font-size:0.8rem;">🎁 NEW COSTUME!</span>';
+                    }
+                }
+
+                document.getElementById('bossReward').innerHTML = rewardHTML;
 
                 // Play tiered victory celebration
                 const tier = bossCurrentBoss.tier || 'basic';
@@ -3046,7 +3271,7 @@
 
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
-                    document.getElementById('bossVictory').innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 <svg class="pixel-mango" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-mango"/></svg></div>';
+                    document.getElementById('bossVictory').innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>';
                     setTimeout(generateProblem, 200);
                 }, 1500);
             }
@@ -3072,6 +3297,17 @@
 
         function savePrestige() {
             localStorage.setItem('mathblaster_prestige', prestigeCount.toString());
+        }
+
+        // Coin persistence
+        function loadCoins() {
+            const saved = localStorage.getItem('mathblaster_coins');
+            if (saved) score = parseInt(saved);
+            document.getElementById('score').textContent = score;
+        }
+
+        function saveCoins() {
+            localStorage.setItem('mathblaster_coins', score.toString());
         }
 
         function canPrestige() {
@@ -3429,8 +3665,17 @@
                 // Combo multiplier
                 updateCombo();
                 let points = doublePointsActive ? 2 : 1;
+                // Golden power-up doubles coins
+                if (activePowerUps.golden.active) {
+                    points *= 2;
+                    activePowerUps.golden.remaining--;
+                    if (activePowerUps.golden.remaining <= 0) {
+                        activePowerUps.golden.active = false;
+                    }
+                }
                 points *= comboMultiplier;
                 score += points;
+                saveCoins();
                 doublePointsActive = false;
 
                 document.getElementById('score').textContent = score;
@@ -3478,7 +3723,9 @@
                     return;
                 }
 
-                if (correctCount > 0 && correctCount % 10 === 0) {
+                // Mystery magnet: trigger every 5 correct instead of 10
+                const mysteryThreshold = activePowerUps.mystery_magnet ? 5 : 10;
+                if (correctCount > 0 && correctCount % mysteryThreshold === 0) {
                     setTimeout(showMysteryBox, 400);
                     return;
                 }
@@ -3688,6 +3935,14 @@
         }
 
         function isCostumeUnlocked(costume) {
+            // Check if purchased from shop
+            if (purchasedShopItems.includes(costume.id)) {
+                return true;
+            }
+            // Check if unlocked from boss drops
+            if (unlockedBossDrops.includes(costume.id)) {
+                return true;
+            }
             if (costume.unlockLevel) {
                 return playerLevel >= costume.unlockLevel;
             }
@@ -3712,8 +3967,9 @@
 
         function showCostumeTab(tab) {
             currentCostumeTab = tab;
-            document.querySelectorAll('.costume-tab').forEach(t => {
-                t.classList.toggle('active', t.textContent.toLowerCase() === tab);
+            document.querySelectorAll('#costumeModal .costume-tab').forEach(t => {
+                const tabName = t.textContent.toLowerCase().replace('s', '');
+                t.classList.toggle('active', tab.startsWith(tabName) || t.textContent.toLowerCase() === tab);
             });
             renderCostumeGrid();
         }
@@ -3721,7 +3977,31 @@
         function renderCostumeGrid() {
             const grid = document.getElementById('costumeGrid');
             const more = document.getElementById('costumeMore');
-            const items = COSTUMES[currentCostumeTab] || [];
+
+            // Handle avatar tab
+            if (currentCostumeTab === 'avatars') {
+                grid.innerHTML = '';
+                Object.values(AVATARS).forEach(avatar => {
+                    const isSelected = selectedAvatar === avatar.id;
+                    const div = document.createElement('div');
+                    div.className = 'costume-item' + (isSelected ? ' equipped' : '');
+                    div.innerHTML = `
+                        <div class="costume-icon">
+                            <svg class="avatar-svg" style="width:48px;height:48px;"><use href="#${avatar.svgId}"/></svg>
+                        </div>
+                        <div class="costume-name">${avatar.name}</div>
+                    `;
+                    div.onclick = () => selectAvatar(avatar.id);
+                    grid.appendChild(div);
+                });
+                more.textContent = '';
+                return;
+            }
+
+            // Combine base costumes with shop costumes
+            const baseItems = COSTUMES[currentCostumeTab] || [];
+            const shopItems = SHOP_COSTUMES[currentCostumeTab] || [];
+            const items = [...baseItems, ...shopItems];
             const equippedKey = currentCostumeTab === 'hats' ? 'hat' :
                                currentCostumeTab === 'outfits' ? 'outfit' : 'accessory';
 
@@ -3732,7 +4012,8 @@
             items.forEach(item => {
                 if (isCostumeUnlocked(item)) {
                     unlockedItems.push(item);
-                } else {
+                } else if (!item.price) {
+                    // Only show locked non-shop items (shop items are purchased in shop)
                     lockedItems.push(item);
                 }
             });
@@ -3772,6 +4053,7 @@
 
         function updateCostumePreview() {
             const preview = document.getElementById('costumePreview');
+            const avatar = AVATARS[selectedAvatar] || AVATARS.mango;
             const hat = COSTUMES.hats.find(h => h.id === equippedCostumes.hat);
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
             const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
@@ -3788,9 +4070,41 @@
             }
 
             preview.innerHTML = `
-                <svg class="pixel-mango" style="width:120px;height:120px;"><use href="#pixel-mango"/></svg>
+                <svg class="pixel-${avatar.id}" style="width:120px;height:120px;"><use href="#${avatar.svgId}"/></svg>
                 ${overlayHTML}
             `;
+        }
+
+        // Avatar functions
+        function selectAvatar(avatarId) {
+            selectedAvatar = avatarId;
+            saveAvatar();
+            updateCostumePreview();
+            updateAvatarDisplay();
+            renderCostumeGrid();
+            playSound('tap');
+        }
+
+        function loadAvatar() {
+            const saved = localStorage.getItem('mathblaster_avatar');
+            if (saved && AVATARS[saved]) {
+                selectedAvatar = saved;
+            }
+            updateAvatarDisplay();
+        }
+
+        function saveAvatar() {
+            localStorage.setItem('mathblaster_avatar', selectedAvatar);
+        }
+
+        function updateAvatarDisplay() {
+            const avatar = AVATARS[selectedAvatar] || AVATARS.mango;
+            const avatarContainer = document.getElementById('mangoAvatar');
+            const avatarSvg = avatarContainer.querySelector('svg');
+            if (avatarSvg) {
+                avatarSvg.innerHTML = `<use href="#${avatar.svgId}"/>`;
+                avatarSvg.className = `pixel-${avatar.id}`;
+            }
         }
 
         function updateCostumeDisplay() {
@@ -3811,6 +4125,177 @@
                 `<div style="position:absolute;top:15px;right:0;font-size:0.8rem;">${acc.icon}</div>` : '';
         }
 
+        // Shop System Functions
+        let currentShopTab = 'costumes';
+
+        function openShopModal() {
+            document.getElementById('shopModal').classList.add('show');
+            document.getElementById('shopCoinDisplay').textContent = score;
+            currentShopTab = 'costumes';
+            showShopTab('costumes');
+        }
+
+        function closeShopModal() {
+            document.getElementById('shopModal').classList.remove('show');
+        }
+
+        function showShopTab(tab) {
+            currentShopTab = tab;
+            document.querySelectorAll('#shopModal .costume-tab').forEach(t => {
+                t.classList.toggle('active', t.textContent.toLowerCase().includes(tab.substring(0, 6)));
+            });
+            renderShopGrid();
+        }
+
+        function renderShopGrid() {
+            const grid = document.getElementById('shopGrid');
+            grid.innerHTML = '';
+
+            if (currentShopTab === 'costumes') {
+                // Render shop costumes
+                ['hats', 'outfits', 'accessories'].forEach(category => {
+                    const items = SHOP_COSTUMES[category] || [];
+                    items.forEach(item => {
+                        const owned = purchasedShopItems.includes(item.id);
+                        const canAfford = score >= item.price;
+                        const div = document.createElement('div');
+                        div.className = 'costume-item' + (owned ? ' owned' : '') + (!canAfford && !owned ? ' locked' : '');
+                        div.innerHTML = `
+                            <div class="costume-icon">${item.icon}</div>
+                            <div class="costume-name">${item.name}</div>
+                            ${owned ? '<div class="costume-unlock" style="color:var(--success);">Owned</div>' :
+                                `<div class="costume-price">${item.price} 🪙</div>`}
+                        `;
+                        if (!owned && canAfford) {
+                            div.onclick = () => buyShopItem(item.id, item.price, category);
+                        }
+                        grid.appendChild(div);
+                    });
+                });
+            } else {
+                // Render power-ups
+                Object.values(POWER_UPS).forEach(powerup => {
+                    const owned = ownedPowerUps[powerup.id] || 0;
+                    const canAfford = score >= powerup.price;
+                    const div = document.createElement('div');
+                    div.className = 'costume-item' + (!canAfford ? ' locked' : '');
+                    div.innerHTML = `
+                        <div class="costume-icon">${powerup.icon}</div>
+                        <div class="costume-name">${powerup.name}</div>
+                        <div class="costume-unlock" style="font-size:0.5rem;color:#aaa;">${powerup.desc}</div>
+                        <div class="costume-price">${powerup.price} 🪙 ${owned > 0 ? `(${owned})` : ''}</div>
+                    `;
+                    if (canAfford) {
+                        div.onclick = () => buyPowerUp(powerup.id, powerup.price);
+                    }
+                    grid.appendChild(div);
+                });
+
+                // Show use buttons for owned power-ups
+                if (Object.values(ownedPowerUps).some(v => v > 0)) {
+                    const useSection = document.createElement('div');
+                    useSection.style.cssText = 'width:100%;text-align:center;padding:10px;color:var(--accent);font-size:0.8rem;';
+                    useSection.innerHTML = '<br>Tap owned power-ups to use them!';
+                    grid.appendChild(useSection);
+                }
+            }
+        }
+
+        function buyShopItem(id, price, category) {
+            if (score < price || purchasedShopItems.includes(id)) return;
+
+            score -= price;
+            saveCoins();
+            purchasedShopItems.push(id);
+            saveShopPurchases();
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('shopCoinDisplay').textContent = score;
+            playSound('bonus');
+            renderShopGrid();
+        }
+
+        function buyPowerUp(id, price) {
+            if (score < price) return;
+
+            score -= price;
+            saveCoins();
+            ownedPowerUps[id] = (ownedPowerUps[id] || 0) + 1;
+            savePowerUps();
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('shopCoinDisplay').textContent = score;
+            playSound('bonus');
+            renderShopGrid();
+
+            // Ask to use immediately
+            if (confirm(`Use ${POWER_UPS[id].name} now?`)) {
+                activatePowerUp(id);
+            }
+        }
+
+        function activatePowerUp(id) {
+            if (!ownedPowerUps[id] || ownedPowerUps[id] <= 0) return;
+
+            ownedPowerUps[id]--;
+            savePowerUps();
+
+            switch(id) {
+                case 'celebration':
+                    activePowerUps.celebration = true;
+                    playVictoryCelebration('elite');
+                    setTimeout(() => { activePowerUps.celebration = false; }, 30000);
+                    break;
+                case 'golden':
+                    activePowerUps.golden = { active: true, remaining: 5 };
+                    break;
+                case 'boss_summon':
+                    closeShopModal();
+                    setTimeout(() => startBossBattle(), 300);
+                    break;
+                case 'mystery_magnet':
+                    activePowerUps.mystery_magnet = true;
+                    // Will be handled in progress bar update
+                    break;
+            }
+
+            renderShopGrid();
+            playSound('streak');
+        }
+
+        function loadPowerUps() {
+            const saved = localStorage.getItem('mathblaster_powerups');
+            if (saved) {
+                ownedPowerUps = { ...ownedPowerUps, ...JSON.parse(saved) };
+            }
+        }
+
+        function savePowerUps() {
+            localStorage.setItem('mathblaster_powerups', JSON.stringify(ownedPowerUps));
+        }
+
+        function loadShopPurchases() {
+            const saved = localStorage.getItem('mathblaster_shop');
+            if (saved) {
+                purchasedShopItems = JSON.parse(saved);
+            }
+        }
+
+        function saveShopPurchases() {
+            localStorage.setItem('mathblaster_shop', JSON.stringify(purchasedShopItems));
+        }
+
+        function loadBossDrops() {
+            const saved = localStorage.getItem('mathblaster_bossdrops');
+            if (saved) {
+                unlockedBossDrops = JSON.parse(saved);
+            }
+        }
+
+        function saveBossDrops() {
+            localStorage.setItem('mathblaster_bossdrops', JSON.stringify(unlockedBossDrops));
+        }
+
         loadTheme();
         loadSoundPref();
         loadAchievements();
@@ -3820,6 +4305,11 @@
         loadScene();
         loadAdaptiveDifficulty();
         loadCostumes(); // Load saved costumes
+        loadCoins(); // Load persistent coin balance
+        loadAvatar(); // Load selected avatar
+        loadPowerUps(); // Load owned power-ups
+        loadShopPurchases(); // Load purchased shop items
+        loadBossDrops(); // Load boss drop unlocks
         initializeFactDatabase(); // Initialize spaced repetition fact database
         updateSettingsLabel();
         resetProblemStruggleState(); // Initialize auto-helper state
