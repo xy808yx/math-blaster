@@ -446,6 +446,15 @@
         }
         .mango-avatar:hover { transform: scale(1.1); }
         .mango-avatar:active { transform: scale(0.95); }
+        @keyframes avatarDance {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-10deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(10deg); }
+        }
+        .mango-avatar.dancing {
+            animation: avatarDance 0.5s ease-in-out infinite;
+        }
         .mango-avatar .costume-layer {
             position: absolute;
             top: 0;
@@ -4636,9 +4645,11 @@
             switch(id) {
                 case 'celebration':
                     activePowerUps.celebration = true;
-                    playVictoryCelebration('elite');
+                    document.getElementById('mangoAvatar').classList.add('dancing');
+                    updateActivePowerUps();
                     setTimeout(() => {
                         activePowerUps.celebration = false;
+                        document.getElementById('mangoAvatar').classList.remove('dancing');
                         updateActivePowerUps();
                     }, 30000);
                     break;
