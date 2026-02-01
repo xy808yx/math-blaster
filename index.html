@@ -2005,7 +2005,7 @@
 
     <div class="game-container">
         <div class="top-bar">
-            <div class="mango-avatar" id="mangoAvatar" onclick="openCostumeModal()" title="Open the Locker Room!">
+            <div class="mango-avatar" id="mangoAvatar" onclick="openShopModal()" title="Open the Shop!">
                 <svg class="pixel-mango" style="width:48px;height:48px;"><use href="#pixel-mango"/></svg>
                 <div class="costume-layer" id="costumeHatLayer"></div>
                 <div class="costume-layer" id="costumeOutfitLayer"></div>
@@ -2016,7 +2016,6 @@
                 <button class="icon-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
                 <button class="icon-btn" onclick="showAchievements()">🏆</button>
                 <button class="icon-btn" onclick="showThemePicker()">🎨</button>
-                <button class="icon-btn" onclick="openShopModal()">🛒</button>
             </div>
         </div>
 
@@ -2175,29 +2174,18 @@
     <!-- Achievement Toast -->
     <div class="achievement-toast" id="achievementToast"></div>
 
-    <!-- Costume Modal -->
-    <div class="modal" id="costumeModal">
-        <h2 style="color: var(--accent);">🚪 Locker Room</h2>
-        <div class="costume-preview" id="costumePreview"></div>
-        <div class="modal-tabs" id="costumeTabs">
-            <button class="modal-tab" data-tab="avatars" onclick="showCostumeTab('avatars')">Avatar</button>
-            <button class="modal-tab active" data-tab="hats" onclick="showCostumeTab('hats')">Hats</button>
-            <button class="modal-tab" data-tab="outfits" onclick="showCostumeTab('outfits')">Outfits</button>
-            <button class="modal-tab" data-tab="accessories" onclick="showCostumeTab('accessories')">Acc</button>
-        </div>
-        <div class="modal-grid" id="costumeGrid"></div>
-        <div class="modal-hint" id="costumeMore"></div>
-        <button class="close-btn" onclick="closeCostumeModal()">Done</button>
-    </div>
-
-    <!-- Shop Modal -->
+    <!-- Shop Modal (costumes + power-ups) -->
     <div class="modal" id="shopModal">
-        <h2 style="color: var(--accent);">🛒 Shop <span id="shopCoinDisplay" style="font-size:1rem;margin-left:10px;"><svg class="pixel-coin" style="width:18px;height:18px;vertical-align:middle;"><use href="#pixel-coin"/></svg> 0</span></h2>
+        <h2 style="color: var(--accent);">🛒 Shop <span id="shopCoinDisplay" style="font-size:1rem;margin-left:10px;"><svg class="pixel-coin" style="width:18px;height:18px;vertical-align:middle;"><use href="#pixel-coin"/></svg> <span id="shopCoinCount">0</span></span></h2>
+        <div class="costume-preview" id="costumePreview"></div>
         <div class="modal-tabs" id="shopTabs">
-            <button class="modal-tab active" data-tab="powerups" onclick="showShopTab('powerups')">Power-Ups</button>
-            <button class="modal-tab" data-tab="environments" onclick="showShopTab('environments')">Scenes</button>
+            <button class="modal-tab" data-tab="avatars" onclick="showShopTab('avatars')">Avatar</button>
+            <button class="modal-tab active" data-tab="hats" onclick="showShopTab('hats')">Hats</button>
+            <button class="modal-tab" data-tab="outfits" onclick="showShopTab('outfits')">Outfits</button>
+            <button class="modal-tab" data-tab="accessories" onclick="showShopTab('accessories')">Acc</button>
         </div>
         <div class="modal-grid" id="shopGrid"></div>
+        <div class="powerup-bar" id="powerupBar" style="display:flex;justify-content:center;gap:10px;margin:10px 0;flex-wrap:wrap;"></div>
         <button class="close-btn" onclick="closeShopModal()">Done</button>
     </div>
 
@@ -2254,28 +2242,28 @@
               ] }
         ];
 
-        // Boss loot tables (variable coin rewards + costume drop chances)
+        // Boss loot tables (variable coin rewards)
         const BOSS_LOOT = {
-            'boss-tiki': { coins: { min: 8, max: 12 }, costumes: [] },
-            'boss-crab': { coins: { min: 8, max: 12 }, costumes: [] },
-            'boss-puffer': { coins: { min: 10, max: 14 }, costumes: [] },
-            'boss-jelly': { coins: { min: 10, max: 14 }, costumes: [] },
-            'boss-bird': { coins: { min: 12, max: 16 }, costumes: [] },
-            'boss-shark': { coins: { min: 12, max: 18 }, costumes: ['hat-pirate'] },
-            'boss-volcano': { coins: { min: 14, max: 18 }, costumes: [] },
-            'boss-coconut': { coins: { min: 14, max: 18 }, costumes: [] },
-            'boss-octopus': { coins: { min: 15, max: 20 }, costumes: [] },
-            'boss-turtle': { coins: { min: 16, max: 22 }, costumes: [] },
-            'boss-hermitcrab': { coins: { min: 15, max: 20 }, costumes: [] },
-            'boss-starfish': { coins: { min: 18, max: 24 }, costumes: [] },
-            'boss-pirate': { coins: { min: 20, max: 28 }, costumes: ['outfit-armor'] },
-            'boss-mermaid': { coins: { min: 22, max: 30 }, costumes: ['hat-flower'] },
-            'boss-stingray': { coins: { min: 24, max: 32 }, costumes: [] },
-            'boss-pelican': { coins: { min: 24, max: 32 }, costumes: [] },
-            'boss-whale': { coins: { min: 30, max: 40 }, costumes: ['acc-shield'] },
-            'boss-serpent': { coins: { min: 32, max: 42 }, costumes: [] },
-            'boss-mimic': { coins: { min: 35, max: 50 }, costumes: ['hat-crown'] },
-            'boss-kraken': { coins: { min: 40, max: 60 }, costumes: ['hat-wizard'] }
+            'boss-tiki': { coins: { min: 8, max: 12 } },
+            'boss-crab': { coins: { min: 8, max: 12 } },
+            'boss-puffer': { coins: { min: 10, max: 14 } },
+            'boss-jelly': { coins: { min: 10, max: 14 } },
+            'boss-bird': { coins: { min: 12, max: 16 } },
+            'boss-shark': { coins: { min: 12, max: 18 } },
+            'boss-volcano': { coins: { min: 14, max: 18 } },
+            'boss-coconut': { coins: { min: 14, max: 18 } },
+            'boss-octopus': { coins: { min: 15, max: 20 } },
+            'boss-turtle': { coins: { min: 16, max: 22 } },
+            'boss-hermitcrab': { coins: { min: 15, max: 20 } },
+            'boss-starfish': { coins: { min: 18, max: 24 } },
+            'boss-pirate': { coins: { min: 20, max: 28 } },
+            'boss-mermaid': { coins: { min: 22, max: 30 } },
+            'boss-stingray': { coins: { min: 24, max: 32 } },
+            'boss-pelican': { coins: { min: 24, max: 32 } },
+            'boss-whale': { coins: { min: 30, max: 40 } },
+            'boss-serpent': { coins: { min: 32, max: 42 } },
+            'boss-mimic': { coins: { min: 35, max: 50 } },
+            'boss-kraken': { coins: { min: 40, max: 60 } }
         };
 
         // Themes with unlock levels
@@ -2327,42 +2315,43 @@
             }
         };
 
-        // Costume definitions - all pixel art SVGs
+        // Costume definitions - all pixel art SVGs (coin-based purchases)
         const COSTUMES = {
             hats: [
-                { id: 'hat-none', name: 'None', svgId: null, unlockLevel: 1 },
-                { id: 'hat-pirate', name: 'Pirate Hat', svgId: 'costume-hat-pirate', unlockLevel: 5 },
-                { id: 'hat-crown', name: 'Crown', svgId: 'costume-hat-crown', unlockLevel: 15 },
-                { id: 'hat-wizard', name: 'Wizard Hat', svgId: 'costume-hat-wizard', unlockType: 'boss', unlockId: 'boss-kraken', unlockHint: 'Beat Kraken' },
-                { id: 'hat-santa', name: 'Santa Hat', svgId: 'costume-hat-santa', unlockLevel: 25 },
-                { id: 'hat-party', name: 'Party Hat', svgId: 'costume-hat-party', unlockLevel: 35 },
-                { id: 'hat-beanie', name: 'Beanie', svgId: 'costume-hat-beanie', unlockLevel: 12 },
-                { id: 'hat-headphones', name: 'Headphones', svgId: 'costume-hat-headphones', unlockLevel: 18 },
-                { id: 'hat-halo', name: 'Halo', svgId: 'costume-hat-halo', unlockLevel: 40 },
-                { id: 'hat-viking', name: 'Viking Helm', svgId: 'costume-hat-viking', unlockType: 'boss', unlockId: 'boss-whale', unlockHint: 'Beat Whale' }
+                { id: 'hat-none', name: 'None', svgId: null, price: 0 },
+                { id: 'hat-pirate', name: 'Pirate Hat', svgId: 'costume-hat-pirate', price: 50 },
+                { id: 'hat-beanie', name: 'Beanie', svgId: 'costume-hat-beanie', price: 75 },
+                { id: 'hat-crown', name: 'Crown', svgId: 'costume-hat-crown', price: 100 },
+                { id: 'hat-headphones', name: 'Headphones', svgId: 'costume-hat-headphones', price: 100 },
+                { id: 'hat-santa', name: 'Santa Hat', svgId: 'costume-hat-santa', price: 150 },
+                { id: 'hat-party', name: 'Party Hat', svgId: 'costume-hat-party', price: 150 },
+                { id: 'hat-halo', name: 'Halo', svgId: 'costume-hat-halo', price: 200 },
+                { id: 'hat-wizard', name: 'Wizard Hat', svgId: 'costume-hat-wizard', price: 200 },
+                { id: 'hat-viking', name: 'Viking Helm', svgId: 'costume-hat-viking', price: 250 }
             ],
             outfits: [
-                { id: 'outfit-none', name: 'None', svgId: null, unlockLevel: 1 },
-                { id: 'outfit-bowtie', name: 'Bow Tie', svgId: 'costume-outfit-bowtie', unlockLevel: 8 },
-                { id: 'outfit-cape', name: 'Cape', svgId: 'costume-outfit-cape', unlockType: 'achievement', unlockId: 'boss_slayer', unlockHint: 'Defeat a boss' },
-                { id: 'outfit-armor', name: 'Armor', svgId: 'costume-outfit-armor', unlockType: 'boss', unlockId: 'boss-pirate', unlockHint: 'Beat Pirate' },
-                { id: 'outfit-scarf', name: 'Scarf', svgId: 'costume-outfit-scarf', unlockLevel: 30 },
-                { id: 'outfit-hoodie', name: 'Hoodie', svgId: 'costume-outfit-hoodie', unlockLevel: 15 },
-                { id: 'outfit-medal', name: 'Medal', svgId: 'costume-outfit-medal', unlockType: 'achievement', unlockId: 'streak_10', unlockHint: '10 streak' },
-                { id: 'outfit-heart', name: 'Heart Locket', svgId: 'costume-outfit-heart', unlockLevel: 22 }
+                { id: 'outfit-none', name: 'None', svgId: null, price: 0 },
+                { id: 'outfit-bowtie', name: 'Bow Tie', svgId: 'costume-outfit-bowtie', price: 50 },
+                { id: 'outfit-hoodie', name: 'Hoodie', svgId: 'costume-outfit-hoodie', price: 75 },
+                { id: 'outfit-cape', name: 'Cape', svgId: 'costume-outfit-cape', price: 100 },
+                { id: 'outfit-medal', name: 'Medal', svgId: 'costume-outfit-medal', price: 100 },
+                { id: 'outfit-heart', name: 'Heart Locket', svgId: 'costume-outfit-heart', price: 125 },
+                { id: 'outfit-armor', name: 'Armor', svgId: 'costume-outfit-armor', price: 150 },
+                { id: 'outfit-scarf', name: 'Scarf', svgId: 'costume-outfit-scarf', price: 175 }
             ],
             accessories: [
-                { id: 'acc-none', name: 'None', svgId: null, unlockLevel: 1 },
-                { id: 'acc-sunglasses', name: 'Sunglasses', svgId: 'costume-acc-sunglasses', unlockLevel: 3, position: 'face' },
-                { id: 'acc-balloon', name: 'Balloon', svgId: 'costume-acc-balloon', unlockLevel: 10 },
-                { id: 'acc-sword', name: 'Sword', svgId: 'costume-acc-sword', unlockLevel: 20 },
-                { id: 'acc-wand', name: 'Magic Wand', svgId: 'costume-acc-wand', unlockType: 'achievement', unlockId: 'score_100', unlockHint: 'Score 100' },
-                { id: 'acc-mustache', name: 'Mustache', svgId: 'costume-acc-mustache', unlockLevel: 7, position: 'face' },
-                { id: 'acc-headband', name: 'Sweatband', svgId: 'costume-acc-headband', unlockLevel: 28 },
-                { id: 'acc-flower', name: 'Flower', svgId: 'costume-acc-flower', unlockLevel: 5 },
-                { id: 'acc-sparkles', name: 'Sparkles', svgId: 'costume-acc-sparkles', unlockType: 'achievement', unlockId: 'boss_slayer_5', unlockHint: 'Beat 5 bosses' }
+                { id: 'acc-none', name: 'None', svgId: null, price: 0 },
+                { id: 'acc-sunglasses', name: 'Sunglasses', svgId: 'costume-acc-sunglasses', price: 30, position: 'face' },
+                { id: 'acc-flower', name: 'Flower', svgId: 'costume-acc-flower', price: 40 },
+                { id: 'acc-mustache', name: 'Mustache', svgId: 'costume-acc-mustache', price: 50, position: 'face' },
+                { id: 'acc-balloon', name: 'Balloon', svgId: 'costume-acc-balloon', price: 75 },
+                { id: 'acc-sword', name: 'Sword', svgId: 'costume-acc-sword', price: 100 },
+                { id: 'acc-headband', name: 'Sweatband', svgId: 'costume-acc-headband', price: 125 },
+                { id: 'acc-wand', name: 'Magic Wand', svgId: 'costume-acc-wand', price: 150 },
+                { id: 'acc-sparkles', name: 'Sparkles', svgId: 'costume-acc-sparkles', price: 200 }
             ]
         };
+        let purchasedCostumes = []; // Costumes bought with coins
 
         // Equipped costumes state
         let equippedCostumes = { hat: 'hat-none', outfit: 'outfit-none', accessory: 'acc-none' };
@@ -2375,22 +2364,20 @@
         };
         let selectedAvatar = 'mango';
 
-        // Power-ups (purchased and consumable)
+        // Power-ups (earned from mystery boxes)
         const POWER_UPS = {
-            celebration: { id: 'celebration', name: 'Celebration Dance', price: 75, desc: 'Avatar dances 30s', icon: '💃' },
-            golden: { id: 'golden', name: 'Golden Problems', price: 100, desc: 'Next 5 = 2x coins', icon: '✨' },
-            boss_summon: { id: 'boss_summon', name: 'Boss Summoner', price: 150, desc: 'Instant boss battle', icon: '👹' },
-            mystery_magnet: { id: 'mystery_magnet', name: 'Mystery Magnet', price: 50, desc: '2x faster mystery box', icon: '🧲' }
+            celebration: { id: 'celebration', name: 'Celebration Dance', desc: 'Avatar dances 30s', icon: '💃' },
+            golden: { id: 'golden', name: 'Golden Problems', desc: 'Next 5 = 2x coins', icon: '✨' },
+            boss_summon: { id: 'boss_summon', name: 'Boss Summoner', desc: 'Instant boss battle', icon: '👹' },
+            mystery_magnet: { id: 'mystery_magnet', name: 'Mystery Magnet', desc: '2x faster mystery box', icon: '🧲' }
         };
 
         let ownedPowerUps = { celebration: 0, golden: 0, boss_summon: 0, mystery_magnet: 0 };
-        let purchasedShopItems = [];
         let activePowerUps = {
             celebration: false,
             golden: { active: false, remaining: 0 },
             mystery_magnet: false
         };
-        let unlockedBossDrops = [];
 
         // Scene variations (3D background cosmetic changes)
         const SCENE_VARIATIONS = [
@@ -2461,7 +2448,6 @@
               extras: ['balloons', 'confetti', 'tikitorches', 'festivalLights'] }
         ];
         let currentSceneId = 'beach';
-        let purchasedEnvironments = []; // Environments bought with coins
 
         // XP and Level system
         let playerXP = 0;
@@ -2753,7 +2739,7 @@
         function isSceneUnlocked(sceneId) {
             const scene = SCENE_VARIATIONS.find(s => s.id === sceneId);
             if (!scene) return false;
-            return playerLevel >= scene.unlockLevel || purchasedEnvironments.includes(sceneId);
+            return playerLevel >= scene.unlockLevel;
         }
 
         function saveScene() {
@@ -3140,35 +3126,45 @@
 
             document.getElementById('mysteryBox').style.display = 'none';
 
-            // Mystery boxes now always give bonus coins (no manual power-ups)
-            const bonus = Math.floor(Math.random() * 4) + 2; // 2-5 bonus coins
-
-            // Show treasure chest first
             const rewardEl = document.getElementById('mysteryReward');
             rewardEl.innerHTML = '<svg class="pixel-chest" style="width:100px;height:100px;"><use href="#pixel-treasure-chest-open"/></svg>';
             document.getElementById('mysteryText').textContent = '';
 
-            // Animate coins bursting out
-            setTimeout(() => {
-                let coinContainer = '<div style="position:relative;height:80px;display:flex;justify-content:center;align-items:flex-end;gap:4px;">';
-                for (let i = 0; i < bonus; i++) {
-                    const delay = i * 100;
-                    coinContainer += `<svg class="pixel-coin coin-burst" style="width:36px;height:36px;animation-delay:${delay}ms;"><use href="#pixel-coin"/></svg>`;
-                }
-                coinContainer += '</div>';
-                rewardEl.innerHTML += coinContainer;
-                document.getElementById('mysteryText').textContent = `+${bonus} coins!`;
+            // 30% chance for power-up, 70% for coins
+            const givesPowerUp = Math.random() < 0.3;
 
-                // Update score after animation
-                setTimeout(() => {
-                    score += bonus;
-                    saveCoins();
-                    document.getElementById('score').textContent = score;
-                    // Flash the coin counter
-                    const coinStat = document.getElementById('coinStat');
-                    coinStat.style.transform = 'scale(1.2)';
-                    setTimeout(() => coinStat.style.transform = '', 200);
-                }, 400);
+            setTimeout(() => {
+                if (givesPowerUp) {
+                    // Award random power-up
+                    const powerUpIds = Object.keys(POWER_UPS);
+                    const randomId = powerUpIds[Math.floor(Math.random() * powerUpIds.length)];
+                    const powerUp = POWER_UPS[randomId];
+                    ownedPowerUps[randomId] = (ownedPowerUps[randomId] || 0) + 1;
+                    savePowerUps();
+
+                    rewardEl.innerHTML += `<div style="font-size:3rem;margin:10px 0;">${powerUp.icon}</div>`;
+                    document.getElementById('mysteryText').textContent = `${powerUp.name}!`;
+                } else {
+                    // Award coins
+                    const bonus = Math.floor(Math.random() * 4) + 2; // 2-5 coins
+                    let coinContainer = '<div style="position:relative;height:80px;display:flex;justify-content:center;align-items:flex-end;gap:4px;">';
+                    for (let i = 0; i < bonus; i++) {
+                        const delay = i * 100;
+                        coinContainer += `<svg class="pixel-coin coin-burst" style="width:36px;height:36px;animation-delay:${delay}ms;"><use href="#pixel-coin"/></svg>`;
+                    }
+                    coinContainer += '</div>';
+                    rewardEl.innerHTML += coinContainer;
+                    document.getElementById('mysteryText').textContent = `+${bonus} coins!`;
+
+                    setTimeout(() => {
+                        score += bonus;
+                        saveCoins();
+                        document.getElementById('score').textContent = score;
+                        const coinStat = document.getElementById('coinStat');
+                        coinStat.style.transform = 'scale(1.2)';
+                        setTimeout(() => coinStat.style.transform = '', 200);
+                    }, 400);
+                }
             }, 300);
 
             document.getElementById('mysteryCloseBtn').classList.remove('hidden');
@@ -3601,27 +3597,14 @@
                 haptic('heavy');
                 gainXP(10); // Bonus XP for defeating boss
 
-                // Get boss loot (variable coin reward + possible costume drop)
-                const loot = BOSS_LOOT[bossCurrentBoss.svg] || { coins: { min: 10, max: 15 }, costumes: [] };
+                // Get boss loot (variable coin reward)
+                const loot = BOSS_LOOT[bossCurrentBoss.svg] || { coins: { min: 10, max: 15 } };
                 const coinReward = Math.floor(Math.random() * (loot.coins.max - loot.coins.min + 1)) + loot.coins.min;
                 score += coinReward;
                 saveCoins();
                 document.getElementById('score').textContent = score;
 
-                let rewardHTML = `+${coinReward} <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg>`;
-
-                // 75% chance of costume drop if available and not already owned
-                if (loot.costumes.length > 0 && Math.random() < 0.75) {
-                    const availableCostumes = loot.costumes.filter(c => !unlockedBossDrops.includes(c));
-                    if (availableCostumes.length > 0) {
-                        const droppedCostume = availableCostumes[Math.floor(Math.random() * availableCostumes.length)];
-                        unlockedBossDrops.push(droppedCostume);
-                        saveBossDrops();
-                        rewardHTML += '<br><span style="color:var(--success);font-size:0.8rem;">🎁 NEW COSTUME!</span>';
-                    }
-                }
-
-                document.getElementById('bossReward').innerHTML = rewardHTML;
+                document.getElementById('bossReward').innerHTML = `+${coinReward} <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg>`;
 
                 // Play tiered victory celebration
                 const tier = bossCurrentBoss.tier || 'basic';
@@ -4306,48 +4289,68 @@
         }
 
         function isCostumeUnlocked(costume) {
-            // Check if purchased from shop
-            if (purchasedShopItems.includes(costume.id)) {
-                return true;
-            }
-            // Check if unlocked from boss drops
-            if (unlockedBossDrops.includes(costume.id)) {
-                return true;
-            }
-            if (costume.unlockLevel) {
-                return playerLevel >= costume.unlockLevel;
-            }
-            if (costume.unlockType === 'achievement') {
-                return unlockedAchievements.includes(costume.unlockId);
-            }
-            if (costume.unlockType === 'boss') {
-                return cumulativeStats.uniqueBossesDefeated && cumulativeStats.uniqueBossesDefeated[costume.unlockId];
-            }
-            // Default to locked if no unlock conditions specified
-            return false;
+            // "None" options are always unlocked
+            if (costume.price === 0) return true;
+            // Check if purchased with coins
+            return purchasedCostumes.includes(costume.id);
         }
 
-        function openCostumeModal() {
-            document.getElementById('costumeModal').classList.add('show');
-            showCostumeTab('hats');
+        function buyCostume(id, price) {
+            if (score < price || purchasedCostumes.includes(id)) return;
+            score -= price;
+            saveCoins();
+            purchasedCostumes.push(id);
+            savePurchasedCostumes();
+            document.getElementById('shopCoinCount').textContent = score;
+            document.getElementById('score').textContent = score;
+            renderShopGrid();
+            playSound('bonus');
+        }
+
+        function loadPurchasedCostumes() {
+            const saved = localStorage.getItem('mathblaster_purchased_costumes');
+            if (saved) purchasedCostumes = JSON.parse(saved);
+        }
+
+        function savePurchasedCostumes() {
+            localStorage.setItem('mathblaster_purchased_costumes', JSON.stringify(purchasedCostumes));
+        }
+
+        function openShopModal() {
+            document.getElementById('shopModal').classList.add('show');
+            document.getElementById('shopCoinCount').textContent = score;
+            showShopTab('hats');
             updateCostumePreview();
+            renderPowerUpBar();
         }
 
-        function closeCostumeModal() {
-            document.getElementById('costumeModal').classList.remove('show');
+        function closeShopModal() {
+            document.getElementById('shopModal').classList.remove('show');
         }
 
-        function showCostumeTab(tab) {
+        function showShopTab(tab) {
             currentCostumeTab = tab;
-            document.querySelectorAll('#costumeTabs .modal-tab').forEach(t => {
+            document.querySelectorAll('#shopTabs .modal-tab').forEach(t => {
                 t.classList.toggle('active', t.dataset.tab === tab);
             });
-            renderCostumeGrid();
+            renderShopGrid();
         }
 
-        function renderCostumeGrid() {
-            const grid = document.getElementById('costumeGrid');
-            const more = document.getElementById('costumeMore');
+        function renderPowerUpBar() {
+            const bar = document.getElementById('powerupBar');
+            let html = '';
+            Object.entries(POWER_UPS).forEach(([id, pu]) => {
+                const count = ownedPowerUps[id] || 0;
+                const canUse = count > 0;
+                html += `<button class="powerup-btn${canUse ? '' : ' disabled'}" onclick="${canUse ? `activatePowerUp('${id}')` : ''}" style="padding:5px 10px;border-radius:8px;border:2px solid ${canUse ? 'var(--accent)' : '#666'};background:${canUse ? 'var(--card-bg)' : '#333'};color:${canUse ? 'var(--text)' : '#666'};cursor:${canUse ? 'pointer' : 'default'};font-size:0.9rem;">
+                    ${pu.icon} x${count}
+                </button>`;
+            });
+            bar.innerHTML = html || '<span style="color:#888;font-size:0.85rem;">Power-ups drop from mystery boxes!</span>';
+        }
+
+        function renderShopGrid() {
+            const grid = document.getElementById('shopGrid');
 
             // Handle avatar tab
             if (currentCostumeTab === 'avatars') {
@@ -4363,7 +4366,6 @@
                     div.onclick = () => selectAvatar(avatar.id);
                     grid.appendChild(div);
                 });
-                more.textContent = '';
                 return;
             }
 
@@ -4371,48 +4373,45 @@
             const equippedKey = currentCostumeTab === 'hats' ? 'hat' :
                                currentCostumeTab === 'outfits' ? 'outfit' : 'accessory';
 
-            let unlockedItems = [];
-            let lockedItems = [];
-
-            items.forEach(item => {
-                if (isCostumeUnlocked(item)) {
-                    unlockedItems.push(item);
-                } else {
-                    lockedItems.push(item);
-                }
-            });
-
-            // Show all items (unlocked first, then locked)
             grid.innerHTML = '';
-            [...unlockedItems, ...lockedItems].forEach(item => {
-                const isUnlocked = isCostumeUnlocked(item);
+            items.forEach(item => {
+                const isOwned = isCostumeUnlocked(item);
                 const isEquipped = equippedCostumes[equippedKey] === item.id;
+                const canAfford = score >= item.price;
                 const div = document.createElement('div');
-                div.className = 'modal-item' + (isEquipped ? ' equipped' : '') + (!isUnlocked ? ' locked' : '');
+                div.className = 'modal-item' + (isEquipped ? ' equipped' : '') + (!isOwned && !canAfford ? ' locked' : '');
 
                 // Use SVG preview for costumes with svgId, or "None" text
                 const iconHTML = item.svgId ?
                     `<svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#${item.svgId}"/></svg>` :
                     '❌';
 
+                let infoText = '';
+                if (isOwned) {
+                    if (isEquipped) infoText = '✓ Equipped';
+                } else {
+                    infoText = `💰 ${item.price}`;
+                }
+
                 div.innerHTML = `
                     <span class="modal-item-icon">${iconHTML}</span>
                     <span class="modal-item-name">${item.name}</span>
-                    ${!isUnlocked ? `<span class="modal-item-info">${item.unlockHint || ('Lv.' + item.unlockLevel)}</span>` : ''}
+                    <span class="modal-item-info" style="color:${isOwned ? 'var(--accent)' : (canAfford ? '#ffd93d' : '#888')}">${infoText}</span>
                 `;
-                if (isUnlocked) {
+
+                if (isOwned) {
                     div.onclick = () => equipCostume(equippedKey, item.id);
+                } else if (canAfford) {
+                    div.onclick = () => buyCostume(item.id, item.price);
                 }
                 grid.appendChild(div);
             });
-
-            more.textContent = '';
         }
 
         function equipCostume(type, id) {
             equippedCostumes[type] = id;
             saveCostumes();
-            renderCostumeGrid();
+            renderShopGrid();
             updateCostumePreview();
             updateCostumeDisplay();
             playSound('tap');
@@ -4510,132 +4509,12 @@
             }
         }
 
-        // Shop System Functions
-        let currentShopTab = 'costumes';
-
-        function openShopModal() {
-            document.getElementById('shopModal').classList.add('show');
-            updateShopCoinDisplay();
-            currentShopTab = 'powerups';
-            showShopTab('powerups');
-        }
-
-        function closeShopModal() {
-            document.getElementById('shopModal').classList.remove('show');
-        }
-
-        function showShopTab(tab) {
-            currentShopTab = tab;
-            document.querySelectorAll('#shopTabs .modal-tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.tab === tab);
-            });
-            renderShopGrid();
-        }
-
-        function renderShopGrid() {
-            const grid = document.getElementById('shopGrid');
-            grid.innerHTML = '';
-
-            if (currentShopTab === 'powerups') {
-                // Render power-ups
-                Object.values(POWER_UPS).forEach(powerup => {
-                    const owned = ownedPowerUps[powerup.id] || 0;
-                    const canAfford = score >= powerup.price;
-                    const div = document.createElement('div');
-                    div.className = 'modal-item' + (!canAfford ? ' locked' : '') + (owned > 0 ? ' owned' : '');
-                    div.innerHTML = `
-                        <span class="modal-item-icon">${powerup.icon}</span>
-                        <span class="modal-item-name">${powerup.name}</span>
-                        <span class="modal-item-info">${powerup.price} 🪙${owned > 0 ? ` (${owned})` : ''}</span>
-                    `;
-                    if (canAfford) {
-                        div.onclick = () => buyPowerUp(powerup.id, powerup.price);
-                    }
-                    grid.appendChild(div);
-                });
-            } else if (currentShopTab === 'environments') {
-                // Render environments/scenes
-                SCENE_VARIATIONS.forEach(env => {
-                    const isUnlocked = isEnvironmentUnlocked(env);
-                    const isSelected = currentSceneId === env.id;
-                    const price = env.unlockLevel * 20;
-                    const canAfford = score >= price;
-
-                    const div = document.createElement('div');
-                    div.className = 'modal-item' + (isSelected ? ' equipped' : '') + (!isUnlocked && !canAfford ? ' locked' : '');
-                    div.innerHTML = `
-                        <span class="modal-item-icon">${env.emoji}</span>
-                        <span class="modal-item-name">${env.name}</span>
-                        <span class="modal-item-info">${isUnlocked ? (isSelected ? '✓' : '') : `${price} 🪙`}</span>
-                    `;
-                    if (isUnlocked) {
-                        div.onclick = () => {
-                            currentSceneId = env.id;
-                            saveScene();
-                            renderShopGrid();
-                            window.dispatchEvent(new Event('sceneChange'));
-                        };
-                    } else if (canAfford) {
-                        div.onclick = () => buyEnvironment(env.id, price);
-                    }
-                    grid.appendChild(div);
-                });
-            }
-        }
-
+        // Simplified scene unlock (level only)
         function isEnvironmentUnlocked(env) {
-            return playerLevel >= env.unlockLevel || purchasedEnvironments.includes(env.id);
+            return playerLevel >= env.unlockLevel;
         }
 
-        function buyEnvironment(envId, price) {
-            if (score < price || purchasedEnvironments.includes(envId)) return;
-
-            score -= price;
-            saveCoins();
-            purchasedEnvironments.push(envId);
-            saveEnvironments();
-
-            document.getElementById('score').textContent = score;
-            updateShopCoinDisplay();
-            playSound('bonus');
-            renderShopGrid();
-        }
-
-        function updateShopCoinDisplay() {
-            const el = document.getElementById('shopCoinDisplay');
-            if (el) el.innerHTML = `<svg class="pixel-coin" style="width:18px;height:18px;vertical-align:middle;"><use href="#pixel-coin"/></svg> ${score}`;
-        }
-
-        function loadEnvironments() {
-            const saved = localStorage.getItem('mathblaster_environments');
-            if (saved) {
-                purchasedEnvironments = JSON.parse(saved);
-            }
-        }
-
-        function saveEnvironments() {
-            localStorage.setItem('mathblaster_environments', JSON.stringify(purchasedEnvironments));
-        }
-
-        function buyPowerUp(id, price) {
-            if (score < price) return;
-
-            score -= price;
-            saveCoins();
-            ownedPowerUps[id] = (ownedPowerUps[id] || 0) + 1;
-            savePowerUps();
-
-            document.getElementById('score').textContent = score;
-            updateShopCoinDisplay();
-            playSound('bonus');
-            renderShopGrid();
-
-            // Ask to use immediately
-            if (confirm(`Use ${POWER_UPS[id].name} now?`)) {
-                activatePowerUp(id);
-            }
-        }
-
+        // Power-up activation
         function activatePowerUp(id) {
             if (!ownedPowerUps[id] || ownedPowerUps[id] <= 0) return;
 
@@ -4665,7 +4544,7 @@
                     break;
             }
 
-            renderShopGrid();
+            renderPowerUpBar();
             updateActivePowerUps();
             playSound('streak');
         }
@@ -4681,28 +4560,6 @@
             localStorage.setItem('mathblaster_powerups', JSON.stringify(ownedPowerUps));
         }
 
-        function loadShopPurchases() {
-            const saved = localStorage.getItem('mathblaster_shop');
-            if (saved) {
-                purchasedShopItems = JSON.parse(saved);
-            }
-        }
-
-        function saveShopPurchases() {
-            localStorage.setItem('mathblaster_shop', JSON.stringify(purchasedShopItems));
-        }
-
-        function loadBossDrops() {
-            const saved = localStorage.getItem('mathblaster_bossdrops');
-            if (saved) {
-                unlockedBossDrops = JSON.parse(saved);
-            }
-        }
-
-        function saveBossDrops() {
-            localStorage.setItem('mathblaster_bossdrops', JSON.stringify(unlockedBossDrops));
-        }
-
         loadTheme();
         loadSoundPref();
         loadAchievements();
@@ -4715,9 +4572,7 @@
         loadCoins(); // Load persistent coin balance
         loadAvatar(); // Load selected avatar
         loadPowerUps(); // Load owned power-ups
-        loadShopPurchases(); // Load purchased shop items
-        loadBossDrops(); // Load boss drop unlocks
-        loadEnvironments(); // Load purchased environments
+        loadPurchasedCostumes(); // Load purchased costumes
         initializeFactDatabase(); // Initialize spaced repetition fact database
         updateSettingsLabel();
         resetProblemStruggleState(); // Initialize auto-helper state
