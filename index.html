@@ -188,7 +188,12 @@
         .pixel-box { image-rendering: pixelated; }
         .pixel-boss { image-rendering: pixelated; }
         .pixel-coin { image-rendering: pixelated; }
-        .pixel-fire { image-rendering: pixelated; }
+        .pixel-fire { image-rendering: pixelated; transition: filter 0.3s; }
+        .pixel-fire.active { animation: fireFlicker 0.5s infinite; }
+        @keyframes fireFlicker {
+            0%, 100% { filter: drop-shadow(0 0 3px #ff6600) drop-shadow(0 0 6px #ff4400); }
+            50% { filter: drop-shadow(0 0 8px #ff9900) drop-shadow(0 0 12px #ff6600); }
+        }
         .pixel-chest { image-rendering: pixelated; }
         .pixel-shop { image-rendering: pixelated; }
 
@@ -219,6 +224,44 @@
         }
         .progress-fill.mystery { background: linear-gradient(90deg, #ffd93d, #ff6b9d); }
         .progress-fill.boss { background: linear-gradient(90deg, #ff6b6b, #ff0000); }
+
+        /* Active Power-ups Indicator */
+        .active-powerups {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            min-height: 18px;
+            flex-wrap: wrap;
+        }
+        .powerup-indicator {
+            background: rgba(255,217,61,0.25);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            animation: powerupPulse 2s infinite;
+        }
+        @keyframes powerupPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Coin Animation */
+        .coin-burst {
+            position: absolute;
+            animation: coinBurst 0.4s ease-out forwards;
+        }
+        @keyframes coinBurst {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
+            100% { transform: translateY(-25px) scale(1); opacity: 1; }
+        }
+        .coin-fly {
+            animation: coinFly 0.6s ease-in forwards;
+        }
+        @keyframes coinFly {
+            to { transform: translate(var(--fly-x), var(--fly-y)) scale(0.3); opacity: 0; }
+        }
 
         /* Combo Multiplier */
         .combo-display {
@@ -483,6 +526,8 @@
         .costume-item .costume-price { font-size: 0.6rem; color: var(--accent); }
         .costume-item.owned { border-color: var(--success); background: rgba(107,203,119,0.2); }
         .costume-item .avatar-svg { width: 48px; height: 48px; }
+        .costume-item .costume-svg-icon { image-rendering: pixelated; }
+        .costume-layer-preview { image-rendering: pixelated; pointer-events: none; }
         .costume-more {
             text-align: center;
             color: var(--accent);
@@ -1144,6 +1189,162 @@
             <rect x="5" y="1" width="6" height="1" fill="#ffd700"/>
         </symbol>
 
+        <!-- ========== COSTUME PIECES (Pixel Art) ========== -->
+
+        <!-- Hat: Pirate Hat -->
+        <symbol id="costume-hat-pirate" viewBox="0 0 16 16">
+            <rect x="3" y="8" width="10" height="3" fill="#1a1a1a"/>
+            <rect x="4" y="5" width="8" height="3" fill="#2a2a2a"/>
+            <rect x="5" y="4" width="6" height="1" fill="#2a2a2a"/>
+            <rect x="6" y="3" width="4" height="1" fill="#1a1a1a"/>
+            <!-- Skull emblem -->
+            <rect x="6" y="6" width="4" height="2" fill="#ffffff"/>
+            <rect x="7" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="6" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+
+        <!-- Hat: Crown -->
+        <symbol id="costume-hat-crown" viewBox="0 0 16 16">
+            <rect x="3" y="9" width="10" height="3" fill="#ffd700"/>
+            <rect x="4" y="8" width="8" height="1" fill="#ffec8b"/>
+            <!-- Crown points -->
+            <rect x="4" y="5" width="2" height="3" fill="#ffd700"/>
+            <rect x="7" y="4" width="2" height="4" fill="#ffd700"/>
+            <rect x="10" y="5" width="2" height="3" fill="#ffd700"/>
+            <!-- Gems -->
+            <rect x="5" y="10" width="1" height="1" fill="#ff0000"/>
+            <rect x="7" y="10" width="2" height="1" fill="#00ff00"/>
+            <rect x="10" y="10" width="1" height="1" fill="#0066ff"/>
+        </symbol>
+
+        <!-- Hat: Wizard Hat -->
+        <symbol id="costume-hat-wizard" viewBox="0 0 16 16">
+            <rect x="4" y="10" width="8" height="2" fill="#4a2c7a"/>
+            <rect x="5" y="8" width="6" height="2" fill="#5a3c8a"/>
+            <rect x="6" y="5" width="4" height="3" fill="#4a2c7a"/>
+            <rect x="7" y="2" width="2" height="3" fill="#5a3c8a"/>
+            <!-- Stars -->
+            <rect x="5" y="9" width="1" height="1" fill="#ffd700"/>
+            <rect x="8" y="6" width="1" height="1" fill="#ffd700"/>
+            <rect x="10" y="10" width="1" height="1" fill="#ffd700"/>
+        </symbol>
+
+        <!-- Hat: Party Hat -->
+        <symbol id="costume-hat-party" viewBox="0 0 16 16">
+            <rect x="5" y="10" width="6" height="2" fill="#ff6b9d"/>
+            <rect x="6" y="7" width="4" height="3" fill="#ffd93d"/>
+            <rect x="7" y="4" width="2" height="3" fill="#6bcb77"/>
+            <rect x="7" y="2" width="2" height="2" fill="#ff6b9d"/>
+            <!-- Pom pom -->
+            <rect x="7" y="1" width="2" height="1" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Hat: Santa Hat -->
+        <symbol id="costume-hat-santa" viewBox="0 0 16 16">
+            <rect x="3" y="10" width="10" height="2" fill="#ffffff"/>
+            <rect x="4" y="7" width="8" height="3" fill="#cc0000"/>
+            <rect x="5" y="5" width="6" height="2" fill="#cc0000"/>
+            <rect x="7" y="3" width="4" height="2" fill="#cc0000"/>
+            <rect x="10" y="2" width="2" height="2" fill="#cc0000"/>
+            <!-- Pom pom -->
+            <rect x="11" y="1" width="2" height="2" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Outfit: Bow Tie -->
+        <symbol id="costume-outfit-bowtie" viewBox="0 0 16 16">
+            <rect x="5" y="10" width="2" height="2" fill="#cc0000"/>
+            <rect x="9" y="10" width="2" height="2" fill="#cc0000"/>
+            <rect x="7" y="10" width="2" height="2" fill="#ff0000"/>
+            <rect x="7" y="11" width="2" height="1" fill="#990000"/>
+        </symbol>
+
+        <!-- Outfit: Cape -->
+        <symbol id="costume-outfit-cape" viewBox="0 0 16 16">
+            <rect x="2" y="8" width="2" height="6" fill="#cc0000"/>
+            <rect x="12" y="8" width="2" height="6" fill="#cc0000"/>
+            <rect x="3" y="9" width="1" height="5" fill="#ff0000"/>
+            <rect x="12" y="9" width="1" height="5" fill="#ff0000"/>
+            <!-- Cape flowing behind -->
+            <rect x="1" y="12" width="2" height="3" fill="#990000"/>
+            <rect x="13" y="12" width="2" height="3" fill="#990000"/>
+        </symbol>
+
+        <!-- Outfit: Knight Armor -->
+        <symbol id="costume-outfit-armor" viewBox="0 0 16 16">
+            <rect x="4" y="9" width="8" height="5" fill="#a0a0a0"/>
+            <rect x="5" y="10" width="6" height="3" fill="#c0c0c0"/>
+            <rect x="6" y="9" width="4" height="1" fill="#808080"/>
+            <!-- Chest emblem -->
+            <rect x="7" y="11" width="2" height="2" fill="#ffd700"/>
+        </symbol>
+
+        <!-- Outfit: Scarf -->
+        <symbol id="costume-outfit-scarf" viewBox="0 0 16 16">
+            <rect x="3" y="10" width="10" height="2" fill="#ff6b6b"/>
+            <rect x="4" y="12" width="2" height="3" fill="#ff6b6b"/>
+            <rect x="5" y="13" width="1" height="2" fill="#cc5555"/>
+            <!-- Stripes -->
+            <rect x="5" y="10" width="2" height="2" fill="#ffffff"/>
+            <rect x="9" y="10" width="2" height="2" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Accessory: Sunglasses -->
+        <symbol id="costume-acc-sunglasses" viewBox="0 0 16 16">
+            <rect x="3" y="7" width="4" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="7" width="4" height="2" fill="#1a1a1a"/>
+            <rect x="7" y="7" width="2" height="1" fill="#1a1a1a"/>
+            <rect x="2" y="7" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="13" y="7" width="1" height="1" fill="#1a1a1a"/>
+            <!-- Lens shine -->
+            <rect x="4" y="7" width="1" height="1" fill="#333333"/>
+            <rect x="10" y="7" width="1" height="1" fill="#333333"/>
+        </symbol>
+
+        <!-- Accessory: Magic Wand -->
+        <symbol id="costume-acc-wand" viewBox="0 0 16 16">
+            <rect x="12" y="4" width="2" height="2" fill="#ffd700"/>
+            <rect x="11" y="5" width="1" height="1" fill="#ffd700"/>
+            <rect x="13" y="3" width="1" height="1" fill="#ffff00"/>
+            <rect x="14" y="5" width="1" height="1" fill="#ffff00"/>
+            <rect x="10" y="6" width="1" height="1" fill="#8b4513"/>
+            <rect x="9" y="7" width="1" height="1" fill="#8b4513"/>
+            <rect x="8" y="8" width="1" height="1" fill="#8b4513"/>
+            <rect x="7" y="9" width="1" height="1" fill="#8b4513"/>
+            <rect x="6" y="10" width="1" height="1" fill="#8b4513"/>
+            <!-- Sparkles -->
+            <rect x="11" y="2" width="1" height="1" fill="#ffffff"/>
+            <rect x="15" y="4" width="1" height="1" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Accessory: Sword -->
+        <symbol id="costume-acc-sword" viewBox="0 0 16 16">
+            <rect x="12" y="2" width="1" height="1" fill="#c0c0c0"/>
+            <rect x="11" y="3" width="2" height="1" fill="#a0a0a0"/>
+            <rect x="10" y="4" width="2" height="1" fill="#c0c0c0"/>
+            <rect x="9" y="5" width="2" height="1" fill="#a0a0a0"/>
+            <rect x="8" y="6" width="2" height="1" fill="#c0c0c0"/>
+            <rect x="7" y="7" width="2" height="1" fill="#a0a0a0"/>
+            <!-- Handle -->
+            <rect x="5" y="8" width="3" height="1" fill="#8b4513"/>
+            <rect x="4" y="9" width="2" height="2" fill="#654321"/>
+        </symbol>
+
+        <!-- Accessory: Balloon -->
+        <symbol id="costume-acc-balloon" viewBox="0 0 16 16">
+            <rect x="11" y="2" width="3" height="1" fill="#ff6b9d"/>
+            <rect x="10" y="3" width="5" height="3" fill="#ff6b9d"/>
+            <rect x="11" y="6" width="3" height="1" fill="#ff6b9d"/>
+            <rect x="12" y="7" width="1" height="1" fill="#ff6b9d"/>
+            <!-- Shine -->
+            <rect x="11" y="3" width="1" height="1" fill="#ffaacc"/>
+            <!-- String -->
+            <rect x="12" y="8" width="1" height="1" fill="#888888"/>
+            <rect x="11" y="9" width="1" height="1" fill="#888888"/>
+            <rect x="12" y="10" width="1" height="1" fill="#888888"/>
+        </symbol>
+
+        <!-- ========== END COSTUME PIECES ========== -->
+
         <!-- Tiki Mystery Box -->
         <symbol id="pixel-mysterybox" viewBox="0 0 24 24">
             <!-- Box body -->
@@ -1730,6 +1931,8 @@
             </div>
         </div>
 
+        <div class="active-powerups" id="activePowerUps"></div>
+
         <div class="progress-container">
             <div class="progress-item">
                 <svg class="pixel-box" style="width:20px;height:20px;"><use href="#pixel-mysterybox"/></svg>
@@ -1882,6 +2085,7 @@
         <div class="costume-tabs">
             <button class="costume-tab active" onclick="showShopTab('costumes')">Costumes</button>
             <button class="costume-tab" onclick="showShopTab('powerups')">Power-Ups</button>
+            <button class="costume-tab" onclick="showShopTab('environments')">Scenes</button>
         </div>
         <div class="costume-grid" id="shopGrid"></div>
         <button class="costume-done-btn" onclick="closeShopModal()">Done</button>
@@ -2013,34 +2217,29 @@
             }
         };
 
-        // Costume definitions (15-20 items)
+        // Costume definitions - all pixel art SVGs
         const COSTUMES = {
             hats: [
-                { id: 'hat-none', name: 'None', icon: '❌', unlockLevel: 1 },
-                { id: 'hat-pirate', name: 'Pirate Hat', icon: '🏴‍☠️', unlockLevel: 5 },
-                { id: 'hat-crown', name: 'Crown', icon: '👑', unlockLevel: 15 },
-                { id: 'hat-flower', name: 'Flower', icon: '🌺', unlockType: 'achievement', unlockId: 'streak_10', unlockHint: 'Get 10 streak' },
-                { id: 'hat-wizard', name: 'Wizard Hat', icon: '🧙', unlockType: 'boss', unlockId: 'boss-kraken', unlockHint: 'Beat Kraken' },
-                { id: 'hat-santa', name: 'Santa Hat', icon: '🎅', unlockLevel: 25 },
-                { id: 'hat-party', name: 'Party Hat', icon: '🥳', unlockLevel: 35 }
+                { id: 'hat-none', name: 'None', svgId: null, unlockLevel: 1 },
+                { id: 'hat-pirate', name: 'Pirate Hat', svgId: 'costume-hat-pirate', unlockLevel: 5 },
+                { id: 'hat-crown', name: 'Crown', svgId: 'costume-hat-crown', unlockLevel: 15 },
+                { id: 'hat-wizard', name: 'Wizard Hat', svgId: 'costume-hat-wizard', unlockType: 'boss', unlockId: 'boss-kraken', unlockHint: 'Beat Kraken' },
+                { id: 'hat-santa', name: 'Santa Hat', svgId: 'costume-hat-santa', unlockLevel: 25 },
+                { id: 'hat-party', name: 'Party Hat', svgId: 'costume-hat-party', unlockLevel: 35 }
             ],
             outfits: [
-                { id: 'outfit-none', name: 'None', icon: '❌', unlockLevel: 1 },
-                { id: 'outfit-bowtie', name: 'Bow Tie', icon: '🎀', unlockLevel: 8 },
-                { id: 'outfit-cape', name: 'Cape', icon: '🦸', unlockType: 'achievement', unlockId: 'boss_slayer', unlockHint: 'Defeat a boss' },
-                { id: 'outfit-lei', name: 'Lei', icon: '🌸', unlockLevel: 12 },
-                { id: 'outfit-armor', name: 'Armor', icon: '🛡️', unlockType: 'boss', unlockId: 'boss-pirate', unlockHint: 'Beat Pirate Captain' },
-                { id: 'outfit-tuxedo', name: 'Tuxedo', icon: '🤵', unlockLevel: 30 },
-                { id: 'outfit-superhero', name: 'Superhero', icon: '🦹', unlockLevel: 45 }
+                { id: 'outfit-none', name: 'None', svgId: null, unlockLevel: 1 },
+                { id: 'outfit-bowtie', name: 'Bow Tie', svgId: 'costume-outfit-bowtie', unlockLevel: 8 },
+                { id: 'outfit-cape', name: 'Cape', svgId: 'costume-outfit-cape', unlockType: 'achievement', unlockId: 'boss_slayer', unlockHint: 'Defeat a boss' },
+                { id: 'outfit-armor', name: 'Armor', svgId: 'costume-outfit-armor', unlockType: 'boss', unlockId: 'boss-pirate', unlockHint: 'Beat Pirate' },
+                { id: 'outfit-scarf', name: 'Scarf', svgId: 'costume-outfit-scarf', unlockLevel: 30 }
             ],
             accessories: [
-                { id: 'acc-none', name: 'None', icon: '❌', unlockLevel: 1 },
-                { id: 'acc-sunglasses', name: 'Sunglasses', icon: '😎', unlockLevel: 3 },
-                { id: 'acc-monocle', name: 'Monocle', icon: '🧐', unlockLevel: 20 },
-                { id: 'acc-wand', name: 'Magic Wand', icon: '🪄', unlockType: 'achievement', unlockId: 'score_100', unlockHint: 'Score 100' },
-                { id: 'acc-shield', name: 'Shield', icon: '🛡️', unlockType: 'boss', unlockId: 'boss-whale', unlockHint: 'Beat Whale' },
-                { id: 'acc-balloon', name: 'Balloon', icon: '🎈', unlockLevel: 10 },
-                { id: 'acc-sword', name: 'Sword', icon: '⚔️', unlockLevel: 40 }
+                { id: 'acc-none', name: 'None', svgId: null, unlockLevel: 1 },
+                { id: 'acc-sunglasses', name: 'Sunglasses', svgId: 'costume-acc-sunglasses', unlockLevel: 3 },
+                { id: 'acc-balloon', name: 'Balloon', svgId: 'costume-acc-balloon', unlockLevel: 10 },
+                { id: 'acc-sword', name: 'Sword', svgId: 'costume-acc-sword', unlockLevel: 20 },
+                { id: 'acc-wand', name: 'Magic Wand', svgId: 'costume-acc-wand', unlockType: 'achievement', unlockId: 'score_100', unlockHint: 'Score 100' }
             ]
         };
 
@@ -2055,21 +2254,11 @@
         };
         let selectedAvatar = 'mango';
 
-        // Shop costumes (purchased with coins)
+        // Shop costumes (purchased with coins) - currently empty, use Power-Ups and Scenes tabs
         const SHOP_COSTUMES = {
-            hats: [
-                { id: 'hat-chef', name: 'Chef Hat', icon: '👨‍🍳', price: 250 },
-                { id: 'hat-cowboy', name: 'Cowboy Hat', icon: '🤠', price: 400 },
-                { id: 'hat-astronaut', name: 'Space Helmet', icon: '🧑‍🚀', price: 800 }
-            ],
-            outfits: [
-                { id: 'outfit-chef', name: 'Chef Coat', icon: '👔', price: 350 },
-                { id: 'outfit-knight', name: 'Knight Armor', icon: '🛡️', price: 600 }
-            ],
-            accessories: [
-                { id: 'acc-guitar', name: 'Guitar', icon: '🎸', price: 300 },
-                { id: 'acc-scepter', name: 'Royal Scepter', icon: '👑', price: 500 }
-            ]
+            hats: [],
+            outfits: [],
+            accessories: []
         };
 
         // Power-ups (purchased and consumable)
@@ -2158,6 +2347,7 @@
               extras: ['balloons', 'confetti', 'tikitorches', 'festivalLights'] }
         ];
         let currentSceneId = 'beach';
+        let purchasedEnvironments = []; // Environments bought with coins
 
         // XP and Level system
         let playerXP = 0;
@@ -2448,7 +2638,12 @@
 
         function isSceneUnlocked(sceneId) {
             const scene = SCENE_VARIATIONS.find(s => s.id === sceneId);
-            return scene ? playerLevel >= scene.unlockLevel : false;
+            if (!scene) return false;
+            return playerLevel >= scene.unlockLevel || purchasedEnvironments.includes(sceneId);
+        }
+
+        function saveScene() {
+            localStorage.setItem('mathblaster_scene', currentSceneId);
         }
 
         function setScene(sceneId) {
@@ -2557,6 +2752,36 @@
             const bossProgress = (correctCount % 15) / 15 * 100;
             document.getElementById('mysteryProgress').style.width = mysteryProgress + '%';
             document.getElementById('bossProgress').style.width = bossProgress + '%';
+        }
+
+        // Fire flicker effect for streak
+        function updateFireEffect() {
+            const fireIcon = document.querySelector('.pixel-fire');
+            if (fireIcon) {
+                if (streak > 0) {
+                    fireIcon.classList.add('active');
+                } else {
+                    fireIcon.classList.remove('active');
+                }
+            }
+        }
+
+        // Active power-ups display
+        function updateActivePowerUps() {
+            const container = document.getElementById('activePowerUps');
+            if (!container) return;
+
+            let html = '';
+            if (activePowerUps.golden.active) {
+                html += `<div class="powerup-indicator">✨ Golden: ${activePowerUps.golden.remaining} left</div>`;
+            }
+            if (activePowerUps.mystery_magnet) {
+                html += `<div class="powerup-indicator">🧲 Magnet Active</div>`;
+            }
+            if (activePowerUps.celebration) {
+                html += `<div class="powerup-indicator">💃 Dancing!</div>`;
+            }
+            container.innerHTML = html;
         }
 
         // Combo system
@@ -2809,16 +3034,34 @@
 
             // Mystery boxes now always give bonus coins (no manual power-ups)
             const bonus = Math.floor(Math.random() * 4) + 2; // 2-5 bonus coins
-            score += bonus;
-            saveCoins();
-            document.getElementById('score').textContent = score;
-            // Show coins with treasure chest animation
-            let coinHTML = '<svg class="pixel-chest" style="width:80px;height:80px;display:inline-block;"><use href="#pixel-treasure-chest-open"/></svg><br>';
-            for (let i = 0; i < bonus; i++) {
-                coinHTML += '<svg class="pixel-coin" style="width:40px;height:40px;display:inline-block;margin:2px;"><use href="#pixel-coin"/></svg>';
-            }
-            document.getElementById('mysteryReward').innerHTML = coinHTML;
-            document.getElementById('mysteryText').textContent = `+${bonus} bonus!`;
+
+            // Show treasure chest first
+            const rewardEl = document.getElementById('mysteryReward');
+            rewardEl.innerHTML = '<svg class="pixel-chest" style="width:100px;height:100px;"><use href="#pixel-treasure-chest-open"/></svg>';
+            document.getElementById('mysteryText').textContent = '';
+
+            // Animate coins bursting out
+            setTimeout(() => {
+                let coinContainer = '<div style="position:relative;height:80px;display:flex;justify-content:center;align-items:flex-end;gap:4px;">';
+                for (let i = 0; i < bonus; i++) {
+                    const delay = i * 100;
+                    coinContainer += `<svg class="pixel-coin coin-burst" style="width:36px;height:36px;animation-delay:${delay}ms;"><use href="#pixel-coin"/></svg>`;
+                }
+                coinContainer += '</div>';
+                rewardEl.innerHTML += coinContainer;
+                document.getElementById('mysteryText').textContent = `+${bonus} coins!`;
+
+                // Update score after animation
+                setTimeout(() => {
+                    score += bonus;
+                    saveCoins();
+                    document.getElementById('score').textContent = score;
+                    // Flash the coin counter
+                    const coinStat = document.getElementById('coinStat');
+                    coinStat.style.transform = 'scale(1.2)';
+                    setTimeout(() => coinStat.style.transform = '', 200);
+                }, 400);
+            }, 300);
 
             document.getElementById('mysteryCloseBtn').classList.remove('hidden');
             playSound('bonus');
@@ -3682,6 +3925,8 @@
                 document.getElementById('streak').textContent = streak;
                 answerEl.classList.add('correct');
                 updateProgressBars();
+                updateFireEffect();
+                updateActivePowerUps();
 
                 // Check achievements (including tiered achievements that stack)
                 checkAchievement('first_correct', correctCount >= 1);
@@ -3754,6 +3999,7 @@
                 comboMultiplier = 1;
                 document.getElementById('comboDisplay').classList.remove('active');
                 document.getElementById('streak').textContent = 0;
+                updateFireEffect();
                 currentInput = '';
                 updateAnswerDisplay();
                 document.body.classList.add('shake');
@@ -4028,8 +4274,14 @@
                 const isEquipped = equippedCostumes[equippedKey] === item.id;
                 const div = document.createElement('div');
                 div.className = 'costume-item' + (isEquipped ? ' equipped' : '') + (!isUnlocked ? ' locked' : '');
+
+                // Use SVG preview for costumes with svgId, or "None" text
+                const iconHTML = item.svgId ?
+                    `<svg class="costume-svg-icon" style="width:32px;height:32px;"><use href="#${item.svgId}"/></svg>` :
+                    '<span style="font-size:1.5rem;">❌</span>';
+
                 div.innerHTML = `
-                    <div class="costume-icon">${item.icon}</div>
+                    <div class="costume-icon">${iconHTML}</div>
                     <div class="costume-name">${item.name}</div>
                     ${!isUnlocked ? `<div class="costume-unlock">${item.unlockHint || ('Lv.' + item.unlockLevel)}</div>` : ''}
                 `;
@@ -4058,15 +4310,16 @@
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
             const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
 
+            // Build SVG layer overlays (pixel art, not emoji)
             let overlayHTML = '';
-            if (hat && hat.id !== 'hat-none') {
-                overlayHTML += `<div style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:2.5rem;">${hat.icon}</div>`;
+            if (hat && hat.svgId) {
+                overlayHTML += `<svg class="costume-layer-preview" style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:100px;height:100px;"><use href="#${hat.svgId}"/></svg>`;
             }
-            if (outfit && outfit.id !== 'outfit-none') {
-                overlayHTML += `<div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:2rem;">${outfit.icon}</div>`;
+            if (outfit && outfit.svgId) {
+                overlayHTML += `<svg class="costume-layer-preview" style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:100px;height:100px;"><use href="#${outfit.svgId}"/></svg>`;
             }
-            if (acc && acc.id !== 'acc-none') {
-                overlayHTML += `<div style="position:absolute;top:35px;right:5px;font-size:1.8rem;">${acc.icon}</div>`;
+            if (acc && acc.svgId) {
+                overlayHTML += `<svg class="costume-layer-preview" style="position:absolute;top:20px;right:-15px;width:70px;height:70px;"><use href="#${acc.svgId}"/></svg>`;
             }
 
             preview.innerHTML = `
@@ -4108,7 +4361,7 @@
         }
 
         function updateCostumeDisplay() {
-            // Update the mango avatar in the top bar
+            // Update the avatar costume layers in the top bar (pixel art SVGs)
             const hatLayer = document.getElementById('costumeHatLayer');
             const outfitLayer = document.getElementById('costumeOutfitLayer');
             const accLayer = document.getElementById('costumeAccessoryLayer');
@@ -4117,12 +4370,12 @@
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
             const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
 
-            hatLayer.innerHTML = hat && hat.id !== 'hat-none' ?
-                `<div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:1.2rem;">${hat.icon}</div>` : '';
-            outfitLayer.innerHTML = outfit && outfit.id !== 'outfit-none' ?
-                `<div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:0.9rem;">${outfit.icon}</div>` : '';
-            accLayer.innerHTML = acc && acc.id !== 'acc-none' ?
-                `<div style="position:absolute;top:15px;right:0;font-size:0.8rem;">${acc.icon}</div>` : '';
+            hatLayer.innerHTML = hat && hat.svgId ?
+                `<svg style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:40px;height:40px;"><use href="#${hat.svgId}"/></svg>` : '';
+            outfitLayer.innerHTML = outfit && outfit.svgId ?
+                `<svg style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:40px;height:40px;"><use href="#${outfit.svgId}"/></svg>` : '';
+            accLayer.innerHTML = acc && acc.svgId ?
+                `<svg style="position:absolute;top:8px;right:-8px;width:28px;height:28px;"><use href="#${acc.svgId}"/></svg>` : '';
         }
 
         // Shop System Functions
@@ -4152,6 +4405,12 @@
             grid.innerHTML = '';
 
             if (currentShopTab === 'costumes') {
+                // Check if shop has any costumes
+                const hasShopCostumes = ['hats', 'outfits', 'accessories'].some(c => SHOP_COSTUMES[c]?.length > 0);
+                if (!hasShopCostumes) {
+                    grid.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;font-size:0.9rem;">Costumes are earned by leveling up and defeating bosses!<br><br>Check Power-Ups and Scenes tabs.</div>';
+                    return;
+                }
                 // Render shop costumes
                 ['hats', 'outfits', 'accessories'].forEach(category => {
                     const items = SHOP_COSTUMES[category] || [];
@@ -4172,7 +4431,7 @@
                         grid.appendChild(div);
                     });
                 });
-            } else {
+            } else if (currentShopTab === 'powerups') {
                 // Render power-ups
                 Object.values(POWER_UPS).forEach(powerup => {
                     const owned = ownedPowerUps[powerup.id] || 0;
@@ -4198,7 +4457,64 @@
                     useSection.innerHTML = '<br>Tap owned power-ups to use them!';
                     grid.appendChild(useSection);
                 }
+            } else if (currentShopTab === 'environments') {
+                // Render environments/scenes
+                SCENE_VARIATIONS.forEach(env => {
+                    const isUnlocked = isEnvironmentUnlocked(env);
+                    const isSelected = currentSceneId === env.id;
+                    const price = env.unlockLevel * 20;
+                    const canAfford = score >= price;
+
+                    const div = document.createElement('div');
+                    div.className = 'costume-item' + (isSelected ? ' equipped' : '') + (!isUnlocked && !canAfford ? ' locked' : '');
+                    div.innerHTML = `
+                        <div class="costume-icon">${env.emoji}</div>
+                        <div class="costume-name">${env.name}</div>
+                        ${isUnlocked ? (isSelected ? '<div class="costume-unlock" style="color:var(--accent);">Active</div>' : '<div class="costume-unlock" style="color:var(--success);">Unlocked</div>') :
+                            `<div class="costume-price">Lv.${env.unlockLevel} or ${price} 🪙</div>`}
+                    `;
+                    if (isUnlocked) {
+                        div.onclick = () => {
+                            currentSceneId = env.id;
+                            saveScene();
+                            renderShopGrid();
+                            window.dispatchEvent(new Event('sceneChange'));
+                        };
+                    } else if (canAfford) {
+                        div.onclick = () => buyEnvironment(env.id, price);
+                    }
+                    grid.appendChild(div);
+                });
             }
+        }
+
+        function isEnvironmentUnlocked(env) {
+            return playerLevel >= env.unlockLevel || purchasedEnvironments.includes(env.id);
+        }
+
+        function buyEnvironment(envId, price) {
+            if (score < price || purchasedEnvironments.includes(envId)) return;
+
+            score -= price;
+            saveCoins();
+            purchasedEnvironments.push(envId);
+            saveEnvironments();
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('shopCoinDisplay').textContent = score;
+            playSound('bonus');
+            renderShopGrid();
+        }
+
+        function loadEnvironments() {
+            const saved = localStorage.getItem('mathblaster_environments');
+            if (saved) {
+                purchasedEnvironments = JSON.parse(saved);
+            }
+        }
+
+        function saveEnvironments() {
+            localStorage.setItem('mathblaster_environments', JSON.stringify(purchasedEnvironments));
         }
 
         function buyShopItem(id, price, category) {
@@ -4244,7 +4560,10 @@
                 case 'celebration':
                     activePowerUps.celebration = true;
                     playVictoryCelebration('elite');
-                    setTimeout(() => { activePowerUps.celebration = false; }, 30000);
+                    setTimeout(() => {
+                        activePowerUps.celebration = false;
+                        updateActivePowerUps();
+                    }, 30000);
                     break;
                 case 'golden':
                     activePowerUps.golden = { active: true, remaining: 5 };
@@ -4255,11 +4574,11 @@
                     break;
                 case 'mystery_magnet':
                     activePowerUps.mystery_magnet = true;
-                    // Will be handled in progress bar update
                     break;
             }
 
             renderShopGrid();
+            updateActivePowerUps();
             playSound('streak');
         }
 
@@ -4310,6 +4629,7 @@
         loadPowerUps(); // Load owned power-ups
         loadShopPurchases(); // Load purchased shop items
         loadBossDrops(); // Load boss drop unlocks
+        loadEnvironments(); // Load purchased environments
         initializeFactDatabase(); // Initialize spaced repetition fact database
         updateSettingsLabel();
         resetProblemStruggleState(); // Initialize auto-helper state
