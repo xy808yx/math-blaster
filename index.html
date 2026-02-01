@@ -96,22 +96,24 @@
             text-shadow: 0 0 15px var(--primary);
         }
 
-        .top-buttons { display: flex; gap: 8px; }
+        .top-buttons { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 
         .icon-btn {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--card-bg);
             border: 2px solid var(--primary);
             color: var(--primary);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.15s;
         }
-        .icon-btn:hover { opacity: 0.8; }
+        .icon-btn:active { transform: scale(0.9); }
         .icon-btn.muted { opacity: 0.5; }
 
         /* Settings */
@@ -458,38 +460,46 @@
         .costume-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 600;
             display: none;
             flex-direction: column;
-            padding: 20px;
+            padding: max(15px, env(safe-area-inset-top)) max(15px, env(safe-area-inset-right)) max(15px, env(safe-area-inset-bottom)) max(15px, env(safe-area-inset-left));
+            overflow: hidden;
         }
         .costume-modal.show { display: flex; }
         .costume-modal-header {
             text-align: center;
-            margin-bottom: 15px;
+            flex-shrink: 0;
+            padding-bottom: 10px;
         }
-        .costume-modal-header h2 { color: var(--accent); margin: 0 0 10px 0; }
+        .costume-modal-header h2 { color: var(--accent); margin: 0 0 8px 0; font-size: 1.3rem; }
         .costume-preview {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto;
             position: relative;
         }
         .costume-tabs {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            padding: 8px 0;
+            flex-shrink: 0;
+            flex-wrap: wrap;
         }
         .costume-tab {
-            padding: 8px 20px;
+            padding: 10px 16px;
             background: var(--card-bg);
             border: 2px solid var(--primary);
             border-radius: 20px;
             color: var(--primary);
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
         }
         .costume-tab.active {
             background: var(--primary);
@@ -497,11 +507,14 @@
         }
         .costume-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            padding: 10px 5px;
+            min-height: 0;
         }
         .costume-item {
             aspect-ratio: 1;
@@ -513,38 +526,50 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
-            padding: 8px;
+            transition: transform 0.15s, border-color 0.15s;
+            padding: 8px 4px;
+            min-height: 80px;
+            -webkit-tap-highlight-color: transparent;
         }
-        .costume-item:hover { border-color: var(--primary); transform: scale(1.05); }
+        .costume-item:active { transform: scale(0.95); }
         .costume-item.equipped { border-color: var(--accent); background: rgba(255,217,61,0.2); }
-        .costume-item.locked { opacity: 0.4; cursor: not-allowed; }
-        .costume-item.locked:hover { transform: none; border-color: rgba(255,255,255,0.2); }
-        .costume-item .costume-icon { font-size: 2rem; margin-bottom: 4px; }
-        .costume-item .costume-name { font-size: 0.65rem; color: var(--text); text-align: center; }
-        .costume-item .costume-unlock { font-size: 0.55rem; color: var(--primary); }
-        .costume-item .costume-price { font-size: 0.6rem; color: var(--accent); }
+        .costume-item.locked { opacity: 0.5; cursor: not-allowed; }
+        .costume-item.locked:active { transform: none; }
+        .costume-item .costume-icon { font-size: 1.8rem; margin-bottom: 4px; }
+        .costume-item .costume-name { font-size: 0.7rem; color: var(--text); text-align: center; line-height: 1.2; }
+        .costume-item .costume-unlock { font-size: 0.6rem; color: var(--primary); margin-top: 2px; }
+        .costume-item .costume-price { font-size: 0.65rem; color: var(--accent); margin-top: 2px; }
         .costume-item.owned { border-color: var(--success); background: rgba(107,203,119,0.2); }
-        .costume-item .avatar-svg { width: 48px; height: 48px; }
-        .costume-item .costume-svg-icon { image-rendering: pixelated; }
+        .costume-item .avatar-svg { width: 44px; height: 44px; }
+        .costume-item .costume-svg-icon { image-rendering: pixelated; width: 36px; height: 36px; }
         .costume-layer-preview { image-rendering: pixelated; pointer-events: none; }
+        @media (min-width: 500px) {
+            .costume-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+            .costume-item .costume-icon { font-size: 2rem; }
+        }
         .costume-more {
             text-align: center;
             color: var(--accent);
-            padding: 10px;
-            font-size: 0.9rem;
+            padding: 8px;
+            font-size: 0.85rem;
+            flex-shrink: 0;
         }
         .costume-done-btn {
-            margin-top: 15px;
-            padding: 12px 30px;
+            margin-top: 10px;
+            padding: 14px 40px;
             background: var(--accent);
             border: none;
             border-radius: 25px;
             color: #1a0a2e;
             font-weight: bold;
+            font-size: 1rem;
             cursor: pointer;
             align-self: center;
+            flex-shrink: 0;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
         }
+        .costume-done-btn:active { transform: scale(0.95); }
 
         /* Timer */
         .timer-display {
@@ -667,9 +692,10 @@
             align-items: center;
             justify-content: flex-start;
             z-index: 200;
-            padding: 20px;
+            padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
         .modal.show { display: flex; }
 
@@ -681,15 +707,19 @@
         #prestigeSection { text-align: center; width: 100%; max-width: 280px; }
         .theme-btn {
             width: 100%;
-            max-width: 250px;
-            padding: 12px 20px;
-            margin: 6px 0;
+            max-width: 280px;
+            padding: 14px 20px;
+            margin: 5px 0;
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             border: 3px solid;
             cursor: pointer;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.15s;
         }
+        .theme-btn:active { transform: scale(0.97); }
         .theme-btn.tropical { background: linear-gradient(135deg, #1a0a2e, #16213e); border-color: #ff6b9d; color: #ff6b9d; }
         .theme-btn.ocean { background: linear-gradient(135deg, #0a1628, #1a3a5c); border-color: #00d9ff; color: #00d9ff; }
         .theme-btn.sunset { background: linear-gradient(135deg, #2d1b2e, #4a2c4a); border-color: #ff9a56; color: #ff9a56; }
@@ -704,14 +734,18 @@
 
         .close-btn {
             margin-top: 15px;
-            padding: 10px 30px;
+            padding: 14px 40px;
             background: var(--card-bg);
             border: 2px solid var(--primary);
             color: var(--primary);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1rem;
             cursor: pointer;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.15s;
         }
+        .close-btn:active { transform: scale(0.95); }
 
         /* Mystery Box */
         .mystery-box { font-size: 5rem; cursor: pointer; }
@@ -758,17 +792,18 @@
 
         /* Coconut Projectile */
         .coconut-projectile {
-            position: absolute;
+            position: fixed;
             font-size: 2.5rem;
-            z-index: 20;
+            z-index: 250;
             pointer-events: none;
-            animation: coconutFly 0.5s ease-in forwards;
+            animation: coconutFly 0.6s ease-out forwards;
         }
         @keyframes coconutFly {
             0% { transform: translateX(-50%) translateY(0) rotate(0deg) scale(0.8); opacity: 1; }
-            70% { transform: translateX(-50%) translateY(-220px) rotate(540deg) scale(1.2); opacity: 1; }
-            85% { transform: translateX(-50%) translateY(-250px) rotate(630deg) scale(1.3); opacity: 1; }
-            100% { transform: translateX(-50%) translateY(-260px) rotate(720deg) scale(0.5); opacity: 0; }
+            60% { transform: translateX(-50%) translateY(-300px) rotate(540deg) scale(1.3); opacity: 1; }
+            80% { transform: translateX(-50%) translateY(-360px) rotate(650deg) scale(1.4); opacity: 1; }
+            90% { transform: translateX(-50%) translateY(-380px) rotate(700deg) scale(1.2); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(-380px) rotate(720deg) scale(0.3); opacity: 0; }
         }
 
         /* Boss Phase Indicators */
@@ -1896,6 +1931,7 @@
                 <button class="icon-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
                 <button class="icon-btn" onclick="showAchievements()">🏆</button>
                 <button class="icon-btn" onclick="showThemePicker()">🎨</button>
+                <button class="icon-btn" onclick="openShopModal()">🛒</button>
             </div>
         </div>
 
@@ -1921,7 +1957,7 @@
         </div>
 
         <div class="stats">
-            <div class="stat-item" id="coinStat" onclick="openShopModal()" style="cursor:pointer;">
+            <div class="stat-item" id="coinStat">
                 <span class="stat-icon"><svg class="pixel-coin"><use href="#pixel-coin"/></svg></span>
                 <span id="score">0</span>
             </div>
@@ -2076,15 +2112,14 @@
     <!-- Shop Modal -->
     <div class="costume-modal" id="shopModal">
         <div class="costume-modal-header">
-            <h2>🏪 Shop</h2>
+            <h2>🛒 Shop</h2>
             <div class="shop-coins" style="font-size:1.2rem;margin-top:10px;">
                 <svg class="pixel-coin" style="width:24px;height:24px;vertical-align:middle;"><use href="#pixel-coin"/></svg>
                 <span id="shopCoinDisplay">0</span>
             </div>
         </div>
         <div class="costume-tabs">
-            <button class="costume-tab active" onclick="showShopTab('costumes')">Costumes</button>
-            <button class="costume-tab" onclick="showShopTab('powerups')">Power-Ups</button>
+            <button class="costume-tab active" onclick="showShopTab('powerups')">Power-Ups</button>
             <button class="costume-tab" onclick="showShopTab('environments')">Scenes</button>
         </div>
         <div class="costume-grid" id="shopGrid"></div>
@@ -3090,14 +3125,16 @@
 
         // Coconut projectile attack
         function fireCoconutProjectile() {
-            const container = document.getElementById('bossContainer');
+            const bossEmoji = document.getElementById('bossEmoji');
+            const bossRect = bossEmoji.getBoundingClientRect();
             const coconut = document.createElement('div');
             coconut.className = 'coconut-projectile';
             coconut.textContent = '🥥';
-            coconut.style.left = '50%';
-            coconut.style.bottom = '20px';
-            container.appendChild(coconut);
-            setTimeout(() => coconut.remove(), 500);
+            // Start from bottom of viewport, centered
+            coconut.style.left = (bossRect.left + bossRect.width / 2) + 'px';
+            coconut.style.bottom = '80px';
+            document.body.appendChild(coconut);
+            setTimeout(() => coconut.remove(), 600);
         }
 
         // Boss speech bubble
@@ -4384,8 +4421,8 @@
         function openShopModal() {
             document.getElementById('shopModal').classList.add('show');
             document.getElementById('shopCoinDisplay').textContent = score;
-            currentShopTab = 'costumes';
-            showShopTab('costumes');
+            currentShopTab = 'powerups';
+            showShopTab('powerups');
         }
 
         function closeShopModal() {
@@ -4395,7 +4432,11 @@
         function showShopTab(tab) {
             currentShopTab = tab;
             document.querySelectorAll('#shopModal .costume-tab').forEach(t => {
-                t.classList.toggle('active', t.textContent.toLowerCase().includes(tab.substring(0, 6)));
+                const btnText = t.textContent.toLowerCase();
+                t.classList.toggle('active',
+                    (tab === 'powerups' && btnText.includes('power')) ||
+                    (tab === 'environments' && btnText.includes('scene'))
+                );
             });
             renderShopGrid();
         }
@@ -4404,34 +4445,7 @@
             const grid = document.getElementById('shopGrid');
             grid.innerHTML = '';
 
-            if (currentShopTab === 'costumes') {
-                // Check if shop has any costumes
-                const hasShopCostumes = ['hats', 'outfits', 'accessories'].some(c => SHOP_COSTUMES[c]?.length > 0);
-                if (!hasShopCostumes) {
-                    grid.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;font-size:0.9rem;">Costumes are earned by leveling up and defeating bosses!<br><br>Check Power-Ups and Scenes tabs.</div>';
-                    return;
-                }
-                // Render shop costumes
-                ['hats', 'outfits', 'accessories'].forEach(category => {
-                    const items = SHOP_COSTUMES[category] || [];
-                    items.forEach(item => {
-                        const owned = purchasedShopItems.includes(item.id);
-                        const canAfford = score >= item.price;
-                        const div = document.createElement('div');
-                        div.className = 'costume-item' + (owned ? ' owned' : '') + (!canAfford && !owned ? ' locked' : '');
-                        div.innerHTML = `
-                            <div class="costume-icon">${item.icon}</div>
-                            <div class="costume-name">${item.name}</div>
-                            ${owned ? '<div class="costume-unlock" style="color:var(--success);">Owned</div>' :
-                                `<div class="costume-price">${item.price} 🪙</div>`}
-                        `;
-                        if (!owned && canAfford) {
-                            div.onclick = () => buyShopItem(item.id, item.price, category);
-                        }
-                        grid.appendChild(div);
-                    });
-                });
-            } else if (currentShopTab === 'powerups') {
+            if (currentShopTab === 'powerups') {
                 // Render power-ups
                 Object.values(POWER_UPS).forEach(powerup => {
                     const owned = ownedPowerUps[powerup.id] || 0;
