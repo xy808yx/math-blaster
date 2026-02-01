@@ -4197,7 +4197,8 @@
             if (costume.unlockType === 'boss') {
                 return cumulativeStats.uniqueBossesDefeated && cumulativeStats.uniqueBossesDefeated[costume.unlockId];
             }
-            return true;
+            // Default to locked if no unlock conditions specified
+            return false;
         }
 
         function openCostumeModal() {
