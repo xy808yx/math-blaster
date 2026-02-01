@@ -197,7 +197,6 @@
             50% { filter: drop-shadow(0 0 8px #ff9900) drop-shadow(0 0 12px #ff6600); }
         }
         .pixel-chest { image-rendering: pixelated; }
-        .pixel-shop { image-rendering: pixelated; }
 
         /* Progress Bars */
         .progress-container {
@@ -1199,29 +1198,6 @@
             <rect x="3" y="6" width="1" height="1" fill="#fff"/>
             <rect x="12" y="4" width="1" height="1" fill="#fff"/>
             <rect x="8" y="1" width="1" height="1" fill="#fff"/>
-        </symbol>
-
-        <!-- Shop Icon -->
-        <symbol id="pixel-shop" viewBox="0 0 16 16">
-            <!-- Awning -->
-            <rect x="1" y="3" width="14" height="3" fill="#ff6b6b"/>
-            <rect x="1" y="3" width="2" height="3" fill="#ff8888"/>
-            <rect x="5" y="3" width="2" height="3" fill="#ff8888"/>
-            <rect x="9" y="3" width="2" height="3" fill="#ff8888"/>
-            <rect x="13" y="3" width="2" height="3" fill="#ff8888"/>
-            <!-- Awning top -->
-            <rect x="2" y="2" width="12" height="1" fill="#cc5555"/>
-            <!-- Store front -->
-            <rect x="2" y="6" width="12" height="8" fill="#f5deb3"/>
-            <rect x="3" y="7" width="10" height="6" fill="#ffe4c4"/>
-            <!-- Door -->
-            <rect x="6" y="9" width="4" height="5" fill="#8b4513"/>
-            <rect x="9" y="11" width="1" height="1" fill="#ffd700"/>
-            <!-- Window -->
-            <rect x="3" y="7" width="2" height="2" fill="#87ceeb"/>
-            <rect x="11" y="7" width="2" height="2" fill="#87ceeb"/>
-            <!-- Sign -->
-            <rect x="5" y="1" width="6" height="1" fill="#ffd700"/>
         </symbol>
 
         <!-- ========== COSTUME PIECES (Pixel Art) ========== -->
@@ -2289,13 +2265,6 @@
         };
         let selectedAvatar = 'mango';
 
-        // Shop costumes (purchased with coins) - currently empty, use Power-Ups and Scenes tabs
-        const SHOP_COSTUMES = {
-            hats: [],
-            outfits: [],
-            accessories: []
-        };
-
         // Power-ups (purchased and consumable)
         const POWER_UPS = {
             celebration: { id: 'celebration', name: 'Celebration Dance', price: 75, desc: 'Avatar dances 30s', icon: '💃' },
@@ -2983,12 +2952,6 @@
         function resetProblemStruggleState() {
             struggleState.problemStartTime = Date.now();
             struggleState.wrongAttemptsOnProblem = 0;
-        }
-
-        // Legacy function for mystery box compatibility
-        function grantRandomPowerup() {
-            // Now mystery boxes always give bonus points instead
-            return 'bonus';
         }
 
         // Achievements
@@ -4281,10 +4244,7 @@
                 return;
             }
 
-            // Combine base costumes with shop costumes
-            const baseItems = COSTUMES[currentCostumeTab] || [];
-            const shopItems = SHOP_COSTUMES[currentCostumeTab] || [];
-            const items = [...baseItems, ...shopItems];
+            const items = COSTUMES[currentCostumeTab] || [];
             const equippedKey = currentCostumeTab === 'hats' ? 'hat' :
                                currentCostumeTab === 'outfits' ? 'outfit' : 'accessory';
 
@@ -4295,8 +4255,7 @@
             items.forEach(item => {
                 if (isCostumeUnlocked(item)) {
                     unlockedItems.push(item);
-                } else if (!item.price) {
-                    // Only show locked non-shop items (shop items are purchased in shop)
+                } else {
                     lockedItems.push(item);
                 }
             });
@@ -4529,20 +4488,6 @@
 
         function saveEnvironments() {
             localStorage.setItem('mathblaster_environments', JSON.stringify(purchasedEnvironments));
-        }
-
-        function buyShopItem(id, price, category) {
-            if (score < price || purchasedShopItems.includes(id)) return;
-
-            score -= price;
-            saveCoins();
-            purchasedShopItems.push(id);
-            saveShopPurchases();
-
-            document.getElementById('score').textContent = score;
-            document.getElementById('shopCoinDisplay').textContent = score;
-            playSound('bonus');
-            renderShopGrid();
         }
 
         function buyPowerUp(id, price) {
