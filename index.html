@@ -4364,7 +4364,6 @@
 
             let unlockedItems = [];
             let lockedItems = [];
-            let hiddenCount = 0;
 
             items.forEach(item => {
                 if (isCostumeUnlocked(item)) {
@@ -4374,12 +4373,9 @@
                 }
             });
 
-            // Show all unlocked + next 2-3 locked items
-            const visibleLocked = lockedItems.slice(0, 3);
-            hiddenCount = lockedItems.length - visibleLocked.length;
-
+            // Show all items (unlocked first, then locked)
             grid.innerHTML = '';
-            [...unlockedItems, ...visibleLocked].forEach(item => {
+            [...unlockedItems, ...lockedItems].forEach(item => {
                 const isUnlocked = isCostumeUnlocked(item);
                 const isEquipped = equippedCostumes[equippedKey] === item.id;
                 const div = document.createElement('div');
@@ -4401,7 +4397,7 @@
                 grid.appendChild(div);
             });
 
-            more.textContent = hiddenCount > 0 ? `+${hiddenCount} more to discover!` : '';
+            more.textContent = '';
         }
 
         function equipCostume(type, id) {
@@ -4431,8 +4427,8 @@
             if (acc && acc.svgId) {
                 if (acc.position === 'face') {
                     // Face accessories - sunglasses on eyes, mustache below
-                    const topOffset = acc.id === 'acc-mustache' ? '32px' : '22px';
-                    overlayHTML += `<svg class="costume-layer-preview" style="top:${topOffset};left:50%;transform:translateX(-50%);width:36px;height:14px;"><use href="#${acc.svgId}"/></svg>`;
+                    const topOffset = acc.id === 'acc-mustache' ? '34px' : '20px';
+                    overlayHTML += `<svg class="costume-layer-preview" style="top:${topOffset};left:50%;transform:translateX(-50%);width:44px;height:17px;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
                     // Held accessories (sword, wand, balloon) - to the right side
                     overlayHTML += `<svg class="costume-layer-preview" style="top:10px;right:-10px;width:35px;height:35px;"><use href="#${acc.svgId}"/></svg>`;
@@ -4494,8 +4490,8 @@
             if (acc && acc.svgId) {
                 if (acc.position === 'face') {
                     // Face accessories - sunglasses on eyes, mustache below
-                    const topOffset = acc.id === 'acc-mustache' ? '24px' : '16px';
-                    accLayer.innerHTML = `<svg style="position:absolute;top:${topOffset};left:50%;transform:translateX(-50%);width:28px;height:11px;"><use href="#${acc.svgId}"/></svg>`;
+                    const topOffset = acc.id === 'acc-mustache' ? '26px' : '14px';
+                    accLayer.innerHTML = `<svg style="position:absolute;top:${topOffset};left:50%;transform:translateX(-50%);width:34px;height:13px;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
                     // Held accessories - to the right side
                     accLayer.innerHTML = `<svg style="position:absolute;top:8px;right:-8px;width:28px;height:28px;"><use href="#${acc.svgId}"/></svg>`;
