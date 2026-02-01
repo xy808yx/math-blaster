@@ -515,12 +515,14 @@
             margin-bottom: 10px;
         }
         .costume-preview {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 10px;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 15px;
             position: relative;
+            overflow: visible;
         }
-        .costume-layer-preview { image-rendering: pixelated; pointer-events: none; }
+        .costume-preview svg { image-rendering: pixelated; }
+        .costume-layer-preview { image-rendering: pixelated; pointer-events: none; position: absolute; }
 
         /* Timer */
         .timer-display {
@@ -4275,20 +4277,20 @@
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
             const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
 
-            // Build SVG layer overlays (pixel art, not emoji)
+            // Build SVG layer overlays (pixel art) - scaled to fit 64px preview
             let overlayHTML = '';
             if (hat && hat.svgId) {
-                overlayHTML += `<svg class="costume-layer-preview" style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:100px;height:100px;"><use href="#${hat.svgId}"/></svg>`;
+                overlayHTML += `<svg class="costume-layer-preview" style="top:-12px;left:50%;transform:translateX(-50%);width:50px;height:50px;"><use href="#${hat.svgId}"/></svg>`;
             }
             if (outfit && outfit.svgId) {
-                overlayHTML += `<svg class="costume-layer-preview" style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:100px;height:100px;"><use href="#${outfit.svgId}"/></svg>`;
+                overlayHTML += `<svg class="costume-layer-preview" style="bottom:-6px;left:50%;transform:translateX(-50%);width:50px;height:50px;"><use href="#${outfit.svgId}"/></svg>`;
             }
             if (acc && acc.svgId) {
-                overlayHTML += `<svg class="costume-layer-preview" style="position:absolute;top:20px;right:-15px;width:70px;height:70px;"><use href="#${acc.svgId}"/></svg>`;
+                overlayHTML += `<svg class="costume-layer-preview" style="top:10px;right:-10px;width:35px;height:35px;"><use href="#${acc.svgId}"/></svg>`;
             }
 
             preview.innerHTML = `
-                <svg class="pixel-${avatar.id}" style="width:120px;height:120px;"><use href="#${avatar.svgId}"/></svg>
+                <svg style="width:64px;height:64px;"><use href="#${avatar.svgId}"/></svg>
                 ${overlayHTML}
             `;
         }
