@@ -2185,7 +2185,6 @@
             <button class="modal-tab" data-tab="accessories" onclick="showShopTab('accessories')">Acc</button>
         </div>
         <div class="modal-grid" id="shopGrid"></div>
-        <div class="powerup-bar" id="powerupBar" style="display:flex;justify-content:center;gap:10px;margin:10px 0;flex-wrap:wrap;"></div>
         <button class="close-btn" onclick="closeShopModal()">Done</button>
     </div>
 
@@ -2366,18 +2365,19 @@
 
         // Power-ups (earned from mystery boxes)
         const POWER_UPS = {
-            celebration: { id: 'celebration', name: 'Celebration Dance', desc: 'Avatar dances 30s', icon: '💃' },
             golden: { id: 'golden', name: 'Golden Problems', desc: 'Next 5 = 2x coins', icon: '✨' },
             boss_summon: { id: 'boss_summon', name: 'Boss Summoner', desc: 'Instant boss battle', icon: '👹' },
             mystery_magnet: { id: 'mystery_magnet', name: 'Mystery Magnet', desc: '2x faster mystery box', icon: '🧲' }
         };
 
-        let ownedPowerUps = { celebration: 0, golden: 0, boss_summon: 0, mystery_magnet: 0 };
+        let ownedPowerUps = { golden: 0, boss_summon: 0, mystery_magnet: 0 };
         let activePowerUps = {
-            celebration: false,
             golden: { active: false, remaining: 0 },
             mystery_magnet: false
         };
+
+        // Boss victory celebration - avatar dances for a few questions after beating a boss
+        let bossVictoryDanceRemaining = 0;
 
         // Scene variations (3D background cosmetic changes)
         const SCENE_VARIATIONS = [
@@ -2878,8 +2878,8 @@
             if (activePowerUps.mystery_magnet) {
                 html += `<div class="powerup-indicator">🧲 Magnet Active</div>`;
             }
-            if (activePowerUps.celebration) {
-                html += `<div class="powerup-indicator">💃 Dancing!</div>`;
+            if (bossVictoryDanceRemaining > 0) {
+                html += `<div class="powerup-indicator">💃 Dancing! (${bossVictoryDanceRemaining})</div>`;
             }
             container.innerHTML = html;
         }
@@ -3610,6 +3610,10 @@
                 const tier = bossCurrentBoss.tier || 'basic';
                 const victoryDuration = playVictoryCelebration(tier);
 
+                // Start avatar celebration dance for next 5 questions
+                bossVictoryDanceRemaining = 5;
+                document.getElementById('mangoAvatar').classList.add('dancing');
+
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
                     victoryEl.classList.remove('show');
@@ -4036,6 +4040,14 @@
                 updateFireEffect();
                 updateActivePowerUps();
 
+                // Decrement boss victory dance counter
+                if (bossVictoryDanceRemaining > 0) {
+                    bossVictoryDanceRemaining--;
+                    if (bossVictoryDanceRemaining <= 0) {
+                        document.getElementById('mangoAvatar').classList.remove('dancing');
+                    }
+                }
+
                 // Check achievements (including tiered achievements that stack)
                 checkAchievement('first_correct', correctCount >= 1);
                 // Streak tiers
@@ -4321,7 +4333,6 @@
             document.getElementById('shopCoinCount').textContent = score;
             showShopTab('hats');
             updateCostumePreview();
-            renderPowerUpBar();
         }
 
         function closeShopModal() {
@@ -4334,19 +4345,6 @@
                 t.classList.toggle('active', t.dataset.tab === tab);
             });
             renderShopGrid();
-        }
-
-        function renderPowerUpBar() {
-            const bar = document.getElementById('powerupBar');
-            let html = '';
-            Object.entries(POWER_UPS).forEach(([id, pu]) => {
-                const count = ownedPowerUps[id] || 0;
-                const canUse = count > 0;
-                html += `<button class="powerup-btn${canUse ? '' : ' disabled'}" onclick="${canUse ? `activatePowerUp('${id}')` : ''}" style="padding:5px 10px;border-radius:8px;border:2px solid ${canUse ? 'var(--accent)' : '#666'};background:${canUse ? 'var(--card-bg)' : '#333'};color:${canUse ? 'var(--text)' : '#666'};cursor:${canUse ? 'pointer' : 'default'};font-size:0.9rem;">
-                    ${pu.icon} x${count}
-                </button>`;
-            });
-            bar.innerHTML = html || '<span style="color:#888;font-size:0.85rem;">Power-ups drop from mystery boxes!</span>';
         }
 
         function renderShopGrid() {
@@ -4514,7 +4512,7 @@
             return playerLevel >= env.unlockLevel;
         }
 
-        // Power-up activation
+        // Power-up activation (from mystery box drops)
         function activatePowerUp(id) {
             if (!ownedPowerUps[id] || ownedPowerUps[id] <= 0) return;
 
@@ -4522,21 +4520,10 @@
             savePowerUps();
 
             switch(id) {
-                case 'celebration':
-                    activePowerUps.celebration = true;
-                    document.getElementById('mangoAvatar').classList.add('dancing');
-                    updateActivePowerUps();
-                    setTimeout(() => {
-                        activePowerUps.celebration = false;
-                        document.getElementById('mangoAvatar').classList.remove('dancing');
-                        updateActivePowerUps();
-                    }, 30000);
-                    break;
                 case 'golden':
                     activePowerUps.golden = { active: true, remaining: 5 };
                     break;
                 case 'boss_summon':
-                    closeShopModal();
                     setTimeout(() => startBossBattle(), 300);
                     break;
                 case 'mystery_magnet':
@@ -4544,7 +4531,6 @@
                     break;
             }
 
-            renderPowerUpBar();
             updateActivePowerUps();
             playSound('streak');
         }
