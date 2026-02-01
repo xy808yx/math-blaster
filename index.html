@@ -917,6 +917,29 @@
         .boss-numpad .delete { border-color: var(--error); color: var(--error); }
         .boss-numpad .submit { border-color: var(--success); color: var(--success); }
 
+        /* Boss battle mobile optimization */
+        @media (max-height: 700px) {
+            .boss-title { font-size: 1.2rem; margin-bottom: 8px; }
+            .boss-emoji { margin: 8px 0; }
+            .boss-emoji svg, .boss-emoji .pixel-boss { width: 140px !important; height: 140px !important; }
+            .boss-name { font-size: 1rem; margin: 5px 0; }
+            .boss-health-bar { height: 12px; margin: 5px auto; }
+            .boss-timer { font-size: 1.3rem; margin: 5px 0; }
+            .boss-problem { font-size: 1.4rem; margin: 5px 0; }
+            .boss-answer { font-size: 1.2rem; padding: 6px 15px; margin: 5px 0; }
+            .boss-numpad { gap: 4px; max-width: 260px; }
+            .boss-numpad button { padding: 8px; min-height: 40px; font-size: 1.1rem; }
+        }
+        @media (max-height: 600px) {
+            .boss-title { font-size: 1rem; margin-bottom: 5px; }
+            .boss-emoji svg, .boss-emoji .pixel-boss { width: 100px !important; height: 100px !important; }
+            .boss-emoji { margin: 5px 0; }
+            .boss-timer { font-size: 1.1rem; }
+            .boss-problem { font-size: 1.2rem; }
+            .boss-answer { font-size: 1rem; padding: 5px 12px; }
+            .boss-numpad button { padding: 6px; min-height: 36px; font-size: 1rem; }
+        }
+
         /* Boss ability system */
         .ability-flash {
             position: absolute;
