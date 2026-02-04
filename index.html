@@ -4750,10 +4750,10 @@
 
         let num1, num2, correctAnswer, currentOp;
         let score = 0, streak = 0, bestStreak = 0;
-        let difficulty = 'easy', operation = 'mixed';
+        let operation = 'mixed';
         let gameActive = true, currentInput = '';
         let soundEnabled = true, audioContext = null;
-        let correctCount = 0, totalAttempts = 0;
+        let correctCount = 0;
 
         let bossActive = false, bossHealth = 100, bossTimer = 30;
         let bossInterval = null, bossAnswer = '', bossCorrectAnswer;
@@ -6717,7 +6717,6 @@
         function checkAnswer() {
             if (!gameActive || bossActive || currentInput === '') return;
 
-            totalAttempts++;
             const userAnswer = parseInt(currentInput, 10);
             const feedbackEl = document.getElementById('feedback');
             const answerEl = document.getElementById('answerDisplay');
@@ -6884,7 +6883,7 @@
         function resetGame() {
             score = 0; streak = 0; bestStreak = 0;
             gameActive = true;
-            correctCount = 0; totalAttempts = 0;
+            correctCount = 0;
             mysteryBoxesOpened = 0;
             bossesDefeated = 0;
 
