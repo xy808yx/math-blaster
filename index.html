@@ -4152,6 +4152,14 @@
     </div>
 
     <script>
+        // Utility functions
+        function randomElement(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
         // Bosses with unlock levels
         // Tiers: 'basic' = original stats, 'simple' = stat variations, 'ability' = single ability, 'elite' = multi-ability
         const BOSSES = [
@@ -4721,6 +4729,7 @@
 
             // Randomly select from owned dances
             const owned = getOwnedDances();
+            if (!owned.length) return;
             const randomDance = owned[Math.floor(Math.random() * owned.length)];
             const danceType = randomDance.cssClass;
 
@@ -4983,6 +4992,7 @@
 
             // Get all stickers of this rarity
             const stickersOfRarity = STICKERS.filter(s => s.rarity === rarity);
+            if (!stickersOfRarity.length) return null;
             // Pick a random one
             return stickersOfRarity[Math.floor(Math.random() * stickersOfRarity.length)];
         }
@@ -5771,6 +5781,10 @@
             bossAnswer = '';
 
             const availableBosses = getUnlockedBosses();
+            if (!availableBosses.length) {
+                bossActive = false;
+                return;
+            }
             const boss = availableBosses[Math.floor(Math.random() * availableBosses.length)];
             bossCurrentBoss = boss;
 
@@ -6011,21 +6025,11 @@
                 checkAchievement('boss_unique_all', uniqueCount >= BOSSES.length);
 
                 // Check ability survivor achievements
-                if (bossAbilityState.usedAbilities.includes('shield')) {
-                    checkAchievement('ability_shield', true);
-                }
-                if (bossAbilityState.usedAbilities.includes('heal')) {
-                    checkAchievement('ability_heal', true);
-                }
-                if (bossAbilityState.usedAbilities.includes('enrage')) {
-                    checkAchievement('ability_enrage', true);
-                }
-                if (bossAbilityState.usedAbilities.includes('dodge')) {
-                    checkAchievement('ability_dodge', true);
-                }
-                if (bossAbilityState.usedAbilities.includes('confuse')) {
-                    checkAchievement('ability_confuse', true);
-                }
+                ['shield', 'heal', 'enrage', 'dodge', 'confuse'].forEach(ability => {
+                    if (bossAbilityState.usedAbilities.includes(ability)) {
+                        checkAchievement('ability_' + ability, true);
+                    }
+                });
 
                 // Show defeat speech
                 showBossSpeech('defeat');
@@ -6637,6 +6641,7 @@
             }
 
             // Priority 3: All facts reviewed - pick soonest upcoming
+            if (!facts.length) return null;
             facts.sort((a, b) => a.nextReview - b.nextReview);
             return facts[0];
         }
