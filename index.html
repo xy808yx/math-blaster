@@ -517,6 +517,9 @@
         .mango-avatar.set-nature { --set-color: #6bcb77; }
         .mango-avatar.set-ocean { --set-color: #5dade2; }
         .mango-avatar.set-space { --set-color: #9b59b6; }
+        .mango-avatar.set-unicorn { --set-color: #ff9ed2; }
+        .mango-avatar.set-sweet { --set-color: #ffb6c1; }
+        .mango-avatar.set-kitty { --set-color: #ffc0cb; }
 
         /* Tier Badge */
         .tier-badge {
@@ -1304,9 +1307,6 @@
         @keyframes recordGlow { 50% { text-shadow: 0 0 20px var(--accent); } }
         .tap-restart { font-size: 1rem; color: var(--primary); opacity: 0.7; animation: tapFade 2s infinite; }
         @keyframes tapFade { 50% { opacity: 1; } }
-
-        .shake { animation: shake 0.3s; }
-        @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
         .hidden { display: none !important; }
 
@@ -4360,7 +4360,7 @@
                 name: 'Unicorn Set',
                 items: { hat: 'hat-unicorn', outfit: 'outfit-butterfly', accessory: 'acc-rainbow' },
                 effect: 'sparkle',
-                cssClass: 'set-fairy'
+                cssClass: 'set-unicorn'
             },
             {
                 id: 'ocean',
@@ -4388,14 +4388,14 @@
                 name: 'Sweet Treats Set',
                 items: { hat: 'hat-party', outfit: 'outfit-tutu', accessory: 'acc-cupcake' },
                 effect: 'sparkle',
-                cssClass: 'set-princess'
+                cssClass: 'set-sweet'
             },
             {
                 id: 'kitty',
                 name: 'Kitty Set',
                 items: { hat: 'hat-catears', outfit: 'outfit-heart', accessory: 'acc-heartglasses' },
                 effect: 'float',
-                cssClass: 'set-princess'
+                cssClass: 'set-kitty'
             }
         ];
 
@@ -4658,6 +4658,9 @@
         let lastAnswerTime = 0;
         let comboMultiplier = 1;
         let comboTimeout = null;
+
+        // Problem generation timeout (prevents race conditions)
+        let problemTimeout = null;
 
         // Auto-Helper System (replaces manual power-ups)
         let struggleState = {
@@ -5479,7 +5482,8 @@
 
         function closeMysteryBox() {
             document.getElementById('mysteryBoxModal').classList.remove('show');
-            setTimeout(generateProblem, 200);
+            if (problemTimeout) clearTimeout(problemTimeout);
+            problemTimeout = setTimeout(generateProblem, 200);
         }
 
         // Boss ability helper functions
@@ -5795,7 +5799,14 @@
         function bossCheckAnswer() {
             if (!bossActive || bossAnswer === '') return;
 
-            if (parseInt(bossAnswer) === bossCorrectAnswer) {
+            const parsedAnswer = parseInt(bossAnswer, 10);
+            if (isNaN(parsedAnswer)) {
+                bossAnswer = '';
+                document.getElementById('bossAnswer').textContent = '|';
+                return;
+            }
+
+            if (parsedAnswer === bossCorrectAnswer) {
                 // Check dodge first
                 if (bossAbilityState.dodgeChance > 0 && Math.random() < bossAbilityState.dodgeChance) {
                     showAbilityFlash('💨 DODGED!');
@@ -5935,7 +5946,8 @@
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
                     victoryEl.classList.remove('show');
-                    setTimeout(generateProblem, 200);
+                    if (problemTimeout) clearTimeout(problemTimeout);
+                    problemTimeout = setTimeout(generateProblem, 200);
                 }, victoryDuration);
             } else {
                 document.getElementById('bossVictory').innerHTML = '<div>💀 ESCAPED!</div><div class="boss-reward">Boss fled...</div>';
@@ -5945,7 +5957,8 @@
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
                     document.getElementById('bossVictory').innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>';
-                    setTimeout(generateProblem, 200);
+                    if (problemTimeout) clearTimeout(problemTimeout);
+                    problemTimeout = setTimeout(generateProblem, 200);
                 }, 1500);
             }
         }
@@ -5965,7 +5978,10 @@
         // Coin persistence
         function loadCoins() {
             const saved = localStorage.getItem('mathblaster_coins');
-            if (saved) score = parseInt(saved);
+            if (saved) {
+                const parsed = parseInt(saved, 10);
+                score = isNaN(parsed) ? 0 : parsed;
+            }
             document.getElementById('score').textContent = score;
         }
 
@@ -6387,7 +6403,8 @@
             document.getElementById('strategyOverlay').classList.remove('show');
 
             // Continue to next problem
-            setTimeout(generateProblem, 200);
+            if (problemTimeout) clearTimeout(problemTimeout);
+            problemTimeout = setTimeout(generateProblem, 200);
         }
 
         // Initialize fact database with SM-2 defaults
@@ -6514,6 +6531,13 @@
         function generateProblem() {
             // Use spaced repetition to select the next fact
             currentFact = selectNextFact();
+
+            // Safety check - if no facts available, generate a simple problem
+            if (!currentFact) {
+                currentFact = { num1: 1 + Math.floor(Math.random() * 10), num2: 1 + Math.floor(Math.random() * 10), op: 'add', answer: 0 };
+                currentFact.answer = currentFact.num1 + currentFact.num2;
+            }
+
             problemStartTime = Date.now();
             problemsSinceStrategy++; // Track problems since last strategy hint
 
@@ -6547,9 +6571,16 @@
             if (!gameActive || bossActive || currentInput === '') return;
 
             totalAttempts++;
-            const userAnswer = parseInt(currentInput);
+            const userAnswer = parseInt(currentInput, 10);
             const feedbackEl = document.getElementById('feedback');
             const answerEl = document.getElementById('answerDisplay');
+
+            // Guard against NaN from invalid input
+            if (isNaN(userAnswer)) {
+                currentInput = '';
+                updateAnswerDisplay();
+                return;
+            }
 
             if (userAnswer === correctAnswer) {
                 trackAccuracy(true); // Adaptive difficulty tracking
@@ -6619,7 +6650,8 @@
 
                 // Boss every 15 correct answers
                 if (correctCount > 0 && correctCount % 15 === 0) {
-                    setTimeout(startBossBattle, 400);
+                    if (problemTimeout) clearTimeout(problemTimeout);
+                    problemTimeout = setTimeout(startBossBattle, 400);
                     return;
                 }
 
@@ -6633,11 +6665,13 @@
                     correctSinceLastBox = 0;
                     nextBoxThreshold = 80 + Math.floor(Math.random() * 41); // Reset to 80-120
                     saveStickers();
-                    setTimeout(showMysteryBox, 400);
+                    if (problemTimeout) clearTimeout(problemTimeout);
+                    problemTimeout = setTimeout(showMysteryBox, 400);
                     return;
                 }
 
-                setTimeout(generateProblem, 400);
+                if (problemTimeout) clearTimeout(problemTimeout);
+                problemTimeout = setTimeout(generateProblem, 400);
             } else {
                 trackAccuracy(false); // Adaptive difficulty tracking
                 updatePlayerSkillLevel(false); // Update auto-helper skill tracking
