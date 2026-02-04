@@ -511,64 +511,6 @@
         .rarity-badge.epic { background: #9b59b6; color: #fff; }
         .rarity-badge.legendary { background: linear-gradient(135deg, #ffd93d, #ff6b9d); color: #1a0a2e; }
 
-        /* Daily Challenge Button */
-        .daily-btn {
-            position: relative;
-        }
-        .daily-btn.pulse::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: 50%;
-            border: 2px solid var(--accent);
-            animation: dailyPulse 1.5s ease-in-out infinite;
-        }
-        @keyframes dailyPulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-        .daily-btn.completed {
-            opacity: 0.5;
-        }
-        .daily-btn.completed::after {
-            display: none;
-        }
-
-        /* Daily Challenge Modal */
-        #dailyChallengeModal {
-            padding: 25px;
-        }
-        .daily-problem {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent);
-            margin: 20px 0;
-            text-shadow: 0 0 15px var(--accent);
-        }
-        .daily-input {
-            width: 150px;
-            padding: 12px;
-            font-size: 1.5rem;
-            text-align: center;
-            background: var(--card-bg);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            color: var(--primary);
-            margin: 15px 0;
-        }
-        .daily-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-        .daily-meta {
-            font-size: 0.9rem;
-            color: var(--primary);
-            margin: 10px 0;
-        }
-
         /* Multiple Dance Animations */
         @keyframes avatarDanceWiggle {
             0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -2587,7 +2529,6 @@
             </div>
             <div class="level-display" id="levelDisplay">Lv.1</div>
             <div class="top-buttons">
-                <button class="icon-btn daily-btn pulse" id="dailyChallengeBtn" onclick="showDailyChallenge()" title="Daily Challenge">⭐</button>
                 <button class="icon-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
                 <button class="icon-btn" onclick="showAchievements()">🏆</button>
                 <button class="icon-btn" onclick="showThemePicker()">🎨</button>
@@ -2733,20 +2674,6 @@
             <div class="final-stat">📝 Problems: <span id="totalProblems">0</span></div>
         </div>
         <div class="tap-restart">Tap anywhere to play again</div>
-    </div>
-
-    <!-- Daily Challenge Modal -->
-    <div class="modal" id="dailyChallengeModal">
-        <h2 style="color: var(--accent);">⭐ Daily Challenge ⭐</h2>
-        <div class="daily-meta" id="dailyStreak">🔥 0 day streak</div>
-        <div class="daily-problem" id="dailyProblem">Loading...</div>
-        <input type="number" class="daily-input" id="dailyAnswer" placeholder="?" onkeypress="if(event.key==='Enter')checkDailyAnswer()">
-        <div class="daily-meta" id="dailyReward">Reward: 100 coins</div>
-        <div id="dailyResult" style="margin: 10px 0; font-weight: bold;"></div>
-        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
-            <button class="close-btn" onclick="checkDailyAnswer()" style="background: var(--success);">Submit</button>
-            <button class="close-btn" onclick="hideDailyChallenge()">Later</button>
-        </div>
     </div>
 
     <!-- Strategy Hint Overlay -->
@@ -3191,100 +3118,6 @@
         const TIER_ADVANCE_MINIMUM = 20; // Minimum problems at current tier
 
         // ==========================================
-        // DAILY CHALLENGE SYSTEM
-        // ==========================================
-        let dailyChallenge = {
-            lastCompletedDate: null,
-            streak: 0,
-            problem: null,
-            completed: false
-        };
-
-        function getDailyChallengeProblem() {
-            // Generate a consistent problem for today based on the date
-            const today = new Date();
-            const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-
-            // Seeded random number generator
-            const seededRandom = (s) => {
-                const x = Math.sin(s) * 10000;
-                return x - Math.floor(x);
-            };
-
-            // Get average player tier across operations
-            const avgTier = Math.round((playerTiers.add + playerTiers.subtract + playerTiers.multiply + playerTiers.divide) / 4);
-            // Daily challenge is 2 tiers harder
-            const challengeTier = Math.min(5, avgTier + 2);
-            const tierConfig = DIFFICULTY_TIERS[challengeTier - 1];
-
-            // Generate problem based on seed
-            const ops = ['add', 'subtract', 'multiply', 'divide'];
-            const op = ops[Math.floor(seededRandom(seed) * ops.length)];
-
-            let num1, num2, answer, display;
-            const r1 = seededRandom(seed + 1);
-            const r2 = seededRandom(seed + 2);
-
-            if (op === 'add') {
-                num1 = Math.floor(r1 * tierConfig.maxNum) + 10;
-                num2 = Math.floor(r2 * Math.min(tierConfig.maxNum, 100)) + 5;
-                answer = num1 + num2;
-                display = `${num1} + ${num2}`;
-            } else if (op === 'subtract') {
-                num1 = Math.floor(r1 * tierConfig.maxNum) + 20;
-                num2 = Math.floor(r2 * Math.min(num1 - 5, 50)) + 5;
-                answer = num1 - num2;
-                display = `${num1} − ${num2}`;
-            } else if (op === 'multiply') {
-                const m = Math.min(12, 5 + challengeTier);
-                num1 = Math.floor(r1 * m) + 3;
-                num2 = Math.floor(r2 * m) + 3;
-                answer = num1 * num2;
-                display = `${num1} × ${num2}`;
-            } else {
-                const m = Math.min(12, 5 + challengeTier);
-                num2 = Math.floor(r1 * m) + 2;
-                answer = Math.floor(r2 * m) + 2;
-                num1 = num2 * answer;
-                display = `${num1} ÷ ${num2}`;
-            }
-
-            return { num1, num2, op, answer, display, tier: challengeTier };
-        }
-
-        function isDailyChallengeAvailable() {
-            const today = new Date().toDateString();
-            return dailyChallenge.lastCompletedDate !== today;
-        }
-
-        function getDailyChallengeReward() {
-            // Base reward 100-300 based on tier difficulty
-            const avgTier = Math.round((playerTiers.add + playerTiers.subtract + playerTiers.multiply + playerTiers.divide) / 4);
-            const baseReward = 100 + (avgTier * 50);
-
-            // Streak bonus (up to 2x at 7 days)
-            const streakMultiplier = 1 + Math.min(dailyChallenge.streak, 7) * 0.14;
-
-            return Math.floor(baseReward * streakMultiplier);
-        }
-
-        function loadDailyChallenge() {
-            try {
-                const saved = localStorage.getItem('mathblaster_daily');
-                if (saved) {
-                    dailyChallenge = JSON.parse(saved);
-                }
-            } catch (e) {
-                // Expected on first run
-            }
-            updateDailyChallengeButton();
-        }
-
-        function saveDailyChallenge() {
-            localStorage.setItem('mathblaster_daily', JSON.stringify(dailyChallenge));
-        }
-
-        // ==========================================
         // DANCE SYSTEM - Multiple dance types
         // ==========================================
         const DANCE_TYPES = ['dance-wiggle', 'dance-spin', 'dance-bounce', 'dance-victory'];
@@ -3310,10 +3143,6 @@
                 case 'achievement':
                     danceType = 'dance-spin';
                     duration = 3000;
-                    break;
-                case 'daily':
-                    danceType = 'dance-bounce';
-                    duration = 4000;
                     break;
                 case 'milestone':
                     danceType = 'dance-victory';
@@ -3344,94 +3173,6 @@
             if (danceTimeout) {
                 clearTimeout(danceTimeout);
                 danceTimeout = null;
-            }
-        }
-
-        function updateDailyChallengeButton() {
-            const btn = document.getElementById('dailyChallengeBtn');
-            if (btn) {
-                const available = isDailyChallengeAvailable();
-                btn.classList.toggle('pulse', available);
-                btn.classList.toggle('completed', !available);
-                btn.title = available ? `Daily Challenge (${dailyChallenge.streak} day streak)` : 'Completed today!';
-            }
-        }
-
-        function showDailyChallenge() {
-            if (!isDailyChallengeAvailable()) {
-                const toast = document.getElementById('achievementToast');
-                toast.textContent = `✅ Daily challenge completed! Come back tomorrow!`;
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
-                return;
-            }
-
-            dailyChallenge.problem = getDailyChallengeProblem();
-            document.getElementById('dailyProblem').textContent = `${dailyChallenge.problem.display} = ?`;
-            document.getElementById('dailyStreak').textContent = `🔥 ${dailyChallenge.streak} day streak`;
-            document.getElementById('dailyReward').textContent = `Reward: ${getDailyChallengeReward()} coins`;
-            document.getElementById('dailyAnswer').value = '';
-            document.getElementById('dailyResult').textContent = '';
-            document.getElementById('dailyChallengeModal').classList.add('show');
-        }
-
-        function hideDailyChallenge() {
-            document.getElementById('dailyChallengeModal').classList.remove('show');
-        }
-
-        function checkDailyAnswer() {
-            const userAnswer = parseInt(document.getElementById('dailyAnswer').value);
-            const resultEl = document.getElementById('dailyResult');
-
-            if (isNaN(userAnswer)) {
-                resultEl.textContent = 'Enter a number!';
-                resultEl.style.color = 'var(--error)';
-                return;
-            }
-
-            if (userAnswer === dailyChallenge.problem.answer) {
-                // Correct!
-                const today = new Date().toDateString();
-                const yesterday = new Date(Date.now() - 86400000).toDateString();
-
-                // Update streak
-                if (dailyChallenge.lastCompletedDate === yesterday) {
-                    dailyChallenge.streak++;
-                } else if (dailyChallenge.lastCompletedDate !== today) {
-                    dailyChallenge.streak = 1;
-                }
-
-                dailyChallenge.lastCompletedDate = today;
-                dailyChallenge.completed = true;
-
-                // Give reward
-                const reward = getDailyChallengeReward();
-                score += reward;
-                saveCoins();
-                document.getElementById('score').textContent = score;
-
-                saveDailyChallenge();
-                updateDailyChallengeButton();
-
-                resultEl.textContent = `🎉 Correct! +${reward} coins!`;
-                resultEl.style.color = 'var(--success)';
-                playSound('bosswin');
-                haptic('heavy');
-
-                // Trigger celebration dance
-                triggerCelebrationDance('daily');
-
-                // Check for 7-day streak achievement
-                if (dailyChallenge.streak >= 7) {
-                    checkAchievement('daily_streak_7', true);
-                }
-
-                setTimeout(hideDailyChallenge, 2000);
-            } else {
-                resultEl.textContent = `❌ Try again! (Hint: it's ${dailyChallenge.problem.answer > 100 ? 'a big number' : 'between 1-100'})`;
-                resultEl.style.color = 'var(--error)';
-                playSound('wrong');
-                haptic('error');
             }
         }
 
@@ -3523,10 +3264,6 @@
             { id: 'bosses_30', emoji: '🗡️', name: '30 Bosses', desc: 'Defeat 30 bosses', category: 'boss', tier: 3 },
             { id: 'bosses_50', emoji: '🗡️', name: '50 Bosses', desc: 'Defeat 50 bosses', category: 'boss', tier: 4 },
             { id: 'bosses_100', emoji: '👹', name: '100 Bosses', desc: 'Defeat 100 bosses', category: 'boss', tier: 5 },
-
-            // Daily challenge achievements
-            { id: 'daily_streak_7', emoji: '📅', name: 'Weekly Warrior', desc: '7-day daily challenge streak', category: 'daily' },
-            { id: 'daily_streak_30', emoji: '🗓️', name: 'Monthly Master', desc: '30-day daily challenge streak', category: 'daily' },
 
             // NEW: Collection achievements
             { id: 'scene_all', emoji: '🎨', name: 'Scene Collector', desc: 'Unlock all scene variations', category: 'collection' },
@@ -5742,7 +5479,6 @@
         loadPurchasedCostumes(); // Load purchased costumes
         initializeFactDatabase(); // Initialize spaced repetition fact database
         loadTierProgress(); // Load difficulty tier progress
-        loadDailyChallenge(); // Load daily challenge progress
         updateSettingsLabel();
         resetProblemStruggleState(); // Initialize auto-helper state
         generateProblem();
