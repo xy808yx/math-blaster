@@ -264,6 +264,16 @@
         .combo-display.active { opacity: 1; animation: comboPulse 0.5s infinite; }
         @keyframes comboPulse { 50% { transform: scale(1.1); } }
 
+        /* Shake animation for locked items */
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
         /* Auto-Helper Effects */
         .auto-helper-overlay {
             position: fixed;
@@ -3860,6 +3870,13 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
+        function showToast(message, duration = 2500) {
+            const toast = document.getElementById('achievementToast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
         function isThemeUnlocked(themeId) {
             const theme = THEMES.find(t => t.id === themeId);
             return theme ? playerLevel >= theme.unlockLevel : false;
@@ -5756,6 +5773,10 @@
                         };
                     } else if (!isOwned && !canAfford) {
                         div.onclick = () => {
+                            const needed = dance.price - score;
+                            div.classList.add('shake');
+                            setTimeout(() => div.classList.remove('shake'), 300);
+                            showToast(`Need ${needed} more coins! 🪙`, 2000);
                             playSound('wrong');
                             haptic('error');
                         };
@@ -5809,6 +5830,15 @@
                     div.onclick = () => equipCostume(equippedKey, item.id);
                 } else if (canAfford) {
                     div.onclick = () => buyCostume(item.id, item.price);
+                } else {
+                    // Feedback for locked items - show how many more coins needed
+                    div.onclick = () => {
+                        const needed = item.price - score;
+                        div.classList.add('shake');
+                        setTimeout(() => div.classList.remove('shake'), 300);
+                        showToast(`Need ${needed} more coins! 🪙`, 2000);
+                        playSound('wrong');
+                    };
                 }
                 grid.appendChild(div);
             });
