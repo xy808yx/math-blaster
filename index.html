@@ -4654,6 +4654,8 @@
         // ==========================================
         let strategyTimeout = null;
         let showingStrategy = false;
+        let lastStrategyTime = 0; // Cooldown tracking
+        let problemsSinceStrategy = 0; // Count problems since last hint
 
         // Get strategy hint for a problem
         function getStrategyHint(num1, num2, op, answer) {
@@ -4801,6 +4803,8 @@
             if (!strategy) return;
 
             showingStrategy = true;
+            lastStrategyTime = Date.now(); // Track when hint was shown
+            problemsSinceStrategy = 0; // Reset counter
             const opSymbols = { add: '+', subtract: '−', multiply: '×', divide: '÷' };
 
             document.getElementById('strategyLabel').textContent = strategy.name;
@@ -4971,6 +4975,7 @@
             // Use spaced repetition to select the next fact
             currentFact = selectNextFact();
             problemStartTime = Date.now();
+            problemsSinceStrategy++; // Track problems since last strategy hint
 
             // Reset struggle state for new problem
             resetProblemStruggleState();
@@ -5122,8 +5127,12 @@
                 document.body.classList.add('shake');
                 setTimeout(() => document.body.classList.remove('shake'), 300);
 
-                // Show strategy hint after wrong answer (50% chance on 2nd+ wrong attempt)
-                if (struggleState.wrongAttemptsOnProblem >= 2 && Math.random() < 0.5) {
+                // Show strategy hint after wrong answer
+                // Cooldown: at least 10 seconds OR 3 problems since last hint
+                const timeSinceHint = Date.now() - lastStrategyTime;
+                const canShowHint = (timeSinceHint > 10000 || problemsSinceStrategy >= 3) && !showingStrategy;
+
+                if (canShowHint) {
                     setTimeout(() => {
                         showStrategyHint(num1, num2, currentOp, correctAnswer);
                     }, 500);
