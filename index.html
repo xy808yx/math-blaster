@@ -944,7 +944,6 @@
         .theme-picker h2 { font-size: 1.3rem; margin-bottom: 10px; margin-top: 15px; text-align: center; }
         .theme-picker h2:first-child { margin-top: 0; }
         #themeButtons, #sceneButtons { display: flex; flex-direction: column; align-items: center; width: 100%; }
-        #prestigeSection { text-align: center; width: 100%; max-width: 280px; }
         .theme-btn {
             width: 100%;
             max-width: 280px;
@@ -967,10 +966,6 @@
         .theme-btn.retro { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); border-color: #39ff14; color: #39ff14; }
         .theme-btn.scene-btn { background: linear-gradient(135deg, #1a2a3a, #2a3a4a); border-color: #7fdbff; color: #fff; font-size: 1rem; }
         .theme-btn.scene-btn.active { border-color: #ffd93d; box-shadow: 0 0 10px rgba(255, 217, 61, 0.5); }
-
-        /* Prestige stars */
-        .prestige-stars { color: #ffd93d; margin-right: 5px; text-shadow: 0 0 5px rgba(255, 217, 61, 0.8); animation: prestigeGlow 2s ease-in-out infinite; }
-        @keyframes prestigeGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
 
         .close-btn {
             margin-top: 15px;
@@ -2408,8 +2403,8 @@
             <rect x="10" y="4" width="1" height="1" fill="#00ff00"/>
         </symbol>
 
-        <!-- Accessory: Heart Sunglasses -->
-        <symbol id="costume-acc-heartglasses" viewBox="0 0 16 16">
+        <!-- Accessory: Heart Sunglasses (viewBox cropped to eye area like regular sunglasses) -->
+        <symbol id="costume-acc-heartglasses" viewBox="0 5 16 6">
             <!-- Left heart lens -->
             <rect x="1" y="5" width="2" height="1" fill="#ff69b4"/>
             <rect x="4" y="5" width="2" height="1" fill="#ff69b4"/>
@@ -3946,7 +3941,6 @@
         <div id="themeButtons"></div>
         <h2 style="margin-top:20px;">🏝️ Beach Scene</h2>
         <div id="sceneButtons"></div>
-        <div id="prestigeSection" style="margin-top:20px;"></div>
         <button class="close-btn" onclick="hideThemePicker()">Done</button>
     </div>
 
@@ -4330,7 +4324,7 @@
                 { id: 'acc-donut', name: 'Donut', svgId: 'costume-acc-donut', price: 320, rarity: 'RARE' },
                 { id: 'acc-onigiri', name: 'Onigiri', svgId: 'costume-acc-onigiri', price: 350, rarity: 'RARE' },
                 { id: 'acc-wand', name: 'Magic Wand', svgId: 'costume-acc-wand', price: 400, rarity: 'RARE' },
-                { id: 'acc-heartglasses', name: 'Heart Glasses', svgId: 'costume-acc-heartglasses', price: 420, rarity: 'RARE' },
+                { id: 'acc-heartglasses', name: 'Heart Glasses', svgId: 'costume-acc-heartglasses', price: 420, position: 'face', rarity: 'RARE' },
                 { id: 'acc-sushi', name: 'Sushi', svgId: 'costume-acc-sushi', price: 400, rarity: 'RARE' },
                 { id: 'acc-ladybug', name: 'Ladybug', svgId: 'costume-acc-ladybug', price: 450, rarity: 'RARE' },
                 { id: 'acc-pizza', name: 'Pizza', svgId: 'costume-acc-pizza', price: 500, rarity: 'RARE' },
@@ -4423,18 +4417,30 @@
         let equippedCostumes = { hat: 'hat-none', outfit: 'outfit-none', accessory: 'acc-none' };
         let currentCostumeTab = 'hats';
 
-        // Avatar system
+        // Avatar system with costume positioning data
+        // Positions are in pixels for 48px avatar display (main) and 56px preview
+        // eyeY: vertical position for face accessories (sunglasses)
+        // hatY: vertical offset for hats (negative = higher)
+        // outfitY: vertical offset for outfits from bottom
         const AVATARS = {
             // Fruits (top row)
-            mango: { id: 'mango', name: 'Mango', svgId: 'pixel-mango', unlocked: true },
-            watermelon: { id: 'watermelon', name: 'Watermelon', svgId: 'pixel-watermelon', unlocked: true },
-            pineapple: { id: 'pineapple', name: 'Pineapple', svgId: 'pixel-pineapple', unlocked: true },
-            banana: { id: 'banana', name: 'Banana', svgId: 'pixel-banana', unlocked: true },
+            mango: { id: 'mango', name: 'Mango', svgId: 'pixel-mango', unlocked: true,
+                costume: { hatY: -10, eyeY: 12, outfitY: -8, accX: -12 } },
+            watermelon: { id: 'watermelon', name: 'Watermelon', svgId: 'pixel-watermelon', unlocked: true,
+                costume: { hatY: -6, eyeY: 8, outfitY: -4, accX: -12 } },
+            pineapple: { id: 'pineapple', name: 'Pineapple', svgId: 'pixel-pineapple', unlocked: true,
+                costume: { hatY: -14, eyeY: 12, outfitY: -6, accX: -12 } },
+            banana: { id: 'banana', name: 'Banana', svgId: 'pixel-banana', unlocked: true,
+                costume: { hatY: -12, eyeY: 16, outfitY: -4, accX: -10 } },
             // Animals (bottom row)
-            panda: { id: 'panda', name: 'Taio', svgId: 'pixel-panda', unlocked: true },
-            hippo: { id: 'hippo', name: 'Hippy', svgId: 'pixel-hippo', unlocked: true },
-            lion: { id: 'lion', name: 'Shasha', svgId: 'pixel-lion', unlocked: true },
-            unicorn: { id: 'unicorn', name: 'Uncorn', svgId: 'pixel-unicorn', unlocked: true }
+            panda: { id: 'panda', name: 'Taio', svgId: 'pixel-panda', unlocked: true,
+                costume: { hatY: -10, eyeY: 10, outfitY: -6, accX: -12 } },
+            hippo: { id: 'hippo', name: 'Hippy', svgId: 'pixel-hippo', unlocked: true,
+                costume: { hatY: -6, eyeY: 10, outfitY: -6, accX: -12 } },
+            lion: { id: 'lion', name: 'Shasha', svgId: 'pixel-lion', unlocked: true,
+                costume: { hatY: -12, eyeY: 10, outfitY: -6, accX: -14 } },
+            unicorn: { id: 'unicorn', name: 'Uncorn', svgId: 'pixel-unicorn', unlocked: true,
+                costume: { hatY: -14, eyeY: 12, outfitY: -6, accX: -12 } }
         };
         let selectedAvatar = 'mango';
 
@@ -4624,8 +4630,7 @@
 
         let num1, num2, correctAnswer, currentOp;
         let score = 0, streak = 0, bestStreak = 0;
-        let difficulty = 'easy', operation = 'mixed', mode = 'endless';
-        let timeLeft = 60, timerInterval = null;
+        let difficulty = 'easy', operation = 'mixed';
         let gameActive = true, currentInput = '';
         let soundEnabled = true, audioContext = null;
         let correctCount = 0, totalAttempts = 0;
@@ -4672,7 +4677,6 @@
             { id: 'speed_demon', emoji: '⚡', name: 'Speed Demon', desc: 'Get a 3x combo', category: 'basic' },
             { id: 'collector', emoji: '🎁', name: 'Collector', desc: 'Open 3 mystery boxes', category: 'basic' },
             { id: 'powerup_user', emoji: '💪', name: 'Powered Up', desc: 'Use a power-up', category: 'basic' },
-            // Timed mode achievements removed
 
             // TIERED: Streak achievements (all stack)
             { id: 'streak_5', emoji: '🔥', name: 'Streak 5', desc: '5 in a row', category: 'streak', tier: 1 },
@@ -4714,9 +4718,6 @@
             { id: 'ability_enrage', emoji: '😤', name: 'Rage Survivor', desc: 'Beat an enraged boss', category: 'ability' },
             { id: 'ability_dodge', emoji: '💨', name: 'Dodge Master', desc: 'Beat a dodging boss', category: 'ability' },
             { id: 'ability_confuse', emoji: '😵', name: 'Clear Mind', desc: 'Beat a confusing boss', category: 'ability' },
-
-            // NEW: Prestige achievement
-            { id: 'prestige_1', emoji: '⭐', name: 'New Game+', desc: 'Complete a prestige reset', category: 'prestige' },
 
             // NEW: Sticker collection achievements
             { id: 'sticker_10', emoji: '🎟️', name: 'Sticker Starter', desc: 'Collect 10 stickers', category: 'collection' },
@@ -4919,9 +4920,6 @@
             themesUnlocked: ['tropical']
         };
 
-        // Prestige system
-        let prestigeCount = 0;
-
         // Haptic feedback - works on Android via Vibration API, iOS via AudioContext workaround
         let hapticContext = null;
         function haptic(type) {
@@ -5000,8 +4998,7 @@
             if (levelEl) {
                 const xpInLevel = playerXP % XP_PER_LEVEL;
                 const progress = (xpInLevel / XP_PER_LEVEL) * 100;
-                const prestigeStars = prestigeCount > 0 ? '<span class="prestige-stars">' + '⭐'.repeat(Math.min(prestigeCount, 5)) + (prestigeCount > 5 ? `+${prestigeCount - 5}` : '') + '</span>' : '';
-                levelEl.innerHTML = `${prestigeStars}<span class="level-num">Lv.${playerLevel}</span><div class="xp-bar"><div class="xp-fill" style="width:${progress}%"></div></div>`;
+                levelEl.innerHTML = `<span class="level-num">Lv.${playerLevel}</span><div class="xp-bar"><div class="xp-fill" style="width:${progress}%"></div></div>`;
             }
         }
 
@@ -5034,6 +5031,7 @@
         function setTheme(theme) {
             if (!isThemeUnlocked(theme)) {
                 const t = THEMES.find(th => th.id === theme);
+                if (!t) return;
                 alert(`Unlock ${t.name} at Level ${t.unlockLevel}!`);
                 return;
             }
@@ -5070,26 +5068,6 @@
                     return `<button class="theme-btn scene-btn ${!unlocked ? 'locked' : ''} ${active ? 'active' : ''}" onclick="setScene('${s.id}')">${s.emoji} ${s.name}${lockIcon}</button>`;
                 }).join('');
             }
-            // Prestige section
-            const prestigeSection = document.getElementById('prestigeSection');
-            if (prestigeSection) {
-                const uniqueBosses = Object.keys(cumulativeStats.uniqueBossesDefeated).length;
-                const totalBosses = BOSSES.length;
-                const canDo = canPrestige();
-                const progress = Math.min(100, (uniqueBosses / totalBosses) * 100);
-                prestigeSection.innerHTML = `
-                    <h2>⭐ New Game+</h2>
-                    <p style="font-size:0.9rem;margin:8px 0;opacity:0.8;">Defeat all ${totalBosses} unique bosses to unlock!</p>
-                    <div style="background:#333;border-radius:8px;height:20px;margin:10px 0;overflow:hidden;">
-                        <div style="background:linear-gradient(90deg,#ffd93d,#ff9a56);height:100%;width:${progress}%;transition:width 0.3s;"></div>
-                    </div>
-                    <p style="font-size:0.85rem;margin-bottom:10px;">${uniqueBosses}/${totalBosses} bosses defeated</p>
-                    <button class="theme-btn ${canDo ? '' : 'locked'}" onclick="doPrestige()" style="background:linear-gradient(135deg,#2d1b2e,#4a2c4a);border-color:${canDo ? '#ffd93d' : '#666'};color:${canDo ? '#ffd93d' : '#888'};">
-                        ${canDo ? '⭐ Start New Game+ ⭐' : '🔒 Keep Defeating Bosses!'}
-                    </button>
-                    ${prestigeCount > 0 ? `<p style="font-size:0.85rem;margin-top:10px;color:#ffd93d;">Current Prestige: ${'⭐'.repeat(Math.min(prestigeCount, 5))}${prestigeCount > 5 ? ` +${prestigeCount - 5}` : ''}</p>` : ''}
-                `;
-            }
             document.getElementById('themePicker').classList.add('show');
         }
         function hideThemePicker() { document.getElementById('themePicker').classList.remove('show'); }
@@ -5100,13 +5078,10 @@
             return playerLevel >= scene.unlockLevel;
         }
 
-        function saveScene() {
-            localStorage.setItem('mathblaster_scene', currentSceneId);
-        }
-
         function setScene(sceneId) {
             if (!isSceneUnlocked(sceneId)) {
                 const scene = SCENE_VARIATIONS.find(s => s.id === sceneId);
+                if (!scene) return;
                 alert(`Unlock ${scene.name} at Level ${scene.unlockLevel}!`);
                 return;
             }
@@ -5198,6 +5173,14 @@
                 }
                 else if (type === 'gameover') {
                     [400, 350, 300, 250].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.12, 0.3), i * 150));
+                }
+                else if (type === 'purchase') {
+                    playTone(600, 'sine', 0.1, 0.08);
+                    setTimeout(() => playTone(900, 'sine', 0.1, 0.08), 60);
+                    setTimeout(() => playTone(1200, 'sine', 0.12, 0.1), 120);
+                }
+                else if (type === 'levelup') {
+                    [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.12, 0.15), i * 100));
                 }
             } catch (e) {}
         }
@@ -5979,16 +5962,6 @@
             localStorage.setItem('mathblaster_stats', JSON.stringify(cumulativeStats));
         }
 
-        // Prestige system
-        function loadPrestige() {
-            prestigeCount = parseInt(localStorage.getItem('mathblaster_prestige') || '0');
-            updateLevelDisplay();
-        }
-
-        function savePrestige() {
-            localStorage.setItem('mathblaster_prestige', prestigeCount.toString());
-        }
-
         // Coin persistence
         function loadCoins() {
             const saved = localStorage.getItem('mathblaster_coins');
@@ -5998,41 +5971,6 @@
 
         function saveCoins() {
             localStorage.setItem('mathblaster_coins', score.toString());
-        }
-
-        function canPrestige() {
-            // Can prestige after defeating all unique bosses
-            const uniqueCount = Object.keys(cumulativeStats.uniqueBossesDefeated).length;
-            return uniqueCount >= BOSSES.length;
-        }
-
-        function doPrestige() {
-            if (!canPrestige()) {
-                const remaining = BOSSES.length - Object.keys(cumulativeStats.uniqueBossesDefeated).length;
-                alert(`Defeat ${remaining} more unique bosses to unlock New Game+!`);
-                return;
-            }
-
-            if (!confirm('Start New Game+? Your XP will reset to 0, but you keep all achievements, unlocks, and themes!')) {
-                return;
-            }
-
-            prestigeCount++;
-            playerXP = 0;
-            playerLevel = 1;
-
-            savePrestige();
-            saveProgression();
-            updateLevelDisplay();
-
-            checkAchievement('prestige_1', true);
-
-            const toast = document.getElementById('achievementToast');
-            toast.textContent = `⭐ NEW GAME+ ${prestigeCount}! ⭐`;
-            toast.classList.add('show');
-            playSound('bosswin');
-            haptic('heavy');
-            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         function updateAnswerDisplay() {
@@ -6651,9 +6589,9 @@
                 checkAchievement('streak_5', streak >= 5);
                 checkAchievement('streak_10', streak >= 10);
                 checkAchievement('streak_20', streak >= 20);
-                checkAchievement('streak_25', streak >= 25);
                 checkAchievement('streak_50', streak >= 50);
                 checkAchievement('streak_100', streak >= 100);
+                checkAchievement('streak_250', streak >= 250);
                 // Score tiers
                 checkAchievement('score_25', score >= 25);
                 checkAchievement('score_50', score >= 50);
@@ -6751,8 +6689,6 @@
             }
         }
 
-        // setDifficulty removed - now using tier system
-
         function setOperation(op) {
             operation = op;
             document.querySelectorAll('.settings-row button').forEach(b => {
@@ -6760,33 +6696,6 @@
             });
             updateSettingsLabel();
             resetGame();
-        }
-
-        function setMode(m) {
-            // Only endless mode now - timed/speed removed
-            mode = 'endless';
-            if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-            resetGame();
-        }
-
-        // Timer functions removed - Free Play only mode
-
-        function endGame() {
-            gameActive = false;
-            clearInterval(timerInterval);
-
-            const acc = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('bestStreak').textContent = bestStreak;
-            document.getElementById('accuracy').textContent = acc + '%';
-            document.getElementById('totalProblems').textContent = correctCount;
-            document.getElementById('newRecordBanner').textContent = '';
-
-            // Timed/speed mode achievements removed
-
-            haptic('heavy');
-            playSound('gameover');
-            document.getElementById('gameOver').classList.add('show');
         }
 
         function resetGame() {
@@ -6847,7 +6756,11 @@
         function loadCostumes() {
             const saved = localStorage.getItem('mathblaster_costumes');
             if (saved) {
-                equippedCostumes = JSON.parse(saved);
+                try {
+                    equippedCostumes = JSON.parse(saved);
+                } catch (e) {
+                    equippedCostumes = { hat: 'hat-none', outfit: 'outfit-none', accessory: 'acc-none' };
+                }
             }
             updateCostumeDisplay();
         }
@@ -7105,21 +7018,31 @@
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
             const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
 
+            // Get avatar-specific positioning (scaled for 56px preview vs 48px main)
+            const pos = avatar.costume || { hatY: -10, eyeY: 12, outfitY: -8, accX: -12 };
+            const scale = 56 / 48; // Preview is 56px, main is 48px
+            const previewPos = {
+                hatY: Math.round(pos.hatY * scale),
+                eyeY: Math.round(pos.eyeY * scale),
+                outfitY: Math.round(pos.outfitY * scale),
+                accX: Math.round(pos.accX * scale)
+            };
+
             // Build SVG layer overlays (pixel art) - scaled to fit 56px preview
             let overlayHTML = '';
             if (hat && hat.svgId) {
-                overlayHTML += `<svg class="costume-layer-preview" style="top:-10px;left:50%;transform:translateX(-50%);width:44px;height:44px;"><use href="#${hat.svgId}"/></svg>`;
+                overlayHTML += `<svg class="costume-layer-preview" style="top:${previewPos.hatY}px;left:50%;transform:translateX(-50%);width:44px;height:44px;"><use href="#${hat.svgId}"/></svg>`;
             }
             if (outfit && outfit.svgId) {
-                overlayHTML += `<svg class="costume-layer-preview" style="bottom:-8px;left:50%;transform:translateX(-50%);width:48px;height:48px;"><use href="#${outfit.svgId}"/></svg>`;
+                overlayHTML += `<svg class="costume-layer-preview" style="bottom:${previewPos.outfitY}px;left:50%;transform:translateX(-50%);width:48px;height:48px;"><use href="#${outfit.svgId}"/></svg>`;
             }
             if (acc && acc.svgId) {
                 if (acc.position === 'face') {
-                    // Face accessories - sunglasses on eyes
-                    overlayHTML += `<svg class="costume-layer-preview" style="top:14px;left:50%;transform:translateX(-50%);width:46px;height:18px;"><use href="#${acc.svgId}"/></svg>`;
+                    // Face accessories - sunglasses on eyes (position varies by avatar)
+                    overlayHTML += `<svg class="costume-layer-preview" style="top:${previewPos.eyeY}px;left:50%;transform:translateX(-50%);width:46px;height:20px;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
                     // Held accessories (wand, food, balloon) - to the right side
-                    overlayHTML += `<svg class="costume-layer-preview" style="top:0px;right:-12px;width:46px;height:46px;"><use href="#${acc.svgId}"/></svg>`;
+                    overlayHTML += `<svg class="costume-layer-preview" style="top:0px;right:${previewPos.accX}px;width:46px;height:46px;"><use href="#${acc.svgId}"/></svg>`;
                 }
             }
 
@@ -7172,17 +7095,21 @@
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
             const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
 
+            // Get avatar-specific positioning
+            const avatar = AVATARS[selectedAvatar] || AVATARS.mango;
+            const pos = avatar.costume || { hatY: -10, eyeY: 12, outfitY: -8, accX: -12 };
+
             hatLayer.innerHTML = hat && hat.svgId ?
-                `<svg style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:40px;height:40px;"><use href="#${hat.svgId}"/></svg>` : '';
+                `<svg style="position:absolute;top:${pos.hatY}px;left:50%;transform:translateX(-50%);width:40px;height:40px;"><use href="#${hat.svgId}"/></svg>` : '';
             outfitLayer.innerHTML = outfit && outfit.svgId ?
-                `<svg style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:46px;height:46px;"><use href="#${outfit.svgId}"/></svg>` : '';
+                `<svg style="position:absolute;bottom:${pos.outfitY}px;left:50%;transform:translateX(-50%);width:46px;height:46px;"><use href="#${outfit.svgId}"/></svg>` : '';
             if (acc && acc.svgId) {
                 if (acc.position === 'face') {
-                    // Face accessories - sunglasses on eyes
-                    accLayer.innerHTML = `<svg style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:42px;height:18px;"><use href="#${acc.svgId}"/></svg>`;
+                    // Face accessories - sunglasses on eyes (position varies by avatar)
+                    accLayer.innerHTML = `<svg style="position:absolute;top:${pos.eyeY}px;left:50%;transform:translateX(-50%);width:42px;height:18px;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
-                    // Held accessories - to the right side (larger)
-                    accLayer.innerHTML = `<svg style="position:absolute;top:0px;right:-12px;width:44px;height:44px;"><use href="#${acc.svgId}"/></svg>`;
+                    // Held accessories - to the right side
+                    accLayer.innerHTML = `<svg style="position:absolute;top:0px;right:${pos.accX}px;width:44px;height:44px;"><use href="#${acc.svgId}"/></svg>`;
                 }
             } else {
                 accLayer.innerHTML = '';
@@ -7221,7 +7148,6 @@
         loadAchievements();
         loadProgression();
         loadCumulativeStats();
-        loadPrestige();
         loadScene();
         loadAdaptiveDifficulty();
         loadCostumes(); // Load saved costumes
