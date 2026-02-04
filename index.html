@@ -99,8 +99,8 @@
         .top-buttons { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 
         .icon-btn {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: var(--card-bg);
             border: 2px solid var(--primary);
@@ -232,27 +232,6 @@
         .progress-fill.mystery { background: linear-gradient(90deg, #ffd93d, #ff6b9d); }
         .progress-fill.boss { background: linear-gradient(90deg, #ff6b6b, #ff0000); }
 
-        /* Active Power-ups Indicator */
-        .active-powerups {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            min-height: 18px;
-            flex-wrap: wrap;
-        }
-        .powerup-indicator {
-            background: rgba(255,217,61,0.25);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            color: var(--accent);
-            animation: powerupPulse 2s infinite;
-        }
-        @keyframes powerupPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
         /* Coin Animation */
         .coin-burst {
             position: absolute;
@@ -311,42 +290,6 @@
             20% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
             40% { transform: translate(-50%, -50%) scale(1.2); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) translateY(-30px); }
-        }
-        .time-freeze-effect {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle, rgba(100,200,255,0.15) 0%, transparent 70%);
-            animation: freezePulse 0.5s ease-out;
-            pointer-events: none;
-            z-index: 500;
-        }
-        @keyframes freezePulse {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0.3; }
-        }
-        .ice-crystal {
-            position: absolute;
-            font-size: 2rem;
-            animation: crystalFloat 5s ease-out forwards;
-            pointer-events: none;
-        }
-        @keyframes crystalFloat {
-            0% { opacity: 0; transform: scale(0); }
-            20% { opacity: 1; transform: scale(1); }
-            80% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-50px); }
-        }
-        .timer-display.frozen {
-            color: #64C8FF !important;
-            text-shadow: 0 0 20px #64C8FF;
-            animation: timerFreezePulse 0.5s infinite;
-        }
-        @keyframes timerFreezePulse {
-            50% { transform: scale(1.1); text-shadow: 0 0 30px #64C8FF; }
         }
         .helper-message {
             position: fixed;
@@ -499,9 +442,9 @@
         }
         .rarity-badge {
             display: inline-block;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 8px;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -601,7 +544,7 @@
         .achievement-item.unlocked { border-color: var(--accent); }
         .achievement-item.locked { opacity: 0.4; }
         .achievement-emoji { font-size: 1.5rem; display: block; margin-bottom: 3px; }
-        .achievement-name { font-size: 0.65rem; color: var(--primary); line-height: 1.2; }
+        .achievement-name { font-size: 0.85rem; color: var(--primary); line-height: 1.2; }
 
         /* Level Display */
         .level-display {
@@ -712,8 +655,8 @@
         .modal-item.owned { border-color: var(--success); }
         .modal-item-icon { font-size: 1.5rem; display: block; margin-bottom: 3px; }
         .modal-item-icon svg { width: 32px; height: 32px; image-rendering: pixelated; }
-        .modal-item-name { font-size: 0.65rem; color: var(--primary); line-height: 1.2; }
-        .modal-item-info { font-size: 0.55rem; color: var(--accent); margin-top: 2px; }
+        .modal-item-name { font-size: 0.85rem; color: var(--primary); line-height: 1.2; }
+        .modal-item-info { font-size: 0.75rem; color: var(--accent); margin-top: 2px; }
         .modal-hint {
             text-align: center;
             color: var(--accent);
@@ -729,17 +672,6 @@
         }
         .costume-preview svg { image-rendering: pixelated; }
         .costume-layer-preview { image-rendering: pixelated; pointer-events: none; position: absolute; }
-
-        /* Timer */
-        .timer-display {
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--accent);
-            min-height: 1.5rem;
-        }
-        .timer-display.warning { color: var(--error); animation: pulse 0.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* Problem Area */
         .problem-area {
@@ -1256,7 +1188,6 @@
             .settings-toggle { display: none; }
             .stats { width: 100%; padding: 4px 0; gap: 15px; }
             .stat-item { font-size: 0.9rem; }
-            .timer-display { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); font-size: 1rem; }
             .problem-area { flex: 1; min-width: 50%; min-height: auto; gap: 8px; }
             .problem { font-size: 2rem; }
             .answer-display { font-size: 1.5rem; padding: 8px 20px; min-width: 80px; }
@@ -3002,8 +2933,6 @@
             </div>
         </div>
 
-        <div class="active-powerups" id="activePowerUps"></div>
-
         <div class="progress-container">
             <div class="progress-item">
                 <svg class="pixel-box" style="width:36px;height:36px;"><use href="#pixel-mysterybox"/></svg>
@@ -3019,8 +2948,6 @@
         <div class="auto-helper-overlay" id="autoHelperOverlay"></div>
 
         <div class="combo-display" id="comboDisplay">x1</div>
-
-        <div class="timer-display" id="timer"></div>
 
         <div class="problem-area">
             <div class="problem" id="problem"></div>
@@ -3543,11 +3470,6 @@
         };
         let selectedAvatar = 'mango';
 
-        // Power-ups removed - mystery boxes now give coins directly
-        const POWER_UPS = {};
-        let ownedPowerUps = {};
-        let activePowerUps = {};
-
         // Boss victory celebration now handled by triggerCelebrationDance()
 
         // Scene variations (3D background cosmetic changes)
@@ -3726,17 +3648,6 @@
             }, duration);
         }
 
-        function stopDance() {
-            const avatar = document.getElementById('mangoAvatar');
-            if (avatar && currentDance) {
-                avatar.classList.remove(currentDance);
-                currentDance = null;
-            }
-            if (danceTimeout) {
-                clearTimeout(danceTimeout);
-                danceTimeout = null;
-            }
-        }
 
         // XP and Level system
         let playerXP = 0;
@@ -3782,11 +3693,8 @@
             lastStreakLoss: 0,
             playerSkillLevel: 0.5,  // Adaptive 0-1
             lastAutoHelperTime: 0,
-            accuracyHistory: [],    // Last 20 answers
-            timeFrozen: false,
-            freezeEndTime: 0
+            accuracyHistory: []     // Last 20 answers
         };
-        let doublePointsActive = false; // Keep for compatibility
 
         // Achievements - now with tiered achievements that STACK (collect all tiers)
         const ACHIEVEMENTS = [
@@ -4153,13 +4061,6 @@
             }
         }
 
-        // Active power-ups display
-        function updateActivePowerUps() {
-            // Power-up indicators removed - system simplified
-            const container = document.getElementById('activePowerUps');
-            if (container) container.innerHTML = '';
-        }
-
         // Combo system
         function updateCombo() {
             const now = Date.now();
@@ -4225,18 +4126,10 @@
         }
 
         function triggerAutoHelper() {
-            // Choose between auto-solve and time freeze
-            const helperType = Math.random() < 0.5 ? 'autoSolve' : 'timeFreeze';
-
             struggleState.lastAutoHelperTime = Date.now();
             playSound('bonus');
             checkAchievement('powerup_user', true);
-
-            if (helperType === 'autoSolve') {
-                triggerAutoSolve();
-            } else {
-                triggerTimeFreeze();
-            }
+            triggerAutoSolve();
         }
 
         function triggerAutoSolve() {
@@ -4261,42 +4154,7 @@
             }, 300);
 
             // Clean up effect
-            setTimeout(() => lightning.remove(), 600);
-        }
-
-        function triggerTimeFreeze() {
-            const overlay = document.getElementById('autoHelperOverlay');
-            const timerEl = document.getElementById('timer');
-
-            // Show freeze effect
-            const freezeEffect = document.createElement('div');
-            freezeEffect.className = 'time-freeze-effect';
-            overlay.appendChild(freezeEffect);
-
-            // Add ice crystals
-            for (let i = 0; i < 6; i++) {
-                const crystal = document.createElement('div');
-                crystal.className = 'ice-crystal';
-                crystal.textContent = '❄️';
-                crystal.style.left = (10 + Math.random() * 80) + '%';
-                crystal.style.top = (10 + Math.random() * 80) + '%';
-                overlay.appendChild(crystal);
-                setTimeout(() => crystal.remove(), 5000);
-            }
-
-            // Freeze timer for 5 seconds
-            struggleState.timeFrozen = true;
-            struggleState.freezeEndTime = Date.now() + 5000;
-            timerEl.classList.add('frozen');
-
-            showHelperMessage('Time frozen! 5 seconds bonus!');
-
-            // Unfreeze after 5 seconds
-            setTimeout(() => {
-                struggleState.timeFrozen = false;
-                timerEl.classList.remove('frozen');
-                freezeEffect.remove();
-            }, 5000);
+            setTimeout(() => lightning.remove(), 400);
         }
 
         function showHelperMessage(text) {
@@ -5134,12 +4992,6 @@
             return facts;
         }
 
-        // Filter facts to only include those at or below player's current tier
-        function getFactsForPlayerTier(allFacts, op) {
-            const playerTier = playerTiers[op] || 1;
-            return allFacts.filter(f => f.op === op && f.tier <= playerTier);
-        }
-
         // Track tier progress and check for advancement
         function trackTierProgress(op, isCorrect) {
             if (!tierTracking[op]) {
@@ -5397,21 +5249,6 @@
             setTimeout(generateProblem, 200);
         }
 
-        // Determine if we should show a strategy hint before a problem
-        function shouldShowPreHint(fact) {
-            // Show hint for new tier problems or low EF (hard) facts
-            if (!fact) return false;
-
-            const playerTier = playerTiers[fact.op] || 1;
-
-            // Show hint if this is at the player's current tier limit and they haven't mastered it
-            if (fact.tier === playerTier && fact.ef < 2.0) {
-                return Math.random() < 0.3; // 30% chance for hard problems
-            }
-
-            return false;
-        }
-
         // Initialize fact database with SM-2 defaults
         function initializeFactDatabase() {
             mathFacts = generateMathFacts();
@@ -5595,18 +5432,15 @@
 
                 // Combo multiplier
                 updateCombo();
-                let points = doublePointsActive ? 2 : 1;
-                points *= comboMultiplier;
+                const points = comboMultiplier;
                 score += points;
                 saveCoins();
-                doublePointsActive = false;
 
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;
                 answerEl.classList.add('correct');
                 updateProgressBars();
                 updateFireEffect();
-                updateActivePowerUps();
 
                 // Check achievements (including tiered achievements that stack)
                 checkAchievement('first_correct', correctCount >= 1);
@@ -5721,8 +5555,6 @@
             // Only endless mode now - timed/speed removed
             mode = 'endless';
             if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-            document.getElementById('timer').textContent = '';
-            document.getElementById('timer').classList.remove('warning');
             resetGame();
         }
 
@@ -5765,11 +5597,8 @@
                 lastStreakLoss: 0,
                 playerSkillLevel: 0.5,
                 lastAutoHelperTime: 0,
-                accuracyHistory: [],
-                timeFrozen: false,
-                freezeEndTime: 0
+                accuracyHistory: []
             };
-            doublePointsActive = false;
 
             // Reset progress bars
             updateProgressBars();
@@ -5784,7 +5613,6 @@
 
         function restartGame() {
             document.getElementById('gameOver').classList.remove('show');
-            document.getElementById('timer').classList.remove('warning');
             resetGame();
         }
 
@@ -6113,28 +5941,6 @@
             }
         }
 
-        // Simplified scene unlock (level only)
-        function isEnvironmentUnlocked(env) {
-            return playerLevel >= env.unlockLevel;
-        }
-
-        // Power-up activation (from mystery box drops)
-        // Power-up system removed - mystery boxes give coins directly
-        function activatePowerUp(id) {
-            // No longer used - kept for compatibility
-        }
-
-        function loadPowerUps() {
-            const saved = localStorage.getItem('mathblaster_powerups');
-            if (saved) {
-                ownedPowerUps = { ...ownedPowerUps, ...JSON.parse(saved) };
-            }
-        }
-
-        function savePowerUps() {
-            localStorage.setItem('mathblaster_powerups', JSON.stringify(ownedPowerUps));
-        }
-
         loadTheme();
         loadSoundPref();
         loadAchievements();
@@ -6146,7 +5952,6 @@
         loadCostumes(); // Load saved costumes
         loadCoins(); // Load persistent coin balance
         loadAvatar(); // Load selected avatar
-        loadPowerUps(); // Load owned power-ups
         loadPurchasedCostumes(); // Load purchased costumes
         loadDances(); // Load owned dances
         initializeFactDatabase(); // Initialize spaced repetition fact database
