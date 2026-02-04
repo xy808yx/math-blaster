@@ -3123,6 +3123,7 @@
             <button class="modal-tab active" data-tab="hats" onclick="showShopTab('hats')">Hats</button>
             <button class="modal-tab" data-tab="outfits" onclick="showShopTab('outfits')">Outfits</button>
             <button class="modal-tab" data-tab="accessories" onclick="showShopTab('accessories')">Acc</button>
+            <button class="modal-tab" data-tab="dances" onclick="showShopTab('dances')">Dances</button>
         </div>
         <div class="modal-grid" id="shopGrid"></div>
         <button class="close-btn" onclick="closeShopModal()">Done</button>
@@ -3549,11 +3550,54 @@
         const TIER_ADVANCE_MINIMUM = 15; // Minimum problems at current tier
 
         // ==========================================
-        // DANCE SYSTEM - Multiple dance types
+        // DANCE SYSTEM - Purchasable dance types
         // ==========================================
-        const DANCE_TYPES = ['dance-wiggle', 'dance-spin', 'dance-bounce', 'dance-victory'];
+        const DANCE_MOVES = [
+            { id: 'dance-wiggle', name: 'Wiggle', cssClass: 'dance-wiggle', price: 0, rarity: 'COMMON', description: 'Classic happy wiggle!' },
+            { id: 'dance-spin', name: 'Spin', cssClass: 'dance-spin', price: 300, rarity: 'RARE', description: 'Twirl around with joy!' },
+            { id: 'dance-bounce', name: 'Bounce', cssClass: 'dance-bounce', price: 400, rarity: 'RARE', description: 'Bouncy celebration!' },
+            { id: 'dance-victory', name: 'Victory', cssClass: 'dance-victory', price: 600, rarity: 'EPIC', description: 'Champion pose!' }
+        ];
+        const DANCE_TYPES = DANCE_MOVES.map(d => d.cssClass);
+        let ownedDances = ['dance-wiggle']; // Wiggle is free/default
         let currentDance = null;
         let danceTimeout = null;
+
+        function getOwnedDances() {
+            return DANCE_MOVES.filter(d => ownedDances.includes(d.id));
+        }
+
+        function purchaseDance(danceId) {
+            const dance = DANCE_MOVES.find(d => d.id === danceId);
+            if (!dance || ownedDances.includes(danceId)) return false;
+            if (score < dance.price) return false;
+
+            score -= dance.price;
+            ownedDances.push(danceId);
+            saveCoins();
+            saveDances();
+            document.getElementById('score').textContent = score;
+            return true;
+        }
+
+        function saveDances() {
+            localStorage.setItem('mathblaster_dances', JSON.stringify(ownedDances));
+        }
+
+        function loadDances() {
+            try {
+                const saved = localStorage.getItem('mathblaster_dances');
+                if (saved) {
+                    ownedDances = JSON.parse(saved);
+                    // Ensure wiggle is always owned
+                    if (!ownedDances.includes('dance-wiggle')) {
+                        ownedDances.push('dance-wiggle');
+                    }
+                }
+            } catch (e) {
+                ownedDances = ['dance-wiggle'];
+            }
+        }
 
         function triggerCelebrationDance(reason, duration = 5000) {
             const avatar = document.getElementById('mangoAvatar');
@@ -3564,27 +3608,19 @@
             DANCE_TYPES.forEach(d => avatar.classList.remove(d));
             avatar.classList.remove('dancing');
 
-            // Choose dance based on reason
-            let danceType;
+            // Set duration based on reason
             switch(reason) {
-                case 'levelup':
-                    danceType = 'dance-victory';
-                    duration = 4000;
-                    break;
-                case 'achievement':
-                    danceType = 'dance-spin';
-                    duration = 3000;
-                    break;
-                case 'milestone':
-                    danceType = 'dance-victory';
-                    duration = 5000;
-                    break;
-                case 'boss':
-                default:
-                    danceType = 'dance-wiggle';
-                    duration = duration;
-                    break;
+                case 'levelup': duration = 4000; break;
+                case 'achievement': duration = 3000; break;
+                case 'milestone': duration = 5000; break;
+                case 'boss': duration = duration || 3000; break;
+                default: duration = 3000;
             }
+
+            // Randomly select from owned dances
+            const owned = getOwnedDances();
+            const randomDance = owned[Math.floor(Math.random() * owned.length)];
+            const danceType = randomDance.cssClass;
 
             avatar.classList.add(danceType);
             currentDance = danceType;
@@ -5753,6 +5789,69 @@
                 return;
             }
 
+            // Handle dances tab
+            if (currentCostumeTab === 'dances') {
+                grid.innerHTML = '';
+                DANCE_MOVES.forEach(dance => {
+                    const isOwned = ownedDances.includes(dance.id);
+                    const canAfford = score >= dance.price;
+                    const rarity = RARITY[dance.rarity];
+                    const div = document.createElement('div');
+                    div.className = 'modal-item' + (isOwned ? ' equipped' : '') + (!isOwned && !canAfford ? ' locked' : '');
+
+                    // Dance emoji icons
+                    const danceIcons = {
+                        'dance-wiggle': '💃',
+                        'dance-spin': '🔄',
+                        'dance-bounce': '⬆️',
+                        'dance-victory': '🏆'
+                    };
+
+                    let infoText = '';
+                    if (isOwned) {
+                        infoText = '✓ Owned';
+                    } else {
+                        infoText = dance.price === 0 ? 'FREE' : `💰 ${dance.price}`;
+                    }
+
+                    div.innerHTML = `
+                        <span class="modal-item-icon" style="font-size:28px;">${danceIcons[dance.id] || '💃'}</span>
+                        <span class="modal-item-name">${dance.name}</span>
+                        <span class="rarity-badge ${rarity.cssClass}">${rarity.name}</span>
+                        <span class="modal-item-info" style="color:${isOwned ? 'var(--accent)' : (canAfford ? '#ffd93d' : '#888')}">${infoText}</span>
+                    `;
+
+                    if (!isOwned && canAfford) {
+                        div.onclick = () => {
+                            if (purchaseDance(dance.id)) {
+                                playSound('purchase');
+                                haptic('success');
+                                renderShopGrid();
+                                // Preview the dance
+                                triggerCelebrationDance('achievement');
+                            }
+                        };
+                    } else if (!isOwned && !canAfford) {
+                        div.onclick = () => {
+                            playSound('wrong');
+                            haptic('error');
+                        };
+                    } else {
+                        // Already owned - preview the dance on click
+                        div.onclick = () => {
+                            const avatar = document.getElementById('mangoAvatar');
+                            if (avatar) {
+                                DANCE_TYPES.forEach(d => avatar.classList.remove(d));
+                                avatar.classList.add(dance.cssClass);
+                                setTimeout(() => avatar.classList.remove(dance.cssClass), 2000);
+                            }
+                        };
+                    }
+                    grid.appendChild(div);
+                });
+                return;
+            }
+
             const items = COSTUMES[currentCostumeTab] || [];
             const equippedKey = currentCostumeTab === 'hats' ? 'hat' :
                                currentCostumeTab === 'outfits' ? 'outfit' : 'accessory';
@@ -5926,6 +6025,7 @@
         loadAvatar(); // Load selected avatar
         loadPowerUps(); // Load owned power-ups
         loadPurchasedCostumes(); // Load purchased costumes
+        loadDances(); // Load owned dances
         initializeFactDatabase(); // Initialize spaced repetition fact database
         loadTierProgress(); // Load difficulty tier progress
         updateSettingsLabel();
