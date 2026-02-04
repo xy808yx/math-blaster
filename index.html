@@ -3094,8 +3094,7 @@
         let ownedPowerUps = {};
         let activePowerUps = {};
 
-        // Boss victory celebration - avatar dances for a few questions after beating a boss
-        let bossVictoryDanceRemaining = 0;
+        // Boss victory celebration now handled by triggerCelebrationDance()
 
         // Scene variations (3D background cosmetic changes)
         const SCENE_VARIATIONS = [
@@ -3276,7 +3275,7 @@
                     dailyChallenge = JSON.parse(saved);
                 }
             } catch (e) {
-                console.log('No saved daily challenge');
+                // Expected on first run
             }
             updateDailyChallengeButton();
         }
@@ -4702,14 +4701,6 @@
             haptic('light');
         }
 
-        function getMaxNumber() {
-            const base = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 50;
-            // Apply adaptive difficulty modifier (hidden from player)
-            // difficultyModifier ranges from -2 to +2, affects max by +/- 20%
-            const adjusted = Math.round(base * (1 + difficultyModifier * 0.1));
-            return Math.max(5, Math.min(base * 2, adjusted)); // Clamp between 5 and 2x base
-        }
-
         // Adaptive difficulty - hidden from players
         function trackAccuracy(isCorrect) {
             accuracyHistory.push(isCorrect ? 1 : 0);
@@ -4763,16 +4754,6 @@
         let mathFacts = [];
         let currentFact = null;
         let problemStartTime = 0;
-
-        // Determine tier for a problem based on the numbers involved
-        function getTierForProblem(num1, num2, answer) {
-            const maxVal = Math.max(num1, num2, answer);
-            if (maxVal <= 10) return 1;
-            if (maxVal <= 20) return 2;
-            if (maxVal <= 50) return 3;
-            if (maxVal <= 100) return 4;
-            return 5;
-        }
 
         // Generate math facts with tier information (optimized for memory)
         function generateMathFacts() {
@@ -4918,7 +4899,7 @@
                 if (savedTiers) playerTiers = JSON.parse(savedTiers);
                 if (savedTracking) tierTracking = JSON.parse(savedTracking);
             } catch (e) {
-                console.log('No saved tier progress');
+                // Expected on first run
             }
         }
 
@@ -5314,14 +5295,6 @@
                 updateFireEffect();
                 updateActivePowerUps();
 
-                // Decrement boss victory dance counter
-                if (bossVictoryDanceRemaining > 0) {
-                    bossVictoryDanceRemaining--;
-                    if (bossVictoryDanceRemaining <= 0) {
-                        document.getElementById('mangoAvatar').classList.remove('dancing');
-                    }
-                }
-
                 // Check achievements (including tiered achievements that stack)
                 checkAchievement('first_correct', correctCount >= 1);
                 // Streak tiers
@@ -5416,14 +5389,7 @@
             }
         }
 
-        function setDifficulty(diff) {
-            difficulty = diff;
-            document.querySelectorAll('.settings-row button').forEach(b => {
-                if (['easy', 'medium', 'hard'].includes(b.id)) b.classList.toggle('active', b.id === diff);
-            });
-            updateSettingsLabel();
-            resetGame();
-        }
+        // setDifficulty removed - now using tier system
 
         function setOperation(op) {
             operation = op;
@@ -5443,43 +5409,7 @@
             resetGame();
         }
 
-        function startSpeedRound() {
-            timeLeft = 30;
-            document.getElementById('timer').textContent = '⚡ 30';
-            document.getElementById('timer').classList.remove('warning');
-            timerInterval = setInterval(() => {
-                // Don't decrement if time is frozen
-                if (!struggleState.timeFrozen) {
-                    timeLeft--;
-                }
-                document.getElementById('timer').textContent = '⚡ ' + timeLeft;
-                if (timeLeft <= 10) document.getElementById('timer').classList.add('warning');
-                if (timeLeft <= 0) endGame();
-                // Periodically check for idle struggle
-                if (gameActive && !bossActive) {
-                    checkStruggleAndHelp();
-                }
-            }, 1000);
-        }
-
-        function startTimer() {
-            timeLeft = 60;
-            document.getElementById('timer').textContent = '⏱️ 60';
-            document.getElementById('timer').classList.remove('warning');
-            timerInterval = setInterval(() => {
-                // Don't decrement if time is frozen
-                if (!struggleState.timeFrozen) {
-                    timeLeft--;
-                }
-                document.getElementById('timer').textContent = '⏱️ ' + timeLeft;
-                if (timeLeft <= 10) document.getElementById('timer').classList.add('warning');
-                if (timeLeft <= 0) endGame();
-                // Periodically check for idle struggle (every second)
-                if (gameActive && !bossActive) {
-                    checkStruggleAndHelp();
-                }
-            }, 1000);
-        }
+        // Timer functions removed - Free Play only mode
 
         function endGame() {
             gameActive = false;
