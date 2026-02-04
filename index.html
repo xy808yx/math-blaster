@@ -3338,10 +3338,8 @@
 
         function updateSettingsLabel() {
             const op = operation === 'mixed' ? 'Mixed' : operation === 'add' ? '+' : operation === 'subtract' ? '−' : operation === 'multiply' ? '×' : '÷';
-            // Show player's current tier for the selected operation
-            const tier = operation === 'mixed' ? Math.round((playerTiers.add + playerTiers.subtract + playerTiers.multiply + playerTiers.divide) / 4) : (playerTiers[operation] || 1);
-            const tierName = DIFFICULTY_TIERS[tier - 1]?.name || 'Beginner';
-            document.getElementById('settingsLabel').textContent = `${op} • ${tierName}`;
+            // Hide tier from kids - just show operation mode
+            document.getElementById('settingsLabel').textContent = `${op} • Free Play`;
         }
 
         // XP and Level System
@@ -4609,17 +4607,20 @@
 
         // Show tier advancement celebration
         function showTierAdvancement(op, newTier) {
-            const tierInfo = DIFFICULTY_TIERS[newTier - 1];
             const opNames = { add: 'Addition', subtract: 'Subtraction', multiply: 'Multiplication', divide: 'Division' };
 
             const toast = document.getElementById('achievementToast');
             if (toast) {
-                toast.textContent = `🎉 ${opNames[op]} Level Up! Now: ${tierInfo.name} (${tierInfo.description})`;
+                // Kid-friendly message without tier names
+                toast.textContent = `🎉 ${opNames[op]} Level Up! Harder problems unlocked!`;
                 toast.classList.add('show');
                 playSound('levelup');
                 haptic('heavy');
                 setTimeout(() => toast.classList.remove('show'), 3000);
             }
+
+            // Trigger celebration dance for level up
+            triggerCelebrationDance('levelup');
         }
 
         // Save tier progress to localStorage
