@@ -618,18 +618,19 @@
         .modal-tabs {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 5px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
+            max-width: 340px;
         }
         .modal-tab {
-            padding: 8px 16px;
+            padding: 6px 10px;
             background: var(--card-bg);
             border: 2px solid var(--primary);
             border-radius: 8px;
             color: var(--primary);
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             -webkit-tap-highlight-color: transparent;
         }
         .modal-tab.active {
@@ -640,14 +641,15 @@
         .modal-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            max-width: 360px;
+            gap: 6px;
+            max-width: 320px;
             width: 100%;
             margin: 0 auto;
-            max-height: 45vh;
+            max-height: 40vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 5px 5px 35px 5px;
+            padding: 5px;
+            box-sizing: border-box;
             scrollbar-width: thin;
             scrollbar-color: var(--primary) transparent;
         }
@@ -663,9 +665,9 @@
         }
         .modal-item {
             text-align: center;
-            padding: 8px 4px;
+            padding: 6px 3px;
             background: var(--card-bg);
-            border-radius: 10px;
+            border-radius: 8px;
             border: 2px solid rgba(255,255,255,0.1);
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
@@ -673,8 +675,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            min-height: 90px;
+            min-height: 80px;
             box-sizing: border-box;
+            min-width: 0;
         }
         .modal-item:active { transform: scale(0.95); }
         .modal-item.equipped { border-color: var(--accent); background: rgba(255,217,61,0.15); }
@@ -685,13 +688,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            margin-bottom: 4px;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 3px;
         }
-        .modal-item-icon svg { width: 32px; height: 32px; image-rendering: pixelated; }
+        .modal-item-icon svg { width: 28px; height: 28px; image-rendering: pixelated; }
         .modal-item-name {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: var(--primary);
             line-height: 1.1;
             overflow: hidden;
@@ -700,9 +703,9 @@
             word-break: break-word;
         }
         .modal-item-info {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: var(--accent);
-            margin-top: 2px;
+            margin-top: 1px;
             display: flex;
             align-items: center;
             gap: 2px;
@@ -714,9 +717,9 @@
             margin-bottom: 10px;
         }
         .costume-preview {
-            width: 64px;
-            height: 64px;
-            margin: 20px auto 20px;
+            width: 56px;
+            height: 56px;
+            margin: 10px auto 10px;
             position: relative;
             overflow: visible;
         }
@@ -727,21 +730,27 @@
         .sticker-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            max-width: 360px;
+            gap: 4px;
+            max-width: 320px;
             width: 100%;
             margin: 0 auto;
-            max-height: 50vh;
+            max-height: 40vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 5px;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
         }
+        .sticker-grid::-webkit-scrollbar { width: 4px; }
+        .sticker-grid::-webkit-scrollbar-track { background: transparent; }
+        .sticker-grid::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
         .sticker-counter {
             text-align: center;
             color: var(--accent);
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .sticker-item {
             aspect-ratio: 1;
@@ -750,23 +759,25 @@
             align-items: center;
             justify-content: center;
             background: var(--card-bg);
-            border-radius: 8px;
+            border-radius: 6px;
             border: 2px solid rgba(255,255,255,0.1);
-            padding: 4px;
+            padding: 2px;
             cursor: pointer;
             transition: transform 0.15s, border-color 0.15s;
+            box-sizing: border-box;
+            min-width: 0;
         }
         .sticker-item:active { transform: scale(0.95); }
         .sticker-item.collected { border-color: var(--success); }
         .sticker-item.uncollected { opacity: 0.4; }
         .sticker-item.uncollected svg { filter: brightness(0) saturate(0); }
-        .sticker-item svg { width: 32px; height: 32px; image-rendering: pixelated; }
+        .sticker-item svg { width: 28px; height: 28px; image-rendering: pixelated; }
         .sticker-item-name {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             color: var(--primary);
-            margin-top: 2px;
+            margin-top: 1px;
             text-align: center;
-            line-height: 1.1;
+            line-height: 1;
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -931,6 +942,19 @@
             overscroll-behavior: contain;
         }
         .modal.show { display: flex; }
+
+        /* Shop Modal specific */
+        #shopModal {
+            padding-top: 30px;
+        }
+        #shopModal > * {
+            max-width: 340px;
+            width: 100%;
+        }
+        #shopModal h2 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
 
         /* Theme Picker */
         .theme-picker { padding-top: 40px; padding-bottom: 40px; }
@@ -7095,26 +7119,26 @@
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
             const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
 
-            // Build SVG layer overlays (pixel art) - scaled to fit 64px preview
+            // Build SVG layer overlays (pixel art) - scaled to fit 56px preview
             let overlayHTML = '';
             if (hat && hat.svgId) {
-                overlayHTML += `<svg class="costume-layer-preview" style="top:-12px;left:50%;transform:translateX(-50%);width:50px;height:50px;"><use href="#${hat.svgId}"/></svg>`;
+                overlayHTML += `<svg class="costume-layer-preview" style="top:-10px;left:50%;transform:translateX(-50%);width:44px;height:44px;"><use href="#${hat.svgId}"/></svg>`;
             }
             if (outfit && outfit.svgId) {
-                overlayHTML += `<svg class="costume-layer-preview" style="bottom:-10px;left:50%;transform:translateX(-50%);width:56px;height:56px;"><use href="#${outfit.svgId}"/></svg>`;
+                overlayHTML += `<svg class="costume-layer-preview" style="bottom:-8px;left:50%;transform:translateX(-50%);width:48px;height:48px;"><use href="#${outfit.svgId}"/></svg>`;
             }
             if (acc && acc.svgId) {
                 if (acc.position === 'face') {
                     // Face accessories - sunglasses on eyes
-                    overlayHTML += `<svg class="costume-layer-preview" style="top:18px;left:50%;transform:translateX(-50%);width:54px;height:22px;"><use href="#${acc.svgId}"/></svg>`;
+                    overlayHTML += `<svg class="costume-layer-preview" style="top:14px;left:50%;transform:translateX(-50%);width:46px;height:18px;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
-                    // Held accessories (wand, food, balloon) - to the right side (larger)
-                    overlayHTML += `<svg class="costume-layer-preview" style="top:0px;right:-14px;width:55px;height:55px;"><use href="#${acc.svgId}"/></svg>`;
+                    // Held accessories (wand, food, balloon) - to the right side
+                    overlayHTML += `<svg class="costume-layer-preview" style="top:0px;right:-12px;width:46px;height:46px;"><use href="#${acc.svgId}"/></svg>`;
                 }
             }
 
             preview.innerHTML = `
-                <svg style="width:64px;height:64px;"><use href="#${avatar.svgId}"/></svg>
+                <svg style="width:56px;height:56px;"><use href="#${avatar.svgId}"/></svg>
                 ${overlayHTML}
             `;
         }
