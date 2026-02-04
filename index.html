@@ -723,6 +723,97 @@
         .costume-preview svg { image-rendering: pixelated; }
         .costume-layer-preview { image-rendering: pixelated; pointer-events: none; position: absolute; }
 
+        /* Sticker Book Styles */
+        .sticker-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            max-width: 360px;
+            width: 100%;
+            margin: 0 auto;
+            max-height: 50vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 5px;
+        }
+        .sticker-counter {
+            text-align: center;
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .sticker-item {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.1);
+            padding: 4px;
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+        .sticker-item:active { transform: scale(0.95); }
+        .sticker-item.collected { border-color: var(--success); }
+        .sticker-item.uncollected { opacity: 0.4; }
+        .sticker-item.uncollected svg { filter: brightness(0) saturate(0); }
+        .sticker-item svg { width: 32px; height: 32px; image-rendering: pixelated; }
+        .sticker-item-name {
+            font-size: 0.55rem;
+            color: var(--primary);
+            margin-top: 2px;
+            text-align: center;
+            line-height: 1.1;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .sticker-item.uncollected .sticker-item-name { color: #666; }
+        /* Sticker rarity effects */
+        .sticker-item.rarity-uncommon.collected { border-color: #5dade2; box-shadow: 0 0 5px rgba(93, 173, 226, 0.4); }
+        .sticker-item.rarity-rare.collected { border-color: #ffd700; box-shadow: 0 0 8px rgba(255, 215, 0, 0.5); }
+        .sticker-item.rarity-legendary.collected {
+            border-color: #ff6b9d;
+            box-shadow: 0 0 12px rgba(255, 107, 157, 0.6);
+            animation: stickerLegendaryGlow 1.5s ease-in-out infinite;
+        }
+        @keyframes stickerLegendaryGlow {
+            0%, 100% { box-shadow: 0 0 12px rgba(255, 107, 157, 0.6); }
+            50% { box-shadow: 0 0 20px rgba(255, 217, 61, 0.8), 0 0 30px rgba(255, 107, 157, 0.5); }
+        }
+        /* Mystery box hint pulse */
+        .mystery-box-icon { transition: filter 0.3s; }
+        .mystery-box-icon.hint-pulse {
+            animation: mysteryHintPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes mysteryHintPulse {
+            0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 217, 61, 0.5)); }
+            50% { filter: drop-shadow(0 0 10px rgba(255, 217, 61, 0.9)) drop-shadow(0 0 15px rgba(255, 107, 157, 0.6)); }
+        }
+        /* Sticker reveal animation */
+        .sticker-reveal {
+            animation: stickerReveal 0.6s ease-out;
+        }
+        @keyframes stickerReveal {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            60% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0); }
+        }
+        .sticker-sparkle {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: sparkle 0.8s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes sparkle {
+            0% { opacity: 1; transform: scale(0.5) translateY(0); }
+            100% { opacity: 0; transform: scale(1.2) translateY(-20px); }
+        }
+
         /* Problem Area */
         .problem-area {
             flex: 1;
@@ -3053,6 +3144,710 @@
             <rect x="14" y="-1" width="2" height="1" fill="#ffc107"/>
             <rect x="18" y="-1" width="2" height="1" fill="#ffc107"/>
         </symbol>
+
+        <!-- ========== STICKERS (80 total) ========== -->
+        <!-- Tropical Fruits (15) -->
+        <symbol id="sticker-mango" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="2" fill="#2d5a1d"/>
+            <rect x="5" y="3" width="6" height="3" fill="#ffb347"/>
+            <rect x="4" y="6" width="8" height="4" fill="#ff9a3c"/>
+            <rect x="5" y="10" width="6" height="3" fill="#ff8c42"/>
+            <rect x="6" y="13" width="4" height="2" fill="#ff7b3a"/>
+            <rect x="5" y="7" width="2" height="2" fill="#3a2a1a"/>
+            <rect x="9" y="7" width="2" height="2" fill="#3a2a1a"/>
+            <rect x="7" y="10" width="2" height="1" fill="#e85a3c"/>
+        </symbol>
+        <symbol id="sticker-watermelon" viewBox="0 0 16 16">
+            <rect x="2" y="12" width="12" height="3" fill="#4a7c3f"/>
+            <rect x="2" y="4" width="12" height="8" fill="#ff6b8a"/>
+            <rect x="4" y="6" width="1" height="2" fill="#2a1a1a"/>
+            <rect x="7" y="5" width="1" height="2" fill="#2a1a1a"/>
+            <rect x="10" y="7" width="1" height="2" fill="#2a1a1a"/>
+        </symbol>
+        <symbol id="sticker-pineapple" viewBox="0 0 16 16">
+            <rect x="6" y="0" width="4" height="3" fill="#4a9a3a"/>
+            <rect x="5" y="1" width="2" height="2" fill="#2d5a1d"/>
+            <rect x="9" y="1" width="2" height="2" fill="#2d5a1d"/>
+            <rect x="4" y="3" width="8" height="10" fill="#ffd700"/>
+            <rect x="5" y="5" width="1" height="1" fill="#cc9900"/>
+            <rect x="7" y="5" width="1" height="1" fill="#cc9900"/>
+            <rect x="9" y="5" width="1" height="1" fill="#cc9900"/>
+            <rect x="6" y="8" width="1" height="1" fill="#cc9900"/>
+            <rect x="8" y="8" width="1" height="1" fill="#cc9900"/>
+        </symbol>
+        <symbol id="sticker-banana" viewBox="0 0 16 16">
+            <rect x="5" y="2" width="3" height="2" fill="#8b6914"/>
+            <rect x="4" y="4" width="8" height="8" fill="#ffe135"/>
+            <rect x="5" y="12" width="7" height="2" fill="#ffd700"/>
+            <rect x="10" y="13" width="2" height="2" fill="#8b6914"/>
+        </symbol>
+        <symbol id="sticker-coconut" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#8b5a2b"/>
+            <rect x="5" y="3" width="6" height="2" fill="#a0522d"/>
+            <rect x="5" y="11" width="6" height="2" fill="#6d4c41"/>
+            <rect x="6" y="6" width="2" height="2" fill="#3e2723"/>
+            <rect x="9" y="7" width="2" height="2" fill="#3e2723"/>
+            <rect x="7" y="9" width="2" height="1" fill="#3e2723"/>
+        </symbol>
+        <symbol id="sticker-papaya" viewBox="0 0 16 16">
+            <rect x="5" y="2" width="6" height="12" fill="#ffa726"/>
+            <rect x="4" y="4" width="8" height="8" fill="#ffb74d"/>
+            <rect x="6" y="6" width="4" height="4" fill="#ff7043"/>
+            <rect x="7" y="7" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="8" y="8" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-starfruit" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="3" fill="#c5e1a5"/>
+            <rect x="2" y="6" width="5" height="2" fill="#c5e1a5"/>
+            <rect x="9" y="6" width="5" height="2" fill="#c5e1a5"/>
+            <rect x="4" y="11" width="3" height="4" fill="#c5e1a5"/>
+            <rect x="9" y="11" width="3" height="4" fill="#c5e1a5"/>
+            <rect x="5" y="5" width="6" height="6" fill="#dce775"/>
+        </symbol>
+        <symbol id="sticker-dragonfruit" viewBox="0 0 16 16">
+            <rect x="5" y="3" width="6" height="10" fill="#ec407a"/>
+            <rect x="4" y="5" width="8" height="6" fill="#f48fb1"/>
+            <rect x="7" y="1" width="2" height="3" fill="#4caf50"/>
+            <rect x="4" y="3" width="2" height="2" fill="#66bb6a"/>
+            <rect x="10" y="3" width="2" height="2" fill="#66bb6a"/>
+            <rect x="6" y="7" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="8" y="8" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="6" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-passionfruit" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#7b1fa2"/>
+            <rect x="5" y="3" width="6" height="2" fill="#9c27b0"/>
+            <rect x="5" y="11" width="6" height="2" fill="#6a1b9a"/>
+            <rect x="6" y="6" width="4" height="4" fill="#ffeb3b"/>
+            <rect x="7" y="7" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="8" y="8" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-guava" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#aed581"/>
+            <rect x="5" y="3" width="6" height="2" fill="#9ccc65"/>
+            <rect x="5" y="11" width="6" height="2" fill="#8bc34a"/>
+            <rect x="6" y="6" width="4" height="4" fill="#f48fb1"/>
+            <rect x="7" y="7" width="1" height="1" fill="#c2185b"/>
+        </symbol>
+        <symbol id="sticker-lychee" viewBox="0 0 16 16">
+            <rect x="5" y="4" width="6" height="8" fill="#d32f2f"/>
+            <rect x="4" y="5" width="8" height="6" fill="#ef5350"/>
+            <rect x="6" y="2" width="2" height="3" fill="#4caf50"/>
+            <rect x="6" y="7" width="4" height="3" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-kiwi" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#795548"/>
+            <rect x="5" y="5" width="6" height="6" fill="#8bc34a"/>
+            <rect x="7" y="7" width="2" height="2" fill="#fff"/>
+            <rect x="6" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="6" y="9" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="9" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-orange" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#ff9800"/>
+            <rect x="5" y="3" width="6" height="2" fill="#ffa726"/>
+            <rect x="5" y="11" width="6" height="2" fill="#f57c00"/>
+            <rect x="7" y="1" width="2" height="3" fill="#4caf50"/>
+        </symbol>
+        <symbol id="sticker-lemon" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#ffeb3b"/>
+            <rect x="5" y="3" width="6" height="2" fill="#fff176"/>
+            <rect x="5" y="11" width="6" height="2" fill="#fdd835"/>
+            <rect x="3" y="6" width="2" height="4" fill="#fff176"/>
+            <rect x="11" y="6" width="2" height="4" fill="#fff176"/>
+        </symbol>
+        <symbol id="sticker-lime" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#8bc34a"/>
+            <rect x="5" y="3" width="6" height="2" fill="#9ccc65"/>
+            <rect x="5" y="11" width="6" height="2" fill="#7cb342"/>
+            <rect x="6" y="6" width="4" height="4" fill="#c5e1a5"/>
+        </symbol>
+
+        <!-- Island Animals (20) -->
+        <symbol id="sticker-crab" viewBox="0 0 16 16">
+            <rect x="5" y="6" width="6" height="5" fill="#ff5722"/>
+            <rect x="1" y="5" width="4" height="2" fill="#e64a19"/>
+            <rect x="11" y="5" width="4" height="2" fill="#e64a19"/>
+            <rect x="0" y="4" width="2" height="3" fill="#ff7043"/>
+            <rect x="14" y="4" width="2" height="3" fill="#ff7043"/>
+            <rect x="6" y="7" width="2" height="2" fill="#fff"/>
+            <rect x="9" y="7" width="2" height="2" fill="#fff"/>
+            <rect x="6" y="8" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="10" y="8" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-turtle" viewBox="0 0 16 16">
+            <rect x="4" y="5" width="8" height="7" fill="#4caf50"/>
+            <rect x="5" y="4" width="6" height="2" fill="#66bb6a"/>
+            <rect x="10" y="6" width="4" height="2" fill="#8bc34a"/>
+            <rect x="2" y="10" width="3" height="3" fill="#8bc34a"/>
+            <rect x="11" y="10" width="3" height="3" fill="#8bc34a"/>
+            <rect x="6" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="6" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-fish" viewBox="0 0 16 16">
+            <rect x="4" y="5" width="8" height="6" fill="#2196f3"/>
+            <rect x="3" y="6" width="2" height="4" fill="#42a5f5"/>
+            <rect x="11" y="4" width="3" height="3" fill="#1e88e5"/>
+            <rect x="11" y="9" width="3" height="3" fill="#1e88e5"/>
+            <rect x="5" y="7" width="2" height="2" fill="#fff"/>
+            <rect x="5" y="7" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-octopus" viewBox="0 0 16 16">
+            <rect x="5" y="2" width="6" height="6" fill="#9c27b0"/>
+            <rect x="6" y="3" width="2" height="2" fill="#fff"/>
+            <rect x="9" y="3" width="2" height="2" fill="#fff"/>
+            <rect x="6" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="10" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="2" y="8" width="2" height="6" fill="#ab47bc"/>
+            <rect x="5" y="8" width="2" height="7" fill="#9c27b0"/>
+            <rect x="9" y="8" width="2" height="7" fill="#9c27b0"/>
+            <rect x="12" y="8" width="2" height="6" fill="#ab47bc"/>
+        </symbol>
+        <symbol id="sticker-jellyfish" viewBox="0 0 16 16">
+            <rect x="4" y="2" width="8" height="6" fill="#e1bee7"/>
+            <rect x="3" y="3" width="10" height="4" fill="#ce93d8"/>
+            <rect x="5" y="4" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="4" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="4" y="8" width="1" height="5" fill="#f3e5f5"/>
+            <rect x="7" y="8" width="2" height="6" fill="#f3e5f5"/>
+            <rect x="11" y="8" width="1" height="5" fill="#f3e5f5"/>
+        </symbol>
+        <symbol id="sticker-starfish" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="4" fill="#ff9800"/>
+            <rect x="1" y="5" width="4" height="2" fill="#ff9800"/>
+            <rect x="11" y="5" width="4" height="2" fill="#ff9800"/>
+            <rect x="3" y="10" width="2" height="4" fill="#ff9800"/>
+            <rect x="11" y="10" width="2" height="4" fill="#ff9800"/>
+            <rect x="5" y="5" width="6" height="6" fill="#ffa726"/>
+            <rect x="7" y="7" width="2" height="2" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-seahorse" viewBox="0 0 16 16">
+            <rect x="8" y="1" width="4" height="4" fill="#ff9800"/>
+            <rect x="7" y="5" width="5" height="3" fill="#ffa726"/>
+            <rect x="6" y="8" width="4" height="3" fill="#ff9800"/>
+            <rect x="5" y="11" width="3" height="3" fill="#ffa726"/>
+            <rect x="7" y="13" width="3" height="2" fill="#ff9800"/>
+            <rect x="10" y="2" width="2" height="2" fill="#fff"/>
+            <rect x="10" y="3" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-dolphin" viewBox="0 0 16 16">
+            <rect x="2" y="6" width="10" height="5" fill="#607d8b"/>
+            <rect x="11" y="5" width="4" height="3" fill="#78909c"/>
+            <rect x="0" y="8" width="3" height="4" fill="#546e7a"/>
+            <rect x="6" y="4" width="3" height="3" fill="#78909c"/>
+            <rect x="12" y="6" width="2" height="2" fill="#fff"/>
+            <rect x="12" y="7" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="4" y="10" width="6" height="2" fill="#b0bec5"/>
+        </symbol>
+        <symbol id="sticker-whale" viewBox="0 0 16 16">
+            <rect x="2" y="5" width="12" height="7" fill="#1976d2"/>
+            <rect x="1" y="6" width="2" height="5" fill="#1e88e5"/>
+            <rect x="12" y="4" width="3" height="4" fill="#2196f3"/>
+            <rect x="12" y="10" width="3" height="3" fill="#2196f3"/>
+            <rect x="3" y="7" width="2" height="2" fill="#fff"/>
+            <rect x="3" y="7" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="5" y="10" width="6" height="2" fill="#90caf9"/>
+            <rect x="7" y="2" width="2" height="3" fill="#64b5f6"/>
+        </symbol>
+        <symbol id="sticker-pelican" viewBox="0 0 16 16">
+            <rect x="6" y="2" width="5" height="5" fill="#fff"/>
+            <rect x="5" y="5" width="6" height="6" fill="#eceff1"/>
+            <rect x="1" y="6" width="5" height="4" fill="#ff9800"/>
+            <rect x="0" y="7" width="2" height="2" fill="#ffa726"/>
+            <rect x="7" y="3" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="5" y="11" width="2" height="3" fill="#ff9800"/>
+            <rect x="9" y="11" width="2" height="3" fill="#ff9800"/>
+        </symbol>
+        <symbol id="sticker-parrot" viewBox="0 0 16 16">
+            <rect x="6" y="2" width="5" height="5" fill="#4caf50"/>
+            <rect x="5" y="5" width="6" height="6" fill="#f44336"/>
+            <rect x="5" y="11" width="6" height="3" fill="#2196f3"/>
+            <rect x="10" y="3" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="7" y="3" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="5" y="13" width="2" height="2" fill="#ff9800"/>
+        </symbol>
+        <symbol id="sticker-toucan" viewBox="0 0 16 16">
+            <rect x="7" y="2" width="5" height="5" fill="#1a1a1a"/>
+            <rect x="6" y="6" width="6" height="6" fill="#212121"/>
+            <rect x="1" y="4" width="6" height="4" fill="#ff9800"/>
+            <rect x="1" y="5" width="2" height="2" fill="#ffc107"/>
+            <rect x="5" y="7" width="2" height="1" fill="#f44336"/>
+            <rect x="9" y="3" width="2" height="2" fill="#fff"/>
+            <rect x="9" y="4" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-flamingo" viewBox="0 0 16 16">
+            <rect x="8" y="1" width="4" height="4" fill="#f48fb1"/>
+            <rect x="7" y="4" width="5" height="3" fill="#ec407a"/>
+            <rect x="11" y="2" width="3" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="2" width="2" height="2" fill="#fff"/>
+            <rect x="9" y="3" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="8" y="7" width="2" height="7" fill="#f48fb1"/>
+            <rect x="7" y="13" width="4" height="2" fill="#ff9800"/>
+        </symbol>
+        <symbol id="sticker-monkey" viewBox="0 0 16 16">
+            <rect x="4" y="3" width="8" height="8" fill="#795548"/>
+            <rect x="2" y="4" width="3" height="4" fill="#8d6e63"/>
+            <rect x="11" y="4" width="3" height="4" fill="#8d6e63"/>
+            <rect x="5" y="5" width="6" height="5" fill="#d7ccc8"/>
+            <rect x="5" y="6" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="6" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="7" y="8" width="2" height="1" fill="#3e2723"/>
+        </symbol>
+        <symbol id="sticker-gecko" viewBox="0 0 16 16">
+            <rect x="6" y="2" width="4" height="4" fill="#8bc34a"/>
+            <rect x="5" y="6" width="6" height="3" fill="#7cb342"/>
+            <rect x="4" y="9" width="8" height="2" fill="#8bc34a"/>
+            <rect x="6" y="11" width="4" height="4" fill="#689f38"/>
+            <rect x="7" y="3" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="3" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="2" y="6" width="3" height="2" fill="#8bc34a"/>
+            <rect x="11" y="6" width="3" height="2" fill="#8bc34a"/>
+        </symbol>
+        <symbol id="sticker-hermitcrab" viewBox="0 0 16 16">
+            <rect x="5" y="5" width="6" height="6" fill="#8d6e63"/>
+            <rect x="4" y="6" width="8" height="4" fill="#a1887f"/>
+            <rect x="2" y="9" width="3" height="3" fill="#ff5722"/>
+            <rect x="11" y="9" width="3" height="3" fill="#ff5722"/>
+            <rect x="6" y="3" width="4" height="3" fill="#ff7043"/>
+            <rect x="7" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="4" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-pufferfish" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#ffeb3b"/>
+            <rect x="3" y="5" width="10" height="6" fill="#fff176"/>
+            <rect x="5" y="6" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="6" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="2" y="4" width="1" height="1" fill="#fdd835"/>
+            <rect x="13" y="4" width="1" height="1" fill="#fdd835"/>
+            <rect x="2" y="11" width="1" height="1" fill="#fdd835"/>
+            <rect x="13" y="11" width="1" height="1" fill="#fdd835"/>
+            <rect x="4" y="2" width="1" height="2" fill="#fdd835"/>
+            <rect x="11" y="2" width="1" height="2" fill="#fdd835"/>
+        </symbol>
+        <symbol id="sticker-mantaray" viewBox="0 0 16 16">
+            <rect x="5" y="6" width="6" height="4" fill="#37474f"/>
+            <rect x="2" y="5" width="4" height="3" fill="#455a64"/>
+            <rect x="10" y="5" width="4" height="3" fill="#455a64"/>
+            <rect x="0" y="4" width="3" height="4" fill="#546e7a"/>
+            <rect x="13" y="4" width="3" height="4" fill="#546e7a"/>
+            <rect x="6" y="10" width="4" height="4" fill="#37474f"/>
+            <rect x="6" y="7" width="1" height="1" fill="#fff"/>
+            <rect x="9" y="7" width="1" height="1" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-seal" viewBox="0 0 16 16">
+            <rect x="3" y="5" width="10" height="7" fill="#78909c"/>
+            <rect x="2" y="6" width="3" height="5" fill="#90a4ae"/>
+            <rect x="11" y="9" width="4" height="3" fill="#607d8b"/>
+            <rect x="5" y="4" width="4" height="3" fill="#90a4ae"/>
+            <rect x="5" y="5" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="3" y="7" width="2" height="1" fill="#1a1a1a"/>
+            <rect x="4" y="12" width="3" height="2" fill="#546e7a"/>
+            <rect x="8" y="12" width="3" height="2" fill="#546e7a"/>
+        </symbol>
+        <symbol id="sticker-otter" viewBox="0 0 16 16">
+            <rect x="4" y="3" width="8" height="6" fill="#795548"/>
+            <rect x="3" y="4" width="10" height="4" fill="#8d6e63"/>
+            <rect x="5" y="4" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="4" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="6" y="6" width="4" height="2" fill="#d7ccc8"/>
+            <rect x="7" y="7" width="2" height="1" fill="#1a1a1a"/>
+            <rect x="3" y="9" width="10" height="4" fill="#6d4c41"/>
+            <rect x="2" y="11" width="2" height="2" fill="#5d4037"/>
+            <rect x="12" y="11" width="2" height="2" fill="#5d4037"/>
+        </symbol>
+
+        <!-- Tropical Vibes (15) -->
+        <symbol id="sticker-palmtree" viewBox="0 0 16 16">
+            <rect x="7" y="8" width="2" height="7" fill="#795548"/>
+            <rect x="3" y="2" width="5" height="4" fill="#4caf50"/>
+            <rect x="8" y="2" width="5" height="4" fill="#66bb6a"/>
+            <rect x="1" y="4" width="4" height="3" fill="#8bc34a"/>
+            <rect x="11" y="4" width="4" height="3" fill="#8bc34a"/>
+            <rect x="5" y="1" width="6" height="3" fill="#4caf50"/>
+        </symbol>
+        <symbol id="sticker-hibiscus" viewBox="0 0 16 16">
+            <rect x="6" y="1" width="4" height="4" fill="#e91e63"/>
+            <rect x="1" y="5" width="4" height="4" fill="#f44336"/>
+            <rect x="11" y="5" width="4" height="4" fill="#f44336"/>
+            <rect x="3" y="10" width="4" height="4" fill="#e91e63"/>
+            <rect x="9" y="10" width="4" height="4" fill="#e91e63"/>
+            <rect x="5" y="5" width="6" height="6" fill="#ec407a"/>
+            <rect x="7" y="7" width="2" height="2" fill="#ffeb3b"/>
+        </symbol>
+        <symbol id="sticker-plumeria" viewBox="0 0 16 16">
+            <rect x="6" y="1" width="4" height="4" fill="#fff"/>
+            <rect x="1" y="5" width="4" height="4" fill="#fff"/>
+            <rect x="11" y="5" width="4" height="4" fill="#fff"/>
+            <rect x="3" y="10" width="4" height="4" fill="#fff"/>
+            <rect x="9" y="10" width="4" height="4" fill="#fff"/>
+            <rect x="5" y="5" width="6" height="6" fill="#ffeb3b"/>
+        </symbol>
+        <symbol id="sticker-wave" viewBox="0 0 16 16">
+            <rect x="0" y="6" width="4" height="4" fill="#2196f3"/>
+            <rect x="4" y="4" width="4" height="4" fill="#42a5f5"/>
+            <rect x="8" y="2" width="4" height="4" fill="#64b5f6"/>
+            <rect x="12" y="4" width="4" height="4" fill="#90caf9"/>
+            <rect x="0" y="10" width="16" height="4" fill="#1e88e5"/>
+            <rect x="2" y="8" width="12" height="3" fill="#1976d2"/>
+        </symbol>
+        <symbol id="sticker-surfboard" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="14" fill="#ff9800"/>
+            <rect x="6" y="3" width="4" height="10" fill="#ffa726"/>
+            <rect x="5" y="5" width="6" height="6" fill="#ffb74d"/>
+            <rect x="7" y="4" width="2" height="2" fill="#f44336"/>
+            <rect x="7" y="8" width="2" height="3" fill="#2196f3"/>
+        </symbol>
+        <symbol id="sticker-beachball" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#fff"/>
+            <rect x="4" y="4" width="4" height="4" fill="#f44336"/>
+            <rect x="8" y="8" width="4" height="4" fill="#f44336"/>
+            <rect x="4" y="8" width="4" height="4" fill="#2196f3"/>
+            <rect x="8" y="4" width="4" height="4" fill="#ffeb3b"/>
+            <rect x="5" y="3" width="6" height="1" fill="#fff"/>
+            <rect x="5" y="12" width="6" height="1" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-sandcastle" viewBox="0 0 16 16">
+            <rect x="2" y="10" width="12" height="5" fill="#d7ccc8"/>
+            <rect x="3" y="7" width="3" height="4" fill="#bcaaa4"/>
+            <rect x="10" y="7" width="3" height="4" fill="#bcaaa4"/>
+            <rect x="6" y="4" width="4" height="7" fill="#a1887f"/>
+            <rect x="7" y="2" width="2" height="3" fill="#8d6e63"/>
+            <rect x="4" y="5" width="1" height="2" fill="#8d6e63"/>
+            <rect x="11" y="5" width="1" height="2" fill="#8d6e63"/>
+            <rect x="7" y="11" width="2" height="3" fill="#6d4c41"/>
+        </symbol>
+        <symbol id="sticker-seashell" viewBox="0 0 16 16">
+            <rect x="4" y="6" width="8" height="6" fill="#f8bbd9"/>
+            <rect x="3" y="7" width="10" height="4" fill="#f48fb1"/>
+            <rect x="5" y="5" width="6" height="2" fill="#fce4ec"/>
+            <rect x="6" y="4" width="4" height="2" fill="#fff"/>
+            <rect x="5" y="8" width="1" height="2" fill="#ad1457"/>
+            <rect x="7" y="8" width="1" height="2" fill="#ad1457"/>
+            <rect x="9" y="8" width="1" height="2" fill="#ad1457"/>
+        </symbol>
+        <symbol id="sticker-coral" viewBox="0 0 16 16">
+            <rect x="2" y="10" width="12" height="4" fill="#ff5722"/>
+            <rect x="3" y="6" width="3" height="5" fill="#ff7043"/>
+            <rect x="7" y="4" width="2" height="7" fill="#e64a19"/>
+            <rect x="10" y="6" width="3" height="5" fill="#ff7043"/>
+            <rect x="4" y="4" width="1" height="3" fill="#ff8a65"/>
+            <rect x="11" y="4" width="1" height="3" fill="#ff8a65"/>
+        </symbol>
+        <symbol id="sticker-sunset" viewBox="0 0 16 16">
+            <rect x="0" y="0" width="16" height="5" fill="#ff9800"/>
+            <rect x="0" y="5" width="16" height="3" fill="#ff5722"/>
+            <rect x="0" y="8" width="16" height="3" fill="#e91e63"/>
+            <rect x="0" y="11" width="16" height="5" fill="#9c27b0"/>
+            <rect x="5" y="4" width="6" height="6" fill="#ffeb3b"/>
+            <rect x="6" y="5" width="4" height="4" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-rainbow" viewBox="0 0 16 16">
+            <rect x="2" y="8" width="12" height="2" fill="#f44336"/>
+            <rect x="3" y="6" width="10" height="2" fill="#ff9800"/>
+            <rect x="4" y="4" width="8" height="2" fill="#ffeb3b"/>
+            <rect x="5" y="2" width="6" height="2" fill="#4caf50"/>
+            <rect x="6" y="0" width="4" height="2" fill="#2196f3"/>
+            <rect x="0" y="10" width="4" height="5" fill="#e0e0e0"/>
+            <rect x="12" y="10" width="4" height="5" fill="#e0e0e0"/>
+        </symbol>
+        <symbol id="sticker-volcano" viewBox="0 0 16 16">
+            <rect x="2" y="10" width="12" height="5" fill="#795548"/>
+            <rect x="4" y="6" width="8" height="5" fill="#5d4037"/>
+            <rect x="6" y="3" width="4" height="4" fill="#3e2723"/>
+            <rect x="6" y="0" width="1" height="3" fill="#ff5722"/>
+            <rect x="8" y="1" width="2" height="3" fill="#ff9800"/>
+            <rect x="5" y="2" width="1" height="2" fill="#ffc107"/>
+        </symbol>
+        <symbol id="sticker-tikitorch" viewBox="0 0 16 16">
+            <rect x="7" y="6" width="2" height="9" fill="#6d4c41"/>
+            <rect x="6" y="8" width="4" height="2" fill="#5d4037"/>
+            <rect x="6" y="12" width="4" height="2" fill="#5d4037"/>
+            <rect x="6" y="3" width="4" height="4" fill="#ff9800"/>
+            <rect x="7" y="1" width="2" height="3" fill="#ffeb3b"/>
+            <rect x="5" y="4" width="1" height="2" fill="#ffc107"/>
+            <rect x="10" y="4" width="1" height="2" fill="#ffc107"/>
+        </symbol>
+        <symbol id="sticker-ukulele" viewBox="0 0 16 16">
+            <rect x="6" y="8" width="4" height="6" fill="#8d6e63"/>
+            <rect x="5" y="10" width="6" height="4" fill="#a1887f"/>
+            <rect x="7" y="11" width="2" height="2" fill="#3e2723"/>
+            <rect x="6" y="2" width="4" height="7" fill="#6d4c41"/>
+            <rect x="7" y="1" width="2" height="2" fill="#5d4037"/>
+            <rect x="5" y="1" width="1" height="1" fill="#ffc107"/>
+            <rect x="10" y="1" width="1" height="1" fill="#ffc107"/>
+            <rect x="7" y="4" width="2" height="4" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-hammock" viewBox="0 0 16 16">
+            <rect x="1" y="3" width="2" height="10" fill="#6d4c41"/>
+            <rect x="13" y="3" width="2" height="10" fill="#6d4c41"/>
+            <rect x="3" y="6" width="10" height="1" fill="#4caf50"/>
+            <rect x="4" y="7" width="8" height="1" fill="#66bb6a"/>
+            <rect x="5" y="8" width="6" height="1" fill="#8bc34a"/>
+            <rect x="4" y="9" width="8" height="1" fill="#66bb6a"/>
+            <rect x="3" y="10" width="10" height="1" fill="#4caf50"/>
+        </symbol>
+
+        <!-- Mini Bosses (15) -->
+        <symbol id="sticker-boss-tiki" viewBox="0 0 16 16">
+            <rect x="4" y="2" width="8" height="12" fill="#8d6e63"/>
+            <rect x="3" y="4" width="10" height="8" fill="#a1887f"/>
+            <rect x="5" y="5" width="2" height="3" fill="#fff"/>
+            <rect x="9" y="5" width="2" height="3" fill="#fff"/>
+            <rect x="5" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="10" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="6" y="10" width="4" height="2" fill="#f44336"/>
+        </symbol>
+        <symbol id="sticker-boss-crab" viewBox="0 0 16 16">
+            <rect x="5" y="5" width="6" height="5" fill="#ff5722"/>
+            <rect x="1" y="4" width="4" height="2" fill="#e64a19"/>
+            <rect x="11" y="4" width="4" height="2" fill="#e64a19"/>
+            <rect x="6" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="9" y="6" width="1" height="1" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-boss-puffer" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="8" fill="#ffeb3b"/>
+            <rect x="5" y="6" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="6" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="2" y="3" width="1" height="1" fill="#fdd835"/>
+            <rect x="13" y="3" width="1" height="1" fill="#fdd835"/>
+        </symbol>
+        <symbol id="sticker-boss-jelly" viewBox="0 0 16 16">
+            <rect x="4" y="2" width="8" height="6" fill="#ce93d8"/>
+            <rect x="5" y="4" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="4" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="5" y="8" width="1" height="4" fill="#e1bee7"/>
+            <rect x="7" y="8" width="2" height="5" fill="#e1bee7"/>
+            <rect x="10" y="8" width="1" height="4" fill="#e1bee7"/>
+        </symbol>
+        <symbol id="sticker-boss-shark" viewBox="0 0 16 16">
+            <rect x="3" y="5" width="10" height="6" fill="#607d8b"/>
+            <rect x="12" y="4" width="3" height="3" fill="#78909c"/>
+            <rect x="7" y="2" width="2" height="4" fill="#546e7a"/>
+            <rect x="4" y="7" width="2" height="2" fill="#fff"/>
+            <rect x="4" y="8" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="5" y="10" width="6" height="2" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-boss-octopus" viewBox="0 0 16 16">
+            <rect x="5" y="2" width="6" height="5" fill="#9c27b0"/>
+            <rect x="6" y="3" width="1" height="1" fill="#fff"/>
+            <rect x="9" y="3" width="1" height="1" fill="#fff"/>
+            <rect x="3" y="7" width="2" height="5" fill="#ab47bc"/>
+            <rect x="6" y="7" width="2" height="6" fill="#9c27b0"/>
+            <rect x="9" y="7" width="2" height="6" fill="#9c27b0"/>
+            <rect x="11" y="7" width="2" height="5" fill="#ab47bc"/>
+        </symbol>
+        <symbol id="sticker-boss-turtle" viewBox="0 0 16 16">
+            <rect x="4" y="4" width="8" height="6" fill="#4caf50"/>
+            <rect x="10" y="5" width="3" height="2" fill="#8bc34a"/>
+            <rect x="3" y="9" width="2" height="2" fill="#8bc34a"/>
+            <rect x="11" y="9" width="2" height="2" fill="#8bc34a"/>
+            <rect x="11" y="5" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-boss-starfish" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="3" fill="#ff9800"/>
+            <rect x="2" y="5" width="3" height="2" fill="#ff9800"/>
+            <rect x="11" y="5" width="3" height="2" fill="#ff9800"/>
+            <rect x="4" y="10" width="2" height="3" fill="#ff9800"/>
+            <rect x="10" y="10" width="2" height="3" fill="#ff9800"/>
+            <rect x="5" y="5" width="6" height="5" fill="#ffa726"/>
+        </symbol>
+        <symbol id="sticker-boss-pirate" viewBox="0 0 16 16">
+            <rect x="5" y="3" width="6" height="6" fill="#ffccbc"/>
+            <rect x="4" y="1" width="8" height="3" fill="#1a1a1a"/>
+            <rect x="5" y="5" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="9" y="5" width="2" height="2" fill="#fff"/>
+            <rect x="9" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="6" y="8" width="4" height="1" fill="#1a1a1a"/>
+            <rect x="4" y="9" width="8" height="5" fill="#f44336"/>
+        </symbol>
+        <symbol id="sticker-boss-mermaid" viewBox="0 0 16 16">
+            <rect x="5" y="2" width="6" height="5" fill="#ffccbc"/>
+            <rect x="4" y="1" width="8" height="2" fill="#ffeb3b"/>
+            <rect x="6" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="5" y="7" width="6" height="3" fill="#4caf50"/>
+            <rect x="4" y="10" width="8" height="4" fill="#26a69a"/>
+            <rect x="3" y="13" width="4" height="2" fill="#4db6ac"/>
+            <rect x="9" y="13" width="4" height="2" fill="#4db6ac"/>
+        </symbol>
+        <symbol id="sticker-boss-kraken" viewBox="0 0 16 16">
+            <rect x="5" y="1" width="6" height="6" fill="#4a148c"/>
+            <rect x="6" y="2" width="1" height="2" fill="#ff5722"/>
+            <rect x="9" y="2" width="1" height="2" fill="#ff5722"/>
+            <rect x="7" y="5" width="2" height="2" fill="#1a1a1a"/>
+            <rect x="2" y="7" width="2" height="6" fill="#6a1b9a"/>
+            <rect x="5" y="7" width="2" height="7" fill="#4a148c"/>
+            <rect x="9" y="7" width="2" height="7" fill="#4a148c"/>
+            <rect x="12" y="7" width="2" height="6" fill="#6a1b9a"/>
+            <rect x="6" y="0" width="4" height="1" fill="#ffd700"/>
+        </symbol>
+        <symbol id="sticker-boss-whale" viewBox="0 0 16 16">
+            <rect x="2" y="4" width="10" height="6" fill="#1976d2"/>
+            <rect x="11" y="3" width="3" height="3" fill="#2196f3"/>
+            <rect x="11" y="8" width="3" height="3" fill="#2196f3"/>
+            <rect x="3" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="6" y="1" width="2" height="3" fill="#64b5f6"/>
+        </symbol>
+        <symbol id="sticker-boss-serpent" viewBox="0 0 16 16">
+            <rect x="2" y="6" width="4" height="4" fill="#4caf50"/>
+            <rect x="6" y="4" width="4" height="4" fill="#66bb6a"/>
+            <rect x="10" y="6" width="4" height="4" fill="#4caf50"/>
+            <rect x="12" y="4" width="3" height="3" fill="#43a047"/>
+            <rect x="13" y="5" width="1" height="1" fill="#ff5722"/>
+        </symbol>
+        <symbol id="sticker-boss-mimic" viewBox="0 0 16 16">
+            <rect x="3" y="6" width="10" height="7" fill="#6d4c41"/>
+            <rect x="4" y="5" width="8" height="2" fill="#5d4037"/>
+            <rect x="5" y="8" width="2" height="2" fill="#fff"/>
+            <rect x="9" y="8" width="2" height="2" fill="#fff"/>
+            <rect x="5" y="9" width="1" height="1" fill="#f44336"/>
+            <rect x="10" y="9" width="1" height="1" fill="#f44336"/>
+            <rect x="6" y="11" width="4" height="1" fill="#f44336"/>
+            <rect x="5" y="4" width="6" height="2" fill="#ffd700"/>
+        </symbol>
+        <symbol id="sticker-boss-volcano" viewBox="0 0 16 16">
+            <rect x="3" y="8" width="10" height="6" fill="#5d4037"/>
+            <rect x="5" y="5" width="6" height="4" fill="#795548"/>
+            <rect x="6" y="2" width="4" height="4" fill="#ff5722"/>
+            <rect x="7" y="0" width="2" height="3" fill="#ffc107"/>
+            <rect x="5" y="3" width="1" height="2" fill="#ff9800"/>
+            <rect x="10" y="3" width="1" height="2" fill="#ff9800"/>
+        </symbol>
+
+        <!-- Special/Rare (15) -->
+        <symbol id="sticker-golden-mango" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="2" fill="#ffd700"/>
+            <rect x="5" y="3" width="6" height="3" fill="#ffd700"/>
+            <rect x="4" y="6" width="8" height="4" fill="#ffeb3b"/>
+            <rect x="5" y="10" width="6" height="3" fill="#ffc107"/>
+            <rect x="6" y="13" width="4" height="2" fill="#ff9800"/>
+            <rect x="5" y="7" width="2" height="2" fill="#fff"/>
+            <rect x="9" y="7" width="2" height="2" fill="#fff"/>
+            <rect x="5" y="7" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="7" width="1" height="1" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-sparkle-star" viewBox="0 0 16 16">
+            <rect x="7" y="0" width="2" height="5" fill="#fff"/>
+            <rect x="7" y="11" width="2" height="5" fill="#fff"/>
+            <rect x="0" y="7" width="5" height="2" fill="#fff"/>
+            <rect x="11" y="7" width="5" height="2" fill="#fff"/>
+            <rect x="2" y="2" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="11" y="2" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="2" y="11" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="11" y="11" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="6" y="6" width="4" height="4" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-diamond" viewBox="0 0 16 16">
+            <rect x="6" y="2" width="4" height="2" fill="#e3f2fd"/>
+            <rect x="4" y="4" width="8" height="3" fill="#bbdefb"/>
+            <rect x="2" y="7" width="12" height="2" fill="#90caf9"/>
+            <rect x="4" y="9" width="8" height="3" fill="#64b5f6"/>
+            <rect x="6" y="12" width="4" height="2" fill="#42a5f5"/>
+        </symbol>
+        <symbol id="sticker-crown" viewBox="0 0 16 16">
+            <rect x="2" y="6" width="12" height="6" fill="#ffd700"/>
+            <rect x="3" y="5" width="2" height="2" fill="#ffc107"/>
+            <rect x="7" y="3" width="2" height="4" fill="#ffc107"/>
+            <rect x="11" y="5" width="2" height="2" fill="#ffc107"/>
+            <rect x="3" y="12" width="10" height="2" fill="#ff9800"/>
+            <rect x="5" y="7" width="2" height="2" fill="#e91e63"/>
+            <rect x="9" y="7" width="2" height="2" fill="#2196f3"/>
+        </symbol>
+        <symbol id="sticker-treasure" viewBox="0 0 16 16">
+            <rect x="2" y="6" width="12" height="8" fill="#6d4c41"/>
+            <rect x="3" y="5" width="10" height="2" fill="#5d4037"/>
+            <rect x="5" y="8" width="3" height="3" fill="#ffd700"/>
+            <rect x="8" y="9" width="3" height="3" fill="#ffc107"/>
+            <rect x="6" y="11" width="4" height="2" fill="#ffeb3b"/>
+            <rect x="6" y="4" width="4" height="2" fill="#ff9800"/>
+        </symbol>
+        <symbol id="sticker-heart" viewBox="0 0 16 16">
+            <rect x="2" y="4" width="5" height="5" fill="#e91e63"/>
+            <rect x="9" y="4" width="5" height="5" fill="#e91e63"/>
+            <rect x="4" y="6" width="8" height="5" fill="#f44336"/>
+            <rect x="5" y="11" width="6" height="2" fill="#e91e63"/>
+            <rect x="7" y="13" width="2" height="2" fill="#c2185b"/>
+        </symbol>
+        <symbol id="sticker-trophy" viewBox="0 0 16 16">
+            <rect x="5" y="2" width="6" height="6" fill="#ffd700"/>
+            <rect x="4" y="3" width="2" height="4" fill="#ffc107"/>
+            <rect x="10" y="3" width="2" height="4" fill="#ffc107"/>
+            <rect x="1" y="3" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="12" y="3" width="3" height="3" fill="#ffeb3b"/>
+            <rect x="7" y="8" width="2" height="3" fill="#8d6e63"/>
+            <rect x="5" y="11" width="6" height="3" fill="#6d4c41"/>
+        </symbol>
+        <symbol id="sticker-medal" viewBox="0 0 16 16">
+            <rect x="6" y="1" width="4" height="4" fill="#2196f3"/>
+            <rect x="5" y="2" width="1" height="2" fill="#1976d2"/>
+            <rect x="10" y="2" width="1" height="2" fill="#1976d2"/>
+            <rect x="4" y="5" width="8" height="8" fill="#ffd700"/>
+            <rect x="5" y="6" width="6" height="6" fill="#ffc107"/>
+            <rect x="7" y="8" width="2" height="2" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-birthday" viewBox="0 0 16 16">
+            <rect x="3" y="7" width="10" height="7" fill="#f48fb1"/>
+            <rect x="4" y="6" width="8" height="2" fill="#ec407a"/>
+            <rect x="5" y="10" width="6" height="1" fill="#fff"/>
+            <rect x="7" y="3" width="2" height="4" fill="#ffeb3b"/>
+            <rect x="7" y="1" width="2" height="3" fill="#ff9800"/>
+        </symbol>
+        <symbol id="sticker-gift" viewBox="0 0 16 16">
+            <rect x="3" y="5" width="10" height="9" fill="#e91e63"/>
+            <rect x="7" y="5" width="2" height="9" fill="#ffd700"/>
+            <rect x="3" y="8" width="10" height="2" fill="#ffd700"/>
+            <rect x="4" y="3" width="8" height="3" fill="#f44336"/>
+            <rect x="6" y="1" width="4" height="3" fill="#ffeb3b"/>
+        </symbol>
+        <symbol id="sticker-confetti" viewBox="0 0 16 16">
+            <rect x="2" y="3" width="2" height="2" fill="#f44336"/>
+            <rect x="6" y="1" width="2" height="2" fill="#ffeb3b"/>
+            <rect x="11" y="2" width="2" height="2" fill="#2196f3"/>
+            <rect x="1" y="7" width="2" height="2" fill="#4caf50"/>
+            <rect x="8" y="6" width="2" height="2" fill="#9c27b0"/>
+            <rect x="13" y="8" width="2" height="2" fill="#ff9800"/>
+            <rect x="3" y="11" width="2" height="2" fill="#e91e63"/>
+            <rect x="7" y="12" width="2" height="2" fill="#00bcd4"/>
+            <rect x="12" y="12" width="2" height="2" fill="#8bc34a"/>
+        </symbol>
+        <symbol id="sticker-100" viewBox="0 0 16 16">
+            <rect x="1" y="5" width="2" height="6" fill="#ffd700"/>
+            <rect x="1" y="4" width="2" height="2" fill="#ffc107"/>
+            <rect x="4" y="4" width="4" height="7" fill="#ffd700"/>
+            <rect x="5" y="5" width="2" height="5" fill="#1a1a1a"/>
+            <rect x="9" y="4" width="4" height="7" fill="#ffd700"/>
+            <rect x="10" y="5" width="2" height="5" fill="#1a1a1a"/>
+        </symbol>
+        <symbol id="sticker-perfect" viewBox="0 0 16 16">
+            <rect x="3" y="4" width="10" height="8" fill="#4caf50"/>
+            <rect x="4" y="3" width="8" height="2" fill="#66bb6a"/>
+            <rect x="4" y="11" width="8" height="2" fill="#388e3c"/>
+            <rect x="5" y="6" width="2" height="4" fill="#fff"/>
+            <rect x="7" y="8" width="2" height="2" fill="#fff"/>
+            <rect x="9" y="6" width="2" height="4" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-mathstar" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="4" fill="#9c27b0"/>
+            <rect x="1" y="5" width="4" height="2" fill="#9c27b0"/>
+            <rect x="11" y="5" width="4" height="2" fill="#9c27b0"/>
+            <rect x="3" y="10" width="2" height="4" fill="#9c27b0"/>
+            <rect x="11" y="10" width="2" height="4" fill="#9c27b0"/>
+            <rect x="5" y="5" width="6" height="6" fill="#ab47bc"/>
+            <rect x="6" y="7" width="1" height="2" fill="#fff"/>
+            <rect x="9" y="7" width="1" height="2" fill="#fff"/>
+            <rect x="7" y="6" width="2" height="1" fill="#fff"/>
+            <rect x="7" y="9" width="2" height="1" fill="#fff"/>
+        </symbol>
+        <symbol id="sticker-champion" viewBox="0 0 16 16">
+            <rect x="4" y="3" width="8" height="8" fill="#ffd700"/>
+            <rect x="5" y="4" width="6" height="6" fill="#ffeb3b"/>
+            <rect x="3" y="5" width="2" height="4" fill="#ffc107"/>
+            <rect x="11" y="5" width="2" height="4" fill="#ffc107"/>
+            <rect x="6" y="11" width="4" height="3" fill="#8d6e63"/>
+            <rect x="4" y="13" width="8" height="2" fill="#6d4c41"/>
+            <rect x="7" y="1" width="2" height="3" fill="#f44336"/>
+        </symbol>
     </svg>
 
     <div class="game-container">
@@ -3101,8 +3896,7 @@
 
         <div class="progress-container">
             <div class="progress-item">
-                <svg class="pixel-box" style="width:36px;height:36px;"><use href="#pixel-mysterybox"/></svg>
-                <div class="progress-bar"><div class="progress-fill mystery" id="mysteryProgress" style="width: 0%"></div></div>
+                <svg class="pixel-box mystery-box-icon" style="width:36px;height:36px;" title="Mystery Box - keep playing!"><use href="#pixel-mysterybox"/></svg>
             </div>
             <div class="progress-item">
                 <svg class="pixel-boss" style="width:36px;height:36px;"><use href="#boss-tiki"/></svg>
@@ -3239,6 +4033,7 @@
             <button class="modal-tab" data-tab="outfits" onclick="showShopTab('outfits')">Outfits</button>
             <button class="modal-tab" data-tab="accessories" onclick="showShopTab('accessories')">Acc</button>
             <button class="modal-tab" data-tab="dances" onclick="showShopTab('dances')">Dances</button>
+            <button class="modal-tab" data-tab="stickers" onclick="showShopTab('stickers')">Stickers</button>
         </div>
         <div class="modal-grid" id="shopGrid"></div>
         <button class="close-btn" onclick="closeShopModal()">Done</button>
@@ -3914,9 +4709,196 @@
             { id: 'ability_confuse', emoji: '😵', name: 'Clear Mind', desc: 'Beat a confusing boss', category: 'ability' },
 
             // NEW: Prestige achievement
-            { id: 'prestige_1', emoji: '⭐', name: 'New Game+', desc: 'Complete a prestige reset', category: 'prestige' }
+            { id: 'prestige_1', emoji: '⭐', name: 'New Game+', desc: 'Complete a prestige reset', category: 'prestige' },
+
+            // NEW: Sticker collection achievements
+            { id: 'sticker_10', emoji: '🎟️', name: 'Sticker Starter', desc: 'Collect 10 stickers', category: 'collection' },
+            { id: 'sticker_40', emoji: '📒', name: 'Sticker Fan', desc: 'Collect 40 stickers', category: 'collection' },
+            { id: 'sticker_all', emoji: '📕', name: 'Sticker Master', desc: 'Collect all 80 stickers', category: 'collection' }
         ];
         let unlockedAchievements = [];
+
+        // ========== STICKER COLLECTION SYSTEM ==========
+        const STICKER_RARITY = {
+            COMMON: { name: 'Common', dropRate: 0.60, cssClass: 'rarity-common' },
+            UNCOMMON: { name: 'Uncommon', dropRate: 0.30, cssClass: 'rarity-uncommon' },
+            RARE: { name: 'Rare', dropRate: 0.09, cssClass: 'rarity-rare' },
+            LEGENDARY: { name: 'Legendary', dropRate: 0.01, cssClass: 'rarity-legendary' }
+        };
+
+        const STICKERS = [
+            // Tropical Fruits (15) - mostly common
+            { id: 'fruit-mango', name: 'Mango', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-mango' },
+            { id: 'fruit-watermelon', name: 'Watermelon', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-watermelon' },
+            { id: 'fruit-pineapple', name: 'Pineapple', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-pineapple' },
+            { id: 'fruit-banana', name: 'Banana', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-banana' },
+            { id: 'fruit-coconut', name: 'Coconut', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-coconut' },
+            { id: 'fruit-papaya', name: 'Papaya', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-papaya' },
+            { id: 'fruit-starfruit', name: 'Starfruit', category: 'fruits', rarity: 'UNCOMMON', svgId: 'sticker-starfruit' },
+            { id: 'fruit-dragonfruit', name: 'Dragonfruit', category: 'fruits', rarity: 'UNCOMMON', svgId: 'sticker-dragonfruit' },
+            { id: 'fruit-passionfruit', name: 'Passionfruit', category: 'fruits', rarity: 'UNCOMMON', svgId: 'sticker-passionfruit' },
+            { id: 'fruit-guava', name: 'Guava', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-guava' },
+            { id: 'fruit-lychee', name: 'Lychee', category: 'fruits', rarity: 'UNCOMMON', svgId: 'sticker-lychee' },
+            { id: 'fruit-kiwi', name: 'Kiwi', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-kiwi' },
+            { id: 'fruit-orange', name: 'Orange', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-orange' },
+            { id: 'fruit-lemon', name: 'Lemon', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-lemon' },
+            { id: 'fruit-lime', name: 'Lime', category: 'fruits', rarity: 'COMMON', svgId: 'sticker-lime' },
+
+            // Island Animals (20) - mix of rarities
+            { id: 'animal-crab', name: 'Crab', category: 'animals', rarity: 'COMMON', svgId: 'sticker-crab' },
+            { id: 'animal-turtle', name: 'Turtle', category: 'animals', rarity: 'COMMON', svgId: 'sticker-turtle' },
+            { id: 'animal-fish', name: 'Fish', category: 'animals', rarity: 'COMMON', svgId: 'sticker-fish' },
+            { id: 'animal-octopus', name: 'Octopus', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-octopus' },
+            { id: 'animal-jellyfish', name: 'Jellyfish', category: 'animals', rarity: 'COMMON', svgId: 'sticker-jellyfish' },
+            { id: 'animal-starfish', name: 'Starfish', category: 'animals', rarity: 'COMMON', svgId: 'sticker-starfish' },
+            { id: 'animal-seahorse', name: 'Seahorse', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-seahorse' },
+            { id: 'animal-dolphin', name: 'Dolphin', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-dolphin' },
+            { id: 'animal-whale', name: 'Whale', category: 'animals', rarity: 'RARE', svgId: 'sticker-whale' },
+            { id: 'animal-pelican', name: 'Pelican', category: 'animals', rarity: 'COMMON', svgId: 'sticker-pelican' },
+            { id: 'animal-parrot', name: 'Parrot', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-parrot' },
+            { id: 'animal-toucan', name: 'Toucan', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-toucan' },
+            { id: 'animal-flamingo', name: 'Flamingo', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-flamingo' },
+            { id: 'animal-monkey', name: 'Monkey', category: 'animals', rarity: 'COMMON', svgId: 'sticker-monkey' },
+            { id: 'animal-gecko', name: 'Gecko', category: 'animals', rarity: 'COMMON', svgId: 'sticker-gecko' },
+            { id: 'animal-hermitcrab', name: 'Hermit Crab', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-hermitcrab' },
+            { id: 'animal-pufferfish', name: 'Pufferfish', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-pufferfish' },
+            { id: 'animal-mantaray', name: 'Manta Ray', category: 'animals', rarity: 'RARE', svgId: 'sticker-mantaray' },
+            { id: 'animal-seal', name: 'Seal', category: 'animals', rarity: 'UNCOMMON', svgId: 'sticker-seal' },
+            { id: 'animal-otter', name: 'Otter', category: 'animals', rarity: 'RARE', svgId: 'sticker-otter' },
+
+            // Tropical Vibes (15) - mostly common/uncommon
+            { id: 'vibe-palmtree', name: 'Palm Tree', category: 'vibes', rarity: 'COMMON', svgId: 'sticker-palmtree' },
+            { id: 'vibe-hibiscus', name: 'Hibiscus', category: 'vibes', rarity: 'COMMON', svgId: 'sticker-hibiscus' },
+            { id: 'vibe-plumeria', name: 'Plumeria', category: 'vibes', rarity: 'UNCOMMON', svgId: 'sticker-plumeria' },
+            { id: 'vibe-wave', name: 'Wave', category: 'vibes', rarity: 'COMMON', svgId: 'sticker-wave' },
+            { id: 'vibe-surfboard', name: 'Surfboard', category: 'vibes', rarity: 'UNCOMMON', svgId: 'sticker-surfboard' },
+            { id: 'vibe-beachball', name: 'Beach Ball', category: 'vibes', rarity: 'COMMON', svgId: 'sticker-beachball' },
+            { id: 'vibe-sandcastle', name: 'Sandcastle', category: 'vibes', rarity: 'COMMON', svgId: 'sticker-sandcastle' },
+            { id: 'vibe-seashell', name: 'Seashell', category: 'vibes', rarity: 'COMMON', svgId: 'sticker-seashell' },
+            { id: 'vibe-coral', name: 'Coral', category: 'vibes', rarity: 'UNCOMMON', svgId: 'sticker-coral' },
+            { id: 'vibe-sunset', name: 'Sunset', category: 'vibes', rarity: 'UNCOMMON', svgId: 'sticker-sunset' },
+            { id: 'vibe-rainbow', name: 'Rainbow', category: 'vibes', rarity: 'RARE', svgId: 'sticker-rainbow' },
+            { id: 'vibe-volcano', name: 'Volcano', category: 'vibes', rarity: 'UNCOMMON', svgId: 'sticker-volcano' },
+            { id: 'vibe-tikitorch', name: 'Tiki Torch', category: 'vibes', rarity: 'COMMON', svgId: 'sticker-tikitorch' },
+            { id: 'vibe-ukulele', name: 'Ukulele', category: 'vibes', rarity: 'UNCOMMON', svgId: 'sticker-ukulele' },
+            { id: 'vibe-hammock', name: 'Hammock', category: 'vibes', rarity: 'RARE', svgId: 'sticker-hammock' },
+
+            // Mini Bosses (15) - rare/legendary
+            { id: 'boss-tiki', name: 'Tiki Mask', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-tiki' },
+            { id: 'boss-crab', name: 'Boss Crab', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-crab' },
+            { id: 'boss-puffer', name: 'Boss Puffer', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-puffer' },
+            { id: 'boss-jelly', name: 'Boss Jelly', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-jelly' },
+            { id: 'boss-shark', name: 'Boss Shark', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-shark' },
+            { id: 'boss-octopus', name: 'Boss Octopus', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-octopus' },
+            { id: 'boss-turtle', name: 'Boss Turtle', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-turtle' },
+            { id: 'boss-starfish', name: 'Boss Starfish', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-starfish' },
+            { id: 'boss-pirate', name: 'Pirate', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-pirate' },
+            { id: 'boss-mermaid', name: 'Mermaid', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-mermaid' },
+            { id: 'boss-kraken', name: 'Kraken', category: 'bosses', rarity: 'LEGENDARY', svgId: 'sticker-boss-kraken' },
+            { id: 'boss-whale', name: 'Boss Whale', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-whale' },
+            { id: 'boss-serpent', name: 'Sea Serpent', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-serpent' },
+            { id: 'boss-mimic', name: 'Mimic', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-mimic' },
+            { id: 'boss-volcano', name: 'Volcano Spirit', category: 'bosses', rarity: 'RARE', svgId: 'sticker-boss-volcano' },
+
+            // Special/Rare (15) - legendary and rare
+            { id: 'special-golden-mango', name: 'Golden Mango', category: 'special', rarity: 'LEGENDARY', svgId: 'sticker-golden-mango' },
+            { id: 'special-sparkle-star', name: 'Sparkle Star', category: 'special', rarity: 'RARE', svgId: 'sticker-sparkle-star' },
+            { id: 'special-diamond', name: 'Diamond', category: 'special', rarity: 'RARE', svgId: 'sticker-diamond' },
+            { id: 'special-crown', name: 'Crown', category: 'special', rarity: 'RARE', svgId: 'sticker-crown' },
+            { id: 'special-treasure', name: 'Treasure', category: 'special', rarity: 'RARE', svgId: 'sticker-treasure' },
+            { id: 'special-heart', name: 'Heart', category: 'special', rarity: 'UNCOMMON', svgId: 'sticker-heart' },
+            { id: 'special-trophy', name: 'Trophy', category: 'special', rarity: 'RARE', svgId: 'sticker-trophy' },
+            { id: 'special-medal', name: 'Medal', category: 'special', rarity: 'UNCOMMON', svgId: 'sticker-medal' },
+            { id: 'special-birthday', name: 'Birthday', category: 'special', rarity: 'UNCOMMON', svgId: 'sticker-birthday' },
+            { id: 'special-gift', name: 'Gift', category: 'special', rarity: 'UNCOMMON', svgId: 'sticker-gift' },
+            { id: 'special-confetti', name: 'Confetti', category: 'special', rarity: 'UNCOMMON', svgId: 'sticker-confetti' },
+            { id: 'special-100', name: '100!', category: 'special', rarity: 'RARE', svgId: 'sticker-100' },
+            { id: 'special-perfect', name: 'Perfect', category: 'special', rarity: 'RARE', svgId: 'sticker-perfect' },
+            { id: 'special-mathstar', name: 'Math Star', category: 'special', rarity: 'LEGENDARY', svgId: 'sticker-mathstar' },
+            { id: 'special-champion', name: 'Champion', category: 'special', rarity: 'RARE', svgId: 'sticker-champion' }
+        ];
+
+        // Sticker state
+        let collectedStickers = [];
+        let correctSinceLastBox = 0;
+        let nextBoxThreshold = 80 + Math.floor(Math.random() * 41); // 80-120
+
+        // Sticker persistence
+        function saveStickers() {
+            localStorage.setItem('mathblaster_stickers', JSON.stringify(collectedStickers));
+            localStorage.setItem('mathblaster_box_progress', JSON.stringify({
+                correctSinceLastBox: correctSinceLastBox,
+                nextBoxThreshold: nextBoxThreshold
+            }));
+        }
+
+        function loadStickers() {
+            const saved = localStorage.getItem('mathblaster_stickers');
+            if (saved) {
+                collectedStickers = JSON.parse(saved);
+            }
+            const progress = localStorage.getItem('mathblaster_box_progress');
+            if (progress) {
+                const p = JSON.parse(progress);
+                correctSinceLastBox = p.correctSinceLastBox || 0;
+                nextBoxThreshold = p.nextBoxThreshold || (80 + Math.floor(Math.random() * 41));
+            }
+        }
+
+        // Roll for a random sticker based on rarity
+        function rollSticker() {
+            const roll = Math.random();
+            let rarity;
+            if (roll < STICKER_RARITY.LEGENDARY.dropRate) {
+                rarity = 'LEGENDARY';
+            } else if (roll < STICKER_RARITY.LEGENDARY.dropRate + STICKER_RARITY.RARE.dropRate) {
+                rarity = 'RARE';
+            } else if (roll < STICKER_RARITY.LEGENDARY.dropRate + STICKER_RARITY.RARE.dropRate + STICKER_RARITY.UNCOMMON.dropRate) {
+                rarity = 'UNCOMMON';
+            } else {
+                rarity = 'COMMON';
+            }
+
+            // Get all stickers of this rarity
+            const stickersOfRarity = STICKERS.filter(s => s.rarity === rarity);
+            // Pick a random one
+            return stickersOfRarity[Math.floor(Math.random() * stickersOfRarity.length)];
+        }
+
+        // Check if sticker is already collected
+        function hasStickerCollected(stickerId) {
+            return collectedStickers.includes(stickerId);
+        }
+
+        // Add sticker to collection
+        function collectSticker(stickerId) {
+            if (!collectedStickers.includes(stickerId)) {
+                collectedStickers.push(stickerId);
+                saveStickers();
+                return true; // New sticker
+            }
+            return false; // Duplicate
+        }
+
+        // Get count of collected stickers
+        function getStickerCount() {
+            return collectedStickers.length;
+        }
+
+        // Check and update mystery box hint pulse
+        function updateMysteryBoxHint() {
+            const boxIcon = document.querySelector('.mystery-box-icon');
+            if (!boxIcon) return;
+
+            const distanceToBox = nextBoxThreshold - correctSinceLastBox;
+            if (distanceToBox <= 10 && distanceToBox > 0) {
+                boxIcon.classList.add('hint-pulse');
+            } else {
+                boxIcon.classList.remove('hint-pulse');
+            }
+        }
+        // ========== END STICKER SYSTEM ==========
+
         let mysteryBoxesOpened = 0;
         let bossesDefeated = 0;
 
@@ -4215,10 +5197,8 @@
 
         // Progress bars
         function updateProgressBars() {
-            // Mystery box every 10, boss every 15
-            const mysteryProgress = (correctCount % 10) / 10 * 100;
+            // Boss every 15 correct answers
             const bossProgress = (correctCount % 15) / 15 * 100;
-            document.getElementById('mysteryProgress').style.width = mysteryProgress + '%';
             document.getElementById('bossProgress').style.width = bossProgress + '%';
         }
 
@@ -4440,27 +5420,67 @@
             document.getElementById('mysteryText').textContent = '';
 
             setTimeout(() => {
-                // Award coins (5-15 based on player level)
-                const baseBonus = 5 + Math.floor(playerLevel / 5);
-                const bonus = Math.floor(Math.random() * (baseBonus * 2 - baseBonus)) + baseBonus;
-                let coinContainer = '<div style="position:relative;height:80px;display:flex;justify-content:center;align-items:flex-end;gap:4px;flex-wrap:wrap;">';
-                const displayCoins = Math.min(bonus, 10); // Show up to 10 coins visually
-                for (let i = 0; i < displayCoins; i++) {
-                    const delay = i * 80;
-                    coinContainer += `<svg class="pixel-coin coin-burst" style="width:32px;height:32px;animation-delay:${delay}ms;"><use href="#pixel-coin"/></svg>`;
-                }
-                coinContainer += '</div>';
-                rewardEl.innerHTML += coinContainer;
-                document.getElementById('mysteryText').textContent = `+${bonus} coins!`;
+                // Roll for a sticker!
+                const sticker = rollSticker();
+                const rarity = STICKER_RARITY[sticker.rarity];
+                const isDuplicate = hasStickerCollected(sticker.id);
 
-                setTimeout(() => {
-                    score += bonus;
-                    saveCoins();
-                    document.getElementById('score').textContent = score;
-                    const coinStat = document.getElementById('coinStat');
-                    coinStat.style.transform = 'scale(1.2)';
-                    setTimeout(() => coinStat.style.transform = '', 200);
-                }, 400);
+                // Show sticker with reveal animation
+                let stickerHTML = `
+                    <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;">
+                        <div class="sticker-reveal" style="position:relative;">
+                            <svg style="width:80px;height:80px;image-rendering:pixelated;"><use href="#${sticker.svgId}"/></svg>
+                `;
+
+                // Add sparkles for rare+ stickers
+                if (sticker.rarity === 'RARE' || sticker.rarity === 'LEGENDARY') {
+                    const sparkleEmojis = ['✨', '⭐', '💫'];
+                    for (let i = 0; i < 5; i++) {
+                        const emoji = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
+                        const x = (Math.random() - 0.5) * 100;
+                        const y = (Math.random() - 0.5) * 100;
+                        const delay = i * 100;
+                        stickerHTML += `<span class="sticker-sparkle" style="left:calc(50% + ${x}px);top:calc(50% + ${y}px);animation-delay:${delay}ms;">${emoji}</span>`;
+                    }
+                }
+
+                stickerHTML += `
+                        </div>
+                        <div style="font-size:1.2rem;font-weight:bold;color:var(--primary);">${sticker.name}</div>
+                        <span class="rarity-badge ${rarity.cssClass}">${rarity.name}</span>
+                    </div>
+                `;
+                rewardEl.innerHTML = stickerHTML;
+
+                if (isDuplicate) {
+                    // Already have this sticker - give coins instead
+                    const coinBonus = 2 + Math.floor(Math.random() * 4); // 2-5 coins
+                    document.getElementById('mysteryText').innerHTML = `
+                        <div style="color:#888;">Already collected!</div>
+                        <div style="color:var(--accent);margin-top:5px;">+${coinBonus} <svg class="pixel-coin" style="width:16px;height:16px;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>
+                    `;
+                    setTimeout(() => {
+                        score += coinBonus;
+                        saveCoins();
+                        document.getElementById('score').textContent = score;
+                        const coinStat = document.getElementById('coinStat');
+                        coinStat.style.transform = 'scale(1.2)';
+                        setTimeout(() => coinStat.style.transform = '', 200);
+                    }, 300);
+                } else {
+                    // New sticker!
+                    collectSticker(sticker.id);
+                    const collected = getStickerCount();
+                    document.getElementById('mysteryText').innerHTML = `
+                        <div style="color:var(--success);font-weight:bold;">NEW STICKER!</div>
+                        <div style="color:var(--accent);font-size:0.9rem;margin-top:5px;">${collected} / ${STICKERS.length} collected</div>
+                    `;
+
+                    // Check for sticker collection achievement
+                    if (collected >= 10) checkAchievement('sticker_10', true);
+                    if (collected >= 40) checkAchievement('sticker_40', true);
+                    if (collected === STICKERS.length) checkAchievement('sticker_all', true);
+                }
             }, 300);
 
             document.getElementById('mysteryCloseBtn').classList.remove('hidden');
@@ -5649,14 +6669,22 @@
                 haptic('success');
                 gainXP(points); // Gain XP based on points earned
 
-                // Boss every 15, Mystery box every 10 (but not when boss triggers)
+                // Boss every 15 correct answers
                 if (correctCount > 0 && correctCount % 15 === 0) {
                     setTimeout(startBossBattle, 400);
                     return;
                 }
 
-                // Mystery box every 10 correct answers
-                if (correctCount > 0 && correctCount % 10 === 0) {
+                // Mystery box: random between 80-120 correct answers (sticker drop!)
+                correctSinceLastBox++;
+                saveStickers(); // Save progress
+                updateMysteryBoxHint(); // Update hint pulse
+                updateProgressBars(); // Update boss progress bar
+
+                if (correctSinceLastBox >= nextBoxThreshold) {
+                    correctSinceLastBox = 0;
+                    nextBoxThreshold = 80 + Math.floor(Math.random() * 41); // Reset to 80-120
+                    saveStickers();
                     setTimeout(showMysteryBox, 400);
                     return;
                 }
@@ -5868,8 +6896,12 @@
         function renderShopGrid() {
             const grid = document.getElementById('shopGrid');
 
+            // Reset grid class (stickers tab uses sticker-grid)
+            grid.className = 'modal-grid';
+
             // Handle avatar tab
             if (currentCostumeTab === 'avatars') {
+                updateCostumePreview();
                 grid.innerHTML = '';
                 Object.values(AVATARS).forEach(avatar => {
                     const isSelected = selectedAvatar === avatar.id;
@@ -5887,6 +6919,7 @@
 
             // Handle dances tab
             if (currentCostumeTab === 'dances') {
+                updateCostumePreview();
                 grid.innerHTML = '';
                 DANCE_MOVES.forEach(dance => {
                     const isOwned = ownedDances.includes(dance.id);
@@ -5951,6 +6984,52 @@
                 });
                 return;
             }
+
+            // Handle stickers tab - Sticker Book!
+            if (currentCostumeTab === 'stickers') {
+                const preview = document.getElementById('costumePreview');
+                const collected = getStickerCount();
+                preview.innerHTML = `<div class="sticker-counter">${collected} / ${STICKERS.length} Collected</div>`;
+
+                grid.innerHTML = '';
+                grid.className = 'sticker-grid';
+
+                // Group stickers by category for display
+                const categories = ['fruits', 'animals', 'vibes', 'bosses', 'special'];
+                const categoryNames = {
+                    fruits: '🍎 Tropical Fruits',
+                    animals: '🐠 Island Animals',
+                    vibes: '🌴 Tropical Vibes',
+                    bosses: '👹 Mini Bosses',
+                    special: '✨ Special'
+                };
+
+                categories.forEach(category => {
+                    const categoryStickers = STICKERS.filter(s => s.category === category);
+                    categoryStickers.forEach(sticker => {
+                        const isCollected = hasStickerCollected(sticker.id);
+                        const rarity = STICKER_RARITY[sticker.rarity];
+                        const div = document.createElement('div');
+                        div.className = `sticker-item ${isCollected ? 'collected' : 'uncollected'} ${rarity.cssClass}`;
+
+                        div.innerHTML = `
+                            <svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#${sticker.svgId}"/></svg>
+                            <span class="sticker-item-name">${isCollected ? sticker.name : '???'}</span>
+                        `;
+
+                        if (isCollected) {
+                            div.onclick = () => {
+                                showToast(`${sticker.name} - ${rarity.name}`, 1500);
+                            };
+                        }
+                        grid.appendChild(div);
+                    });
+                });
+                return;
+            }
+
+            // Reset grid class for other tabs
+            grid.className = 'modal-grid';
 
             const items = COSTUMES[currentCostumeTab] || [];
             const equippedKey = currentCostumeTab === 'hats' ? 'hat' :
@@ -6140,6 +7219,7 @@
         loadAvatar(); // Load selected avatar
         loadPurchasedCostumes(); // Load purchased costumes
         loadDances(); // Load owned dances
+        loadStickers(); // Load sticker collection
         initializeFactDatabase(); // Initialize spaced repetition fact database
         loadTierProgress(); // Load difficulty tier progress
         updateSettingsLabel();
