@@ -389,6 +389,233 @@
         }
         .achievement-toast.show { transform: translateX(-50%) translateY(0); }
 
+        /* Strategy Hint Overlay - Singapore Math */
+        .strategy-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 30, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 600;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            padding: 20px;
+        }
+        .strategy-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .strategy-problem {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px var(--primary);
+        }
+        .strategy-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            max-width: 350px;
+        }
+        .strategy-step {
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 2px solid var(--primary);
+            font-size: 1.2rem;
+            color: #fff;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: stepAppear 0.4s ease-out forwards;
+        }
+        .strategy-step:nth-child(1) { animation-delay: 0.3s; }
+        .strategy-step:nth-child(2) { animation-delay: 0.7s; }
+        .strategy-step:nth-child(3) { animation-delay: 1.1s; }
+        .strategy-step .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        .strategy-answer {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--success);
+            margin-top: 20px;
+            opacity: 0;
+            animation: stepAppear 0.4s ease-out forwards;
+            animation-delay: 1.5s;
+        }
+        .strategy-label {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .strategy-tap {
+            position: absolute;
+            bottom: 40px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            opacity: 0;
+            animation: stepAppear 0.4s ease-out forwards;
+            animation-delay: 2s;
+        }
+        @keyframes stepAppear {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Item Rarity Effects */
+        .rarity-common { }
+        .rarity-rare {
+            box-shadow: 0 0 10px rgba(93, 173, 226, 0.6), inset 0 0 5px rgba(93, 173, 226, 0.2);
+            border-color: #5dade2 !important;
+        }
+        .rarity-epic {
+            box-shadow: 0 0 15px rgba(155, 89, 182, 0.7), inset 0 0 5px rgba(155, 89, 182, 0.3);
+            border-color: #9b59b6 !important;
+            animation: epicPulse 2s ease-in-out infinite;
+        }
+        @keyframes epicPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(155, 89, 182, 0.7); }
+            50% { box-shadow: 0 0 25px rgba(155, 89, 182, 0.9); }
+        }
+        .rarity-legendary {
+            box-shadow: 0 0 20px rgba(255, 217, 61, 0.8), inset 0 0 8px rgba(255, 217, 61, 0.4);
+            border-color: #ffd93d !important;
+            animation: legendaryGlow 1.5s ease-in-out infinite;
+            position: relative;
+        }
+        @keyframes legendaryGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 217, 61, 0.8), 0 0 40px rgba(255, 107, 157, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(255, 217, 61, 1), 0 0 60px rgba(255, 107, 157, 0.6); }
+        }
+        .rarity-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .rarity-badge.common { background: #666; color: #fff; }
+        .rarity-badge.rare { background: #5dade2; color: #1a0a2e; }
+        .rarity-badge.epic { background: #9b59b6; color: #fff; }
+        .rarity-badge.legendary { background: linear-gradient(135deg, #ffd93d, #ff6b9d); color: #1a0a2e; }
+
+        /* Daily Challenge Button */
+        .daily-btn {
+            position: relative;
+        }
+        .daily-btn.pulse::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            animation: dailyPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes dailyPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        .daily-btn.completed {
+            opacity: 0.5;
+        }
+        .daily-btn.completed::after {
+            display: none;
+        }
+
+        /* Daily Challenge Modal */
+        #dailyChallengeModal {
+            padding: 25px;
+        }
+        .daily-problem {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 20px 0;
+            text-shadow: 0 0 15px var(--accent);
+        }
+        .daily-input {
+            width: 150px;
+            padding: 12px;
+            font-size: 1.5rem;
+            text-align: center;
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+        .daily-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .daily-meta {
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        /* Multiple Dance Animations */
+        @keyframes avatarDanceWiggle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-10deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(10deg); }
+        }
+        @keyframes avatarDanceSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(1); }
+            75% { transform: rotate(270deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        @keyframes avatarDanceBounce {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            30% { transform: translateY(-15px) scaleY(1.1); }
+            50% { transform: translateY(0) scaleY(0.9); }
+            70% { transform: translateY(-8px) scaleY(1.05); }
+        }
+        @keyframes avatarDanceVictory {
+            0%, 100% { transform: translateY(0) scale(1); }
+            25% { transform: translateY(-12px) scale(1.15) rotate(-5deg); }
+            50% { transform: translateY(-5px) scale(1.1) rotate(5deg); }
+            75% { transform: translateY(-12px) scale(1.15) rotate(-5deg); }
+        }
+        .mango-avatar.dance-wiggle { animation: avatarDanceWiggle 0.5s ease-in-out infinite; }
+        .mango-avatar.dance-spin { animation: avatarDanceSpin 0.8s ease-in-out infinite; }
+        .mango-avatar.dance-bounce { animation: avatarDanceBounce 0.6s ease-in-out infinite; }
+        .mango-avatar.dance-victory { animation: avatarDanceVictory 0.7s ease-in-out infinite; }
+
+        /* Tier Badge */
+        .tier-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 5px;
+        }
+        .tier-badge.tier-1 { background: #6bcb77; color: #1a0a2e; }
+        .tier-badge.tier-2 { background: #5dade2; color: #1a0a2e; }
+        .tier-badge.tier-3 { background: #9b59b6; color: #fff; }
+        .tier-badge.tier-4 { background: #ff6b9d; color: #1a0a2e; }
+        .tier-badge.tier-5 { background: linear-gradient(135deg, #ffd93d, #ff6b9d); color: #1a0a2e; }
+
         /* Achievements Modal */
         #achievementsModal { padding-top: 30px; padding-bottom: 30px; }
         #achievementsModal h2 { margin-bottom: 15px; }
@@ -2360,6 +2587,7 @@
             </div>
             <div class="level-display" id="levelDisplay">Lv.1</div>
             <div class="top-buttons">
+                <button class="icon-btn daily-btn pulse" id="dailyChallengeBtn" onclick="showDailyChallenge()" title="Daily Challenge">⭐</button>
                 <button class="icon-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
                 <button class="icon-btn" onclick="showAchievements()">🏆</button>
                 <button class="icon-btn" onclick="showThemePicker()">🎨</button>
@@ -2380,11 +2608,7 @@
                 <button id="divide" onclick="setOperation('divide')">÷</button>
                 <button id="mixed" class="active" onclick="setOperation('mixed')">Mix</button>
             </div>
-            <div class="settings-row">
-                <button id="endless" class="active" onclick="setMode('endless')">Free Play</button>
-                <button id="timed" onclick="setMode('timed')">60 Sec</button>
-                <button id="speed" onclick="setMode('speed')">⚡ Speed</button>
-            </div>
+            <!-- Mode selection removed - Free Play only now -->
         </div>
 
         <div class="stats">
@@ -2511,6 +2735,31 @@
         <div class="tap-restart">Tap anywhere to play again</div>
     </div>
 
+    <!-- Daily Challenge Modal -->
+    <div class="modal" id="dailyChallengeModal">
+        <h2 style="color: var(--accent);">⭐ Daily Challenge ⭐</h2>
+        <div class="daily-meta" id="dailyStreak">🔥 0 day streak</div>
+        <div class="daily-problem" id="dailyProblem">Loading...</div>
+        <input type="number" class="daily-input" id="dailyAnswer" placeholder="?" onkeypress="if(event.key==='Enter')checkDailyAnswer()">
+        <div class="daily-meta" id="dailyReward">Reward: 100 coins</div>
+        <div id="dailyResult" style="margin: 10px 0; font-weight: bold;"></div>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+            <button class="close-btn" onclick="checkDailyAnswer()" style="background: var(--success);">Submit</button>
+            <button class="close-btn" onclick="hideDailyChallenge()">Later</button>
+        </div>
+    </div>
+
+    <!-- Strategy Hint Overlay -->
+    <div class="strategy-overlay" id="strategyOverlay" onclick="dismissStrategyHint()">
+        <div class="strategy-label" id="strategyLabel">Making Tens</div>
+        <div class="strategy-problem" id="strategyProblem">8 + 7 = ?</div>
+        <div class="strategy-steps" id="strategySteps">
+            <!-- Steps populated by JS -->
+        </div>
+        <div class="strategy-answer" id="strategyAnswer">= 15</div>
+        <div class="strategy-tap">Tap anywhere to continue</div>
+    </div>
+
     <!-- Achievements Modal -->
     <div class="modal" id="achievementsModal">
         <h2 style="color: var(--accent);">🏆 Achievements</h2>
@@ -2622,18 +2871,38 @@
         ];
 
         // Boss personality phrases for key bosses
+        // Boss story progression - named bosses with personalities
         const BOSS_PHRASES = {
-            'boss-kraken': {
-                intro: ['Release the Kraken!', 'You dare challenge me?', 'Face the deep!'],
-                hit: ['Argh!', 'That stings!', 'Lucky shot!'],
-                lowHp: ['You cannot defeat the sea!', 'I will not fall!'],
-                defeat: ['The depths... call me...', 'Impossible!']
+            // Basic tier bosses (L1-15)
+            'boss-tiki': {
+                intro: ['The island spirits awaken!', 'Tiki power!', 'Face the mask!'],
+                hit: ['Ooga!', 'The spirits cry!', 'Ack!'],
+                lowHp: ['Ancient magic... failing!', 'Not... possible!'],
+                defeat: ['The spirits... rest...', 'You pass the test!']
             },
-            'boss-pirate': {
-                intro: ['Ahoy, matey!', 'Prepare to be boarded!', 'X marks the spot!'],
-                hit: ['Shiver me timbers!', 'Blimey!', 'Arrr!'],
-                lowHp: ['I never surrender!', 'Fight to the last!'],
-                defeat: ['Walk the plank...', 'Curse ye!']
+            'boss-crab': {
+                intro: ['Snippy snappy!', 'Pinch time!', 'These claws mean business!'],
+                hit: ['Ouch!', 'My shell!', 'Hey!'],
+                lowHp: ['Still got my claws!', 'Getting crabby!'],
+                defeat: ['Scuttling away...', 'Good fight!']
+            },
+            'boss-puffer': {
+                intro: ['Puff puff!', 'Watch my spikes!', 'I feel bloated!'],
+                hit: ['Pop!', 'Deflating!', 'Ooof!'],
+                lowHp: ['Maximum puff!', 'So... puffy!'],
+                defeat: ['Ppppfffft...', 'All aired out...']
+            },
+            'boss-jelly': {
+                intro: ['Bloop bloop!', 'Electric personality!', 'Feeling tingly?'],
+                hit: ['Zap!', 'Squishy!', 'Wobble!'],
+                lowHp: ['Still shocking!', 'Jelly power!'],
+                defeat: ['Drifting away...', 'Bloooop...']
+            },
+            'boss-bird': {
+                intro: ['Caw caw!', 'Rainbow feathers!', 'Tropical storm!'],
+                hit: ['My feathers!', 'Squawk!', 'Ruffled!'],
+                lowHp: ['Still flying!', 'Wind beneath my wings!'],
+                defeat: ['Flying south...', 'Tweet tweet...']
             },
             'boss-shark': {
                 intro: ['Time to hunt!', 'I smell fear!', 'Dinner time!'],
@@ -2641,12 +2910,69 @@
                 lowHp: ["You'll need a bigger boat!", 'Still hungry!'],
                 defeat: ['Swimming away...', 'Until next time!']
             },
+            'boss-volcano': {
+                intro: ['ERUPTION TIME!', 'Feel the heat!', 'Lava flow!'],
+                hit: ['Sizzle!', 'Hot hot hot!', 'Cooling down!'],
+                lowHp: ['Final eruption!', 'Magma rising!'],
+                defeat: ['Going dormant...', 'The fire fades...']
+            },
+            'boss-coconut': {
+                intro: ['Coconut chaos!', 'Hard-headed!', 'Nutty time!'],
+                hit: ['Crack!', 'My shell!', 'Bonk!'],
+                lowHp: ['Still nutty!', 'Coconut rage!'],
+                defeat: ['Split open...', 'Going coco-loco...']
+            },
+            // Simple tier (L16-25)
+            'boss-octopus': {
+                intro: ['Eight arms of math!', 'Inky time!', 'Tentacle trouble!'],
+                hit: ['Splort!', 'One arm down!', 'Squish!'],
+                lowHp: ['Still got 7 arms!', 'Ink explosion!'],
+                defeat: ['Ink cloud escape...', 'Octopus out!']
+            },
+            'boss-turtle': {
+                intro: ['Slow and steady!', 'Shell shock!', 'Turtle power!'],
+                hit: ['Bonk!', 'Shell crack!', 'Ooof!'],
+                lowHp: ['Retreating...', 'Shell defense!'],
+                defeat: ['Taking a nap...', 'Good race...']
+            },
+            'boss-hermitcrab': {
+                intro: ['Nice shell, right?', 'Pinch pinch!', 'Home sweet home!'],
+                hit: ['My home!', 'Ouch!', 'Not the shell!'],
+                lowHp: ['Need new shell!', 'Crabby mode!'],
+                defeat: ['Moving out...', 'Shell shocked...']
+            },
+            'boss-starfish': {
+                intro: ['Star power!', 'Five points of doom!', 'Starry eyed!'],
+                hit: ['One point!', 'Ouch!', 'Still star-shaped!'],
+                lowHp: ['Regenerating!', 'Star bright!'],
+                defeat: ['Sinking down...', 'Star light out...']
+            },
+            // Ability tier (L26-40)
+            'boss-pirate': {
+                intro: ['Ahoy, matey!', 'Prepare to be boarded!', 'X marks the spot!'],
+                hit: ['Shiver me timbers!', 'Blimey!', 'Arrr!'],
+                lowHp: ['I never surrender!', 'Fight to the last!'],
+                defeat: ['Walk the plank...', 'Curse ye!']
+            },
             'boss-mermaid': {
                 intro: ['Care to swim?', 'The ocean is mine!', 'Catch me if you can!'],
                 hit: ['Hey!', 'Rude!', 'Watch it!'],
                 lowHp: ['The sea protects me!', 'Not so fast!'],
                 defeat: ['Back to the depths...', 'You won... this time!']
             },
+            'boss-stingray': {
+                intro: ['Gliding in!', 'Feel my sting!', 'Flat and fast!'],
+                hit: ['Flap!', 'Sharp!', 'Stung!'],
+                lowHp: ['Getting stingy!', 'Ray of doom!'],
+                defeat: ['Gliding away...', 'Smooth sailing...']
+            },
+            'boss-pelican': {
+                intro: ['Big beak energy!', 'Fish delivery!', 'Pelican express!'],
+                hit: ['Squawk!', 'My beak!', 'Gulp!'],
+                lowHp: ['Beak attack!', 'Pelican panic!'],
+                defeat: ['Flying off...', 'Catch you later!']
+            },
+            // Elite tier (L41+)
             'boss-whale': {
                 intro: ['SPLASH!', 'Here I come!', 'Making waves!'],
                 hit: ['BONK!', 'Ow!', 'That tickled!'],
@@ -2658,50 +2984,88 @@
                 hit: ['Sssstop!', 'That hurt!', 'Sssscratched!'],
                 lowHp: ['My venom awaits!', 'Ssstill dangerous!'],
                 defeat: ['Ssslithering away...', 'Cursssed!']
+            },
+            'boss-mimic': {
+                intro: ['Surprise!', 'Not a chest!', 'Treasure... OF DOOM!'],
+                hit: ['Chomp!', 'Ow!', 'Tricky!'],
+                lowHp: ['More tricks!', 'Mimic madness!'],
+                defeat: ['Closing... lid...', 'Fooled again...']
+            },
+            'boss-kraken': {
+                intro: ['Release the Kraken!', 'You dare challenge me?', 'Face the deep!'],
+                hit: ['Argh!', 'That stings!', 'Lucky shot!'],
+                lowHp: ['You cannot defeat the sea!', 'I will not fall!'],
+                defeat: ['The depths... call me...', 'Impossible!']
             }
         };
 
-        // Costume definitions - all pixel art SVGs (coin-based purchases)
+        // Rarity tiers for items
+        const RARITY = {
+            COMMON: { name: 'Common', cssClass: 'rarity-common', color: '#aaaaaa' },
+            RARE: { name: 'Rare', cssClass: 'rarity-rare', color: '#5dade2' },
+            EPIC: { name: 'Epic', cssClass: 'rarity-epic', color: '#9b59b6' },
+            LEGENDARY: { name: 'Legendary', cssClass: 'rarity-legendary', color: '#ffd93d' }
+        };
+
+        // Costume definitions - all pixel art SVGs (coin-based purchases) with rarity
         const COSTUMES = {
             hats: [
-                { id: 'hat-none', name: 'None', svgId: null, price: 0 },
-                { id: 'hat-pirate', name: 'Pirate Hat', svgId: 'costume-hat-pirate', price: 50 },
-                { id: 'hat-beanie', name: 'Beanie', svgId: 'costume-hat-beanie', price: 75 },
-                { id: 'hat-ballcap', name: 'Ball Cap', svgId: 'costume-hat-ballcap', price: 75 },
-                { id: 'hat-crown', name: 'Crown', svgId: 'costume-hat-crown', price: 100 },
-                { id: 'hat-headphones', name: 'Headphones', svgId: 'costume-hat-headphones', price: 100 },
-                { id: 'hat-cowboy', name: 'Cowboy Hat', svgId: 'costume-hat-cowboy', price: 125 },
-                { id: 'hat-santa', name: 'Santa Hat', svgId: 'costume-hat-santa', price: 150 },
-                { id: 'hat-party', name: 'Party Hat', svgId: 'costume-hat-party', price: 150 },
-                { id: 'hat-halo', name: 'Halo', svgId: 'costume-hat-halo', price: 200 },
-                { id: 'hat-wizard', name: 'Wizard Hat', svgId: 'costume-hat-wizard', price: 200 },
-                { id: 'hat-viking', name: 'Viking Helm', svgId: 'costume-hat-viking', price: 250 }
+                { id: 'hat-none', name: 'None', svgId: null, price: 0, rarity: 'COMMON' },
+                // Common (30-100)
+                { id: 'hat-beanie', name: 'Beanie', svgId: 'costume-hat-beanie', price: 50, rarity: 'COMMON' },
+                { id: 'hat-ballcap', name: 'Ball Cap', svgId: 'costume-hat-ballcap', price: 75, rarity: 'COMMON' },
+                { id: 'hat-party', name: 'Party Hat', svgId: 'costume-hat-party', price: 100, rarity: 'COMMON' },
+                // Rare (250-500)
+                { id: 'hat-pirate', name: 'Pirate Hat', svgId: 'costume-hat-pirate', price: 300, rarity: 'RARE' },
+                { id: 'hat-headphones', name: 'Headphones', svgId: 'costume-hat-headphones', price: 350, rarity: 'RARE' },
+                { id: 'hat-cowboy', name: 'Cowboy Hat', svgId: 'costume-hat-cowboy', price: 400, rarity: 'RARE' },
+                { id: 'hat-santa', name: 'Santa Hat', svgId: 'costume-hat-santa', price: 500, rarity: 'RARE' },
+                // Epic (1000-2500)
+                { id: 'hat-crown', name: 'Crown', svgId: 'costume-hat-crown', price: 1200, rarity: 'EPIC' },
+                { id: 'hat-halo', name: 'Halo', svgId: 'costume-hat-halo', price: 1500, rarity: 'EPIC' },
+                { id: 'hat-wizard', name: 'Wizard Hat', svgId: 'costume-hat-wizard', price: 2000, rarity: 'EPIC' },
+                // Legendary (5000-15000)
+                { id: 'hat-viking', name: 'Viking Helm', svgId: 'costume-hat-viking', price: 5000, rarity: 'LEGENDARY' },
+                { id: 'hat-emperor', name: 'Emperor Crown', svgId: 'costume-hat-crown', price: 8000, rarity: 'LEGENDARY' },
+                { id: 'hat-galaxy', name: 'Galaxy Hat', svgId: 'costume-hat-wizard', price: 15000, rarity: 'LEGENDARY' }
             ],
             outfits: [
-                { id: 'outfit-none', name: 'None', svgId: null, price: 0 },
-                { id: 'outfit-bowtie', name: 'Bow Tie', svgId: 'costume-outfit-bowtie', price: 50 },
-                { id: 'outfit-hoodie', name: 'Hoodie', svgId: 'costume-outfit-hoodie', price: 75 },
-                { id: 'outfit-cape', name: 'Cape', svgId: 'costume-outfit-cape', price: 100 },
-                { id: 'outfit-medal', name: 'Medal', svgId: 'costume-outfit-medal', price: 100 },
-                { id: 'outfit-heart', name: 'Heart Locket', svgId: 'costume-outfit-heart', price: 125 },
-                { id: 'outfit-armor', name: 'Armor', svgId: 'costume-outfit-armor', price: 150 },
-                { id: 'outfit-scarf', name: 'Scarf', svgId: 'costume-outfit-scarf', price: 175 },
-                { id: 'outfit-wings', name: 'Fairy Wings', svgId: 'costume-outfit-wings', price: 200 },
-                { id: 'outfit-mermaid', name: 'Mermaid Tail', svgId: 'costume-outfit-mermaid', price: 250 }
+                { id: 'outfit-none', name: 'None', svgId: null, price: 0, rarity: 'COMMON' },
+                // Common (30-100)
+                { id: 'outfit-bowtie', name: 'Bow Tie', svgId: 'costume-outfit-bowtie', price: 50, rarity: 'COMMON' },
+                { id: 'outfit-hoodie', name: 'Hoodie', svgId: 'costume-outfit-hoodie', price: 75, rarity: 'COMMON' },
+                { id: 'outfit-scarf', name: 'Scarf', svgId: 'costume-outfit-scarf', price: 100, rarity: 'COMMON' },
+                // Rare (250-500)
+                { id: 'outfit-cape', name: 'Cape', svgId: 'costume-outfit-cape', price: 350, rarity: 'RARE' },
+                { id: 'outfit-medal', name: 'Medal', svgId: 'costume-outfit-medal', price: 400, rarity: 'RARE' },
+                { id: 'outfit-heart', name: 'Heart Locket', svgId: 'costume-outfit-heart', price: 500, rarity: 'RARE' },
+                // Epic (1000-2500)
+                { id: 'outfit-armor', name: 'Armor', svgId: 'costume-outfit-armor', price: 1500, rarity: 'EPIC' },
+                { id: 'outfit-wings', name: 'Fairy Wings', svgId: 'costume-outfit-wings', price: 2000, rarity: 'EPIC' },
+                { id: 'outfit-mermaid', name: 'Mermaid Tail', svgId: 'costume-outfit-mermaid', price: 2500, rarity: 'EPIC' },
+                // Legendary (5000-15000)
+                { id: 'outfit-dragon', name: 'Dragon Armor', svgId: 'costume-outfit-armor', price: 7500, rarity: 'LEGENDARY' },
+                { id: 'outfit-phoenix', name: 'Phoenix Wings', svgId: 'costume-outfit-wings', price: 12000, rarity: 'LEGENDARY' }
             ],
             accessories: [
-                { id: 'acc-none', name: 'None', svgId: null, price: 0 },
-                { id: 'acc-sunglasses', name: 'Sunglasses', svgId: 'costume-acc-sunglasses', price: 30, position: 'face' },
-                { id: 'acc-flower', name: 'Flower', svgId: 'costume-acc-flower', price: 40 },
-                { id: 'acc-icecream', name: 'Ice Cream', svgId: 'costume-acc-icecream', price: 50 },
-                { id: 'acc-bengbeng', name: 'BengBeng', svgId: 'costume-acc-bengbeng', price: 60 },
-                { id: 'acc-onigiri', name: 'Onigiri', svgId: 'costume-acc-onigiri', price: 65 },
-                { id: 'acc-balloon', name: 'Balloon', svgId: 'costume-acc-balloon', price: 75 },
-                { id: 'acc-sushi', name: 'Sushi', svgId: 'costume-acc-sushi', price: 80 },
-                { id: 'acc-pizza', name: 'Pizza', svgId: 'costume-acc-pizza', price: 90 },
-                { id: 'acc-soccer', name: 'Soccer Ball', svgId: 'costume-acc-soccer', price: 100 },
-                { id: 'acc-basketball', name: 'Basketball', svgId: 'costume-acc-basketball', price: 110 },
-                { id: 'acc-football', name: 'Football', svgId: 'costume-acc-football', price: 120 }
+                { id: 'acc-none', name: 'None', svgId: null, price: 0, rarity: 'COMMON' },
+                // Common (30-100)
+                { id: 'acc-sunglasses', name: 'Sunglasses', svgId: 'costume-acc-sunglasses', price: 50, position: 'face', rarity: 'COMMON' },
+                { id: 'acc-flower', name: 'Flower', svgId: 'costume-acc-flower', price: 60, rarity: 'COMMON' },
+                { id: 'acc-icecream', name: 'Ice Cream', svgId: 'costume-acc-icecream', price: 75, rarity: 'COMMON' },
+                { id: 'acc-balloon', name: 'Balloon', svgId: 'costume-acc-balloon', price: 100, rarity: 'COMMON' },
+                // Rare (250-500)
+                { id: 'acc-bengbeng', name: 'BengBeng', svgId: 'costume-acc-bengbeng', price: 300, rarity: 'RARE' },
+                { id: 'acc-onigiri', name: 'Onigiri', svgId: 'costume-acc-onigiri', price: 350, rarity: 'RARE' },
+                { id: 'acc-sushi', name: 'Sushi', svgId: 'costume-acc-sushi', price: 400, rarity: 'RARE' },
+                { id: 'acc-pizza', name: 'Pizza', svgId: 'costume-acc-pizza', price: 500, rarity: 'RARE' },
+                // Epic (1000-2500)
+                { id: 'acc-soccer', name: 'Soccer Ball', svgId: 'costume-acc-soccer', price: 1200, rarity: 'EPIC' },
+                { id: 'acc-basketball', name: 'Basketball', svgId: 'costume-acc-basketball', price: 1500, rarity: 'EPIC' },
+                { id: 'acc-football', name: 'Football', svgId: 'costume-acc-football', price: 2000, rarity: 'EPIC' },
+                // Legendary (5000-15000)
+                { id: 'acc-trophy', name: 'Gold Trophy', svgId: 'costume-acc-soccer', price: 6000, rarity: 'LEGENDARY' },
+                { id: 'acc-rainbow', name: 'Rainbow', svgId: 'costume-acc-balloon', price: 10000, rarity: 'LEGENDARY' }
             ]
         };
         let purchasedCostumes = []; // Costumes bought with coins
@@ -2725,18 +3089,10 @@
         };
         let selectedAvatar = 'mango';
 
-        // Power-ups (earned from mystery boxes)
-        const POWER_UPS = {
-            golden: { id: 'golden', name: 'Golden Problems', desc: 'Next 5 = 2x coins', icon: '✨' },
-            boss_summon: { id: 'boss_summon', name: 'Boss Summoner', desc: 'Instant boss battle', icon: '👹' },
-            mystery_magnet: { id: 'mystery_magnet', name: 'Mystery Magnet', desc: '2x faster mystery box', icon: '🧲' }
-        };
-
-        let ownedPowerUps = { golden: 0, boss_summon: 0, mystery_magnet: 0 };
-        let activePowerUps = {
-            golden: { active: false, remaining: 0 },
-            mystery_magnet: false
-        };
+        // Power-ups removed - mystery boxes now give coins directly
+        const POWER_UPS = {};
+        let ownedPowerUps = {};
+        let activePowerUps = {};
 
         // Boss victory celebration - avatar dances for a few questions after beating a boss
         let bossVictoryDanceRemaining = 0;
@@ -2805,6 +3161,281 @@
         ];
         let currentSceneId = 'beach';
 
+        // ==========================================
+        // DIFFICULTY TIER SYSTEM
+        // ==========================================
+        const DIFFICULTY_TIERS = [
+            { tier: 1, name: 'Beginner', maxNum: 10, description: '0-10' },
+            { tier: 2, name: 'Explorer', maxNum: 20, description: '0-20' },
+            { tier: 3, name: 'Adventurer', maxNum: 50, description: '0-50' },
+            { tier: 4, name: 'Expert', maxNum: 100, description: '0-100' },
+            { tier: 5, name: 'Master', maxNum: 200, description: '0-200+' }
+        ];
+
+        // Player's current tier per operation (track separately)
+        let playerTiers = {
+            add: 1,
+            subtract: 1,
+            multiply: 1,
+            divide: 1
+        };
+
+        // Tier advancement tracking (need 80%+ accuracy on 20+ problems to advance)
+        let tierTracking = {
+            add: { correct: 0, total: 0 },
+            subtract: { correct: 0, total: 0 },
+            multiply: { correct: 0, total: 0 },
+            divide: { correct: 0, total: 0 }
+        };
+
+        const TIER_ADVANCE_THRESHOLD = 0.80; // 80% accuracy needed
+        const TIER_ADVANCE_MINIMUM = 20; // Minimum problems at current tier
+
+        // ==========================================
+        // DAILY CHALLENGE SYSTEM
+        // ==========================================
+        let dailyChallenge = {
+            lastCompletedDate: null,
+            streak: 0,
+            problem: null,
+            completed: false
+        };
+
+        function getDailyChallengeProblem() {
+            // Generate a consistent problem for today based on the date
+            const today = new Date();
+            const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+
+            // Seeded random number generator
+            const seededRandom = (s) => {
+                const x = Math.sin(s) * 10000;
+                return x - Math.floor(x);
+            };
+
+            // Get average player tier across operations
+            const avgTier = Math.round((playerTiers.add + playerTiers.subtract + playerTiers.multiply + playerTiers.divide) / 4);
+            // Daily challenge is 2 tiers harder
+            const challengeTier = Math.min(5, avgTier + 2);
+            const tierConfig = DIFFICULTY_TIERS[challengeTier - 1];
+
+            // Generate problem based on seed
+            const ops = ['add', 'subtract', 'multiply', 'divide'];
+            const op = ops[Math.floor(seededRandom(seed) * ops.length)];
+
+            let num1, num2, answer, display;
+            const r1 = seededRandom(seed + 1);
+            const r2 = seededRandom(seed + 2);
+
+            if (op === 'add') {
+                num1 = Math.floor(r1 * tierConfig.maxNum) + 10;
+                num2 = Math.floor(r2 * Math.min(tierConfig.maxNum, 100)) + 5;
+                answer = num1 + num2;
+                display = `${num1} + ${num2}`;
+            } else if (op === 'subtract') {
+                num1 = Math.floor(r1 * tierConfig.maxNum) + 20;
+                num2 = Math.floor(r2 * Math.min(num1 - 5, 50)) + 5;
+                answer = num1 - num2;
+                display = `${num1} − ${num2}`;
+            } else if (op === 'multiply') {
+                const m = Math.min(12, 5 + challengeTier);
+                num1 = Math.floor(r1 * m) + 3;
+                num2 = Math.floor(r2 * m) + 3;
+                answer = num1 * num2;
+                display = `${num1} × ${num2}`;
+            } else {
+                const m = Math.min(12, 5 + challengeTier);
+                num2 = Math.floor(r1 * m) + 2;
+                answer = Math.floor(r2 * m) + 2;
+                num1 = num2 * answer;
+                display = `${num1} ÷ ${num2}`;
+            }
+
+            return { num1, num2, op, answer, display, tier: challengeTier };
+        }
+
+        function isDailyChallengeAvailable() {
+            const today = new Date().toDateString();
+            return dailyChallenge.lastCompletedDate !== today;
+        }
+
+        function getDailyChallengeReward() {
+            // Base reward 100-300 based on tier difficulty
+            const avgTier = Math.round((playerTiers.add + playerTiers.subtract + playerTiers.multiply + playerTiers.divide) / 4);
+            const baseReward = 100 + (avgTier * 50);
+
+            // Streak bonus (up to 2x at 7 days)
+            const streakMultiplier = 1 + Math.min(dailyChallenge.streak, 7) * 0.14;
+
+            return Math.floor(baseReward * streakMultiplier);
+        }
+
+        function loadDailyChallenge() {
+            try {
+                const saved = localStorage.getItem('mathblaster_daily');
+                if (saved) {
+                    dailyChallenge = JSON.parse(saved);
+                }
+            } catch (e) {
+                console.log('No saved daily challenge');
+            }
+            updateDailyChallengeButton();
+        }
+
+        function saveDailyChallenge() {
+            localStorage.setItem('mathblaster_daily', JSON.stringify(dailyChallenge));
+        }
+
+        // ==========================================
+        // DANCE SYSTEM - Multiple dance types
+        // ==========================================
+        const DANCE_TYPES = ['dance-wiggle', 'dance-spin', 'dance-bounce', 'dance-victory'];
+        let currentDance = null;
+        let danceTimeout = null;
+
+        function triggerCelebrationDance(reason, duration = 5000) {
+            const avatar = document.getElementById('mangoAvatar');
+            if (!avatar) return;
+
+            // Clear any existing dance
+            if (danceTimeout) clearTimeout(danceTimeout);
+            DANCE_TYPES.forEach(d => avatar.classList.remove(d));
+            avatar.classList.remove('dancing');
+
+            // Choose dance based on reason
+            let danceType;
+            switch(reason) {
+                case 'levelup':
+                    danceType = 'dance-victory';
+                    duration = 4000;
+                    break;
+                case 'achievement':
+                    danceType = 'dance-spin';
+                    duration = 3000;
+                    break;
+                case 'daily':
+                    danceType = 'dance-bounce';
+                    duration = 4000;
+                    break;
+                case 'milestone':
+                    danceType = 'dance-victory';
+                    duration = 5000;
+                    break;
+                case 'boss':
+                default:
+                    danceType = 'dance-wiggle';
+                    duration = duration;
+                    break;
+            }
+
+            avatar.classList.add(danceType);
+            currentDance = danceType;
+
+            danceTimeout = setTimeout(() => {
+                avatar.classList.remove(danceType);
+                currentDance = null;
+            }, duration);
+        }
+
+        function stopDance() {
+            const avatar = document.getElementById('mangoAvatar');
+            if (avatar && currentDance) {
+                avatar.classList.remove(currentDance);
+                currentDance = null;
+            }
+            if (danceTimeout) {
+                clearTimeout(danceTimeout);
+                danceTimeout = null;
+            }
+        }
+
+        function updateDailyChallengeButton() {
+            const btn = document.getElementById('dailyChallengeBtn');
+            if (btn) {
+                const available = isDailyChallengeAvailable();
+                btn.classList.toggle('pulse', available);
+                btn.classList.toggle('completed', !available);
+                btn.title = available ? `Daily Challenge (${dailyChallenge.streak} day streak)` : 'Completed today!';
+            }
+        }
+
+        function showDailyChallenge() {
+            if (!isDailyChallengeAvailable()) {
+                const toast = document.getElementById('achievementToast');
+                toast.textContent = `✅ Daily challenge completed! Come back tomorrow!`;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+                return;
+            }
+
+            dailyChallenge.problem = getDailyChallengeProblem();
+            document.getElementById('dailyProblem').textContent = `${dailyChallenge.problem.display} = ?`;
+            document.getElementById('dailyStreak').textContent = `🔥 ${dailyChallenge.streak} day streak`;
+            document.getElementById('dailyReward').textContent = `Reward: ${getDailyChallengeReward()} coins`;
+            document.getElementById('dailyAnswer').value = '';
+            document.getElementById('dailyResult').textContent = '';
+            document.getElementById('dailyChallengeModal').classList.add('show');
+        }
+
+        function hideDailyChallenge() {
+            document.getElementById('dailyChallengeModal').classList.remove('show');
+        }
+
+        function checkDailyAnswer() {
+            const userAnswer = parseInt(document.getElementById('dailyAnswer').value);
+            const resultEl = document.getElementById('dailyResult');
+
+            if (isNaN(userAnswer)) {
+                resultEl.textContent = 'Enter a number!';
+                resultEl.style.color = 'var(--error)';
+                return;
+            }
+
+            if (userAnswer === dailyChallenge.problem.answer) {
+                // Correct!
+                const today = new Date().toDateString();
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+                // Update streak
+                if (dailyChallenge.lastCompletedDate === yesterday) {
+                    dailyChallenge.streak++;
+                } else if (dailyChallenge.lastCompletedDate !== today) {
+                    dailyChallenge.streak = 1;
+                }
+
+                dailyChallenge.lastCompletedDate = today;
+                dailyChallenge.completed = true;
+
+                // Give reward
+                const reward = getDailyChallengeReward();
+                score += reward;
+                saveCoins();
+                document.getElementById('score').textContent = score;
+
+                saveDailyChallenge();
+                updateDailyChallengeButton();
+
+                resultEl.textContent = `🎉 Correct! +${reward} coins!`;
+                resultEl.style.color = 'var(--success)';
+                playSound('bosswin');
+                haptic('heavy');
+
+                // Trigger celebration dance
+                triggerCelebrationDance('daily');
+
+                // Check for 7-day streak achievement
+                if (dailyChallenge.streak >= 7) {
+                    checkAchievement('daily_streak_7', true);
+                }
+
+                setTimeout(hideDailyChallenge, 2000);
+            } else {
+                resultEl.textContent = `❌ Try again! (Hint: it's ${dailyChallenge.problem.answer > 100 ? 'a big number' : 'between 1-100'})`;
+                resultEl.style.color = 'var(--error)';
+                playSound('wrong');
+                haptic('error');
+            }
+        }
+
         // XP and Level system
         let playerXP = 0;
         let playerLevel = 1;
@@ -2863,9 +3494,7 @@
             { id: 'speed_demon', emoji: '⚡', name: 'Speed Demon', desc: 'Get a 3x combo', category: 'basic' },
             { id: 'collector', emoji: '🎁', name: 'Collector', desc: 'Open 3 mystery boxes', category: 'basic' },
             { id: 'powerup_user', emoji: '💪', name: 'Powered Up', desc: 'Use a power-up', category: 'basic' },
-            { id: 'perfectionist', emoji: '💯', name: 'Perfectionist', desc: '100% accuracy in timed mode', category: 'basic' },
-            { id: 'speed_round_10', emoji: '🏃', name: 'Quick Thinker', desc: 'Solve 10+ in speed round', category: 'basic' },
-            { id: 'speed_round_20', emoji: '🚀', name: 'Lightning Fast', desc: 'Solve 20+ in speed round', category: 'basic' },
+            // Timed mode achievements removed
 
             // TIERED: Streak achievements (all stack)
             { id: 'streak_5', emoji: '🔥', name: 'Streak 5', desc: '5 in a row', category: 'streak', tier: 1 },
@@ -2895,6 +3524,10 @@
             { id: 'bosses_30', emoji: '🗡️', name: '30 Bosses', desc: 'Defeat 30 bosses', category: 'boss', tier: 3 },
             { id: 'bosses_50', emoji: '🗡️', name: '50 Bosses', desc: 'Defeat 50 bosses', category: 'boss', tier: 4 },
             { id: 'bosses_100', emoji: '👹', name: '100 Bosses', desc: 'Defeat 100 bosses', category: 'boss', tier: 5 },
+
+            // Daily challenge achievements
+            { id: 'daily_streak_7', emoji: '📅', name: 'Weekly Warrior', desc: '7-day daily challenge streak', category: 'daily' },
+            { id: 'daily_streak_30', emoji: '🗓️', name: 'Monthly Master', desc: '30-day daily challenge streak', category: 'daily' },
 
             // NEW: Collection achievements
             { id: 'scene_all', emoji: '🎨', name: 'Scene Collector', desc: 'Unlock all scene variations', category: 'collection' },
@@ -2969,8 +3602,10 @@
 
         function updateSettingsLabel() {
             const op = operation === 'mixed' ? 'Mixed' : operation === 'add' ? '+' : operation === 'subtract' ? '−' : operation === 'multiply' ? '×' : '÷';
-            const modeLabel = mode === 'speed' ? '⚡ Speed' : mode === 'timed' ? '⏱️ 60s' : '∞ Free';
-            document.getElementById('settingsLabel').textContent = `${op} • ${modeLabel}`;
+            // Show player's current tier for the selected operation
+            const tier = operation === 'mixed' ? Math.round((playerTiers.add + playerTiers.subtract + playerTiers.multiply + playerTiers.divide) / 4) : (playerTiers[operation] || 1);
+            const tierName = DIFFICULTY_TIERS[tier - 1]?.name || 'Beginner';
+            document.getElementById('settingsLabel').textContent = `${op} • ${tierName}`;
         }
 
         // XP and Level System
@@ -3017,6 +3652,7 @@
             toast.classList.add('show');
             playSound('streak');
             haptic('heavy');
+            triggerCelebrationDance('levelup');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
@@ -3202,9 +3838,8 @@
 
         // Progress bars
         function updateProgressBars() {
-            // Mystery magnet power-up: threshold is 5 instead of 10
-            const mysteryThreshold = activePowerUps.mystery_magnet ? 5 : 10;
-            const mysteryProgress = (correctCount % mysteryThreshold) / mysteryThreshold * 100;
+            // Mystery box every 10, boss every 15
+            const mysteryProgress = (correctCount % 10) / 10 * 100;
             const bossProgress = (correctCount % 15) / 15 * 100;
             document.getElementById('mysteryProgress').style.width = mysteryProgress + '%';
             document.getElementById('bossProgress').style.width = bossProgress + '%';
@@ -3224,20 +3859,9 @@
 
         // Active power-ups display
         function updateActivePowerUps() {
+            // Power-up indicators removed - system simplified
             const container = document.getElementById('activePowerUps');
-            if (!container) return;
-
-            let html = '';
-            if (activePowerUps.golden.active) {
-                html += `<div class="powerup-indicator">✨ Golden: ${activePowerUps.golden.remaining} left</div>`;
-            }
-            if (activePowerUps.mystery_magnet) {
-                html += `<div class="powerup-indicator">🧲 Magnet Active</div>`;
-            }
-            if (bossVictoryDanceRemaining > 0) {
-                html += `<div class="powerup-indicator">💃 Dancing! (${bossVictoryDanceRemaining})</div>`;
-            }
-            container.innerHTML = html;
+            if (container) container.innerHTML = '';
         }
 
         // Combo system
@@ -3434,6 +4058,7 @@
                 toast.textContent = `${achievement.emoji} ${achievement.name} unlocked!`;
                 toast.classList.add('show');
                 playSound('streak');
+                triggerCelebrationDance('achievement');
                 setTimeout(() => toast.classList.remove('show'), 3000);
             }
         }
@@ -3461,13 +4086,14 @@
             void el.offsetWidth;
             el.classList.add('show');
             playSound('streak');
+
+            // Trigger celebration dance for milestone streaks
+            if (num === 25 || num === 50 || num === 100 || num === 250) {
+                triggerCelebrationDance('milestone');
+            }
         }
 
         function showMysteryBox() {
-            // Disable mystery magnet after use
-            if (activePowerUps.mystery_magnet) {
-                activePowerUps.mystery_magnet = false;
-            }
             document.getElementById('mysteryReward').textContent = '';
             document.getElementById('mysteryText').textContent = 'Tap to open!';
             document.getElementById('mysteryCloseBtn').classList.add('hidden');
@@ -3486,41 +4112,28 @@
             rewardEl.innerHTML = '<svg class="pixel-chest" style="width:100px;height:100px;"><use href="#pixel-treasure-chest-open"/></svg>';
             document.getElementById('mysteryText').textContent = '';
 
-            // 30% chance for power-up, 70% for coins
-            const givesPowerUp = Math.random() < 0.3;
-
             setTimeout(() => {
-                if (givesPowerUp) {
-                    // Award random power-up
-                    const powerUpIds = Object.keys(POWER_UPS);
-                    const randomId = powerUpIds[Math.floor(Math.random() * powerUpIds.length)];
-                    const powerUp = POWER_UPS[randomId];
-                    ownedPowerUps[randomId] = (ownedPowerUps[randomId] || 0) + 1;
-                    savePowerUps();
-
-                    rewardEl.innerHTML += `<div style="font-size:3rem;margin:10px 0;">${powerUp.icon}</div>`;
-                    document.getElementById('mysteryText').textContent = `${powerUp.name}!`;
-                } else {
-                    // Award coins
-                    const bonus = Math.floor(Math.random() * 4) + 2; // 2-5 coins
-                    let coinContainer = '<div style="position:relative;height:80px;display:flex;justify-content:center;align-items:flex-end;gap:4px;">';
-                    for (let i = 0; i < bonus; i++) {
-                        const delay = i * 100;
-                        coinContainer += `<svg class="pixel-coin coin-burst" style="width:36px;height:36px;animation-delay:${delay}ms;"><use href="#pixel-coin"/></svg>`;
-                    }
-                    coinContainer += '</div>';
-                    rewardEl.innerHTML += coinContainer;
-                    document.getElementById('mysteryText').textContent = `+${bonus} coins!`;
-
-                    setTimeout(() => {
-                        score += bonus;
-                        saveCoins();
-                        document.getElementById('score').textContent = score;
-                        const coinStat = document.getElementById('coinStat');
-                        coinStat.style.transform = 'scale(1.2)';
-                        setTimeout(() => coinStat.style.transform = '', 200);
-                    }, 400);
+                // Award coins (5-15 based on player level)
+                const baseBonus = 5 + Math.floor(playerLevel / 5);
+                const bonus = Math.floor(Math.random() * (baseBonus * 2 - baseBonus)) + baseBonus;
+                let coinContainer = '<div style="position:relative;height:80px;display:flex;justify-content:center;align-items:flex-end;gap:4px;flex-wrap:wrap;">';
+                const displayCoins = Math.min(bonus, 10); // Show up to 10 coins visually
+                for (let i = 0; i < displayCoins; i++) {
+                    const delay = i * 80;
+                    coinContainer += `<svg class="pixel-coin coin-burst" style="width:32px;height:32px;animation-delay:${delay}ms;"><use href="#pixel-coin"/></svg>`;
                 }
+                coinContainer += '</div>';
+                rewardEl.innerHTML += coinContainer;
+                document.getElementById('mysteryText').textContent = `+${bonus} coins!`;
+
+                setTimeout(() => {
+                    score += bonus;
+                    saveCoins();
+                    document.getElementById('score').textContent = score;
+                    const coinStat = document.getElementById('coinStat');
+                    coinStat.style.transform = 'scale(1.2)';
+                    setTimeout(() => coinStat.style.transform = '', 200);
+                }, 400);
             }, 300);
 
             document.getElementById('mysteryCloseBtn').classList.remove('hidden');
@@ -3781,29 +4394,41 @@
         }
 
         function generateBossProblem() {
-            const max = getMaxNumber();
+            // Boss problems are 1-2 tiers harder than player's current tier
             const ops = operation === 'mixed' ? ['add', 'subtract', 'multiply', 'divide'] : [operation];
             const currentBossOp = ops[Math.floor(Math.random() * ops.length)];
+
+            // Get player's tier for this operation and bump it up for boss difficulty
+            const playerTier = playerTiers[currentBossOp] || 1;
+            const bossTier = Math.min(5, playerTier + 1 + (bossCurrentBoss?.tier === 'elite' ? 1 : 0));
+            const tierConfig = DIFFICULTY_TIERS[bossTier - 1];
+            const maxNum = tierConfig.maxNum;
+
             let num1, num2, display;
 
             if (currentBossOp === 'add') {
-                num1 = Math.floor(Math.random() * max) + 1;
-                num2 = Math.floor(Math.random() * max) + 1;
+                // Generate numbers appropriate for the boss tier
+                const min = bossTier > 1 ? DIFFICULTY_TIERS[bossTier - 2].maxNum : 1;
+                num1 = Math.floor(Math.random() * (maxNum - min)) + min;
+                num2 = Math.floor(Math.random() * Math.min(maxNum, 100)) + 1;
                 bossCorrectAnswer = num1 + num2;
                 display = `${num1} + ${num2}`;
             } else if (currentBossOp === 'subtract') {
-                num1 = Math.floor(Math.random() * max) + 1;
-                num2 = Math.floor(Math.random() * num1) + 1;
+                const min = bossTier > 1 ? DIFFICULTY_TIERS[bossTier - 2].maxNum : 1;
+                num1 = Math.floor(Math.random() * (maxNum - min)) + min + 10;
+                num2 = Math.floor(Math.random() * Math.min(num1 - 1, 50)) + 1;
                 bossCorrectAnswer = num1 - num2;
                 display = `${num1} − ${num2}`;
             } else if (currentBossOp === 'multiply') {
-                const m = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
+                // Multiplication uses smaller numbers but scaled by tier
+                const m = Math.min(12, 3 + bossTier * 2);
                 num1 = Math.floor(Math.random() * m) + 1;
                 num2 = Math.floor(Math.random() * m) + 1;
                 bossCorrectAnswer = num1 * num2;
                 display = `${num1} × ${num2}`;
             } else {
-                const m = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
+                // Division
+                const m = Math.min(12, 3 + bossTier * 2);
                 num2 = Math.floor(Math.random() * m) + 1;
                 bossCorrectAnswer = Math.floor(Math.random() * m) + 1;
                 num1 = num2 * bossCorrectAnswer;
@@ -3966,9 +4591,9 @@
                 const tier = bossCurrentBoss.tier || 'basic';
                 const victoryDuration = playVictoryCelebration(tier);
 
-                // Start avatar celebration dance for next 5 questions
-                bossVictoryDanceRemaining = 5;
-                document.getElementById('mangoAvatar').classList.add('dancing');
+                // Start avatar celebration dance based on boss tier
+                const danceDuration = tier === 'elite' ? 8000 : tier === 'ability' ? 6000 : 4000;
+                triggerCelebrationDance('boss', danceDuration);
 
                 setTimeout(() => {
                     document.getElementById('bossBattleModal').classList.remove('show');
@@ -4139,49 +4764,83 @@
         let currentFact = null;
         let problemStartTime = 0;
 
-        // Generate all math facts on first load
+        // Determine tier for a problem based on the numbers involved
+        function getTierForProblem(num1, num2, answer) {
+            const maxVal = Math.max(num1, num2, answer);
+            if (maxVal <= 10) return 1;
+            if (maxVal <= 20) return 2;
+            if (maxVal <= 50) return 3;
+            if (maxVal <= 100) return 4;
+            return 5;
+        }
+
+        // Generate math facts with tier information (optimized for memory)
         function generateMathFacts() {
             const facts = [];
 
-            // Addition: 1+1 to 12+12 (use smaller num first to avoid duplicates)
-            for (let a = 1; a <= 12; a++) {
-                for (let b = a; b <= 12; b++) {
-                    facts.push({
-                        id: `add_${a}_${b}`,
-                        op: 'add',
-                        num1: a,
-                        num2: b,
-                        answer: a + b
-                    });
+            // TIER 1: Basic facts (0-10)
+            for (let a = 1; a <= 10; a++) {
+                for (let b = a; b <= 10; b++) {
+                    facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 1 });
+                }
+            }
+            for (let minuend = 2; minuend <= 10; minuend++) {
+                for (let sub = 1; sub < minuend; sub++) {
+                    facts.push({ id: `sub_${minuend}_${sub}`, op: 'subtract', num1: minuend, num2: sub, answer: minuend - sub, tier: 1 });
                 }
             }
 
-            // Subtraction: results 0-20, minuend up to 20
-            for (let result = 0; result <= 12; result++) {
-                for (let subtrahend = 1; subtrahend <= 12; subtrahend++) {
-                    const minuend = result + subtrahend;
-                    if (minuend <= 20) {
-                        facts.push({
-                            id: `sub_${minuend}_${subtrahend}`,
-                            op: 'subtract',
-                            num1: minuend,
-                            num2: subtrahend,
-                            answer: result
-                        });
+            // TIER 2: Expanded facts (11-20)
+            for (let a = 1; a <= 20; a++) {
+                for (let b = Math.max(a, 11); b <= 20; b++) {
+                    if (a + b <= 40) {
+                        facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 2 });
                     }
                 }
             }
+            for (let minuend = 11; minuend <= 20; minuend++) {
+                for (let sub = 1; sub < minuend && sub <= 20; sub++) {
+                    facts.push({ id: `sub_${minuend}_${sub}`, op: 'subtract', num1: minuend, num2: sub, answer: minuend - sub, tier: 2 });
+                }
+            }
 
-            // Multiplication: 1x1 to 12x12 (use smaller num first to avoid duplicates)
+            // TIER 3: Medium facts (21-50)
+            for (let a = 10; a <= 50; a += 5) { // Sample every 5
+                for (let b = 10; b <= 50; b += 5) {
+                    if (a + b <= 100) {
+                        facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 3 });
+                    }
+                }
+            }
+            // Add some random tier 3 problems for variety
+            for (let i = 0; i < 50; i++) {
+                const a = Math.floor(Math.random() * 30) + 21;
+                const b = Math.floor(Math.random() * 30) + 1;
+                facts.push({ id: `add_t3_${i}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 3 });
+                facts.push({ id: `sub_t3_${i}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 3 });
+            }
+
+            // TIER 4: Larger facts (51-100)
+            for (let i = 0; i < 80; i++) {
+                const a = Math.floor(Math.random() * 50) + 51;
+                const b = Math.floor(Math.random() * 50) + 1;
+                facts.push({ id: `add_t4_${i}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 4 });
+                facts.push({ id: `sub_t4_${i}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 4 });
+            }
+
+            // TIER 5: Expert facts (100-200+)
+            for (let i = 0; i < 100; i++) {
+                const a = Math.floor(Math.random() * 100) + 101;
+                const b = Math.floor(Math.random() * 100) + 1;
+                facts.push({ id: `add_t5_${i}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 5 });
+                facts.push({ id: `sub_t5_${i}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 5 });
+            }
+
+            // Multiplication: 1x1 to 12x12 with tiers
             for (let a = 1; a <= 12; a++) {
                 for (let b = a; b <= 12; b++) {
-                    facts.push({
-                        id: `mul_${a}_${b}`,
-                        op: 'multiply',
-                        num1: a,
-                        num2: b,
-                        answer: a * b
-                    });
+                    const tier = a <= 3 && b <= 3 ? 1 : a <= 5 && b <= 5 ? 2 : a <= 8 && b <= 8 ? 3 : a <= 10 && b <= 10 ? 4 : 5;
+                    facts.push({ id: `mul_${a}_${b}`, op: 'multiply', num1: a, num2: b, answer: a * b, tier: tier });
                 }
             }
 
@@ -4189,17 +4848,275 @@
             for (let divisor = 1; divisor <= 12; divisor++) {
                 for (let quotient = 1; quotient <= 12; quotient++) {
                     const dividend = divisor * quotient;
-                    facts.push({
-                        id: `div_${dividend}_${divisor}`,
-                        op: 'divide',
-                        num1: dividend,
-                        num2: divisor,
-                        answer: quotient
-                    });
+                    const tier = divisor <= 3 && quotient <= 3 ? 1 : divisor <= 5 && quotient <= 5 ? 2 : divisor <= 8 && quotient <= 8 ? 3 : divisor <= 10 && quotient <= 10 ? 4 : 5;
+                    facts.push({ id: `div_${dividend}_${divisor}`, op: 'divide', num1: dividend, num2: divisor, answer: quotient, tier: tier });
                 }
             }
 
             return facts;
+        }
+
+        // Filter facts to only include those at or below player's current tier
+        function getFactsForPlayerTier(allFacts, op) {
+            const playerTier = playerTiers[op] || 1;
+            return allFacts.filter(f => f.op === op && f.tier <= playerTier);
+        }
+
+        // Track tier progress and check for advancement
+        function trackTierProgress(op, isCorrect) {
+            if (!tierTracking[op]) {
+                tierTracking[op] = { correct: 0, total: 0 };
+            }
+
+            tierTracking[op].total++;
+            if (isCorrect) {
+                tierTracking[op].correct++;
+            }
+
+            // Check for tier advancement
+            if (tierTracking[op].total >= TIER_ADVANCE_MINIMUM) {
+                const accuracy = tierTracking[op].correct / tierTracking[op].total;
+                if (accuracy >= TIER_ADVANCE_THRESHOLD && playerTiers[op] < 5) {
+                    // Advance to next tier!
+                    playerTiers[op]++;
+                    tierTracking[op] = { correct: 0, total: 0 }; // Reset tracking
+                    showTierAdvancement(op, playerTiers[op]);
+                    saveTierProgress();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Show tier advancement celebration
+        function showTierAdvancement(op, newTier) {
+            const tierInfo = DIFFICULTY_TIERS[newTier - 1];
+            const opNames = { add: 'Addition', subtract: 'Subtraction', multiply: 'Multiplication', divide: 'Division' };
+
+            const toast = document.getElementById('achievementToast');
+            if (toast) {
+                toast.textContent = `🎉 ${opNames[op]} Level Up! Now: ${tierInfo.name} (${tierInfo.description})`;
+                toast.classList.add('show');
+                playSound('levelup');
+                haptic('heavy');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+        }
+
+        // Save tier progress to localStorage
+        function saveTierProgress() {
+            localStorage.setItem('mathblaster_tiers', JSON.stringify(playerTiers));
+            localStorage.setItem('mathblaster_tier_tracking', JSON.stringify(tierTracking));
+        }
+
+        // Load tier progress from localStorage
+        function loadTierProgress() {
+            try {
+                const savedTiers = localStorage.getItem('mathblaster_tiers');
+                const savedTracking = localStorage.getItem('mathblaster_tier_tracking');
+                if (savedTiers) playerTiers = JSON.parse(savedTiers);
+                if (savedTracking) tierTracking = JSON.parse(savedTracking);
+            } catch (e) {
+                console.log('No saved tier progress');
+            }
+        }
+
+        // ==========================================
+        // SINGAPORE MATH STRATEGY HINTS
+        // ==========================================
+        let strategyTimeout = null;
+        let showingStrategy = false;
+
+        // Get strategy hint for a problem
+        function getStrategyHint(num1, num2, op, answer) {
+            const strategies = [];
+
+            if (op === 'add') {
+                // Making Tens strategy
+                if (num1 < 10 && num2 < 10 && num1 + num2 > 10) {
+                    const toTen = 10 - num1;
+                    const remainder = num2 - toTen;
+                    strategies.push({
+                        name: 'Making Tens',
+                        steps: [
+                            `<span class="highlight">${num1}</span> needs <span class="highlight">${toTen}</span> to make 10`,
+                            `Split ${num2} into <span class="highlight">${toTen}</span> + <span class="highlight">${remainder}</span>`,
+                            `10 + <span class="highlight">${remainder}</span> = <span class="highlight">${answer}</span>`
+                        ]
+                    });
+                }
+
+                // Compensation strategy for near-round numbers
+                if (num2 >= 9 && num2 % 10 >= 7) {
+                    const roundUp = Math.ceil(num2 / 10) * 10;
+                    const adjustment = roundUp - num2;
+                    strategies.push({
+                        name: 'Compensation',
+                        steps: [
+                            `Round <span class="highlight">${num2}</span> up to <span class="highlight">${roundUp}</span>`,
+                            `${num1} + ${roundUp} = <span class="highlight">${num1 + roundUp}</span>`,
+                            `Subtract ${adjustment}: ${num1 + roundUp} − ${adjustment} = <span class="highlight">${answer}</span>`
+                        ]
+                    });
+                }
+
+                // Number bonds for smaller numbers
+                if (num1 <= 10 && num2 <= 10) {
+                    strategies.push({
+                        name: 'Number Bonds',
+                        steps: [
+                            `<span class="highlight">${num1}</span> and <span class="highlight">${num2}</span> make a pair`,
+                            `Count on from ${Math.max(num1, num2)}: ${Math.max(num1, num2)}... +${Math.min(num1, num2)}`,
+                            `= <span class="highlight">${answer}</span>`
+                        ]
+                    });
+                }
+            }
+
+            if (op === 'subtract') {
+                // Bridging through 10
+                if (num1 > 10 && num1 - num2 < 10 && num2 < 10) {
+                    const toTen = num1 - 10;
+                    const remainder = num2 - toTen;
+                    strategies.push({
+                        name: 'Bridging Through 10',
+                        steps: [
+                            `From <span class="highlight">${num1}</span>, subtract <span class="highlight">${toTen}</span> to get 10`,
+                            `Then subtract <span class="highlight">${remainder}</span> more`,
+                            `10 − ${remainder} = <span class="highlight">${answer}</span>`
+                        ]
+                    });
+                }
+
+                // Compensation for subtraction
+                if (num2 >= 9 && num2 % 10 >= 7) {
+                    const roundUp = Math.ceil(num2 / 10) * 10;
+                    const adjustment = roundUp - num2;
+                    strategies.push({
+                        name: 'Compensation',
+                        steps: [
+                            `Round <span class="highlight">${num2}</span> up to <span class="highlight">${roundUp}</span>`,
+                            `${num1} − ${roundUp} = <span class="highlight">${num1 - roundUp}</span>`,
+                            `Add back ${adjustment}: ${num1 - roundUp} + ${adjustment} = <span class="highlight">${answer}</span>`
+                        ]
+                    });
+                }
+
+                // Think addition
+                strategies.push({
+                    name: 'Think Addition',
+                    steps: [
+                        `Think: what + <span class="highlight">${num2}</span> = <span class="highlight">${num1}</span>?`,
+                        `<span class="highlight">?</span> + ${num2} = ${num1}`,
+                        `The answer is <span class="highlight">${answer}</span>`
+                    ]
+                });
+            }
+
+            if (op === 'multiply') {
+                // Skip counting
+                strategies.push({
+                    name: 'Skip Counting',
+                    steps: [
+                        `Count by <span class="highlight">${num2}</span>s, <span class="highlight">${num1}</span> times`,
+                        `${Array.from({length: Math.min(num1, 5)}, (_, i) => num2 * (i + 1)).join(', ')}${num1 > 5 ? '...' : ''}`,
+                        `= <span class="highlight">${answer}</span>`
+                    ]
+                });
+
+                // Breaking apart (distributive)
+                if (num1 > 5 || num2 > 5) {
+                    const larger = Math.max(num1, num2);
+                    const smaller = Math.min(num1, num2);
+                    const part1 = 5;
+                    const part2 = larger - 5;
+                    strategies.push({
+                        name: 'Break Apart',
+                        steps: [
+                            `Split <span class="highlight">${larger}</span> into <span class="highlight">${part1}</span> + <span class="highlight">${part2}</span>`,
+                            `${smaller} × ${part1} = ${smaller * part1}, and ${smaller} × ${part2} = ${smaller * part2}`,
+                            `${smaller * part1} + ${smaller * part2} = <span class="highlight">${answer}</span>`
+                        ]
+                    });
+                }
+            }
+
+            if (op === 'divide') {
+                // Think multiplication
+                strategies.push({
+                    name: 'Think Multiplication',
+                    steps: [
+                        `Think: <span class="highlight">${num2}</span> × ? = <span class="highlight">${num1}</span>`,
+                        `What times ${num2} equals ${num1}?`,
+                        `<span class="highlight">${answer}</span> × ${num2} = ${num1}`
+                    ]
+                });
+
+                // Fair sharing
+                strategies.push({
+                    name: 'Fair Sharing',
+                    steps: [
+                        `Share <span class="highlight">${num1}</span> equally among <span class="highlight">${num2}</span> groups`,
+                        `Each group gets the same amount`,
+                        `= <span class="highlight">${answer}</span> in each group`
+                    ]
+                });
+            }
+
+            // Return a random strategy or the first one
+            return strategies.length > 0 ? strategies[Math.floor(Math.random() * strategies.length)] : null;
+        }
+
+        // Show strategy hint overlay
+        function showStrategyHint(num1, num2, op, answer) {
+            const strategy = getStrategyHint(num1, num2, op, answer);
+            if (!strategy) return;
+
+            showingStrategy = true;
+            const opSymbols = { add: '+', subtract: '−', multiply: '×', divide: '÷' };
+
+            document.getElementById('strategyLabel').textContent = strategy.name;
+            document.getElementById('strategyProblem').textContent = `${num1} ${opSymbols[op]} ${num2} = ?`;
+            document.getElementById('strategySteps').innerHTML = strategy.steps.map(s =>
+                `<div class="strategy-step">${s}</div>`
+            ).join('');
+            document.getElementById('strategyAnswer').textContent = `= ${answer}`;
+
+            document.getElementById('strategyOverlay').classList.add('show');
+
+            // Auto-dismiss after 4 seconds
+            strategyTimeout = setTimeout(dismissStrategyHint, 4000);
+        }
+
+        // Dismiss strategy hint
+        function dismissStrategyHint() {
+            if (!showingStrategy) return;
+
+            showingStrategy = false;
+            if (strategyTimeout) {
+                clearTimeout(strategyTimeout);
+                strategyTimeout = null;
+            }
+            document.getElementById('strategyOverlay').classList.remove('show');
+
+            // Continue to next problem
+            setTimeout(generateProblem, 200);
+        }
+
+        // Determine if we should show a strategy hint before a problem
+        function shouldShowPreHint(fact) {
+            // Show hint for new tier problems or low EF (hard) facts
+            if (!fact) return false;
+
+            const playerTier = playerTiers[fact.op] || 1;
+
+            // Show hint if this is at the player's current tier limit and they haven't mastered it
+            if (fact.tier === playerTier && fact.ef < 2.0) {
+                return Math.random() < 0.3; // 30% chance for hard problems
+            }
+
+            return false;
         }
 
         // Initialize fact database with SM-2 defaults
@@ -4288,9 +5205,13 @@
 
         // Get facts filtered by current operation
         function getFactsForOperation(op) {
-            if (op === 'mixed') return mathFacts;
+            if (op === 'mixed') {
+                // For mixed mode, filter each operation by its tier
+                return mathFacts.filter(f => f.tier <= (playerTiers[f.op] || 1));
+            }
             const opMap = { add: 'add', subtract: 'subtract', multiply: 'multiply', divide: 'divide' };
-            return mathFacts.filter(f => f.op === opMap[op]);
+            const playerTier = playerTiers[opMap[op]] || 1;
+            return mathFacts.filter(f => f.op === opMap[op] && f.tier <= playerTier);
         }
 
         // Select next fact using spaced repetition
@@ -4362,6 +5283,11 @@
                 trackAccuracy(true); // Adaptive difficulty tracking
                 updatePlayerSkillLevel(true); // Update auto-helper skill tracking
 
+                // Track tier progress for advancement
+                if (currentFact) {
+                    trackTierProgress(currentFact.op, true);
+                }
+
                 // SM-2 spaced repetition update
                 if (currentFact) {
                     const responseTime = Date.now() - problemStartTime;
@@ -4376,14 +5302,6 @@
                 // Combo multiplier
                 updateCombo();
                 let points = doublePointsActive ? 2 : 1;
-                // Golden power-up doubles coins
-                if (activePowerUps.golden.active) {
-                    points *= 2;
-                    activePowerUps.golden.remaining--;
-                    if (activePowerUps.golden.remaining <= 0) {
-                        activePowerUps.golden.active = false;
-                    }
-                }
                 points *= comboMultiplier;
                 score += points;
                 saveCoins();
@@ -4444,9 +5362,8 @@
                     return;
                 }
 
-                // Mystery magnet: trigger every 5 correct instead of 10
-                const mysteryThreshold = activePowerUps.mystery_magnet ? 5 : 10;
-                if (correctCount > 0 && correctCount % mysteryThreshold === 0) {
+                // Mystery box every 10 correct answers
+                if (correctCount > 0 && correctCount % 10 === 0) {
                     setTimeout(showMysteryBox, 400);
                     return;
                 }
@@ -4455,6 +5372,11 @@
             } else {
                 trackAccuracy(false); // Adaptive difficulty tracking
                 updatePlayerSkillLevel(false); // Update auto-helper skill tracking
+
+                // Track tier progress for wrong answers
+                if (currentFact) {
+                    trackTierProgress(currentFact.op, false);
+                }
 
                 // Track struggle for auto-helper
                 struggleState.wrongAttemptsOnProblem++;
@@ -4481,6 +5403,14 @@
                 document.body.classList.add('shake');
                 setTimeout(() => document.body.classList.remove('shake'), 300);
 
+                // Show strategy hint after wrong answer (50% chance on 2nd+ wrong attempt)
+                if (struggleState.wrongAttemptsOnProblem >= 2 && Math.random() < 0.5) {
+                    setTimeout(() => {
+                        showStrategyHint(num1, num2, currentOp, correctAnswer);
+                    }, 500);
+                    return;
+                }
+
                 // Check if player is struggling and needs help
                 checkStruggleAndHelp();
             }
@@ -4505,17 +5435,11 @@
         }
 
         function setMode(m) {
-            mode = m;
-            document.querySelectorAll('.settings-row button').forEach(b => {
-                if (['endless', 'timed', 'speed'].includes(b.id)) b.classList.toggle('active', b.id === m);
-            });
+            // Only endless mode now - timed/speed removed
+            mode = 'endless';
             if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-            if (mode === 'timed') startTimer();
-            else if (mode === 'speed') startSpeedRound();
-            else {
-                document.getElementById('timer').textContent = '';
-                document.getElementById('timer').classList.remove('warning');
-            }
+            document.getElementById('timer').textContent = '';
+            document.getElementById('timer').classList.remove('warning');
             resetGame();
         }
 
@@ -4568,16 +5492,7 @@
             document.getElementById('totalProblems').textContent = correctCount;
             document.getElementById('newRecordBanner').textContent = '';
 
-            // Check perfectionist achievement (100% accuracy with at least 10 problems in timed mode)
-            if (mode === 'timed' && acc === 100 && correctCount >= 10) {
-                checkAchievement('perfectionist', true);
-            }
-
-            // Check speed round achievements
-            if (mode === 'speed') {
-                checkAchievement('speed_round_10', correctCount >= 10);
-                checkAchievement('speed_round_20', correctCount >= 20);
-            }
+            // Timed/speed mode achievements removed
 
             haptic('heavy');
             playSound('gameover');
@@ -4623,7 +5538,6 @@
         function restartGame() {
             document.getElementById('gameOver').classList.remove('show');
             document.getElementById('timer').classList.remove('warning');
-            if (mode === 'timed') startTimer();
             resetGame();
         }
 
@@ -4867,26 +5781,9 @@
         }
 
         // Power-up activation (from mystery box drops)
+        // Power-up system removed - mystery boxes give coins directly
         function activatePowerUp(id) {
-            if (!ownedPowerUps[id] || ownedPowerUps[id] <= 0) return;
-
-            ownedPowerUps[id]--;
-            savePowerUps();
-
-            switch(id) {
-                case 'golden':
-                    activePowerUps.golden = { active: true, remaining: 5 };
-                    break;
-                case 'boss_summon':
-                    setTimeout(() => startBossBattle(), 300);
-                    break;
-                case 'mystery_magnet':
-                    activePowerUps.mystery_magnet = true;
-                    break;
-            }
-
-            updateActivePowerUps();
-            playSound('streak');
+            // No longer used - kept for compatibility
         }
 
         function loadPowerUps() {
@@ -4914,6 +5811,8 @@
         loadPowerUps(); // Load owned power-ups
         loadPurchasedCostumes(); // Load purchased costumes
         initializeFactDatabase(); // Initialize spaced repetition fact database
+        loadTierProgress(); // Load difficulty tier progress
+        loadDailyChallenge(); // Load daily challenge progress
         updateSettingsLabel();
         resetProblemStruggleState(); // Initialize auto-helper state
         generateProblem();
