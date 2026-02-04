@@ -3114,8 +3114,8 @@
             divide: { correct: 0, total: 0 }
         };
 
-        const TIER_ADVANCE_THRESHOLD = 0.80; // 80% accuracy needed
-        const TIER_ADVANCE_MINIMUM = 20; // Minimum problems at current tier
+        const TIER_ADVANCE_THRESHOLD = 0.75; // 75% accuracy needed
+        const TIER_ADVANCE_MINIMUM = 15; // Minimum problems at current tier
 
         // ==========================================
         // DANCE SYSTEM - Multiple dance types
@@ -4599,7 +4599,15 @@
                     showTierAdvancement(op, playerTiers[op]);
                     saveTierProgress();
                     return true;
+                } else if (accuracy < TIER_ADVANCE_THRESHOLD * 0.6) {
+                    // Reset if accuracy too low (below 45%) - they need more practice
+                    tierTracking[op] = { correct: 0, total: 0 };
                 }
+            }
+
+            // Save progress periodically (every 5 problems) to prevent loss
+            if (tierTracking[op].total % 5 === 0) {
+                saveTierProgress();
             }
 
             return false;
