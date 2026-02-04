@@ -542,6 +542,28 @@
         .mango-avatar.dance-bounce { animation: avatarDanceBounce 0.6s ease-in-out infinite; }
         .mango-avatar.dance-victory { animation: avatarDanceVictory 0.7s ease-in-out infinite; }
 
+        /* Set Bonus Effects */
+        @keyframes setSparkle {
+            0%, 100% { filter: drop-shadow(0 0 3px #ffd700) drop-shadow(0 0 6px #ff69b4); }
+            50% { filter: drop-shadow(0 0 8px #ffd700) drop-shadow(0 0 12px #ff69b4); }
+        }
+        @keyframes setGlow {
+            0%, 100% { filter: drop-shadow(0 0 5px var(--set-color, #ff69b4)); }
+            50% { filter: drop-shadow(0 0 15px var(--set-color, #ff69b4)) drop-shadow(0 0 20px var(--set-color, #ff69b4)); }
+        }
+        @keyframes setFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .mango-avatar.set-bonus-sparkle { animation: setSparkle 1.5s ease-in-out infinite; }
+        .mango-avatar.set-bonus-glow { animation: setGlow 2s ease-in-out infinite; }
+        .mango-avatar.set-bonus-float { animation: setFloat 2s ease-in-out infinite; }
+        .mango-avatar.set-fairy { --set-color: #da70d6; }
+        .mango-avatar.set-princess { --set-color: #ff69b4; }
+        .mango-avatar.set-nature { --set-color: #6bcb77; }
+        .mango-avatar.set-ocean { --set-color: #5dade2; }
+        .mango-avatar.set-space { --set-color: #9b59b6; }
+
         /* Tier Badge */
         .tier-badge {
             display: inline-block;
@@ -3427,6 +3449,79 @@
                 { id: 'acc-rainbow', name: 'Rainbow', svgId: 'costume-acc-rainbow', price: 10000, rarity: 'LEGENDARY' }
             ]
         };
+
+        // Themed costume sets with bonus effects
+        const COSTUME_SETS = [
+            {
+                id: 'fairy',
+                name: 'Fairy Set',
+                items: { hat: 'hat-tiara', outfit: 'outfit-wings', accessory: 'acc-wand' },
+                effect: 'sparkle',
+                cssClass: 'set-fairy'
+            },
+            {
+                id: 'princess',
+                name: 'Princess Set',
+                items: { hat: 'hat-crown', outfit: 'outfit-princess', accessory: 'acc-sparkle' },
+                effect: 'glow',
+                cssClass: 'set-princess'
+            },
+            {
+                id: 'unicorn',
+                name: 'Unicorn Set',
+                items: { hat: 'hat-unicorn', outfit: 'outfit-butterfly', accessory: 'acc-rainbow' },
+                effect: 'sparkle',
+                cssClass: 'set-fairy'
+            },
+            {
+                id: 'ocean',
+                name: 'Ocean Set',
+                items: { hat: 'hat-flowercrown', outfit: 'outfit-mermaid', accessory: 'acc-flower' },
+                effect: 'glow',
+                cssClass: 'set-ocean'
+            },
+            {
+                id: 'nature',
+                name: 'Nature Set',
+                items: { hat: 'hat-bunny', outfit: 'outfit-butterfly', accessory: 'acc-ladybug' },
+                effect: 'float',
+                cssClass: 'set-nature'
+            },
+            {
+                id: 'space',
+                name: 'Space Set',
+                items: { hat: 'hat-galaxy', outfit: 'outfit-phoenix', accessory: 'acc-sparkle' },
+                effect: 'glow',
+                cssClass: 'set-space'
+            },
+            {
+                id: 'sweet',
+                name: 'Sweet Treats Set',
+                items: { hat: 'hat-party', outfit: 'outfit-tutu', accessory: 'acc-cupcake' },
+                effect: 'sparkle',
+                cssClass: 'set-princess'
+            },
+            {
+                id: 'kitty',
+                name: 'Kitty Set',
+                items: { hat: 'hat-catears', outfit: 'outfit-heart', accessory: 'acc-heartglasses' },
+                effect: 'float',
+                cssClass: 'set-princess'
+            }
+        ];
+
+        // Check if player has a complete set equipped
+        function getEquippedSet() {
+            for (const set of COSTUME_SETS) {
+                if (equippedCostumes.hat === set.items.hat &&
+                    equippedCostumes.outfit === set.items.outfit &&
+                    equippedCostumes.accessory === set.items.accessory) {
+                    return set;
+                }
+            }
+            return null;
+        }
+
         let purchasedCostumes = []; // Costumes bought with coins
 
         // Equipped costumes state
@@ -5968,6 +6063,7 @@
             const hatLayer = document.getElementById('costumeHatLayer');
             const outfitLayer = document.getElementById('costumeOutfitLayer');
             const accLayer = document.getElementById('costumeAccessoryLayer');
+            const avatarEl = document.getElementById('mangoAvatar');
 
             const hat = COSTUMES.hats.find(h => h.id === equippedCostumes.hat);
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
@@ -5987,6 +6083,33 @@
                 }
             } else {
                 accLayer.innerHTML = '';
+            }
+
+            // Check for complete set and apply bonus effect
+            if (avatarEl) {
+                // Remove any existing set bonus classes
+                avatarEl.classList.remove('set-bonus-sparkle', 'set-bonus-glow', 'set-bonus-float');
+                avatarEl.classList.remove('set-fairy', 'set-princess', 'set-nature', 'set-ocean', 'set-space');
+
+                const equippedSet = getEquippedSet();
+                if (equippedSet) {
+                    // Apply set bonus effect
+                    avatarEl.classList.add(`set-bonus-${equippedSet.effect}`);
+                    avatarEl.classList.add(equippedSet.cssClass);
+
+                    // Show set bonus notification (only once per set)
+                    if (!avatarEl.dataset.currentSet || avatarEl.dataset.currentSet !== equippedSet.id) {
+                        avatarEl.dataset.currentSet = equippedSet.id;
+                        const toast = document.getElementById('achievementToast');
+                        if (toast) {
+                            toast.textContent = `✨ ${equippedSet.name} Complete! Bonus effect active!`;
+                            toast.classList.add('show');
+                            setTimeout(() => toast.classList.remove('show'), 2500);
+                        }
+                    }
+                } else {
+                    avatarEl.dataset.currentSet = '';
+                }
             }
         }
 
