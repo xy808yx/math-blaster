@@ -640,33 +640,73 @@
         .modal-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 8px;
             max-width: 360px;
             width: 100%;
-            margin: 0 auto 15px;
-            max-height: 50vh;
+            margin: 0 auto;
+            max-height: 45vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 5px;
+            padding: 5px 5px 35px 5px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+        .modal-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .modal-grid::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 2px;
         }
         .modal-item {
             text-align: center;
-            padding: 10px 5px;
+            padding: 8px 4px;
             background: var(--card-bg);
             border-radius: 10px;
             border: 2px solid rgba(255,255,255,0.1);
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 90px;
+            box-sizing: border-box;
         }
         .modal-item:active { transform: scale(0.95); }
         .modal-item.equipped { border-color: var(--accent); background: rgba(255,217,61,0.15); }
-        .modal-item.locked { opacity: 0.4; cursor: not-allowed; }
+        .modal-item.locked { opacity: 0.5; cursor: not-allowed; }
         .modal-item.locked:active { transform: none; }
         .modal-item.owned { border-color: var(--success); }
-        .modal-item-icon { font-size: 1.5rem; display: block; margin-bottom: 3px; }
+        .modal-item-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            margin-bottom: 4px;
+        }
         .modal-item-icon svg { width: 32px; height: 32px; image-rendering: pixelated; }
-        .modal-item-name { font-size: 0.85rem; color: var(--primary); line-height: 1.2; }
-        .modal-item-info { font-size: 0.75rem; color: var(--accent); margin-top: 2px; }
+        .modal-item-name {
+            font-size: 0.75rem;
+            color: var(--primary);
+            line-height: 1.1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            word-break: break-word;
+        }
+        .modal-item-info {
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
         .modal-hint {
             text-align: center;
             color: var(--accent);
@@ -2361,6 +2401,122 @@
 
         <!-- ========== END COSTUME PIECES ========== -->
 
+        <!-- ========== DANCE ICONS ========== -->
+        <!-- Wiggle Dance - figure with wavy motion -->
+        <symbol id="dance-wiggle-icon" viewBox="0 0 16 16">
+            <!-- Body -->
+            <rect x="7" y="3" width="2" height="2" fill="#ff69b4"/>
+            <rect x="6" y="5" width="4" height="4" fill="#ff69b4"/>
+            <rect x="7" y="9" width="2" height="4" fill="#ff69b4"/>
+            <!-- Arms wavy -->
+            <rect x="4" y="5" width="2" height="1" fill="#ff69b4"/>
+            <rect x="3" y="6" width="1" height="1" fill="#ff69b4"/>
+            <rect x="10" y="6" width="2" height="1" fill="#ff69b4"/>
+            <rect x="12" y="5" width="1" height="1" fill="#ff69b4"/>
+            <!-- Legs -->
+            <rect x="6" y="13" width="1" height="2" fill="#ff69b4"/>
+            <rect x="9" y="13" width="1" height="2" fill="#ff69b4"/>
+            <!-- Motion lines -->
+            <rect x="1" y="7" width="1" height="1" fill="#ffd700"/>
+            <rect x="14" y="7" width="1" height="1" fill="#ffd700"/>
+            <rect x="2" y="5" width="1" height="1" fill="#ffd700"/>
+            <rect x="13" y="5" width="1" height="1" fill="#ffd700"/>
+        </symbol>
+
+        <!-- Spin Dance - figure with circular arrows -->
+        <symbol id="dance-spin-icon" viewBox="0 0 16 16">
+            <!-- Body -->
+            <rect x="7" y="5" width="2" height="2" fill="#64b5f6"/>
+            <rect x="6" y="7" width="4" height="3" fill="#64b5f6"/>
+            <rect x="7" y="10" width="2" height="3" fill="#64b5f6"/>
+            <!-- Arms out -->
+            <rect x="3" y="7" width="3" height="1" fill="#64b5f6"/>
+            <rect x="10" y="8" width="3" height="1" fill="#64b5f6"/>
+            <!-- Legs -->
+            <rect x="6" y="13" width="1" height="2" fill="#64b5f6"/>
+            <rect x="9" y="13" width="1" height="2" fill="#64b5f6"/>
+            <!-- Spin circle -->
+            <rect x="2" y="3" width="2" height="1" fill="#ffd700"/>
+            <rect x="1" y="4" width="1" height="2" fill="#ffd700"/>
+            <rect x="12" y="3" width="2" height="1" fill="#ffd700"/>
+            <rect x="14" y="4" width="1" height="2" fill="#ffd700"/>
+            <rect x="2" y="11" width="1" height="1" fill="#ffd700"/>
+            <rect x="13" y="11" width="1" height="1" fill="#ffd700"/>
+        </symbol>
+
+        <!-- Bounce Dance - figure jumping with up arrows -->
+        <symbol id="dance-bounce-icon" viewBox="0 0 16 16">
+            <!-- Body in air -->
+            <rect x="7" y="4" width="2" height="2" fill="#81c784"/>
+            <rect x="6" y="6" width="4" height="3" fill="#81c784"/>
+            <rect x="7" y="9" width="2" height="2" fill="#81c784"/>
+            <!-- Arms up -->
+            <rect x="4" y="4" width="2" height="1" fill="#81c784"/>
+            <rect x="4" y="3" width="1" height="1" fill="#81c784"/>
+            <rect x="10" y="4" width="2" height="1" fill="#81c784"/>
+            <rect x="11" y="3" width="1" height="1" fill="#81c784"/>
+            <!-- Legs bent -->
+            <rect x="5" y="11" width="2" height="1" fill="#81c784"/>
+            <rect x="9" y="11" width="2" height="1" fill="#81c784"/>
+            <!-- Up arrows -->
+            <rect x="1" y="8" width="1" height="3" fill="#ffd700"/>
+            <rect x="0" y="9" width="1" height="1" fill="#ffd700"/>
+            <rect x="2" y="9" width="1" height="1" fill="#ffd700"/>
+            <rect x="14" y="8" width="1" height="3" fill="#ffd700"/>
+            <rect x="13" y="9" width="1" height="1" fill="#ffd700"/>
+            <rect x="15" y="9" width="1" height="1" fill="#ffd700"/>
+            <!-- Ground shadow -->
+            <rect x="5" y="14" width="6" height="1" fill="#555"/>
+        </symbol>
+
+        <!-- Victory Dance - figure with arms raised, stars -->
+        <symbol id="dance-victory-icon" viewBox="0 0 16 16">
+            <!-- Body -->
+            <rect x="7" y="5" width="2" height="2" fill="#ffd54f"/>
+            <rect x="6" y="7" width="4" height="3" fill="#ffd54f"/>
+            <rect x="7" y="10" width="2" height="3" fill="#ffd54f"/>
+            <!-- Arms up in V -->
+            <rect x="4" y="5" width="2" height="1" fill="#ffd54f"/>
+            <rect x="3" y="3" width="1" height="2" fill="#ffd54f"/>
+            <rect x="2" y="2" width="1" height="1" fill="#ffd54f"/>
+            <rect x="10" y="5" width="2" height="1" fill="#ffd54f"/>
+            <rect x="12" y="3" width="1" height="2" fill="#ffd54f"/>
+            <rect x="13" y="2" width="1" height="1" fill="#ffd54f"/>
+            <!-- Legs -->
+            <rect x="6" y="13" width="1" height="2" fill="#ffd54f"/>
+            <rect x="9" y="13" width="1" height="2" fill="#ffd54f"/>
+            <!-- Stars -->
+            <rect x="1" y="1" width="1" height="1" fill="#fff"/>
+            <rect x="0" y="2" width="1" height="1" fill="#fff"/>
+            <rect x="2" y="2" width="1" height="1" fill="#fff"/>
+            <rect x="14" y="1" width="1" height="1" fill="#fff"/>
+            <rect x="13" y="2" width="1" height="1" fill="#fff"/>
+            <rect x="15" y="2" width="1" height="1" fill="#fff"/>
+        </symbol>
+
+        <!-- Checkmark icon for "owned" -->
+        <symbol id="icon-checkmark" viewBox="0 0 16 16">
+            <rect x="3" y="8" width="2" height="2" fill="#4caf50"/>
+            <rect x="5" y="10" width="2" height="2" fill="#4caf50"/>
+            <rect x="7" y="8" width="2" height="2" fill="#4caf50"/>
+            <rect x="9" y="6" width="2" height="2" fill="#4caf50"/>
+            <rect x="11" y="4" width="2" height="2" fill="#4caf50"/>
+        </symbol>
+
+        <!-- X icon for "none" -->
+        <symbol id="icon-none" viewBox="0 0 16 16">
+            <rect x="3" y="3" width="2" height="2" fill="#888"/>
+            <rect x="5" y="5" width="2" height="2" fill="#888"/>
+            <rect x="7" y="7" width="2" height="2" fill="#888"/>
+            <rect x="9" y="9" width="2" height="2" fill="#888"/>
+            <rect x="11" y="11" width="2" height="2" fill="#888"/>
+            <rect x="11" y="3" width="2" height="2" fill="#888"/>
+            <rect x="9" y="5" width="2" height="2" fill="#888"/>
+            <rect x="5" y="9" width="2" height="2" fill="#888"/>
+            <rect x="3" y="11" width="2" height="2" fill="#888"/>
+        </symbol>
+        <!-- ========== END DANCE ICONS ========== -->
+
         <!-- Tiki Mystery Box -->
         <symbol id="pixel-mysterybox" viewBox="0 0 24 24">
             <!-- Box body -->
@@ -3075,7 +3231,7 @@
 
     <!-- Shop Modal (costumes + power-ups) -->
     <div class="modal" id="shopModal">
-        <h2 style="color: var(--accent);">🛒 Shop <span id="shopCoinDisplay" style="font-size:1rem;margin-left:10px;"><svg class="pixel-coin" style="width:18px;height:18px;vertical-align:middle;"><use href="#pixel-coin"/></svg> <span id="shopCoinCount">0</span></span></h2>
+        <h2 style="color: var(--accent);">Shop <span id="shopCoinDisplay" style="font-size:1rem;margin-left:10px;"><svg class="pixel-coin" style="width:18px;height:18px;vertical-align:middle;"><use href="#pixel-coin"/></svg> <span id="shopCoinCount">0</span></span></h2>
         <div class="costume-preview" id="costumePreview"></div>
         <div class="modal-tabs" id="shopTabs">
             <button class="modal-tab" data-tab="avatars" onclick="showShopTab('avatars')">Avatar</button>
@@ -5739,23 +5895,23 @@
                     const div = document.createElement('div');
                     div.className = 'modal-item' + (isOwned ? ' equipped' : '') + (!isOwned && !canAfford ? ' locked' : '');
 
-                    // Dance emoji icons
-                    const danceIcons = {
-                        'dance-wiggle': '💃',
-                        'dance-spin': '🔄',
-                        'dance-bounce': '⬆️',
-                        'dance-victory': '🏆'
+                    // Dance SVG icons
+                    const danceIconIds = {
+                        'dance-wiggle': 'dance-wiggle-icon',
+                        'dance-spin': 'dance-spin-icon',
+                        'dance-bounce': 'dance-bounce-icon',
+                        'dance-victory': 'dance-victory-icon'
                     };
 
                     let infoText = '';
                     if (isOwned) {
-                        infoText = '✓ Owned';
+                        infoText = '<svg style="width:12px;height:12px;vertical-align:middle;"><use href="#icon-checkmark"/></svg> Owned';
                     } else {
-                        infoText = dance.price === 0 ? 'FREE' : `💰 ${dance.price}`;
+                        infoText = dance.price === 0 ? 'FREE' : `<svg style="width:12px;height:12px;vertical-align:middle;"><use href="#pixel-coin"/></svg> ${dance.price}`;
                     }
 
                     div.innerHTML = `
-                        <span class="modal-item-icon" style="font-size:28px;">${danceIcons[dance.id] || '💃'}</span>
+                        <span class="modal-item-icon"><svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#${danceIconIds[dance.id] || 'dance-wiggle-icon'}"/></svg></span>
                         <span class="modal-item-name">${dance.name}</span>
                         <span class="rarity-badge ${rarity.cssClass}">${rarity.name}</span>
                         <span class="modal-item-info" style="color:${isOwned ? 'var(--accent)' : (canAfford ? '#ffd93d' : '#888')}">${infoText}</span>
@@ -5776,7 +5932,7 @@
                             const needed = dance.price - score;
                             div.classList.add('shake');
                             setTimeout(() => div.classList.remove('shake'), 300);
-                            showToast(`Need ${needed} more coins! 🪙`, 2000);
+                            showToast(`Need ${needed} more coins!`, 2000);
                             playSound('wrong');
                             haptic('error');
                         };
@@ -5808,16 +5964,16 @@
                 const div = document.createElement('div');
                 div.className = 'modal-item' + (isEquipped ? ' equipped' : '') + (!isOwned && !canAfford ? ' locked' : '');
 
-                // Use SVG preview for costumes with svgId, or "None" text
+                // Use SVG preview for costumes with svgId, or "None" icon
                 const iconHTML = item.svgId ?
                     `<svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#${item.svgId}"/></svg>` :
-                    '❌';
+                    `<svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#icon-none"/></svg>`;
 
                 let infoText = '';
                 if (isOwned) {
-                    if (isEquipped) infoText = '✓ Equipped';
+                    if (isEquipped) infoText = '<svg style="width:12px;height:12px;vertical-align:middle;"><use href="#icon-checkmark"/></svg> Equipped';
                 } else {
-                    infoText = `💰 ${item.price}`;
+                    infoText = `<svg style="width:12px;height:12px;vertical-align:middle;"><use href="#pixel-coin"/></svg> ${item.price}`;
                 }
 
                 div.innerHTML = `
@@ -5836,7 +5992,7 @@
                         const needed = item.price - score;
                         div.classList.add('shake');
                         setTimeout(() => div.classList.remove('shake'), 300);
-                        showToast(`Need ${needed} more coins! 🪙`, 2000);
+                        showToast(`Need ${needed} more coins!`, 2000);
                         playSound('wrong');
                     };
                 }
