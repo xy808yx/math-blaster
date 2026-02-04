@@ -6426,13 +6426,16 @@
 
             document.getElementById('strategyOverlay').classList.add('show');
 
-            // Auto-dismiss after 10 seconds (tap to dismiss early)
-            strategyTimeout = setTimeout(dismissStrategyHint, 10000);
+            // Auto-dismiss after 10 seconds (tap can dismiss after 5s)
+            strategyTimeout = setTimeout(() => dismissStrategyHint(true), 10000);
         }
 
-        // Dismiss strategy hint
-        function dismissStrategyHint() {
+        // Dismiss strategy hint (minimum 5 seconds before tap can dismiss)
+        function dismissStrategyHint(force) {
             if (!showingStrategy) return;
+
+            // Don't allow tap dismiss for first 5 seconds (unless forced by timeout)
+            if (!force && (Date.now() - lastStrategyTime) < 5000) return;
 
             showingStrategy = false;
             if (strategyTimeout) {
