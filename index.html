@@ -6393,13 +6393,24 @@
                     const smaller = Math.min(num1, num2);
                     const tens = Math.floor(smaller / 10) * 10;
                     const ones = smaller % 10;
-                    if (tens > 0) {
+                    if (tens > 0 && ones > 0) {
+                        // Both tens and ones to add
                         strategies.push({
                             name: 'Add by Parts',
                             steps: [
                                 `Start with <span class="highlight">${larger}</span>`,
                                 `Add the tens: ${larger} + ${tens} = <span class="highlight">${larger + tens}</span>`,
                                 `Add the ones: ${larger + tens} + ${ones} = <span class="highlight">${answer}</span>`
+                            ]
+                        });
+                    } else if (smaller > 0) {
+                        // Smaller number is single digits - use counting on
+                        strategies.push({
+                            name: 'Count On',
+                            steps: [
+                                `Start with the bigger number: <span class="highlight">${larger}</span>`,
+                                `Count on <span class="highlight">${smaller}</span> more`,
+                                `${larger}... ${Array.from({length: Math.min(smaller, 5)}, (_, i) => larger + i + 1).join(', ')}${smaller > 5 ? '...' : ''} = <span class="highlight">${answer}</span>`
                             ]
                         });
                     }
