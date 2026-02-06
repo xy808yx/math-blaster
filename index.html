@@ -4952,7 +4952,7 @@
         // Sticker state
         let collectedStickers = [];
         let correctSinceLastBox = 0;
-        let nextBoxThreshold = 80 + Math.floor(Math.random() * 41); // 80-120
+        let nextBoxThreshold = 50 + Math.floor(Math.random() * 31); // 50-80
 
         // Sticker persistence
         function saveStickers() {
@@ -4964,15 +4964,21 @@
         }
 
         function loadStickers() {
-            const saved = localStorage.getItem('mathblaster_stickers');
-            if (saved) {
-                collectedStickers = JSON.parse(saved);
-            }
-            const progress = localStorage.getItem('mathblaster_box_progress');
-            if (progress) {
-                const p = JSON.parse(progress);
-                correctSinceLastBox = p.correctSinceLastBox || 0;
-                nextBoxThreshold = p.nextBoxThreshold || (80 + Math.floor(Math.random() * 41));
+            try {
+                const saved = localStorage.getItem('mathblaster_stickers');
+                if (saved) {
+                    collectedStickers = JSON.parse(saved);
+                }
+                const progress = localStorage.getItem('mathblaster_box_progress');
+                if (progress) {
+                    const p = JSON.parse(progress);
+                    correctSinceLastBox = p.correctSinceLastBox || 0;
+                    nextBoxThreshold = p.nextBoxThreshold || (50 + Math.floor(Math.random() * 31));
+                }
+            } catch (e) {
+                collectedStickers = [];
+                correctSinceLastBox = 0;
+                nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
             }
         }
 
@@ -5128,6 +5134,7 @@
 
         function showLevelUp(level) {
             const toast = document.getElementById('achievementToast');
+            if (!toast) return;
             toast.textContent = `🎉 Level Up! You're now Level ${level}!`;
             toast.classList.add('show');
             playSound('streak');
@@ -5138,6 +5145,7 @@
 
         function showToast(message, duration = 2500) {
             const toast = document.getElementById('achievementToast');
+            if (!toast) return;
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), duration);
@@ -5455,8 +5463,12 @@
 
         // Achievements
         function loadAchievements() {
-            const saved = localStorage.getItem('mathblaster_achievements');
-            if (saved) unlockedAchievements = JSON.parse(saved);
+            try {
+                const saved = localStorage.getItem('mathblaster_achievements');
+                if (saved) unlockedAchievements = JSON.parse(saved);
+            } catch (e) {
+                unlockedAchievements = [];
+            }
         }
 
         function saveAchievements() {
@@ -5478,11 +5490,13 @@
             const achievement = ACHIEVEMENTS.find(a => a.id === id);
             if (achievement) {
                 const toast = document.getElementById('achievementToast');
-                toast.textContent = `${achievement.emoji} ${achievement.name} unlocked!`;
-                toast.classList.add('show');
+                if (toast) {
+                    toast.textContent = `${achievement.emoji} ${achievement.name} unlocked!`;
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 3000);
+                }
                 playSound('streak');
                 triggerCelebrationDance('achievement');
-                setTimeout(() => toast.classList.remove('show'), 3000);
             }
         }
 
@@ -6082,9 +6096,13 @@
 
         // Save/load cumulative stats
         function loadCumulativeStats() {
-            const saved = localStorage.getItem('mathblaster_stats');
-            if (saved) {
-                cumulativeStats = { ...cumulativeStats, ...JSON.parse(saved) };
+            try {
+                const saved = localStorage.getItem('mathblaster_stats');
+                if (saved) {
+                    cumulativeStats = { ...cumulativeStats, ...JSON.parse(saved) };
+                }
+            } catch (e) {
+                // Keep default cumulativeStats on error
             }
         }
 
@@ -6801,7 +6819,7 @@
                     return;
                 }
 
-                // Mystery box: random between 80-120 correct answers (sticker drop!)
+                // Mystery box: random between 50-80 correct answers (sticker drop!)
                 correctSinceLastBox++;
                 saveStickers(); // Save progress
                 updateMysteryBoxHint(); // Update hint pulse
@@ -6809,7 +6827,7 @@
 
                 if (correctSinceLastBox >= nextBoxThreshold) {
                     correctSinceLastBox = 0;
-                    nextBoxThreshold = 80 + Math.floor(Math.random() * 41); // Reset to 80-120
+                    nextBoxThreshold = 50 + Math.floor(Math.random() * 31); // Reset to 50-80
                     saveStickers();
                     if (problemTimeout) clearTimeout(problemTimeout);
                     problemTimeout = setTimeout(showMysteryBox, 400);
@@ -6971,8 +6989,12 @@
         }
 
         function loadPurchasedCostumes() {
-            const saved = localStorage.getItem('mathblaster_purchased_costumes');
-            if (saved) purchasedCostumes = JSON.parse(saved);
+            try {
+                const saved = localStorage.getItem('mathblaster_purchased_costumes');
+                if (saved) purchasedCostumes = JSON.parse(saved);
+            } catch (e) {
+                purchasedCostumes = [];
+            }
         }
 
         function savePurchasedCostumes() {
