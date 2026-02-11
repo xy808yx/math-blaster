@@ -186,24 +186,15 @@
         .stat-icon svg { width: 24px; height: 24px; }
 
         /* Pixel Art SVG Styles */
-        .pixel-mango { image-rendering: pixelated; }
-        .pixel-watermelon { image-rendering: pixelated; }
-        .pixel-panda { image-rendering: pixelated; }
-        .pixel-hippo { image-rendering: pixelated; }
-        .pixel-lion { image-rendering: pixelated; }
-        .pixel-unicorn { image-rendering: pixelated; }
-        .pixel-pineapple { image-rendering: pixelated; }
-        .pixel-banana { image-rendering: pixelated; }
-        .pixel-box { image-rendering: pixelated; }
-        .pixel-boss { image-rendering: pixelated; }
-        .pixel-coin { image-rendering: pixelated; }
-        .pixel-fire { image-rendering: pixelated; transition: filter 0.3s; }
+        .pixel-mango, .pixel-watermelon, .pixel-panda, .pixel-hippo, .pixel-lion,
+        .pixel-unicorn, .pixel-pineapple, .pixel-banana, .pixel-box, .pixel-boss,
+        .pixel-coin, .pixel-fire, .pixel-chest { image-rendering: pixelated; }
+        .pixel-fire { transition: filter 0.3s; }
         .pixel-fire.active { animation: fireFlicker 0.5s infinite; }
         @keyframes fireFlicker {
             0%, 100% { filter: drop-shadow(0 0 3px #ff6600) drop-shadow(0 0 6px #ff4400); }
             50% { filter: drop-shadow(0 0 8px #ff9900) drop-shadow(0 0 12px #ff6600); }
         }
-        .pixel-chest { image-rendering: pixelated; }
 
         /* Progress Bars */
         .progress-container {
@@ -601,14 +592,8 @@
         }
         .mango-avatar:hover { transform: scale(1.1); }
         .mango-avatar:active { transform: scale(0.95); }
-        @keyframes avatarDance {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-8px) rotate(-10deg); }
-            50% { transform: translateY(0) rotate(0deg); }
-            75% { transform: translateY(-8px) rotate(10deg); }
-        }
         .mango-avatar.dancing {
-            animation: avatarDance 0.5s ease-in-out infinite;
+            animation: avatarDanceWiggle 0.5s ease-in-out infinite;
         }
         .mango-avatar .costume-layer {
             position: absolute;
@@ -5164,7 +5149,7 @@
             if (!isThemeUnlocked(theme)) {
                 const t = THEMES.find(th => th.id === theme);
                 if (!t) return;
-                alert(`Unlock ${t.name} at Level ${t.unlockLevel}!`);
+                showToast(`🔒 Unlock ${t.name} at Level ${t.unlockLevel}!`, 2000);
                 return;
             }
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
@@ -5214,7 +5199,7 @@
             if (!isSceneUnlocked(sceneId)) {
                 const scene = SCENE_VARIATIONS.find(s => s.id === sceneId);
                 if (!scene) return;
-                alert(`Unlock ${scene.name} at Level ${scene.unlockLevel}!`);
+                showToast(`🔒 Unlock ${scene.name} at Level ${scene.unlockLevel}!`, 2000);
                 return;
             }
             currentSceneId = sceneId;
@@ -5345,7 +5330,7 @@
 
             if (lastAnswerTime > 0 && timeSinceLastAnswer < 2000) {
                 comboMultiplier = Math.min(comboMultiplier + 1, 5);
-            } else if (timeSinceLastAnswer >= 3000) {
+            } else {
                 comboMultiplier = 1;
             }
 
@@ -5552,6 +5537,7 @@
             setTimeout(() => {
                 // Roll for a sticker!
                 const sticker = rollSticker();
+                if (!sticker) { closeMysteryBox(); return; }
                 const rarity = STICKER_RARITY[sticker.rarity];
                 const isDuplicate = hasStickerCollected(sticker.id);
 
@@ -5861,6 +5847,7 @@
             }, 800);
 
             // Timer with enrage speed support
+            if (bossInterval) clearInterval(bossInterval);
             let timerAccumulator = 0;
             bossInterval = setInterval(() => {
                 timerAccumulator += bossTimerSpeed;
@@ -5869,7 +5856,7 @@
                     timerAccumulator -= 1;
                 }
                 const timerEl = document.getElementById('bossTimer');
-                timerEl.textContent = Math.ceil(bossTimer);
+                timerEl.textContent = Math.max(0, Math.ceil(bossTimer));
                 if (bossTimer <= 10) timerEl.classList.add('danger');
                 if (bossTimer <= 0) endBossBattle(false);
             }, 1000);
@@ -5917,7 +5904,18 @@
                 display = `${num1} ÷ ${num2}`;
             }
 
-            document.getElementById('bossProblem').textContent = `${display} = ?`;
+            // Confuse ability: briefly show scrambled display, then reveal the real one
+            if (bossAbilityState.confuseChance && Math.random() < bossAbilityState.confuseChance) {
+                const scramble = (n) => { const d = String(n).split(''); for (let i = d.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [d[i], d[j]] = [d[j], d[i]]; } return d.join(''); };
+                const fakeDisplay = display.replace(/\d+/g, m => scramble(m));
+                document.getElementById('bossProblem').textContent = `${fakeDisplay} = ?`;
+                showAbilityFlash('😵 CONFUSED!');
+                setTimeout(() => {
+                    if (bossActive) document.getElementById('bossProblem').textContent = `${display} = ?`;
+                }, 1500);
+            } else {
+                document.getElementById('bossProblem').textContent = `${display} = ?`;
+            }
             bossAnswer = '';
             document.getElementById('bossAnswer').textContent = '|';
         }
@@ -5933,7 +5931,8 @@
         function bossDeletePress() {
             if (!bossActive) return;
             bossAnswer = bossAnswer.slice(0, -1);
-            document.getElementById('bossAnswer').textContent = (bossAnswer || '') + '|';
+            document.getElementById('bossAnswer').textContent = bossAnswer + '|';
+            playSound('tap');
             haptic('light');
         }
 
@@ -6013,6 +6012,7 @@
         }
 
         function endBossBattle(victory) {
+            if (!bossActive) return;
             bossActive = false;
             clearInterval(bossInterval);
 
@@ -6239,28 +6239,32 @@
                     }
                 }
             }
+            // Seeded PRNG for deterministic fact generation (so SM-2 state persists correctly)
+            let _seed = 42;
+            function seededRandom() { _seed = (_seed * 16807 + 0) % 2147483647; return (_seed - 1) / 2147483646; }
+
             // Add some random tier 3 problems for variety
             for (let i = 0; i < 50; i++) {
-                const a = Math.floor(Math.random() * 30) + 21;
-                const b = Math.floor(Math.random() * 30) + 1;
-                facts.push({ id: `add_t3_${i}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 3 });
-                facts.push({ id: `sub_t3_${i}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 3 });
+                const a = Math.floor(seededRandom() * 30) + 21;
+                const b = Math.floor(seededRandom() * 30) + 1;
+                facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 3 });
+                facts.push({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 3 });
             }
 
             // TIER 4: Larger facts (51-100)
             for (let i = 0; i < 80; i++) {
-                const a = Math.floor(Math.random() * 50) + 51;
-                const b = Math.floor(Math.random() * 50) + 1;
-                facts.push({ id: `add_t4_${i}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 4 });
-                facts.push({ id: `sub_t4_${i}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 4 });
+                const a = Math.floor(seededRandom() * 50) + 51;
+                const b = Math.floor(seededRandom() * 50) + 1;
+                facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 4 });
+                facts.push({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 4 });
             }
 
             // TIER 5: Expert facts (100-200+)
             for (let i = 0; i < 100; i++) {
-                const a = Math.floor(Math.random() * 100) + 101;
-                const b = Math.floor(Math.random() * 100) + 1;
-                facts.push({ id: `add_t5_${i}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 5 });
-                facts.push({ id: `sub_t5_${i}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 5 });
+                const a = Math.floor(seededRandom() * 100) + 101;
+                const b = Math.floor(seededRandom() * 100) + 1;
+                facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 5 });
+                facts.push({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 5 });
             }
 
             // Multiplication: 1x1 to 12x12 with tiers
@@ -6439,7 +6443,7 @@
 
             if (op === 'subtract') {
                 // Bridging through 10
-                if (num1 > 10 && num1 - num2 < 10 && num2 < 10) {
+                if (num1 > 10 && num1 - num2 < 10 && num2 < 10 && num2 >= num1 - 10) {
                     const toTen = num1 - 10;
                     const remainder = num2 - toTen;
                     strategies.push({
@@ -6550,8 +6554,6 @@
 
             document.getElementById('strategyOverlay').classList.add('show');
 
-            // Auto-dismiss after 10 seconds (tap can dismiss after 5s)
-            strategyTimeout = setTimeout(() => dismissStrategyHint(true), 10000);
         }
 
         // Dismiss strategy hint (minimum 5 seconds before tap can dismiss)
@@ -6686,6 +6688,8 @@
             // Priority 2: New facts (never reviewed) - introduce gradually
             const newFacts = facts.filter(f => f.repetitions === 0);
             if (newFacts.length > 0) {
+                // Shuffle to avoid bias toward beginning of array, then pick from first 5
+                for (let i = newFacts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [newFacts[i], newFacts[j]] = [newFacts[j], newFacts[i]]; }
                 return newFacts[Math.floor(Math.random() * Math.min(5, newFacts.length))];
             }
 
@@ -6777,7 +6781,6 @@
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;
                 answerEl.classList.add('correct');
-                updateProgressBars();
                 updateFireEffect();
 
                 // Check achievements (including tiered achievements that stack)
@@ -6823,7 +6826,6 @@
 
                 // Mystery box: random between 50-80 correct answers (sticker drop!)
                 correctSinceLastBox++;
-                saveStickers(); // Save progress
                 updateMysteryBoxHint(); // Update hint pulse
                 updateProgressBars(); // Update boss progress bar
 
@@ -6901,17 +6903,22 @@
         }
 
         function resetGame() {
-            // Clear any pending timeouts to prevent memory leaks
+            // Clear any pending timeouts/intervals to prevent memory leaks
             if (comboTimeout) clearTimeout(comboTimeout);
             if (danceTimeout) clearTimeout(danceTimeout);
             if (strategyTimeout) clearTimeout(strategyTimeout);
             if (problemTimeout) clearTimeout(problemTimeout);
+            if (bossInterval) clearInterval(bossInterval);
+            bossActive = false;
+            document.getElementById('bossBattleModal').classList.remove('show');
 
-            score = 0; streak = 0; bestStreak = 0;
+            streak = 0; bestStreak = 0;
             gameActive = true;
             correctCount = 0;
             mysteryBoxesOpened = 0;
             bossesDefeated = 0;
+            correctSinceLastBox = 0;
+            nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
 
             // Reset combo
             comboMultiplier = 1;
@@ -6931,7 +6938,7 @@
             // Reset progress bars
             updateProgressBars();
 
-            document.getElementById('score').textContent = 0;
+            loadCoins();
             document.getElementById('streak').textContent = 0;
             document.getElementById('feedback').textContent = '';
             document.getElementById('answerDisplay').classList.remove('correct');
@@ -6945,6 +6952,7 @@
         }
 
         document.addEventListener('keydown', function(e) {
+            if (showingStrategy) return;
             if (bossActive) {
                 if (e.key >= '0' && e.key <= '9') bossNumPress(e.key);
                 else if (e.key === 'Backspace') { e.preventDefault(); bossDeletePress(); }
@@ -7090,6 +7098,7 @@
                             if (purchaseDance(dance.id)) {
                                 playSound('purchase');
                                 haptic('success');
+                                document.getElementById('shopCoinCount').textContent = score;
                                 renderShopGrid();
                                 // Preview the dance
                                 triggerCelebrationDance('achievement');
@@ -7208,6 +7217,7 @@
                         setTimeout(() => div.classList.remove('shake'), 300);
                         showToast(`Need ${needed} more coins!`, 2000);
                         playSound('wrong');
+                        haptic('error');
                     };
                 }
                 grid.appendChild(div);
@@ -7331,7 +7341,7 @@
             if (avatarEl) {
                 // Remove any existing set bonus classes
                 avatarEl.classList.remove('set-bonus-sparkle', 'set-bonus-glow', 'set-bonus-float');
-                avatarEl.classList.remove('set-fairy', 'set-princess', 'set-nature', 'set-ocean', 'set-space');
+                avatarEl.classList.remove('set-fairy', 'set-princess', 'set-nature', 'set-ocean', 'set-space', 'set-unicorn', 'set-sweet', 'set-kitty');
 
                 const equippedSet = getEquippedSet();
                 if (equippedSet) {
@@ -7680,7 +7690,7 @@
             if (extras.includes('stars')) {
                 for (let i = 0; i < 60; i++) {
                     const starGeo = new THREE.BoxGeometry(0.15, 0.15, 0.1);
-                    const star = new THREE.Mesh(starGeo, new THREE.MeshBasicMaterial({ color: 0xffffff }));
+                    const star = new THREE.Mesh(starGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true }));
                     star.position.set(
                         (Math.random() - 0.5) * 80,
                         5 + Math.random() * 20,
