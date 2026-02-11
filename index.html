@@ -143,16 +143,32 @@
             display: none;
             flex-direction: column;
             gap: 10px;
-            padding: 12px;
-            background: var(--card-bg);
+            padding: 16px;
+            background: rgba(30, 15, 55, 0.97);
             border-radius: 12px;
+            border: 2px solid var(--primary);
+            box-shadow:
+                0 0 15px var(--primary),
+                0 12px 40px rgba(0, 0, 0, 0.7);
             position: absolute;
             top: 100%;
             left: 0;
             right: 0;
             margin-top: 5px;
+            transform-origin: top center;
         }
-        .settings-panel.show { display: flex; }
+        .settings-panel.show {
+            display: flex;
+            animation: panelPop 0.2s ease-out;
+        }
+        @keyframes panelPop {
+            0%   { opacity: 0; transform: scaleY(0.95) scaleX(0.98); }
+            100% { opacity: 1; transform: scaleY(1) scaleX(1); }
+        }
+        .settings-btn.open {
+            background: var(--primary);
+            color: #1a0a2e;
+        }
 
         .settings-row {
             display: flex;
@@ -162,12 +178,12 @@
         }
 
         .settings-row button {
-            padding: 8px 14px;
+            padding: 12px 18px;
             background: transparent;
             border: 2px solid var(--primary);
             border-radius: 8px;
             color: var(--primary);
-            font-size: 0.85rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
         }
@@ -5083,8 +5099,31 @@
         }
 
         function toggleSettings() {
-            document.getElementById('settingsPanel').classList.toggle('show');
+            const panel = document.getElementById('settingsPanel');
+            const btn = document.querySelector('.settings-btn');
+            const isOpen = panel.classList.toggle('show');
+            btn.classList.toggle('open', isOpen);
+            const label = document.getElementById('settingsLabel');
+            const arrow = isOpen ? ' ▲' : ' ▼';
+            btn.innerHTML = '';
+            btn.appendChild(label);
+            btn.append(arrow);
         }
+
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('settingsPanel');
+            const wrapper = document.querySelector('.settings-wrapper');
+            if (panel.classList.contains('show') && !wrapper.contains(e.target)) {
+                panel.classList.remove('show');
+                const btn = document.querySelector('.settings-btn');
+                btn.classList.remove('open');
+                const label = document.getElementById('settingsLabel');
+                btn.innerHTML = '';
+                btn.appendChild(label);
+                btn.append(' ▼');
+                e.stopPropagation();
+            }
+        }, true);
 
         function updateSettingsLabel() {
             const op = operation === 'mixed' ? 'Mixed' : operation === 'add' ? '+' : operation === 'subtract' ? '−' : operation === 'multiply' ? '×' : '÷';
@@ -6910,6 +6949,26 @@
             document.querySelectorAll('.settings-row button').forEach(b => {
                 if (['add', 'subtract', 'multiply', 'divide', 'mixed'].includes(b.id)) b.classList.toggle('active', b.id === op);
             });
+
+            const selectedBtn = document.getElementById(op === 'mixed' ? 'mixed' : op);
+            if (selectedBtn) {
+                selectedBtn.style.transition = 'background 0.15s, color 0.15s';
+                selectedBtn.style.background = 'var(--primary)';
+                selectedBtn.style.color = '#1a0a2e';
+                setTimeout(() => {
+                    selectedBtn.style.background = '';
+                    selectedBtn.style.color = '';
+                    const panel = document.getElementById('settingsPanel');
+                    panel.classList.remove('show');
+                    const btn = document.querySelector('.settings-btn');
+                    btn.classList.remove('open');
+                    const label = document.getElementById('settingsLabel');
+                    btn.innerHTML = '';
+                    btn.appendChild(label);
+                    btn.append(' ▼');
+                }, 300);
+            }
+
             updateSettingsLabel();
             resetGame();
         }
