@@ -175,15 +175,17 @@
             flex-wrap: wrap;
         }
 
+        .settings-row button, .numpad button, .boss-numpad button, .modal-tab {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            cursor: pointer;
+        }
         .settings-row button {
             padding: 12px 18px;
             background: transparent;
-            border: 2px solid var(--primary);
             border-radius: 8px;
-            color: var(--primary);
             font-size: 1rem;
             font-weight: 600;
-            cursor: pointer;
         }
         .settings-row button.active {
             background: var(--primary);
@@ -645,10 +647,7 @@
         .modal-tab {
             padding: 6px 10px;
             background: var(--card-bg);
-            border: 2px solid var(--primary);
             border-radius: 8px;
-            color: var(--primary);
-            cursor: pointer;
             font-size: 0.75rem;
             -webkit-tap-highlight-color: transparent;
         }
@@ -904,10 +903,7 @@
             font-size: 1.8rem;
             font-weight: bold;
             background: rgba(255, 107, 157, 0.15);
-            border: 2px solid var(--primary);
             border-radius: 12px;
-            color: var(--primary);
-            cursor: pointer;
             touch-action: manipulation;
         }
         .numpad button:hover { opacity: 0.8; }
@@ -1209,10 +1205,7 @@
             padding: 10px;
             min-height: 44px;
             background: rgba(255, 107, 157, 0.15);
-            border: 2px solid var(--primary);
-            color: var(--primary);
             border-radius: 8px;
-            cursor: pointer;
         }
         .boss-numpad .delete { border-color: var(--error); color: var(--error); }
         .boss-numpad .submit { border-color: var(--success); color: var(--success); }
@@ -4175,6 +4168,13 @@
         function randomInt(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
+        function store(key, val) {
+            localStorage.setItem('mathblaster_' + key, JSON.stringify(val));
+        }
+        function load(key, fallback) {
+            try { const s = localStorage.getItem('mathblaster_' + key); return s !== null ? JSON.parse(s) : fallback; }
+            catch { return fallback; }
+        }
 
         const OP_SYMBOLS = { add: '+', subtract: '−', multiply: '×', divide: '÷', mixed: 'Mixed' };
 
@@ -4182,77 +4182,53 @@
         // Tiers: 'basic' = original stats, 'simple' = stat variations, 'ability' = single ability, 'elite' = multi-ability
         const BOSSES = [
             // Original bosses (basic tier)
-            { svg: 'boss-tiki', name: 'Tiki Mask', unlockLevel: 1, tier: 'basic' },
-            { svg: 'boss-crab', name: 'Coconut Crab', unlockLevel: 1, tier: 'basic' },
-            { svg: 'boss-puffer', name: 'Pufferfish', unlockLevel: 3, tier: 'basic' },
-            { svg: 'boss-jelly', name: 'Jellyfish', unlockLevel: 5, tier: 'basic' },
-            { svg: 'boss-bird', name: 'Tropical Bird', unlockLevel: 7, tier: 'basic' },
-            { svg: 'boss-shark', name: 'Surfing Shark', unlockLevel: 10, tier: 'basic' },
-            { svg: 'boss-volcano', name: 'Volcano Spirit', unlockLevel: 12, tier: 'basic' },
-            { svg: 'boss-coconut', name: 'Coconut Monster', unlockLevel: 15, tier: 'basic' },
+            { svg: 'boss-tiki', name: 'Tiki Mask', unlockLevel: 1, tier: 'basic', loot: { min: 8, max: 12 } },
+            { svg: 'boss-crab', name: 'Coconut Crab', unlockLevel: 1, tier: 'basic', loot: { min: 8, max: 12 } },
+            { svg: 'boss-puffer', name: 'Pufferfish', unlockLevel: 3, tier: 'basic', loot: { min: 10, max: 14 } },
+            { svg: 'boss-jelly', name: 'Jellyfish', unlockLevel: 5, tier: 'basic', loot: { min: 10, max: 14 } },
+            { svg: 'boss-bird', name: 'Tropical Bird', unlockLevel: 7, tier: 'basic', loot: { min: 12, max: 16 } },
+            { svg: 'boss-shark', name: 'Surfing Shark', unlockLevel: 10, tier: 'basic', loot: { min: 12, max: 18 } },
+            { svg: 'boss-volcano', name: 'Volcano Spirit', unlockLevel: 12, tier: 'basic', loot: { min: 14, max: 18 } },
+            { svg: 'boss-coconut', name: 'Coconut Monster', unlockLevel: 15, tier: 'basic', loot: { min: 14, max: 18 } },
 
-            // NEW: Simple tier (L16-25) - stat variations only
-            { svg: 'boss-octopus', name: 'Octopus', unlockLevel: 16, tier: 'simple', hp: 120, time: 28 },
-            { svg: 'boss-turtle', name: 'Sea Turtle', unlockLevel: 18, tier: 'simple', hp: 140, time: 35 },
-            { svg: 'boss-hermitcrab', name: 'Hermit Crab', unlockLevel: 20, tier: 'simple', hp: 100, time: 25 },
-            { svg: 'boss-starfish', name: 'Starfish', unlockLevel: 23, tier: 'simple', hp: 150, time: 32 },
+            // Simple tier (L16-25) - stat variations only
+            { svg: 'boss-octopus', name: 'Octopus', unlockLevel: 16, tier: 'simple', hp: 120, time: 28, loot: { min: 15, max: 20 } },
+            { svg: 'boss-turtle', name: 'Sea Turtle', unlockLevel: 18, tier: 'simple', hp: 140, time: 35, loot: { min: 16, max: 22 } },
+            { svg: 'boss-hermitcrab', name: 'Hermit Crab', unlockLevel: 20, tier: 'simple', hp: 100, time: 25, loot: { min: 15, max: 20 } },
+            { svg: 'boss-starfish', name: 'Starfish', unlockLevel: 23, tier: 'simple', hp: 150, time: 32, loot: { min: 18, max: 24 } },
 
-            // NEW: Ability tier (L26-40) - single special ability
-            { svg: 'boss-pirate', name: 'Pirate Captain', unlockLevel: 26, tier: 'ability',
+            // Ability tier (L26-40) - single special ability
+            { svg: 'boss-pirate', name: 'Pirate Captain', unlockLevel: 26, tier: 'ability', loot: { min: 20, max: 28 },
               ability: { type: 'shield', trigger: 'start', charges: 1, desc: 'Blocks first hit' } },
-            { svg: 'boss-mermaid', name: 'Mermaid', unlockLevel: 30, tier: 'ability',
+            { svg: 'boss-mermaid', name: 'Mermaid', unlockLevel: 30, tier: 'ability', loot: { min: 22, max: 30 },
               ability: { type: 'heal', trigger: 'hp50', amount: 25, desc: 'Heals at 50% HP' } },
-            { svg: 'boss-stingray', name: 'Stingray', unlockLevel: 34, tier: 'ability',
+            { svg: 'boss-stingray', name: 'Stingray', unlockLevel: 34, tier: 'ability', loot: { min: 24, max: 32 },
               ability: { type: 'enrage', trigger: 'hp25', speedBoost: 1.5, desc: 'Timer speeds up below 25% HP' } },
-            { svg: 'boss-pelican', name: 'Pelican', unlockLevel: 38, tier: 'ability',
+            { svg: 'boss-pelican', name: 'Pelican', unlockLevel: 38, tier: 'ability', loot: { min: 24, max: 32 },
               ability: { type: 'dodge', trigger: 'random', chance: 0.2, desc: '20% chance to dodge' } },
 
-            // NEW: Elite tier (L41+) - multiple abilities or complex mechanics
-            { svg: 'boss-whale', name: 'Whale', unlockLevel: 42, tier: 'elite', hp: 200, time: 40,
+            // Elite tier (L41+) - multiple abilities or complex mechanics
+            { svg: 'boss-whale', name: 'Whale', unlockLevel: 42, tier: 'elite', hp: 200, time: 40, loot: { min: 30, max: 40 },
               abilities: [
                 { type: 'shield', trigger: 'start', charges: 2, desc: 'Blocks 2 hits' },
                 { type: 'heal', trigger: 'hp25', amount: 50, desc: 'Big heal at 25% HP' }
               ] },
-            { svg: 'boss-serpent', name: 'Sea Serpent', unlockLevel: 48, tier: 'elite', hp: 180, time: 35,
+            { svg: 'boss-serpent', name: 'Sea Serpent', unlockLevel: 48, tier: 'elite', hp: 180, time: 35, loot: { min: 32, max: 42 },
               abilities: [
                 { type: 'enrage', trigger: 'hp50', speedBoost: 1.3, desc: 'Gets faster at 50% HP' },
                 { type: 'dodge', trigger: 'random', chance: 0.15, desc: '15% dodge chance' }
               ] },
-            { svg: 'boss-mimic', name: 'Treasure Mimic', unlockLevel: 55, tier: 'elite', hp: 150, time: 30,
+            { svg: 'boss-mimic', name: 'Treasure Mimic', unlockLevel: 55, tier: 'elite', hp: 150, time: 30, loot: { min: 35, max: 50 },
               abilities: [
                 { type: 'confuse', trigger: 'random', chance: 0.25, desc: 'Scrambles numbers sometimes' }
               ] },
-            { svg: 'boss-kraken', name: 'Kraken', unlockLevel: 60, tier: 'elite', hp: 250, time: 45,
+            { svg: 'boss-kraken', name: 'Kraken', unlockLevel: 60, tier: 'elite', hp: 250, time: 45, loot: { min: 40, max: 60 },
               abilities: [
                 { type: 'shield', trigger: 'start', charges: 3, desc: 'Blocks 3 hits' },
                 { type: 'heal', trigger: 'hp50', amount: 50, desc: 'Heals at 50% HP' },
                 { type: 'enrage', trigger: 'hp25', speedBoost: 2, desc: 'Double speed below 25% HP' }
               ] }
         ];
-
-        // Boss loot tables (variable coin rewards)
-        const BOSS_LOOT = {
-            'boss-tiki': { coins: { min: 8, max: 12 } },
-            'boss-crab': { coins: { min: 8, max: 12 } },
-            'boss-puffer': { coins: { min: 10, max: 14 } },
-            'boss-jelly': { coins: { min: 10, max: 14 } },
-            'boss-bird': { coins: { min: 12, max: 16 } },
-            'boss-shark': { coins: { min: 12, max: 18 } },
-            'boss-volcano': { coins: { min: 14, max: 18 } },
-            'boss-coconut': { coins: { min: 14, max: 18 } },
-            'boss-octopus': { coins: { min: 15, max: 20 } },
-            'boss-turtle': { coins: { min: 16, max: 22 } },
-            'boss-hermitcrab': { coins: { min: 15, max: 20 } },
-            'boss-starfish': { coins: { min: 18, max: 24 } },
-            'boss-pirate': { coins: { min: 20, max: 28 } },
-            'boss-mermaid': { coins: { min: 22, max: 30 } },
-            'boss-stingray': { coins: { min: 24, max: 32 } },
-            'boss-pelican': { coins: { min: 24, max: 32 } },
-            'boss-whale': { coins: { min: 30, max: 40 } },
-            'boss-serpent': { coins: { min: 32, max: 42 } },
-            'boss-mimic': { coins: { min: 35, max: 50 } },
-            'boss-kraken': { coins: { min: 40, max: 60 } }
-        };
 
         // Themes with unlock levels
         const THEMES = [
@@ -4704,27 +4680,15 @@
             ownedDances.push(danceId);
             saveCoins();
             saveDances();
-            document.getElementById('score').textContent = score;
+            $score.textContent = score;
             return true;
         }
 
-        function saveDances() {
-            localStorage.setItem('mathblaster_dances', JSON.stringify(ownedDances));
-        }
+        function saveDances() { store('dances', ownedDances); }
 
         function loadDances() {
-            try {
-                const saved = localStorage.getItem('mathblaster_dances');
-                if (saved) {
-                    ownedDances = JSON.parse(saved);
-                    // Ensure wiggle is always owned
-                    if (!ownedDances.includes('dance-wiggle')) {
-                        ownedDances.push('dance-wiggle');
-                    }
-                }
-            } catch (e) {
-                ownedDances = ['dance-wiggle'];
-            }
+            ownedDances = load('dances', ['dance-wiggle']);
+            if (!ownedDances.includes('dance-wiggle')) ownedDances.push('dance-wiggle');
         }
 
         function triggerCelebrationDance(reason, duration = 5000) {
@@ -4974,29 +4938,16 @@
 
         // Sticker persistence
         function saveStickers() {
-            localStorage.setItem('mathblaster_stickers', JSON.stringify(collectedStickers));
-            localStorage.setItem('mathblaster_box_progress', JSON.stringify({
-                correctSinceLastBox: correctSinceLastBox,
-                nextBoxThreshold: nextBoxThreshold
-            }));
+            store('stickers', collectedStickers);
+            store('box_progress', { correctSinceLastBox, nextBoxThreshold });
         }
 
         function loadStickers() {
-            try {
-                const saved = localStorage.getItem('mathblaster_stickers');
-                if (saved) {
-                    collectedStickers = JSON.parse(saved);
-                }
-                const progress = localStorage.getItem('mathblaster_box_progress');
-                if (progress) {
-                    const p = JSON.parse(progress);
-                    correctSinceLastBox = p.correctSinceLastBox || 0;
-                    nextBoxThreshold = p.nextBoxThreshold || (50 + Math.floor(Math.random() * 31));
-                }
-            } catch (e) {
-                collectedStickers = [];
-                correctSinceLastBox = 0;
-                nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
+            collectedStickers = load('stickers', []);
+            const p = load('box_progress', null);
+            if (p) {
+                correctSinceLastBox = p.correctSinceLastBox || 0;
+                nextBoxThreshold = p.nextBoxThreshold || (50 + Math.floor(Math.random() * 31));
             }
         }
 
@@ -5145,14 +5096,12 @@
 
         // XP and Level System
         function loadProgression() {
-            playerXP = parseInt(localStorage.getItem('mathblaster_xp') || '0');
+            playerXP = load('xp', 0);
             playerLevel = Math.floor(playerXP / XP_PER_LEVEL) + 1;
             updateLevelDisplay();
         }
 
-        function saveProgression() {
-            localStorage.setItem('mathblaster_xp', playerXP.toString());
-        }
+        function saveProgression() { store('xp', playerXP); }
 
         function gainXP(amount) {
             const oldLevel = playerLevel;
@@ -5163,11 +5112,7 @@
 
             if (playerLevel > oldLevel) {
                 showLevelUp(playerLevel);
-                checkAchievement('level_5', playerLevel >= 5);
-                checkAchievement('level_10', playerLevel >= 10);
-                checkAchievement('level_25', playerLevel >= 25);
-                checkAchievement('level_50', playerLevel >= 50);
-                checkAchievement('level_100', playerLevel >= 100);
+                [5,10,25,50,100].forEach(n => checkAchievement('level_'+n, playerLevel >= n));
             }
         }
 
@@ -5181,15 +5126,15 @@
         }
 
         function showLevelUp(level) {
-            const toast = document.getElementById('achievementToast');
-            if (!toast) return;
-            toast.textContent = `🎉 Level Up! You're now Level ${level}!`;
-            toast.classList.add('show');
+            showToast(`🎉 Level Up! You're now Level ${level}!`, 3000);
             playSound('streak');
             haptic('heavy');
             triggerCelebrationDance('levelup');
-            setTimeout(() => toast.classList.remove('show'), 3000);
         }
+
+        function showModal(id) { document.getElementById(id).classList.add('show'); }
+        function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+        function flashClass(el, cls, ms) { el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); }
 
         function showToast(message, duration = 2500) {
             const toast = document.getElementById('achievementToast');
@@ -5216,12 +5161,12 @@
                 return;
             }
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
-            localStorage.setItem('mathblaster_theme', theme);
+            store('theme', theme);
             hideThemePicker();
         }
 
         function loadTheme() {
-            const theme = localStorage.getItem('mathblaster_theme') || 'tropical';
+            const theme = load('theme', 'tropical');
             if (isItemUnlocked(THEMES, theme)) {
                 document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
             } else {
@@ -5248,9 +5193,9 @@
                     return `<button class="theme-btn scene-btn ${!unlocked ? 'locked' : ''} ${active ? 'active' : ''}" onclick="setScene('${s.id}')">${s.emoji} ${s.name}${lockIcon}</button>`;
                 }).join('');
             }
-            document.getElementById('themePicker').classList.add('show');
+            showModal('themePicker');
         }
-        function hideThemePicker() { document.getElementById('themePicker').classList.remove('show'); }
+        function hideThemePicker() { hideModal('themePicker'); }
 
 
         function setScene(sceneId) {
@@ -5261,7 +5206,7 @@
                 return;
             }
             currentSceneId = sceneId;
-            localStorage.setItem('mathblaster_scene', sceneId);
+            store('scene', sceneId);
             // Track scene unlock
             if (!cumulativeStats.scenesUnlocked.includes(sceneId)) {
                 cumulativeStats.scenesUnlocked.push(sceneId);
@@ -5277,7 +5222,7 @@
         }
 
         function loadScene() {
-            const savedScene = localStorage.getItem('mathblaster_scene') || 'beach';
+            const savedScene = load('scene', 'beach');
             if (isItemUnlocked(SCENE_VARIATIONS, savedScene)) {
                 currentSceneId = savedScene;
             } else {
@@ -5291,11 +5236,11 @@
             const useEl = btn.querySelector('use');
             useEl.setAttribute('href', soundEnabled ? '#icon-sound-on' : '#icon-sound-off');
             btn.classList.toggle('muted', !soundEnabled);
-            localStorage.setItem('mathblaster_sound', soundEnabled);
+            store('sound', soundEnabled);
         }
 
         function loadSoundPref() {
-            if (localStorage.getItem('mathblaster_sound') === 'false') {
+            if (load('sound', true) === false) {
                 soundEnabled = false;
                 const btn = document.getElementById('soundBtn');
                 btn.querySelector('use').setAttribute('href', '#icon-sound-off');
@@ -5309,56 +5254,40 @@
             return audioContext;
         }
 
+        const SOUND_DEFS = {
+            tap:        { tones: [[600,'sine',0.08,0.05]] },
+            correct:    { tones: [[880,'sine',0.12,0.08],[1100,'sine',0.1,0.08]], delay: 80 },
+            wrong:      { tones: [[200,'triangle',0.15,0.2]] },
+            streak:     { tones: [[880,'sine',0.12,0.15],[1100,'sine',0.12,0.15],[1320,'sine',0.12,0.15],[1760,'sine',0.12,0.15]], delay: 80 },
+            bonus:      { tones: [[800,'sine',0.12,0.1],[1000,'sine',0.12,0.1],[1200,'sine',0.12,0.1]], delay: 60 },
+            bossappear: { tones: [[150,'sawtooth',0.2,0.15],[200,'sawtooth',0.2,0.15],[150,'sawtooth',0.2,0.15],[250,'sawtooth',0.2,0.15]], delay: 120 },
+            bosshit:    { tones: [[300,'square',0.15,0.1],[500,'square',0.1,0.08]], delay: 50 },
+            bosswin:    { tones: [[400,'sine',0.15,0.15],[500,'sine',0.15,0.15],[600,'sine',0.15,0.15],[800,'sine',0.15,0.15],[1000,'sine',0.15,0.15],[1200,'sine',0.15,0.15]], delay: 80 },
+            gameover:   { tones: [[400,'triangle',0.12,0.3],[350,'triangle',0.12,0.3],[300,'triangle',0.12,0.3],[250,'triangle',0.12,0.3]], delay: 150 },
+            purchase:   { tones: [[600,'sine',0.1,0.08],[900,'sine',0.1,0.08],[1200,'sine',0.12,0.1]], delay: 60 },
+            levelup:    { tones: [[523,'sine',0.12,0.15],[659,'sine',0.12,0.15],[784,'sine',0.12,0.15],[1047,'sine',0.12,0.15]], delay: 100 },
+        };
+
         function playSound(type) {
             if (!soundEnabled) return;
+            const def = SOUND_DEFS[type];
+            if (!def) return;
             try {
                 const ctx = getAudioContext();
                 const playTone = (freq, wave, vol, dur) => {
                     const osc = ctx.createOscillator();
                     const g = ctx.createGain();
-                    osc.connect(g);
-                    g.connect(ctx.destination);
-                    osc.frequency.value = freq;
-                    osc.type = wave;
+                    osc.connect(g); g.connect(ctx.destination);
+                    osc.frequency.value = freq; osc.type = wave;
                     g.gain.setValueAtTime(vol, ctx.currentTime);
                     g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + dur);
-                    osc.start();
-                    osc.stop(ctx.currentTime + dur);
+                    osc.start(); osc.stop(ctx.currentTime + dur);
                 };
-
-                if (type === 'tap') playTone(600, 'sine', 0.08, 0.05);
-                else if (type === 'correct') {
-                    playTone(880, 'sine', 0.12, 0.08);
-                    setTimeout(() => playTone(1100, 'sine', 0.1, 0.08), 80);
-                }
-                else if (type === 'wrong') playTone(200, 'triangle', 0.15, 0.2);
-                else if (type === 'streak') {
-                    [880, 1100, 1320, 1760].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.12, 0.15), i * 80));
-                }
-                else if (type === 'bonus') {
-                    [800, 1000, 1200].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.12, 0.1), i * 60));
-                }
-                else if (type === 'bossappear') {
-                    [150, 200, 150, 250].forEach((f, i) => setTimeout(() => playTone(f, 'sawtooth', 0.2, 0.15), i * 120));
-                }
-                else if (type === 'bosshit') {
-                    playTone(300, 'square', 0.15, 0.1);
-                    setTimeout(() => playTone(500, 'square', 0.1, 0.08), 50);
-                }
-                else if (type === 'bosswin') {
-                    [400, 500, 600, 800, 1000, 1200].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.15, 0.15), i * 80));
-                }
-                else if (type === 'gameover') {
-                    [400, 350, 300, 250].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.12, 0.3), i * 150));
-                }
-                else if (type === 'purchase') {
-                    playTone(600, 'sine', 0.1, 0.08);
-                    setTimeout(() => playTone(900, 'sine', 0.1, 0.08), 60);
-                    setTimeout(() => playTone(1200, 'sine', 0.12, 0.1), 120);
-                }
-                else if (type === 'levelup') {
-                    [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.12, 0.15), i * 100));
-                }
+                def.tones.forEach(([f, w, v, d], i) => {
+                    const t = i * (def.delay || 0);
+                    if (t === 0) playTone(f, w, v, d);
+                    else setTimeout(() => playTone(f, w, v, d), t);
+                });
             } catch (e) {}
         }
 
@@ -5394,7 +5323,7 @@
 
             lastAnswerTime = now;
 
-            const comboEl = document.getElementById('comboDisplay');
+            const comboEl = $comboDisplay;
             if (comboMultiplier > 1) {
                 comboEl.textContent = `x${comboMultiplier}`;
                 comboEl.classList.add('active');
@@ -5468,7 +5397,7 @@
             setTimeout(() => {
                 if (gameActive && !bossActive) {
                     currentInput = String(correctAnswer);
-                    document.getElementById('answerDisplay').textContent = currentInput;
+                    $answerDisplay.textContent = currentInput;
                     checkAnswer();
                 }
             }, 300);
@@ -5505,18 +5434,9 @@
         }
 
         // Achievements
-        function loadAchievements() {
-            try {
-                const saved = localStorage.getItem('mathblaster_achievements');
-                if (saved) unlockedAchievements = JSON.parse(saved);
-            } catch (e) {
-                unlockedAchievements = [];
-            }
-        }
+        function loadAchievements() { unlockedAchievements = load('achievements', []); }
 
-        function saveAchievements() {
-            localStorage.setItem('mathblaster_achievements', JSON.stringify(unlockedAchievements));
-        }
+        function saveAchievements() { store('achievements', unlockedAchievements); }
 
         function checkAchievement(id, condition) {
             if (condition && !unlockedAchievements.includes(id)) {
@@ -5532,12 +5452,7 @@
 
             const achievement = ACHIEVEMENTS.find(a => a.id === id);
             if (achievement) {
-                const toast = document.getElementById('achievementToast');
-                if (toast) {
-                    toast.textContent = `${achievement.emoji} ${achievement.name} unlocked!`;
-                    toast.classList.add('show');
-                    setTimeout(() => toast.classList.remove('show'), 3000);
-                }
+                showToast(`${achievement.emoji} ${achievement.name} unlocked!`, 3000);
                 playSound('streak');
                 triggerCelebrationDance('achievement');
             }
@@ -5552,12 +5467,10 @@
                     <span class="achievement-name">${a.name}</span>
                 </div>`;
             }).join('');
-            document.getElementById('achievementsModal').classList.add('show');
+            showModal('achievementsModal');
         }
 
-        function hideAchievements() {
-            document.getElementById('achievementsModal').classList.remove('show');
-        }
+        function hideAchievements() { hideModal('achievementsModal'); }
 
         function showStreakCelebration(num) {
             const el = document.getElementById('streakCelebration');
@@ -5636,7 +5549,7 @@
                     setTimeout(() => {
                         score += coinBonus;
                         saveCoins();
-                        document.getElementById('score').textContent = score;
+                        $score.textContent = score;
                         const coinStat = document.getElementById('coinStat');
                         coinStat.style.transform = 'scale(1.2)';
                         setTimeout(() => coinStat.style.transform = '', 200);
@@ -5885,10 +5798,10 @@
             document.getElementById('bossHealthFill').style.width = '100%';
             document.getElementById('bossTimer').textContent = bossTimer;
             document.getElementById('bossTimer').classList.remove('danger');
-            document.getElementById('bossAnswer').textContent = '|';
+            $bossAnswer.textContent = '|';
             document.getElementById('bossVictory').classList.add('hidden');
             document.getElementById('bossContainer').style.opacity = '1';
-            document.getElementById('bossBattleModal').classList.add('show');
+            showModal('bossBattleModal');
 
             // Show ability info for ability/elite tier bosses
             if (boss.tier === 'ability' || boss.tier === 'elite') {
@@ -5975,24 +5888,11 @@
                 document.getElementById('bossProblem').textContent = `${display} = ?`;
             }
             bossAnswer = '';
-            document.getElementById('bossAnswer').textContent = '|';
+            $bossAnswer.textContent = '|';
         }
 
-        function bossNumPress(num) {
-            if (!bossActive || bossAnswer.length >= 4) return;
-            bossAnswer += num;
-            document.getElementById('bossAnswer').textContent = bossAnswer + '|';
-            playSound('tap');
-            haptic('light');
-        }
-
-        function bossDeletePress() {
-            if (!bossActive) return;
-            bossAnswer = bossAnswer.slice(0, -1);
-            document.getElementById('bossAnswer').textContent = bossAnswer + '|';
-            playSound('tap');
-            haptic('light');
-        }
+        function bossNumPress(num) { numPress(num, true); }
+        function bossDeletePress() { deletePress(true); }
 
         function bossCheckAnswer() {
             if (!bossActive || bossAnswer === '') return;
@@ -6000,7 +5900,7 @@
             const parsedAnswer = parseInt(bossAnswer, 10);
             if (isNaN(parsedAnswer)) {
                 bossAnswer = '';
-                document.getElementById('bossAnswer').textContent = '|';
+                $bossAnswer.textContent = '|';
                 return;
             }
 
@@ -6010,7 +5910,7 @@
                     showAbilityFlash('💨 DODGED!');
                     playSound('tap');
                     bossAnswer = '';
-                    document.getElementById('bossAnswer').textContent = '|';
+                    $bossAnswer.textContent = '|';
                     generateBossProblem();
                     return;
                 }
@@ -6021,7 +5921,7 @@
                     showAbilityFlash(`🛡️ BLOCKED! (${bossAbilityState.shieldCharges} left)`);
                     playSound('tap');
                     bossAnswer = '';
-                    document.getElementById('bossAnswer').textContent = '|';
+                    $bossAnswer.textContent = '|';
                     generateBossProblem();
                     return;
                 }
@@ -6063,7 +5963,7 @@
                 else generateBossProblem();
             } else {
                 bossAnswer = '';
-                document.getElementById('bossAnswer').textContent = '|';
+                $bossAnswer.textContent = '|';
                 playSound('wrong');
                 haptic('error');
             }
@@ -6116,11 +6016,11 @@
                 gainXP(10); // Bonus XP for defeating boss
 
                 // Get boss loot (variable coin reward)
-                const loot = BOSS_LOOT[bossCurrentBoss.svg] || { coins: { min: 10, max: 15 } };
-                const coinReward = Math.floor(Math.random() * (loot.coins.max - loot.coins.min + 1)) + loot.coins.min;
+                const loot = bossCurrentBoss.loot || { min: 10, max: 15 };
+                const coinReward = randomInt(loot.min, loot.max);
                 score += coinReward;
                 saveCoins();
-                document.getElementById('score').textContent = score;
+                $score.textContent = score;
 
                 document.getElementById('bossReward').innerHTML = `+${coinReward} <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg>`;
 
@@ -6133,7 +6033,7 @@
                 triggerCelebrationDance('boss', danceDuration);
 
                 setTimeout(() => {
-                    document.getElementById('bossBattleModal').classList.remove('show');
+                    hideModal('bossBattleModal');
                     victoryEl.classList.remove('show');
                     if (problemTimeout) clearTimeout(problemTimeout);
                     problemTimeout = setTimeout(generateProblem, 200);
@@ -6144,7 +6044,7 @@
                 playSound('gameover');
 
                 setTimeout(() => {
-                    document.getElementById('bossBattleModal').classList.remove('show');
+                    hideModal('bossBattleModal');
                     document.getElementById('bossVictory').classList.add('hidden');
                     // Reset victory HTML for next boss battle
                     document.getElementById('bossVictory').innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>';
@@ -6156,53 +6056,50 @@
 
         // Save/load cumulative stats
         function loadCumulativeStats() {
-            try {
-                const saved = localStorage.getItem('mathblaster_stats');
-                if (saved) {
-                    cumulativeStats = { ...cumulativeStats, ...JSON.parse(saved) };
-                }
-            } catch (e) {
-                // Keep default cumulativeStats on error
-            }
+            const saved = load('stats', null);
+            if (saved) cumulativeStats = { ...cumulativeStats, ...saved };
         }
 
-        function saveCumulativeStats() {
-            localStorage.setItem('mathblaster_stats', JSON.stringify(cumulativeStats));
-        }
+        function saveCumulativeStats() { store('stats', cumulativeStats); }
 
         // Coin persistence
         function loadCoins() {
-            const saved = localStorage.getItem('mathblaster_coins');
-            if (saved) {
-                const parsed = parseInt(saved, 10);
-                score = isNaN(parsed) ? 0 : parsed;
-            }
-            document.getElementById('score').textContent = score;
+            score = load('coins', 0);
+            if (typeof score !== 'number' || isNaN(score)) score = 0;
+            $score.textContent = score;
         }
 
-        function saveCoins() {
-            localStorage.setItem('mathblaster_coins', score.toString());
-        }
+        function saveCoins() { store('coins', score); }
 
         function updateAnswerDisplay() {
-            document.getElementById('answerDisplay').innerHTML =
+            $answerDisplay.innerHTML =
                 currentInput === '' ? '<span class="cursor">|</span>' : currentInput + '<span class="cursor">|</span>';
         }
 
-        function numPress(num) {
-            if (!gameActive || bossActive || currentInput.length >= 5) return;
-            currentInput += num;
-            updateAnswerDisplay();
-            playSound('tap');
-            haptic('light');
+        function numPress(num, boss) {
+            if (boss) {
+                if (!bossActive || bossAnswer.length >= 4) return;
+                bossAnswer += num;
+                $bossAnswer.textContent = bossAnswer + '|';
+            } else {
+                if (!gameActive || bossActive || currentInput.length >= 5) return;
+                currentInput += num;
+                updateAnswerDisplay();
+            }
+            playSound('tap'); haptic('light');
         }
 
-        function deletePress() {
-            if (!gameActive || bossActive) return;
-            currentInput = currentInput.slice(0, -1);
-            updateAnswerDisplay();
-            playSound('tap');
-            haptic('light');
+        function deletePress(boss) {
+            if (boss) {
+                if (!bossActive) return;
+                bossAnswer = bossAnswer.slice(0, -1);
+                $bossAnswer.textContent = bossAnswer + '|';
+            } else {
+                if (!gameActive || bossActive) return;
+                currentInput = currentInput.slice(0, -1);
+                updateAnswerDisplay();
+            }
+            playSound('tap'); haptic('light');
         }
 
         // Adaptive difficulty - hidden from players
@@ -6233,21 +6130,15 @@
         }
 
         function saveAdaptiveDifficulty() {
-            localStorage.setItem('mathblaster_adaptive', JSON.stringify({
-                history: accuracyHistory.slice(-ACCURACY_WINDOW),
-                modifier: difficultyModifier
-            }));
+            store('adaptive', { history: accuracyHistory.slice(-ACCURACY_WINDOW), modifier: difficultyModifier });
         }
 
         function loadAdaptiveDifficulty() {
-            try {
-                const saved = localStorage.getItem('mathblaster_adaptive');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    accuracyHistory = data.history || [];
-                    difficultyModifier = data.modifier || 0;
-                }
-            } catch (e) {}
+            const data = load('adaptive', null);
+            if (data) {
+                accuracyHistory = data.history || [];
+                difficultyModifier = data.modifier || 0;
+            }
         }
 
         // ============================================
@@ -6384,36 +6275,24 @@
         function showTierAdvancement(op, newTier) {
             const opNames = { add: 'Addition', subtract: 'Subtraction', multiply: 'Multiplication', divide: 'Division' };
 
-            const toast = document.getElementById('achievementToast');
-            if (toast) {
-                // Kid-friendly message without tier names
-                toast.textContent = `🎉 ${opNames[op]} Level Up! Harder problems unlocked!`;
-                toast.classList.add('show');
-                playSound('levelup');
-                haptic('heavy');
-                setTimeout(() => toast.classList.remove('show'), 3000);
-            }
+            showToast(`🎉 ${opNames[op]} Level Up! Harder problems unlocked!`, 3000);
+            playSound('levelup');
+            haptic('heavy');
 
             // Trigger celebration dance for level up
             triggerCelebrationDance('levelup');
         }
 
-        // Save tier progress to localStorage
         function saveTierProgress() {
-            localStorage.setItem('mathblaster_tiers', JSON.stringify(playerTiers));
-            localStorage.setItem('mathblaster_tier_tracking', JSON.stringify(tierTracking));
+            store('tiers', playerTiers);
+            store('tier_tracking', tierTracking);
         }
 
-        // Load tier progress from localStorage
         function loadTierProgress() {
-            try {
-                const savedTiers = localStorage.getItem('mathblaster_tiers');
-                const savedTracking = localStorage.getItem('mathblaster_tier_tracking');
-                if (savedTiers) playerTiers = JSON.parse(savedTiers);
-                if (savedTracking) tierTracking = JSON.parse(savedTracking);
-            } catch (e) {
-                // Expected on first run
-            }
+            const savedTiers = load('tiers', null);
+            const savedTracking = load('tier_tracking', null);
+            if (savedTiers) playerTiers = savedTiers;
+            if (savedTracking) tierTracking = savedTracking;
         }
 
         // ==========================================
@@ -6651,29 +6530,14 @@
             });
         }
 
-        // Load SM-2 state from localStorage
-        function loadFactState() {
-            try {
-                const saved = localStorage.getItem('mathblaster_facts_sm2');
-                return saved ? JSON.parse(saved) : {};
-            } catch (e) {
-                return {};
-            }
-        }
+        function loadFactState() { return load('facts_sm2', {}); }
 
-        // Save SM-2 state to localStorage
         function saveFactState() {
             const state = {};
             mathFacts.forEach(fact => {
-                state[fact.id] = {
-                    ef: fact.ef,
-                    interval: fact.interval,
-                    repetitions: fact.repetitions,
-                    nextReview: fact.nextReview,
-                    lastReview: fact.lastReview
-                };
+                state[fact.id] = { ef: fact.ef, interval: fact.interval, repetitions: fact.repetitions, nextReview: fact.nextReview, lastReview: fact.lastReview };
             });
-            localStorage.setItem('mathblaster_facts_sm2', JSON.stringify(state));
+            store('facts_sm2', state);
         }
 
         // SM-2 Algorithm: Update fact after answer
@@ -6788,17 +6652,17 @@
 
             currentInput = '';
             updateAnswerDisplay();
-            document.getElementById('feedback').textContent = '';
-            document.getElementById('feedback').className = 'feedback';
-            document.getElementById('answerDisplay').classList.remove('correct');
+            $feedback.textContent = '';
+            $feedback.className = 'feedback';
+            $answerDisplay.classList.remove('correct');
         }
 
         function checkAnswer() {
             if (!gameActive || bossActive || currentInput === '') return;
 
             const userAnswer = parseInt(currentInput, 10);
-            const feedbackEl = document.getElementById('feedback');
-            const answerEl = document.getElementById('answerDisplay');
+            const feedbackEl = $feedback;
+            const answerEl = $answerDisplay;
 
             // Guard against NaN from invalid input
             if (isNaN(userAnswer)) {
@@ -6833,26 +6697,15 @@
                 score += points;
                 saveCoins();
 
-                document.getElementById('score').textContent = score;
-                document.getElementById('streak').textContent = streak;
+                $score.textContent = score;
+                $streak.textContent = streak;
                 answerEl.classList.add('correct');
                 updateFireEffect();
 
                 // Check achievements (including tiered achievements that stack)
                 checkAchievement('first_correct', correctCount >= 1);
-                // Streak tiers
-                checkAchievement('streak_5', streak >= 5);
-                checkAchievement('streak_10', streak >= 10);
-                checkAchievement('streak_20', streak >= 20);
-                checkAchievement('streak_50', streak >= 50);
-                checkAchievement('streak_100', streak >= 100);
-                checkAchievement('streak_250', streak >= 250);
-                // Score tiers
-                checkAchievement('score_25', score >= 25);
-                checkAchievement('score_50', score >= 50);
-                checkAchievement('score_100', score >= 100);
-                checkAchievement('score_250', score >= 250);
-                checkAchievement('score_500', score >= 500);
+                [5,10,20,50,100,250].forEach(n => checkAchievement('streak_'+n, streak >= n));
+                [25,50,100,250,500].forEach(n => checkAchievement('score_'+n, score >= n));
                 // Update cumulative stats
                 if (streak > cumulativeStats.maxStreak) {
                     cumulativeStats.maxStreak = streak;
@@ -6921,13 +6774,12 @@
                 haptic('error');
                 streak = 0;
                 comboMultiplier = 1;
-                document.getElementById('comboDisplay').classList.remove('active');
-                document.getElementById('streak').textContent = 0;
+                $comboDisplay.classList.remove('active');
+                $streak.textContent = 0;
                 updateFireEffect();
                 currentInput = '';
                 updateAnswerDisplay();
-                document.body.classList.add('shake');
-                setTimeout(() => document.body.classList.remove('shake'), 300);
+                flashClass(document.body, 'shake', 300);
 
                 // Show strategy hint after wrong answer
                 // Cooldown: at least 10 seconds OR 3 problems since last hint
@@ -6977,7 +6829,7 @@
             if (problemTimeout) clearTimeout(problemTimeout);
             if (bossInterval) clearInterval(bossInterval);
             bossActive = false;
-            document.getElementById('bossBattleModal').classList.remove('show');
+            hideModal('bossBattleModal');
 
             streak = 0; bestStreak = 0;
             gameActive = true;
@@ -6990,7 +6842,7 @@
             // Reset combo
             comboMultiplier = 1;
             lastAnswerTime = 0;
-            document.getElementById('comboDisplay').classList.remove('active');
+            $comboDisplay.classList.remove('active');
 
             // Reset auto-helper struggle state
             struggleState = {
@@ -7006,9 +6858,9 @@
             updateProgressBars();
 
             loadCoins();
-            document.getElementById('streak').textContent = 0;
-            document.getElementById('feedback').textContent = '';
-            document.getElementById('answerDisplay').classList.remove('correct');
+            $streak.textContent = 0;
+            $feedback.textContent = '';
+            $answerDisplay.classList.remove('correct');
 
             generateProblem();
         }
@@ -7037,20 +6889,11 @@
 
         // Costume System Functions
         function loadCostumes() {
-            const saved = localStorage.getItem('mathblaster_costumes');
-            if (saved) {
-                try {
-                    equippedCostumes = JSON.parse(saved);
-                } catch (e) {
-                    equippedCostumes = { hat: 'hat-none', outfit: 'outfit-none', accessory: 'acc-none' };
-                }
-            }
+            equippedCostumes = load('costumes', { hat: 'hat-none', outfit: 'outfit-none', accessory: 'acc-none' });
             updateCostumeDisplay();
         }
 
-        function saveCostumes() {
-            localStorage.setItem('mathblaster_costumes', JSON.stringify(equippedCostumes));
-        }
+        function saveCostumes() { store('costumes', equippedCostumes); }
 
         function isCostumeUnlocked(costume) {
             // "None" options are always unlocked
@@ -7066,34 +6909,23 @@
             purchasedCostumes.push(id);
             savePurchasedCostumes();
             document.getElementById('shopCoinCount').textContent = score;
-            document.getElementById('score').textContent = score;
+            $score.textContent = score;
             renderShopGrid();
             playSound('bonus');
         }
 
-        function loadPurchasedCostumes() {
-            try {
-                const saved = localStorage.getItem('mathblaster_purchased_costumes');
-                if (saved) purchasedCostumes = JSON.parse(saved);
-            } catch (e) {
-                purchasedCostumes = [];
-            }
-        }
+        function loadPurchasedCostumes() { purchasedCostumes = load('purchased_costumes', []); }
 
-        function savePurchasedCostumes() {
-            localStorage.setItem('mathblaster_purchased_costumes', JSON.stringify(purchasedCostumes));
-        }
+        function savePurchasedCostumes() { store('purchased_costumes', purchasedCostumes); }
 
         function openShopModal() {
-            document.getElementById('shopModal').classList.add('show');
+            showModal('shopModal');
             document.getElementById('shopCoinCount').textContent = score;
             showShopTab('hats');
             updateCostumePreview();
         }
 
-        function closeShopModal() {
-            document.getElementById('shopModal').classList.remove('show');
-        }
+        function closeShopModal() { hideModal('shopModal'); }
 
         function showShopTab(tab) {
             currentCostumeTab = tab;
@@ -7352,16 +7184,12 @@
         }
 
         function loadAvatar() {
-            const saved = localStorage.getItem('mathblaster_avatar');
-            if (saved && AVATARS[saved]) {
-                selectedAvatar = saved;
-            }
+            const saved = load('avatar', null);
+            if (saved && AVATARS[saved]) selectedAvatar = saved;
             updateAvatarDisplay();
         }
 
-        function saveAvatar() {
-            localStorage.setItem('mathblaster_avatar', selectedAvatar);
-        }
+        function saveAvatar() { store('avatar', selectedAvatar); }
 
         function updateAvatarDisplay() {
             const avatar = AVATARS[selectedAvatar] || AVATARS.mango;
@@ -7419,18 +7247,20 @@
                     // Show set bonus notification (only once per set)
                     if (!avatarEl.dataset.currentSet || avatarEl.dataset.currentSet !== equippedSet.id) {
                         avatarEl.dataset.currentSet = equippedSet.id;
-                        const toast = document.getElementById('achievementToast');
-                        if (toast) {
-                            toast.textContent = `✨ ${equippedSet.name} Complete! Bonus effect active!`;
-                            toast.classList.add('show');
-                            setTimeout(() => toast.classList.remove('show'), 2500);
-                        }
+                        showToast(`✨ ${equippedSet.name} Complete! Bonus effect active!`, 2500);
                     }
                 } else {
                     avatarEl.dataset.currentSet = '';
                 }
             }
         }
+
+        const $score = document.getElementById('score');
+        const $streak = document.getElementById('streak');
+        const $feedback = document.getElementById('feedback');
+        const $answerDisplay = document.getElementById('answerDisplay');
+        const $bossAnswer = document.getElementById('bossAnswer');
+        const $comboDisplay = document.getElementById('comboDisplay');
 
         loadTheme();
         loadSoundPref();
