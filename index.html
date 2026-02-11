@@ -34,7 +34,6 @@
 
         html {
             height: 100%;
-            height: -webkit-fill-available;
         }
 
         /* 3D Canvas Background */
@@ -55,7 +54,6 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100%;
-            min-height: -webkit-fill-available;
             overflow: hidden;
             padding: 10px;
             padding-top: max(10px, env(safe-area-inset-top));
@@ -190,6 +188,11 @@
         .settings-row button.active {
             background: var(--primary);
             color: #1a0a2e;
+        }
+        .settings-row button.flash {
+            background: var(--primary);
+            color: #1a0a2e;
+            transition: background 0.15s, color 0.15s;
         }
 
         /* Stats */
@@ -444,7 +447,7 @@
         }
 
         /* Item Rarity Effects */
-        .rarity-common { }
+
         .rarity-rare {
             box-shadow: 0 0 10px rgba(93, 173, 226, 0.6), inset 0 0 5px rgba(93, 173, 226, 0.2);
             border-color: #5dade2 !important;
@@ -4173,6 +4176,8 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
+        const OP_SYMBOLS = { add: '+', subtract: '−', multiply: '×', divide: '÷', mixed: 'Mixed' };
+
         // Bosses with unlock levels
         // Tiers: 'basic' = original stats, 'simple' = stat variations, 'ability' = single ability, 'elite' = multi-ability
         const BOSSES = [
@@ -5133,7 +5138,7 @@
         }, true);
 
         function updateSettingsLabel() {
-            const op = operation === 'mixed' ? 'Mixed' : operation === 'add' ? '+' : operation === 'subtract' ? '−' : operation === 'multiply' ? '×' : '÷';
+            const op = OP_SYMBOLS[operation] || '÷';
             // Hide tier from kids - just show operation mode
             document.getElementById('settingsLabel').textContent = `${op} • Free Play`;
         }
@@ -5194,9 +5199,9 @@
             setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        function isThemeUnlocked(themeId) {
-            const theme = THEMES.find(t => t.id === themeId);
-            return theme ? playerLevel >= theme.unlockLevel : false;
+        function isItemUnlocked(collection, id) {
+            const item = collection.find(x => x.id === id);
+            return item ? playerLevel >= item.unlockLevel : false;
         }
 
         function getUnlockedBosses() {
@@ -5204,7 +5209,7 @@
         }
 
         function setTheme(theme) {
-            if (!isThemeUnlocked(theme)) {
+            if (!isItemUnlocked(THEMES, theme)) {
                 const t = THEMES.find(th => th.id === theme);
                 if (!t) return;
                 showToast(`🔒 Unlock ${t.name} at Level ${t.unlockLevel}!`, 2000);
@@ -5217,7 +5222,7 @@
 
         function loadTheme() {
             const theme = localStorage.getItem('mathblaster_theme') || 'tropical';
-            if (isThemeUnlocked(theme)) {
+            if (isItemUnlocked(THEMES, theme)) {
                 document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
             } else {
                 document.body.className = '';
@@ -5247,14 +5252,9 @@
         }
         function hideThemePicker() { document.getElementById('themePicker').classList.remove('show'); }
 
-        function isSceneUnlocked(sceneId) {
-            const scene = SCENE_VARIATIONS.find(s => s.id === sceneId);
-            if (!scene) return false;
-            return playerLevel >= scene.unlockLevel;
-        }
 
         function setScene(sceneId) {
-            if (!isSceneUnlocked(sceneId)) {
+            if (!isItemUnlocked(SCENE_VARIATIONS, sceneId)) {
                 const scene = SCENE_VARIATIONS.find(s => s.id === sceneId);
                 if (!scene) return;
                 showToast(`🔒 Unlock ${scene.name} at Level ${scene.unlockLevel}!`, 2000);
@@ -5278,7 +5278,7 @@
 
         function loadScene() {
             const savedScene = localStorage.getItem('mathblaster_scene') || 'beach';
-            if (isSceneUnlocked(savedScene)) {
+            if (isItemUnlocked(SCENE_VARIATIONS, savedScene)) {
                 currentSceneId = savedScene;
             } else {
                 currentSceneId = 'beach';
@@ -6601,10 +6601,8 @@
             showingStrategy = true;
             lastStrategyTime = Date.now(); // Track when hint was shown
             problemsSinceStrategy = 0; // Reset counter
-            const opSymbols = { add: '+', subtract: '−', multiply: '×', divide: '÷' };
-
             document.getElementById('strategyLabel').textContent = strategy.name;
-            document.getElementById('strategyProblem').textContent = `${num1} ${opSymbols[op]} ${num2} = ?`;
+            document.getElementById('strategyProblem').textContent = `${num1} ${OP_SYMBOLS[op]} ${num2} = ?`;
             document.getElementById('strategySteps').innerHTML = strategy.steps.map(s =>
                 `<div class="strategy-step">${s}</div>`
             ).join('');
@@ -6786,8 +6784,7 @@
 
             // Display the problem
             const el = document.getElementById('problem');
-            const opSymbols = { add: '+', subtract: '−', multiply: '×', divide: '÷' };
-            el.textContent = `${num1} ${opSymbols[currentOp]} ${num2}`;
+            el.textContent = `${num1} ${OP_SYMBOLS[currentOp]} ${num2}`;
 
             currentInput = '';
             updateAnswerDisplay();
@@ -6959,13 +6956,10 @@
 
             const selectedBtn = document.getElementById(op);
             if (selectedBtn) {
-                selectedBtn.style.transition = 'background 0.15s, color 0.15s';
-                selectedBtn.style.background = 'var(--primary)';
-                selectedBtn.style.color = '#1a0a2e';
+                selectedBtn.classList.add('flash');
                 if (_settingsCloseTimeout) clearTimeout(_settingsCloseTimeout);
                 _settingsCloseTimeout = setTimeout(() => {
-                    selectedBtn.style.background = '';
-                    selectedBtn.style.color = '';
+                    selectedBtn.classList.remove('flash');
                     closeSettingsPanel();
                     _settingsCloseTimeout = null;
                 }, 300);
