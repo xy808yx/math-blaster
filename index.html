@@ -5456,7 +5456,7 @@
             const now = Date.now();
             const timeSinceLastAnswer = now - lastAnswerTime;
 
-            if (lastAnswerTime > 0 && timeSinceLastAnswer < 2000) {
+            if (lastAnswerTime > 0 && timeSinceLastAnswer < 3000) {
                 comboMultiplier = Math.min(comboMultiplier + 1, 5);
             } else {
                 comboMultiplier = 1;
@@ -5903,7 +5903,7 @@
             // Set boss-specific stats with defaults
             bossMaxHealth = boss.hp || 100;
             bossHealth = bossMaxHealth;
-            bossTimer = boss.time || 30;
+            bossTimer = (boss.time || 30) + 5;
             bossTimerSpeed = 1;
 
             // Reset ability state
@@ -5981,7 +5981,7 @@
 
             // Get player's tier for this operation and bump it up for boss difficulty
             const playerTier = playerTiers[currentBossOp] || 1;
-            const bossTier = Math.min(5, playerTier + 1 + (bossCurrentBoss?.tier === 'elite' ? 1 : 0));
+            const bossTier = Math.min(5, playerTier + (bossCurrentBoss?.tier === 'elite' ? 1 : 0));
             const tierConfig = DIFFICULTY_TIERS[bossTier - 1];
             const maxNum = tierConfig.maxNum;
 
@@ -6071,7 +6071,7 @@
                 fireCoconutProjectile();
 
                 // Calculate damage based on boss HP
-                const damage = 25;
+                const damage = 34;
                 bossHealth -= damage;
                 const hpPercent = (bossHealth / bossMaxHealth) * 100;
                 document.getElementById('bossHealthFill').style.width = hpPercent + '%';
@@ -6834,7 +6834,7 @@
 
                 // Combo multiplier
                 updateCombo();
-                const points = comboMultiplier;
+                const points = comboMultiplier + 1;
                 score += points;
                 saveCoins();
 
