@@ -362,6 +362,7 @@
             z-index: 400;
             transition: transform 0.4s ease-out;
             box-shadow: 0 4px 20px rgba(255, 217, 61, 0.4);
+            pointer-events: none;
         }
         .achievement-toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -1002,13 +1003,13 @@
         .mystery-text { font-size: 1.3rem; margin-top: 15px; color: var(--accent); }
 
         /* Boss Battle */
-        .boss-modal.show { animation: bossFlash 0.5s ease-out; }
+        .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: hidden; touch-action: manipulation; }
         @keyframes bossFlash {
             0% { background: rgba(255, 0, 0, 0.8); }
             100% { background: rgba(0, 0, 0, 0.95); }
         }
 
-        .boss-container { text-align: center; width: 100%; max-width: 350px; }
+        .boss-container { text-align: center; width: 100%; max-width: 350px; display: flex; flex-direction: column; align-items: center; max-height: 100%; }
 
         .boss-title {
             font-size: 1.5rem;
@@ -1016,13 +1017,15 @@
             text-shadow: 0 0 20px var(--error);
             margin-bottom: 15px;
             animation: bossPulse 1s infinite;
+            flex-shrink: 0;
         }
         @keyframes bossPulse {
             0%, 100% { text-shadow: 0 0 20px var(--error); }
             50% { text-shadow: 0 0 40px var(--error), 0 0 60px var(--error); }
         }
 
-        .boss-emoji { font-size: 5rem; display: block; margin: 15px 0; }
+        .boss-emoji { font-size: 5rem; display: flex; align-items: center; justify-content: center; margin: 8px 0; flex: 1 1 auto; min-height: 60px; overflow: hidden; }
+        .boss-emoji svg, .boss-emoji .pixel-boss { max-height: 100%; width: auto; }
         .boss-emoji.entrance { animation: bossEnter 0.8s ease-out; }
         @keyframes bossEnter {
             0% { transform: scale(0) rotate(-180deg); opacity: 0; }
@@ -1157,7 +1160,7 @@
             100% { opacity: 0; transform: translateY(100px) rotate(360deg); }
         }
 
-        .boss-name { font-size: 1.2rem; color: var(--error); margin-bottom: 15px; }
+        .boss-name { font-size: 1.2rem; color: var(--error); margin-bottom: 15px; flex-shrink: 0; }
 
         .boss-health-bar {
             width: 100%;
@@ -1168,6 +1171,7 @@
             overflow: hidden;
             margin: 0 auto 15px;
             border: 2px solid var(--error);
+            flex-shrink: 0;
         }
         .boss-health-fill {
             height: 100%;
@@ -1175,11 +1179,11 @@
             transition: width 0.3s;
         }
 
-        .boss-timer { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin: 10px 0; }
+        .boss-timer { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin: 10px 0; flex-shrink: 0; }
         .boss-timer.danger { color: var(--error); animation: timerPanic 0.3s infinite; }
         @keyframes timerPanic { 50% { transform: scale(1.1); } }
 
-        .boss-problem { font-size: 1.8rem; color: #fff; margin: 15px 0; }
+        .boss-problem { font-size: 1.8rem; color: #fff; margin: 15px 0; flex-shrink: 0; }
         .boss-answer {
             font-size: 1.5rem;
             padding: 8px 20px;
@@ -1191,6 +1195,7 @@
             text-align: center;
             margin: 0 auto 15px;
             display: inline-block;
+            flex-shrink: 0;
         }
 
         .boss-numpad {
@@ -1199,6 +1204,7 @@
             gap: 6px;
             max-width: 300px;
             margin: 0 auto;
+            flex-shrink: 0;
         }
         .boss-numpad button {
             font-size: 1.2rem;
@@ -1206,6 +1212,7 @@
             min-height: 44px;
             background: rgba(255, 107, 157, 0.15);
             border-radius: 8px;
+            touch-action: manipulation;
         }
         .boss-numpad .delete { border-color: var(--error); color: var(--error); }
         .boss-numpad .submit { border-color: var(--success); color: var(--success); }
@@ -1213,8 +1220,7 @@
         /* Boss battle mobile optimization */
         @media (max-height: 700px) {
             .boss-title { font-size: 1.2rem; margin-bottom: 8px; }
-            .boss-emoji { margin: 8px 0; }
-            .boss-emoji svg, .boss-emoji .pixel-boss { width: 140px !important; height: 140px !important; }
+            .boss-emoji { margin: 5px 0; }
             .boss-name { font-size: 1rem; margin: 5px 0; }
             .boss-health-bar { height: 12px; margin: 5px auto; }
             .boss-timer { font-size: 1.3rem; margin: 5px 0; }
@@ -1225,8 +1231,7 @@
         }
         @media (max-height: 600px) {
             .boss-title { font-size: 1rem; margin-bottom: 5px; }
-            .boss-emoji svg, .boss-emoji .pixel-boss { width: 100px !important; height: 100px !important; }
-            .boss-emoji { margin: 5px 0; }
+            .boss-emoji { margin: 3px 0; min-height: 40px; }
             .boss-timer { font-size: 1.1rem; }
             .boss-problem { font-size: 1.2rem; }
             .boss-answer { font-size: 1rem; padding: 5px 12px; }
@@ -5277,13 +5282,32 @@
         function hideModal(id) { document.getElementById(id).classList.remove('show'); }
         function flashClass(el, cls, ms) { el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); }
 
+        let toastTimeout = null;
+        let toastExpiry = 0;
+
         function showToast(message, duration = 2500) {
             const toast = document.getElementById('achievementToast');
             if (!toast) return;
+            if (toastTimeout) clearTimeout(toastTimeout);
             toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), duration);
+            toastExpiry = Date.now() + duration;
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+                toastTimeout = null;
+            }, duration);
         }
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && toastTimeout) {
+                const toast = document.getElementById('achievementToast');
+                if (toast && Date.now() >= toastExpiry) {
+                    toast.classList.remove('show');
+                    clearTimeout(toastTimeout);
+                    toastTimeout = null;
+                }
+            }
+        });
 
         function isItemUnlocked(collection, id) {
             const item = collection.find(x => x.id === id);
