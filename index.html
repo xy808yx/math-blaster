@@ -309,7 +309,6 @@
             border-radius: 4px;
             transition: width 0.3s;
         }
-        .progress-fill.mystery { background: linear-gradient(90deg, #ffd93d, #ff6b9d); }
         .progress-fill.boss { background: linear-gradient(90deg, #ff6b6b, #ff0000); }
 
         /* Coin Animation */
@@ -907,11 +906,6 @@
             text-align: center;
             box-shadow: 0 0 20px var(--primary);
         }
-        .answer-display.correct {
-            border-color: var(--success);
-            box-shadow: 0 0 30px var(--success);
-            background: rgba(107, 203, 119, 0.2);
-        }
         .answer-display.flash-correct {
             animation: flashCorrect 0.3s ease-out;
         }
@@ -936,7 +930,6 @@
             font-weight: bold;
             min-height: 1.5rem;
         }
-        .feedback.correct { color: var(--success); }
 
         /* Streak Celebration */
         .streak-celebration {
@@ -4276,7 +4269,7 @@
         <div class="settings-wrapper">
             <div class="settings-toggle">
                 <button class="settings-btn" onclick="toggleSettings()">
-                    <span id="settingsLabel">Mixed • ∞ Free</span> ▼
+                    <span id="settingsLabel">Mixed • Free Play</span> ▼
                 </button>
             </div>
 
@@ -5052,8 +5045,9 @@
         let soundEnabled = true, audioContext = null;
         let correctCount = 0;
 
+        let _initDone = false;
         let bossActive = false, bossHealth = 100, bossTimer = 30;
-        let bossInterval = null, bossAnswer = '', bossCorrectAnswer;
+        let bossInterval = null, bossEndTimeout = null, bossAnswer = '', bossCorrectAnswer;
         // NEW: Boss ability system state
         let bossMaxHealth = 100, bossTimerSpeed = 1;
         let bossCurrentBoss = null;
@@ -5572,6 +5566,14 @@
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
             store('theme', theme);
             applyWeatherOverlay(theme);
+            // Track theme usage for theme_all achievement
+            if (!cumulativeStats.themesUnlocked.includes(theme)) {
+                cumulativeStats.themesUnlocked.push(theme);
+                saveCumulativeStats();
+                if (cumulativeStats.themesUnlocked.length >= THEMES.length) {
+                    checkAchievement('theme_all', true);
+                }
+            }
             hideThemePicker();
         }
 
@@ -5735,6 +5737,7 @@
                 g.gain.value = vol;
                 const when = ctx.currentTime + (delayMs / 1000);
                 src.start(when);
+                src.onended = () => { src.disconnect(); g.disconnect(); };
             } catch (e) {}
         }
 
@@ -5787,6 +5790,7 @@
                     g.gain.setValueAtTime(vol, ctx.currentTime);
                     g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + dur);
                     osc.start(); osc.stop(ctx.currentTime + dur);
+                    osc.onended = () => { osc.disconnect(); g.disconnect(); };
                 };
                 def.tones.forEach(([f, w, v, d], i) => {
                     const t = i * (def.delay || 0);
@@ -6469,6 +6473,7 @@
             if (!bossActive) return;
             bossActive = false;
             clearInterval(bossInterval);
+            bossInterval = null;
 
             if (victory) {
                 bossesDefeated++;
@@ -6528,7 +6533,8 @@
                 const danceDuration = tier === 'elite' ? 8000 : tier === 'ability' ? 6000 : 4000;
                 triggerCelebrationDance('boss', danceDuration);
 
-                setTimeout(() => {
+                bossEndTimeout = setTimeout(() => {
+                    bossEndTimeout = null;
                     hideModal('bossBattleModal');
                     victoryEl.classList.remove('show');
                     if (problemTimeout) clearTimeout(problemTimeout);
@@ -6539,7 +6545,8 @@
                 document.getElementById('bossVictory').classList.remove('hidden');
                 playSound('gameover');
 
-                setTimeout(() => {
+                bossEndTimeout = setTimeout(() => {
+                    bossEndTimeout = null;
                     hideModal('bossBattleModal');
                     document.getElementById('bossVictory').classList.add('hidden');
                     // Reset victory HTML for next boss battle
@@ -7124,7 +7131,10 @@
             if (!currentFact) {
                 const a = 1 + Math.floor(Math.random() * 10), b = 1 + Math.floor(Math.random() * 10);
                 const fallbackOp = operation === 'mixed' ? 'add' : operation;
-                currentFact = { num1: a, num2: b, op: fallbackOp, answer: a + b };
+                if (fallbackOp === 'multiply') currentFact = { num1: a, num2: b, op: fallbackOp, answer: a * b };
+                else if (fallbackOp === 'divide') currentFact = { num1: a * b, num2: a, op: fallbackOp, answer: b };
+                else if (fallbackOp === 'subtract') { const big = Math.max(a, b), sm = Math.min(a, b); currentFact = { num1: big, num2: sm, op: fallbackOp, answer: big - sm }; }
+                else currentFact = { num1: a, num2: b, op: fallbackOp, answer: a + b };
             }
 
             problemStartTime = Date.now();
@@ -7328,6 +7338,7 @@
             if (strategyTimeout) clearTimeout(strategyTimeout);
             if (problemTimeout) clearTimeout(problemTimeout);
             if (bossInterval) clearInterval(bossInterval);
+            if (bossEndTimeout) { clearTimeout(bossEndTimeout); bossEndTimeout = null; }
             if (toastTimeout) { clearTimeout(toastTimeout); toastTimeout = null; }
             bossActive = false;
             hideModal('bossBattleModal');
@@ -7750,11 +7761,11 @@
                     avatarEl.classList.add(`set-bonus-${equippedSet.effect}`);
                     avatarEl.classList.add(equippedSet.cssClass);
 
-                    // Show set bonus notification (only once per set)
-                    if (!avatarEl.dataset.currentSet || avatarEl.dataset.currentSet !== equippedSet.id) {
-                        avatarEl.dataset.currentSet = equippedSet.id;
+                    // Show set bonus notification (only once per set, not on page load)
+                    if (_initDone && (!avatarEl.dataset.currentSet || avatarEl.dataset.currentSet !== equippedSet.id)) {
                         showToast(`✨ ${equippedSet.name} Complete! Bonus effect active!`, 2500);
                     }
+                    avatarEl.dataset.currentSet = equippedSet.id;
                 } else {
                     avatarEl.dataset.currentSet = '';
                 }
@@ -7775,9 +7786,9 @@
         loadCumulativeStats();
         loadScene();
         loadAdaptiveDifficulty();
+        loadAvatar(); // Load selected avatar (before costumes so offsets are correct)
         loadCostumes(); // Load saved costumes
         loadCoins(); // Load persistent coin balance
-        loadAvatar(); // Load selected avatar
         loadPurchasedCostumes(); // Load purchased costumes
         loadDances(); // Load owned dances
         loadStickers(); // Load sticker collection
@@ -7786,6 +7797,7 @@
         updateSettingsLabel();
         resetProblemStruggleState(); // Initialize auto-helper state
         generateProblem();
+        _initDone = true;
 
         // ============================================
         // THREE.JS PIXEL ART LANIKAI BEACH SCENE
