@@ -25,11 +25,71 @@
             --card-bg: rgba(0, 0, 0, 0.4);
             --container-bg: rgba(10, 10, 30, 0.7);
         }
-        .theme-ocean { --bg-gradient: linear-gradient(135deg, #0a1628, #1a3a5c, #2d6187); --primary: #00d9ff; --accent: #7fdbff; --container-bg: rgba(10, 22, 40, 0.7); }
-        .theme-sunset { --bg-gradient: linear-gradient(135deg, #2d1b2e, #4a2c4a, #6b3a5b); --primary: #ff9a56; --accent: #ffcd3c; --container-bg: rgba(45, 27, 46, 0.7); }
-        .theme-berry { --bg-gradient: linear-gradient(135deg, #1a0a1a, #2d1f3d, #4a3260); --primary: #da70d6; --accent: #ff69b4; --container-bg: rgba(26, 10, 26, 0.7); }
-        .theme-retro { --bg-gradient: linear-gradient(135deg, #0a0a0a, #1a1a1a); --primary: #39ff14; --accent: #39ff14; --success: #39ff14; --container-bg: rgba(10, 10, 10, 0.8); }
+        .theme-rain { --bg-gradient: linear-gradient(135deg, #1a2a3a, #2a3a4a, #3a4a5a); --primary: #7fdbff; --accent: #aaddff; --container-bg: rgba(26, 42, 58, 0.8); }
+        .theme-snow { --bg-gradient: linear-gradient(135deg, #d0e8f0, #e8f4f8, #f0f8ff); --primary: #4a90d9; --accent: #87ceeb; --container-bg: rgba(200, 220, 240, 0.7); }
+        .theme-aurora { --bg-gradient: linear-gradient(135deg, #0a0a2a, #1a1a4a, #0a2a2a); --primary: #00ff88; --accent: #aa66ff; --container-bg: rgba(10, 10, 42, 0.8); }
+        .theme-shootingstars { --bg-gradient: linear-gradient(135deg, #0a0020, #1a0040, #0a0030); --primary: #cc99ff; --accent: #ffcc66; --container-bg: rgba(10, 0, 32, 0.8); }
+        .theme-goldenhour { --bg-gradient: linear-gradient(135deg, #4a2800, #6a3a00, #8a4a10); --primary: #ffd700; --accent: #ffaa00; --container-bg: rgba(74, 40, 0, 0.8); }
 
+        /* Weather Overlay Effects */
+        #weatherOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        #weatherOverlay.weather-rain .rain-drop {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(transparent, rgba(130,180,220,0.6));
+            animation: rainFall linear infinite;
+        }
+        @keyframes rainFall {
+            from { transform: translateY(-10px); }
+            to { transform: translateY(100vh); }
+        }
+        #weatherOverlay.weather-snow .snowflake {
+            position: absolute;
+            width: 6px; height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: snowFall linear infinite;
+        }
+        @keyframes snowFall {
+            from { transform: translateY(-10px) rotate(0deg); }
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+        #weatherOverlay.weather-aurora {
+            background: linear-gradient(180deg,
+                rgba(0,255,136,0.08) 0%,
+                rgba(170,102,255,0.06) 30%,
+                rgba(0,200,255,0.04) 60%,
+                transparent 100%);
+            animation: auroraShift 8s ease-in-out infinite alternate;
+        }
+        @keyframes auroraShift {
+            0% { background-position: 0% 0%; opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { background-position: 100% 0%; opacity: 0.6; }
+        }
+        #weatherOverlay.weather-shootingstars .shooting-star {
+            position: absolute;
+            width: 80px; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transform: rotate(-35deg);
+            animation: shootStar 1.5s linear forwards;
+            opacity: 0;
+        }
+        @keyframes shootStar {
+            0% { opacity: 0; transform: rotate(-35deg) translateX(0); }
+            10% { opacity: 1; }
+            100% { opacity: 0; transform: rotate(-35deg) translateX(300px); }
+        }
+        #weatherOverlay.weather-goldenhour {
+            background: rgba(255, 170, 0, 0.12);
+            mix-blend-mode: soft-light;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html {
@@ -223,11 +283,6 @@
         .pixel-unicorn, .pixel-pineapple, .pixel-banana, .pixel-box, .pixel-boss,
         .pixel-coin, .pixel-fire, .pixel-chest { image-rendering: pixelated; }
         .pixel-fire { transition: filter 0.3s; }
-        .pixel-fire.active { animation: fireFlicker 0.5s infinite; }
-        @keyframes fireFlicker {
-            0%, 100% { filter: drop-shadow(0 0 3px #ff6600) drop-shadow(0 0 6px #ff4400); }
-            50% { filter: drop-shadow(0 0 8px #ff9900) drop-shadow(0 0 12px #ff6600); }
-        }
 
         /* Progress Bars */
         .progress-container {
@@ -286,8 +341,7 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-        .combo-display.active { opacity: 1; animation: comboPulse 0.5s infinite; }
-        @keyframes comboPulse { 50% { transform: scale(1.1); } }
+        .combo-display.active { opacity: 1; }
 
         /* Shake animation for locked items */
         .shake { animation: shake 0.3s ease-in-out; }
@@ -858,6 +912,21 @@
             box-shadow: 0 0 30px var(--success);
             background: rgba(107, 203, 119, 0.2);
         }
+        .answer-display.flash-correct {
+            animation: flashCorrect 0.3s ease-out;
+        }
+        .answer-display.flash-wrong {
+            animation: flashWrong 0.3s ease-out;
+        }
+        @keyframes flashCorrect {
+            0% { background: rgba(107, 203, 119, 0.6); transform: scale(1.05); }
+            100% { background: rgba(255,255,255,0.1); transform: scale(1); }
+        }
+        @keyframes flashWrong {
+            0%, 20%, 40%, 60% { transform: translateX(-3px); background: rgba(255, 107, 107, 0.4); }
+            10%, 30%, 50% { transform: translateX(3px); background: rgba(255, 107, 107, 0.4); }
+            100% { transform: translateX(0); background: rgba(255,255,255,0.1); }
+        }
 
         .cursor { animation: blink 1s infinite; }
         @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
@@ -937,7 +1006,29 @@
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
         }
-        .modal.show { display: flex; }
+        .modal.show {
+            display: flex;
+            animation: modalFadeIn 0.25s ease-out;
+        }
+        .modal.show > *:first-child {
+            animation: modalContentIn 0.25s ease-out;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes modalContentIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal.hiding {
+            display: flex;
+            animation: modalFadeOut 0.2s ease-in forwards;
+        }
+        @keyframes modalFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
 
         /* Shop Modal specific */
         #shopModal {
@@ -977,10 +1068,11 @@
         }
         .theme-btn:active { transform: scale(0.97); }
         .theme-btn.tropical { background: linear-gradient(135deg, #1a0a2e, #16213e); border-color: #ff6b9d; color: #ff6b9d; }
-        .theme-btn.ocean { background: linear-gradient(135deg, #0a1628, #1a3a5c); border-color: #00d9ff; color: #00d9ff; }
-        .theme-btn.sunset { background: linear-gradient(135deg, #2d1b2e, #4a2c4a); border-color: #ff9a56; color: #ff9a56; }
-        .theme-btn.berry { background: linear-gradient(135deg, #1a0a1a, #2d1f3d); border-color: #da70d6; color: #da70d6; }
-        .theme-btn.retro { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); border-color: #39ff14; color: #39ff14; }
+        .theme-btn.rain { background: linear-gradient(135deg, #1a2a3a, #2a3a4a); border-color: #7fdbff; color: #7fdbff; }
+        .theme-btn.snow { background: linear-gradient(135deg, #d0e8f0, #e8f4f8); border-color: #4a90d9; color: #4a90d9; }
+        .theme-btn.aurora { background: linear-gradient(135deg, #0a0a2a, #1a1a4a); border-color: #00ff88; color: #00ff88; }
+        .theme-btn.shootingstars { background: linear-gradient(135deg, #0a0020, #1a0040); border-color: #cc99ff; color: #cc99ff; }
+        .theme-btn.goldenhour { background: linear-gradient(135deg, #4a2800, #6a3a00); border-color: #ffd700; color: #ffd700; }
         .theme-btn.scene-btn { background: linear-gradient(135deg, #1a2a3a, #2a3a4a); border-color: #7fdbff; color: #fff; font-size: 1rem; }
         .theme-btn.scene-btn.active { border-color: #ffd93d; box-shadow: 0 0 10px rgba(255, 217, 61, 0.5); }
 
@@ -1003,6 +1095,13 @@
         .mystery-box { font-size: 5rem; cursor: pointer; }
         .mystery-reward { font-size: 3rem; margin-top: 20px; }
         .mystery-text { font-size: 1.3rem; margin-top: 15px; color: var(--accent); }
+        #mysteryBoxModal.show .mystery-box {
+            animation: mysteryBounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes mysteryBounceIn {
+            from { transform: translateY(-60px) scale(0.8); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
 
         /* Boss Battle */
         .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: hidden; touch-action: manipulation; }
@@ -1012,6 +1111,13 @@
         }
 
         .boss-container { text-align: center; width: 100%; max-width: 350px; display: flex; flex-direction: column; align-items: center; max-height: 100%; }
+        .boss-modal.show .boss-container {
+            animation: bossScaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes bossScaleIn {
+            from { transform: scale(0.6); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
 
         .boss-title {
             font-size: 1.5rem;
@@ -1358,6 +1464,7 @@
 <body>
     <!-- Three.js 3D Background -->
     <canvas id="three-canvas"></canvas>
+    <div id="weatherOverlay"></div>
 
     <!-- Pixel Art SVG Definitions -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -4110,6 +4217,44 @@
             <rect x="4" y="13" width="8" height="2" fill="#6d4c41"/>
             <rect x="7" y="1" width="2" height="3" fill="#f44336"/>
         </symbol>
+
+        <!-- Pixel-art effect symbols -->
+        <symbol id="pixel-sparkle" viewBox="0 0 16 16">
+            <rect x="7" y="0" width="2" height="5" fill="#ffd93d"/>
+            <rect x="7" y="11" width="2" height="5" fill="#ffd93d"/>
+            <rect x="0" y="7" width="5" height="2" fill="#ffd93d"/>
+            <rect x="11" y="7" width="5" height="2" fill="#ffd93d"/>
+            <rect x="3" y="3" width="2" height="2" fill="#ffeb3b"/>
+            <rect x="11" y="3" width="2" height="2" fill="#ffeb3b"/>
+            <rect x="3" y="11" width="2" height="2" fill="#ffeb3b"/>
+            <rect x="11" y="11" width="2" height="2" fill="#ffeb3b"/>
+            <rect x="7" y="7" width="2" height="2" fill="#fff"/>
+        </symbol>
+        <symbol id="pixel-star" viewBox="0 0 16 16">
+            <rect x="7" y="0" width="2" height="3" fill="#ffd93d"/>
+            <rect x="6" y="3" width="4" height="2" fill="#ffd93d"/>
+            <rect x="0" y="5" width="16" height="3" fill="#ffd93d"/>
+            <rect x="2" y="8" width="12" height="2" fill="#ffb347"/>
+            <rect x="3" y="10" width="4" height="2" fill="#ffb347"/>
+            <rect x="9" y="10" width="4" height="2" fill="#ffb347"/>
+            <rect x="4" y="12" width="2" height="2" fill="#ffd93d"/>
+            <rect x="10" y="12" width="2" height="2" fill="#ffd93d"/>
+            <rect x="5" y="14" width="2" height="2" fill="#ffd93d"/>
+            <rect x="9" y="14" width="2" height="2" fill="#ffd93d"/>
+        </symbol>
+        <symbol id="pixel-confetti-square" viewBox="0 0 8 8">
+            <rect x="1" y="1" width="6" height="6" fill="currentColor"/>
+            <rect x="2" y="2" width="2" height="2" fill="rgba(255,255,255,0.3)"/>
+        </symbol>
+        <symbol id="pixel-lightning" viewBox="0 0 16 16">
+            <rect x="8" y="0" width="3" height="3" fill="#ffd93d"/>
+            <rect x="7" y="3" width="3" height="2" fill="#ffd93d"/>
+            <rect x="5" y="5" width="6" height="2" fill="#ffd93d"/>
+            <rect x="6" y="7" width="3" height="2" fill="#ffb347"/>
+            <rect x="5" y="9" width="3" height="2" fill="#ffb347"/>
+            <rect x="4" y="11" width="3" height="2" fill="#ffd93d"/>
+            <rect x="3" y="13" width="3" height="3" fill="#ffd93d"/>
+        </symbol>
     </svg>
 
     <div class="game-container">
@@ -4374,11 +4519,12 @@
 
         // Themes with unlock levels
         const THEMES = [
-            { id: 'tropical', name: '🌺 Tropical', unlockLevel: 1 },
-            { id: 'ocean', name: '🌊 Ocean', unlockLevel: 3 },
-            { id: 'sunset', name: '🌅 Sunset', unlockLevel: 6 },
-            { id: 'berry', name: '🍇 Berry', unlockLevel: 9 },
-            { id: 'retro', name: '👾 Retro', unlockLevel: 12 }
+            { id: 'tropical', name: '☀️ Clear', unlockLevel: 1 },
+            { id: 'rain', name: '🌧️ Rain', unlockLevel: 15, weather: 'rain' },
+            { id: 'snow', name: '❄️ Snow', unlockLevel: 25, weather: 'snow' },
+            { id: 'aurora', name: '🌌 Aurora', unlockLevel: 45, weather: 'aurora' },
+            { id: 'shootingstars', name: '💫 Shooting Stars', unlockLevel: 65, weather: 'shootingstars' },
+            { id: 'goldenhour', name: '🌅 Golden Hour', unlockLevel: 85, weather: 'goldenhour' }
         ];
 
         // Boss personality phrases for key bosses
@@ -4709,62 +4855,60 @@
 
         // Scene variations (3D background cosmetic changes)
         const SCENE_VARIATIONS = [
-            // Original scenes
             { id: 'beach', name: 'Sunny Beach', emoji: '🏖️', unlockLevel: 1 },
 
-            // New location: Rocky Tide Pools (L15)
-            { id: 'tidepools', name: 'Rocky Tide Pools', emoji: '🪨', unlockLevel: 15,
-              colors: { sky: 0x87ceeb, skyHorizon: 0xb0e0e6, sun: 0xffd700, sunGlow: 0xffa500,
-                       sand: 0x808080, sandDark: 0x606060,
-                       oceanDeep: 0x006994, oceanMid: 0x1ca9c9, oceanLight: 0x40e0d0 },
-              extras: ['rocks', 'tidepools', 'crabs'] },
-
-            { id: 'sunset', name: 'Sunset Paradise', emoji: '🌅', unlockLevel: 20,
+            { id: 'sunset', name: 'Sunset Paradise', emoji: '🌅', unlockLevel: 10,
               colors: { sky: 0xff7e5f, skyHorizon: 0xffcc80, sun: 0xff4500, sunGlow: 0xff6b00,
                        oceanDeep: 0x2c3e50, oceanMid: 0x4a6fa5, oceanLight: 0x7a9cc6 } },
 
-            // New location: Beach Boardwalk (L25)
-            { id: 'boardwalk', name: 'Beach Boardwalk', emoji: '🎡', unlockLevel: 25,
-              colors: { sky: 0x4a90d9, skyHorizon: 0x87ceeb, sun: 0xffd700, sunGlow: 0xffb347,
-                       sand: 0xf4a460, sandDark: 0xd2691e },
-              extras: ['ferrisWheel', 'stringLights', 'boardwalk'] },
-
-            { id: 'night', name: 'Moonlit Night', emoji: '🌙', unlockLevel: 30,
+            { id: 'night', name: 'Moonlit Night', emoji: '🌙', unlockLevel: 20,
               colors: { sky: 0x0a0a2a, skyHorizon: 0x1a1a4a, sun: 0xf5f5dc, sunGlow: 0xccccaa,
                        oceanDeep: 0x0a1628, oceanMid: 0x152238, oceanLight: 0x203348 },
               extras: ['stars', 'moon'] },
 
-            // New location: Underwater View (L35)
-            { id: 'underwater', name: 'Underwater View', emoji: '🐠', unlockLevel: 35,
+            { id: 'rainbow', name: 'Rainbow Falls', emoji: '🌈', unlockLevel: 30,
+              colors: { sky: 0x5bc0eb, skyHorizon: 0xa8e6cf, sun: 0xffd93d, sunGlow: 0xffb347,
+                       sand: 0x8fbc8f, sandDark: 0x6b8e6b, palmLeaf: 0x228b22, palmLeafLight: 0x32cd32,
+                       oceanDeep: 0x20b2aa, oceanMid: 0x48d1cc, oceanLight: 0x7fffd4 },
+              extras: ['rainbow', 'waterfall', 'mist'] },
+
+            { id: 'underwater', name: 'Underwater View', emoji: '🐠', unlockLevel: 40,
               colors: { sky: 0x0077be, skyHorizon: 0x00a3cc, sun: 0x87ceeb, sunGlow: 0xadd8e6,
                        oceanDeep: 0x001f3f, oceanMid: 0x003366, oceanLight: 0x0066cc },
               extras: ['fish', 'bubbles', 'caustics', 'seaweed'] },
 
-            { id: 'stormy', name: 'Stormy Seas', emoji: '🌧️', unlockLevel: 40,
-              colors: { sky: 0x4a4a5a, skyHorizon: 0x5a5a6a, sun: 0x888888, sunGlow: 0x666666,
-                       oceanDeep: 0x2a3a4a, oceanMid: 0x3a4a5a, oceanLight: 0x5a6a7a },
-              extras: ['rain', 'darkClouds'] },
-
-            { id: 'snowy', name: 'Winter Beach', emoji: '❄️', unlockLevel: 45,
+            { id: 'snowy', name: 'Winter Beach', emoji: '❄️', unlockLevel: 50,
               colors: { sky: 0xd0e8f0, skyHorizon: 0xe8f4f8, sun: 0xfff8dc, sunGlow: 0xfff0c0,
                        sand: 0xffffff, sandDark: 0xe8e8e8,
                        oceanDeep: 0x3a6a8a, oceanMid: 0x5a8aaa, oceanLight: 0x8abacc },
               extras: ['snowflakes'] },
 
-            // Seasonal: Spooky Beach (L50)
-            { id: 'spooky', name: 'Spooky Beach', emoji: '🎃', unlockLevel: 50,
-              colors: { sky: 0x2d1b4e, skyHorizon: 0x4a2c7a, sun: 0xff8c00, sunGlow: 0xff4500,
-                       sand: 0x3d2817, sandDark: 0x2b1810,
-                       oceanDeep: 0x1a0a2e, oceanMid: 0x2d1b4e, oceanLight: 0x4a2c7a },
-              extras: ['pumpkins', 'bats', 'ghosts'] },
-
-            { id: 'sakura', name: 'Cherry Blossom', emoji: '🌸', unlockLevel: 55,
+            { id: 'sakura', name: 'Cherry Blossom', emoji: '🌸', unlockLevel: 60,
               colors: { sky: 0xffc0cb, skyHorizon: 0xffe4e8, sun: 0xffdd55, sunGlow: 0xffcc33,
                        palmLeaf: 0xff69b4, palmLeafLight: 0xff8dc7 },
               extras: ['petals'] },
 
-            // Seasonal: Summer Party (L60)
-            { id: 'party', name: 'Summer Party', emoji: '🎉', unlockLevel: 60,
+            { id: 'crystal', name: 'Crystal Cave', emoji: '💎', unlockLevel: 70,
+              colors: { sky: 0x1a1a3e, skyHorizon: 0x2a2a5e, sun: 0x9966ff, sunGlow: 0x7744cc,
+                       sand: 0x2d2d4a, sandDark: 0x1e1e3a,
+                       oceanDeep: 0x0a0a2e, oceanMid: 0x151540, oceanLight: 0x2a2a6a,
+                       palmTrunk: 0x4a4a6a, palmLeaf: 0x66ccff, palmLeafLight: 0x99ddff },
+              extras: ['crystals', 'glowPools'] },
+
+            { id: 'volcano', name: 'Volcano Island', emoji: '🌋', unlockLevel: 80,
+              colors: { sky: 0x8b2500, skyHorizon: 0xcc4400, sun: 0xff4500, sunGlow: 0xff6600,
+                       sand: 0x3d3d3d, sandDark: 0x2a2a2a,
+                       oceanDeep: 0x1a0a00, oceanMid: 0x4a2a10, oceanLight: 0x8b4513 },
+              extras: ['lava', 'volcanoSmoke', 'embers'] },
+
+            { id: 'space', name: 'Space Beach', emoji: '🚀', unlockLevel: 90,
+              colors: { sky: 0x0a0020, skyHorizon: 0x1a0040, sun: 0xcc99ff, sunGlow: 0x9966cc,
+                       sand: 0x2a1a3a, sandDark: 0x1a0a2a,
+                       oceanDeep: 0x0a0030, oceanMid: 0x1a0050, oceanLight: 0x3a2070,
+                       palmTrunk: 0x6a4a8a, palmLeaf: 0xaa66ff, palmLeafLight: 0xcc88ff },
+              extras: ['twoMoons', 'meteorShowers', 'glowSand', 'stars'] },
+
+            { id: 'party', name: 'Summer Party', emoji: '🎉', unlockLevel: 100,
               colors: { sky: 0x4169e1, skyHorizon: 0x87ceeb, sun: 0xffd700, sunGlow: 0xff69b4,
                        sand: 0xfaebd7, sandDark: 0xdeb887 },
               extras: ['balloons', 'confetti', 'tikitorches', 'festivalLights'] }
@@ -4846,14 +4990,13 @@
             // Clear any existing dance
             if (danceTimeout) clearTimeout(danceTimeout);
             DANCE_TYPES.forEach(d => avatar.classList.remove(d));
-            avatar.classList.remove('dancing');
 
             // Set duration based on reason
             switch(reason) {
                 case 'levelup': duration = 4000; break;
                 case 'achievement': duration = 3000; break;
                 case 'milestone': duration = 5000; break;
-                case 'boss': duration = duration || 3000; break;
+                case 'boss': break; // Use caller-provided duration
                 default: duration = 3000;
             }
 
@@ -4873,10 +5016,34 @@
         }
 
 
-        // XP and Level system
+        // XP and Level system — exponential curve
         let playerXP = 0;
         let playerLevel = 1;
-        const XP_PER_LEVEL = 100; // XP needed per level
+
+        function xpForLevel(level) {
+            if (level <= 10) return 100;
+            if (level <= 25) return 100 + (level - 10) * 15;
+            return Math.floor(100 * Math.pow(1.12, level - 10));
+        }
+
+        function cumulativeXPForLevel(level) {
+            let total = 0;
+            for (let i = 1; i < level; i++) total += xpForLevel(i);
+            return total;
+        }
+
+        function levelFromXP(totalXP) {
+            if (typeof totalXP !== 'number' || !isFinite(totalXP) || totalXP < 0) return 1;
+            let level = 1;
+            let cumulative = 0;
+            while (true) {
+                const needed = xpForLevel(level);
+                if (cumulative + needed > totalXP) break;
+                cumulative += needed;
+                level++;
+            }
+            return level;
+        }
 
         let num1, num2, correctAnswer, currentOp;
         let score = 0, streak = 0, bestStreak = 0;
@@ -5200,6 +5367,7 @@
                 const duration = type === 'light' ? 0.01 : type === 'medium' ? 0.02 : 0.03;
                 oscillator.start(hapticContext.currentTime);
                 oscillator.stop(hapticContext.currentTime + duration);
+                oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
             } catch (e) {}
         }
 
@@ -5233,9 +5401,8 @@
             const wrapper = document.querySelector('.settings-wrapper');
             if (panel.classList.contains('show') && !wrapper.contains(e.target)) {
                 closeSettingsPanel();
-                e.stopPropagation();
             }
-        }, true);
+        });
 
         function updateSettingsLabel() {
             const op = OP_SYMBOLS[operation] || '÷';
@@ -5243,10 +5410,21 @@
             document.getElementById('settingsLabel').textContent = `${op} • Free Play`;
         }
 
-        // XP and Level System
+        // XP and Level System (exponential curve)
         function loadProgression() {
-            playerXP = load('xp', 0);
-            playerLevel = Math.floor(playerXP / XP_PER_LEVEL) + 1;
+            // Soft reset migration: detect pre-update save
+            const version = load('version', 0);
+            if (version < 2) {
+                // First load after XP curve update — soft reset to L25
+                playerXP = cumulativeXPForLevel(25);
+                playerLevel = 25;
+                store('version', 2);
+                saveProgression();
+                setTimeout(() => showToast('New Season! Levels recalibrated — new challenges ahead!', 4000), 1000);
+            } else {
+                playerXP = load('xp', 0);
+                playerLevel = levelFromXP(playerXP);
+            }
             updateLevelDisplay();
         }
 
@@ -5255,7 +5433,7 @@
         function gainXP(amount) {
             const oldLevel = playerLevel;
             playerXP += amount;
-            playerLevel = Math.floor(playerXP / XP_PER_LEVEL) + 1;
+            playerLevel = levelFromXP(playerXP);
             saveProgression();
             updateLevelDisplay();
 
@@ -5268,9 +5446,11 @@
         function updateLevelDisplay() {
             const levelEl = document.getElementById('levelDisplay');
             if (levelEl) {
-                const xpInLevel = playerXP % XP_PER_LEVEL;
-                const progress = (xpInLevel / XP_PER_LEVEL) * 100;
-                levelEl.innerHTML = `<span class="level-num">Lv.${playerLevel}</span><div class="xp-bar"><div class="xp-fill" style="width:${progress}%"></div></div>`;
+                const levelStart = cumulativeXPForLevel(playerLevel);
+                const needed = xpForLevel(playerLevel);
+                const xpInLevel = playerXP - levelStart;
+                const progress = needed > 0 ? (xpInLevel / needed) * 100 : 0;
+                levelEl.innerHTML = `<span class="level-num">Lv.${playerLevel}</span><div class="xp-bar"><div class="xp-fill" style="width:${Math.min(100, progress)}%"></div></div>`;
             }
         }
 
@@ -5282,7 +5462,13 @@
         }
 
         function showModal(id) { document.getElementById(id).classList.add('show'); }
-        function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+        function hideModal(id) {
+            const el = document.getElementById(id);
+            if (!el.classList.contains('show')) return;
+            el.classList.add('hiding');
+            el.classList.remove('show');
+            setTimeout(() => el.classList.remove('hiding'), 200);
+        }
         function flashClass(el, cls, ms) { el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); }
 
         let toastTimeout = null;
@@ -5321,6 +5507,61 @@
             return BOSSES.filter(b => playerLevel >= b.unlockLevel);
         }
 
+        let _shootingStarsInterval = null;
+        function applyWeatherOverlay(themeId) {
+            if (_shootingStarsInterval) { clearInterval(_shootingStarsInterval); _shootingStarsInterval = null; }
+            const overlay = document.getElementById('weatherOverlay');
+            if (!overlay) return;
+            overlay.className = '';
+            overlay.innerHTML = '';
+            const theme = THEMES.find(t => t.id === themeId);
+            if (!theme || !theme.weather) return;
+
+            const w = theme.weather;
+            overlay.className = 'weather-' + w;
+
+            if (w === 'rain') {
+                for (let i = 0; i < 60; i++) {
+                    const drop = document.createElement('div');
+                    drop.className = 'rain-drop';
+                    drop.style.left = Math.random() * 100 + '%';
+                    drop.style.height = (15 + Math.random() * 20) + 'px';
+                    drop.style.animationDuration = (0.4 + Math.random() * 0.3) + 's';
+                    drop.style.animationDelay = Math.random() * 2 + 's';
+                    overlay.appendChild(drop);
+                }
+            } else if (w === 'snow') {
+                for (let i = 0; i < 40; i++) {
+                    const flake = document.createElement('div');
+                    flake.className = 'snowflake';
+                    flake.style.left = Math.random() * 100 + '%';
+                    const size = 3 + Math.random() * 5;
+                    flake.style.width = size + 'px';
+                    flake.style.height = size + 'px';
+                    flake.style.opacity = 0.4 + Math.random() * 0.5;
+                    flake.style.animationDuration = (3 + Math.random() * 4) + 's';
+                    flake.style.animationDelay = Math.random() * 5 + 's';
+                    overlay.appendChild(flake);
+                }
+            } else if (w === 'shootingstars') {
+                // Spawn shooting stars periodically
+                _shootingStarsInterval = setInterval(() => {
+                    if (!overlay.classList.contains('weather-shootingstars')) {
+                        clearInterval(_shootingStarsInterval);
+                        _shootingStarsInterval = null;
+                        return;
+                    }
+                    const star = document.createElement('div');
+                    star.className = 'shooting-star';
+                    star.style.left = Math.random() * 80 + '%';
+                    star.style.top = Math.random() * 40 + '%';
+                    overlay.appendChild(star);
+                    setTimeout(() => star.remove(), 1600);
+                }, 2000 + Math.random() * 3000);
+            }
+            // aurora and goldenhour are pure CSS — no DOM elements needed
+        }
+
         function setTheme(theme) {
             if (!isItemUnlocked(THEMES, theme)) {
                 const t = THEMES.find(th => th.id === theme);
@@ -5330,6 +5571,7 @@
             }
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
             store('theme', theme);
+            applyWeatherOverlay(theme);
             hideThemePicker();
         }
 
@@ -5337,6 +5579,7 @@
             const theme = load('theme', 'tropical');
             if (isItemUnlocked(THEMES, theme)) {
                 document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
+                applyWeatherOverlay(theme);
             } else {
                 document.body.className = '';
             }
@@ -5422,18 +5665,104 @@
             return audioContext;
         }
 
+        // Synthesized sample buffers (rendered on first use)
+        const _sampleBuffers = {};
+        async function renderSample(name) {
+            if (_sampleBuffers[name]) return _sampleBuffers[name];
+            const ctx = getAudioContext();
+            const sr = ctx.sampleRate;
+            const dur = 0.5;
+            const offline = new OfflineAudioContext(1, sr * dur, sr);
+
+            if (name === 'marimba') {
+                // FM synthesis marimba: carrier + modulator with fast decay
+                const carrier = offline.createOscillator();
+                const mod = offline.createOscillator();
+                const modGain = offline.createGain();
+                const env = offline.createGain();
+                carrier.frequency.value = 262; // C4
+                mod.frequency.value = 262 * 4; // 4:1 ratio
+                modGain.gain.value = 300;
+                mod.connect(modGain);
+                modGain.connect(carrier.frequency);
+                carrier.connect(env);
+                env.connect(offline.destination);
+                env.gain.setValueAtTime(0.6, 0);
+                env.gain.exponentialRampToValueAtTime(0.01, dur);
+                modGain.gain.setValueAtTime(300, 0);
+                modGain.gain.exponentialRampToValueAtTime(1, 0.15);
+                carrier.start(); mod.start();
+                carrier.stop(dur); mod.stop(dur);
+            } else if (name === 'steeldrum') {
+                // Karplus-Strong style steel drum: noise burst + filtered delay
+                const bufLen = Math.floor(sr * dur);
+                const noiseBuffer = offline.createBuffer(1, bufLen, sr);
+                const data = noiseBuffer.getChannelData(0);
+                // Short noise burst with resonance
+                const period = Math.floor(sr / 262); // C4 period
+                for (let i = 0; i < period * 2; i++) {
+                    data[i] = (Math.random() * 2 - 1) * 0.8;
+                }
+                // Simple KS: average adjacent samples
+                for (let i = period * 2; i < bufLen; i++) {
+                    data[i] = (data[i - period] + data[i - period - 1]) * 0.499;
+                }
+                // Apply amplitude envelope
+                for (let i = 0; i < bufLen; i++) {
+                    const t = i / sr;
+                    data[i] *= Math.exp(-t * 6);
+                }
+                const src = offline.createBufferSource();
+                src.buffer = noiseBuffer;
+                src.connect(offline.destination);
+                src.start();
+            }
+
+            const rendered = await offline.startRendering();
+            _sampleBuffers[name] = rendered;
+            return rendered;
+        }
+
+        function playSampleNote(buffer, rate, vol, delayMs) {
+            try {
+                const ctx = getAudioContext();
+                const src = ctx.createBufferSource();
+                const g = ctx.createGain();
+                src.buffer = buffer;
+                src.playbackRate.value = rate;
+                src.connect(g);
+                g.connect(ctx.destination);
+                g.gain.value = vol;
+                const when = ctx.currentTime + (delayMs / 1000);
+                src.start(when);
+            } catch (e) {}
+        }
+
         const SOUND_DEFS = {
             tap:        { tones: [[600,'sine',0.08,0.05]] },
             correct:    { tones: [[880,'sine',0.12,0.08],[1100,'sine',0.1,0.08]], delay: 80 },
             wrong:      { tones: [[200,'triangle',0.15,0.2]] },
             streak:     { tones: [[880,'sine',0.12,0.15],[1100,'sine',0.12,0.15],[1320,'sine',0.12,0.15],[1760,'sine',0.12,0.15]], delay: 80 },
-            bonus:      { tones: [[800,'sine',0.12,0.1],[1000,'sine',0.12,0.1],[1200,'sine',0.12,0.1]], delay: 60 },
+            bonus:      { samples: [
+                { src: 'marimba', rate: 1.5, vol: 0.25, delay: 0 },
+                { src: 'marimba', rate: 2.0, vol: 0.3, delay: 80 },
+            ]},
             bossappear: { tones: [[150,'sawtooth',0.2,0.15],[200,'sawtooth',0.2,0.15],[150,'sawtooth',0.2,0.15],[250,'sawtooth',0.2,0.15]], delay: 120 },
             bosshit:    { tones: [[300,'square',0.15,0.1],[500,'square',0.1,0.08]], delay: 50 },
-            bosswin:    { tones: [[400,'sine',0.15,0.15],[500,'sine',0.15,0.15],[600,'sine',0.15,0.15],[800,'sine',0.15,0.15],[1000,'sine',0.15,0.15],[1200,'sine',0.15,0.15]], delay: 80 },
+            bosswin:    { samples: [
+                { src: 'steeldrum', rate: 1.0, vol: 0.3, delay: 0 },
+                { src: 'steeldrum', rate: 1.26, vol: 0.3, delay: 100 },
+                { src: 'steeldrum', rate: 1.5, vol: 0.3, delay: 200 },
+                { src: 'steeldrum', rate: 2.0, vol: 0.4, delay: 300 },
+            ]},
             gameover:   { tones: [[400,'triangle',0.12,0.3],[350,'triangle',0.12,0.3],[300,'triangle',0.12,0.3],[250,'triangle',0.12,0.3]], delay: 150 },
             purchase:   { tones: [[600,'sine',0.1,0.08],[900,'sine',0.1,0.08],[1200,'sine',0.12,0.1]], delay: 60 },
-            levelup:    { tones: [[523,'sine',0.12,0.15],[659,'sine',0.12,0.15],[784,'sine',0.12,0.15],[1047,'sine',0.12,0.15]], delay: 100 },
+            levelup:    { samples: [
+                { src: 'marimba', rate: 1.0, vol: 0.3, delay: 0 },
+                { src: 'marimba', rate: 1.26, vol: 0.3, delay: 120 },
+                { src: 'marimba', rate: 1.5, vol: 0.3, delay: 240 },
+                { src: 'marimba', rate: 2.0, vol: 0.4, delay: 360 },
+            ]},
         };
 
         function playSound(type) {
@@ -5442,6 +5771,14 @@
             if (!def) return;
             try {
                 const ctx = getAudioContext();
+                // Sample-based sounds
+                if (def.samples) {
+                    def.samples.forEach(s => {
+                        renderSample(s.src).then(buf => playSampleNote(buf, s.rate, s.vol, s.delay));
+                    });
+                    return;
+                }
+                // Chiptune synth sounds
                 const playTone = (freq, wave, vol, dur) => {
                     const osc = ctx.createOscillator();
                     const g = ctx.createGain();
@@ -5466,17 +5803,7 @@
             document.getElementById('bossProgress').style.width = bossProgress + '%';
         }
 
-        // Fire flicker effect for streak
-        function updateFireEffect() {
-            const fireIcon = document.querySelector('.pixel-fire');
-            if (fireIcon) {
-                if (streak > 0) {
-                    fireIcon.classList.add('active');
-                } else {
-                    fireIcon.classList.remove('active');
-                }
-            }
-        }
+        // Fire flicker removed — answer box flash replaces it
 
         // Combo system
         function updateCombo() {
@@ -5552,10 +5879,10 @@
         function triggerAutoSolve() {
             const overlay = document.getElementById('autoHelperOverlay');
 
-            // Show lightning effect
+            // Show pixel lightning effect
             const lightning = document.createElement('div');
             lightning.className = 'lightning-effect';
-            lightning.textContent = '⚡';
+            lightning.innerHTML = '<svg style="width:64px;height:64px;image-rendering:pixelated;"><use href="#pixel-lightning"/></svg>';
             overlay.appendChild(lightning);
 
             // Show helper message
@@ -5642,7 +5969,7 @@
 
         function showStreakCelebration(num) {
             const el = document.getElementById('streakCelebration');
-            el.textContent = `🔥 ${num} STREAK! 🔥`;
+            el.innerHTML = `<svg style="width:24px;height:24px;image-rendering:pixelated;vertical-align:middle;"><use href="#pixel-sparkle"/></svg> ${num} STREAK! <svg style="width:24px;height:24px;image-rendering:pixelated;vertical-align:middle;"><use href="#pixel-sparkle"/></svg>`;
             el.classList.remove('show');
             void el.offsetWidth;
             el.classList.add('show');
@@ -5689,13 +6016,13 @@
 
                 // Add sparkles for rare+ stickers
                 if (sticker.rarity === 'RARE' || sticker.rarity === 'LEGENDARY') {
-                    const sparkleEmojis = ['✨', '⭐', '💫'];
+                    const sparkleSymbols = ['#pixel-sparkle', '#pixel-star', '#pixel-sparkle'];
                     for (let i = 0; i < 5; i++) {
-                        const emoji = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
+                        const sym = sparkleSymbols[Math.floor(Math.random() * sparkleSymbols.length)];
                         const x = (Math.random() - 0.5) * 100;
                         const y = (Math.random() - 0.5) * 100;
                         const delay = i * 100;
-                        stickerHTML += `<span class="sticker-sparkle" style="left:calc(50% + ${x}px);top:calc(50% + ${y}px);animation-delay:${delay}ms;">${emoji}</span>`;
+                        stickerHTML += `<span class="sticker-sparkle" style="left:calc(50% + ${x}px);top:calc(50% + ${y}px);animation-delay:${delay}ms;"><svg style="width:16px;height:16px;image-rendering:pixelated;"><use href="${sym}"/></svg></span>`;
                     }
                 }
 
@@ -5743,7 +6070,7 @@
         }
 
         function closeMysteryBox() {
-            document.getElementById('mysteryBoxModal').classList.remove('show');
+            hideModal('mysteryBoxModal');
             if (problemTimeout) clearTimeout(problemTimeout);
             problemTimeout = setTimeout(generateProblem, 200);
         }
@@ -5838,14 +6165,15 @@
             const container = document.getElementById('bossContainer');
             container.classList.add('victory-' + tier);
 
-            // Elite bosses get confetti
+            // Elite bosses get pixel confetti
             if (tier === 'elite') {
-                const confettiEmojis = ['🎉', '🎊', '⭐', '✨', '🌟', '💫'];
+                const confettiColors = ['#ff6b6b','#ffd93d','#6bcb77','#64c8ff','#ff69b4','#da70d6'];
                 for (let i = 0; i < 15; i++) {
                     setTimeout(() => {
                         const confetti = document.createElement('div');
                         confetti.className = 'victory-confetti';
-                        confetti.textContent = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
+                        const c = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                        confetti.innerHTML = `<svg style="width:16px;height:16px;image-rendering:pixelated;color:${c};"><use href="#pixel-confetti-square"/></svg>`;
                         confetti.style.left = (10 + Math.random() * 80) + '%';
                         confetti.style.top = (Math.random() * 40) + '%';
                         confetti.style.animationDelay = (Math.random() * 0.5) + 's';
@@ -6321,16 +6649,18 @@
         // Generate math facts with tier information (optimized for memory)
         function generateMathFacts() {
             const facts = [];
+            const seenIds = new Set();
+            function addFact(f) { if (!seenIds.has(f.id)) { seenIds.add(f.id); facts.push(f); } }
 
             // TIER 1: Basic facts (0-10)
             for (let a = 1; a <= 10; a++) {
                 for (let b = a; b <= 10; b++) {
-                    facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 1 });
+                    addFact({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 1 });
                 }
             }
             for (let minuend = 2; minuend <= 10; minuend++) {
                 for (let sub = 1; sub < minuend; sub++) {
-                    facts.push({ id: `sub_${minuend}_${sub}`, op: 'subtract', num1: minuend, num2: sub, answer: minuend - sub, tier: 1 });
+                    addFact({ id: `sub_${minuend}_${sub}`, op: 'subtract', num1: minuend, num2: sub, answer: minuend - sub, tier: 1 });
                 }
             }
 
@@ -6338,13 +6668,13 @@
             for (let a = 1; a <= 20; a++) {
                 for (let b = Math.max(a, 11); b <= 20; b++) {
                     if (a + b <= 40) {
-                        facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 2 });
+                        addFact({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 2 });
                     }
                 }
             }
             for (let minuend = 11; minuend <= 20; minuend++) {
                 for (let sub = 1; sub < minuend && sub <= 20; sub++) {
-                    facts.push({ id: `sub_${minuend}_${sub}`, op: 'subtract', num1: minuend, num2: sub, answer: minuend - sub, tier: 2 });
+                    addFact({ id: `sub_${minuend}_${sub}`, op: 'subtract', num1: minuend, num2: sub, answer: minuend - sub, tier: 2 });
                 }
             }
 
@@ -6352,7 +6682,7 @@
             for (let a = 10; a <= 50; a += 5) { // Sample every 5
                 for (let b = 10; b <= 50; b += 5) {
                     if (a + b <= 100) {
-                        facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 3 });
+                        addFact({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 3 });
                     }
                 }
             }
@@ -6364,31 +6694,31 @@
             for (let i = 0; i < 50; i++) {
                 const a = Math.floor(seededRandom() * 30) + 21;
                 const b = Math.floor(seededRandom() * 30) + 1;
-                facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 3 });
-                facts.push({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 3 });
+                addFact({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 3 });
+                addFact({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 3 });
             }
 
             // TIER 4: Larger facts (51-100)
             for (let i = 0; i < 80; i++) {
                 const a = Math.floor(seededRandom() * 50) + 51;
                 const b = Math.floor(seededRandom() * 50) + 1;
-                facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 4 });
-                facts.push({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 4 });
+                addFact({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 4 });
+                addFact({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 4 });
             }
 
             // TIER 5: Expert facts (100-200+)
             for (let i = 0; i < 100; i++) {
                 const a = Math.floor(seededRandom() * 100) + 101;
                 const b = Math.floor(seededRandom() * 100) + 1;
-                facts.push({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 5 });
-                facts.push({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 5 });
+                addFact({ id: `add_${a}_${b}`, op: 'add', num1: a, num2: b, answer: a + b, tier: 5 });
+                addFact({ id: `sub_${a + b}_${b}`, op: 'subtract', num1: a + b, num2: b, answer: a, tier: 5 });
             }
 
             // Multiplication: 1x1 to 12x12 with tiers
             for (let a = 1; a <= 12; a++) {
                 for (let b = a; b <= 12; b++) {
                     const tier = a <= 3 && b <= 3 ? 1 : a <= 5 && b <= 5 ? 2 : a <= 8 && b <= 8 ? 3 : a <= 10 && b <= 10 ? 4 : 5;
-                    facts.push({ id: `mul_${a}_${b}`, op: 'multiply', num1: a, num2: b, answer: a * b, tier: tier });
+                    addFact({ id: `mul_${a}_${b}`, op: 'multiply', num1: a, num2: b, answer: a * b, tier: tier });
                 }
             }
 
@@ -6397,7 +6727,7 @@
                 for (let quotient = 1; quotient <= 12; quotient++) {
                     const dividend = divisor * quotient;
                     const tier = divisor <= 3 && quotient <= 3 ? 1 : divisor <= 5 && quotient <= 5 ? 2 : divisor <= 8 && quotient <= 8 ? 3 : divisor <= 10 && quotient <= 10 ? 4 : 5;
-                    facts.push({ id: `div_${dividend}_${divisor}`, op: 'divide', num1: dividend, num2: divisor, answer: quotient, tier: tier });
+                    addFact({ id: `div_${dividend}_${divisor}`, op: 'divide', num1: dividend, num2: divisor, answer: quotient, tier: tier });
                 }
             }
 
@@ -6753,9 +7083,8 @@
                 // For mixed mode, filter each operation by its tier
                 return mathFacts.filter(f => f.tier <= (playerTiers[f.op] || 1));
             }
-            const opMap = { add: 'add', subtract: 'subtract', multiply: 'multiply', divide: 'divide' };
-            const playerTier = playerTiers[opMap[op]] || 1;
-            return mathFacts.filter(f => f.op === opMap[op] && f.tier <= playerTier);
+            const playerTier = playerTiers[op] || 1;
+            return mathFacts.filter(f => f.op === op && f.tier <= playerTier);
         }
 
         // Select next fact using spaced repetition
@@ -6793,8 +7122,9 @@
 
             // Safety check - if no facts available, generate a simple problem
             if (!currentFact) {
-                currentFact = { num1: 1 + Math.floor(Math.random() * 10), num2: 1 + Math.floor(Math.random() * 10), op: 'add', answer: 0 };
-                currentFact.answer = currentFact.num1 + currentFact.num2;
+                const a = 1 + Math.floor(Math.random() * 10), b = 1 + Math.floor(Math.random() * 10);
+                const fallbackOp = operation === 'mixed' ? 'add' : operation;
+                currentFact = { num1: a, num2: b, op: fallbackOp, answer: a + b };
             }
 
             problemStartTime = Date.now();
@@ -6822,7 +7152,7 @@
             updateAnswerDisplay();
             $feedback.textContent = '';
             $feedback.className = 'feedback';
-            $answerDisplay.classList.remove('correct');
+            $answerDisplay.classList.remove('correct','flash-correct','flash-wrong');
         }
 
         function checkAnswer() {
@@ -6848,8 +7178,8 @@
                     trackTierProgress(currentFact.op, true);
                 }
 
-                // SM-2 spaced repetition update
-                if (currentFact) {
+                // SM-2 spaced repetition update (skip fallback facts without SM-2 props)
+                if (currentFact && currentFact.ef !== undefined) {
                     const responseTime = Date.now() - problemStartTime;
                     const grade = calculateGrade(true, responseTime);
                     updateFactSM2(currentFact, grade);
@@ -6867,8 +7197,10 @@
 
                 $score.textContent = score;
                 $streak.textContent = streak;
-                answerEl.classList.add('correct');
-                updateFireEffect();
+                answerEl.classList.remove('flash-correct','flash-wrong');
+                void answerEl.offsetWidth;
+                answerEl.classList.add('flash-correct');
+                setTimeout(() => answerEl.classList.remove('flash-correct'), 300);
 
                 // Check achievements (including tiered achievements that stack)
                 checkAchievement('first_correct', correctCount >= 1);
@@ -6879,16 +7211,14 @@
                     cumulativeStats.maxStreak = streak;
                 }
                 cumulativeStats.totalScore = Math.max(cumulativeStats.totalScore, score);
+                saveCumulativeStats();
 
                 if (streak === 5 || streak === 10 || streak === 15 || streak === 20 || (streak > 20 && streak % 10 === 0)) {
                     showStreakCelebration(streak);
                 }
 
-                let feedbackText = streak >= 5 ? `🍉 ${streak} streak!` : 'Correct!';
-                if (comboMultiplier > 1) feedbackText += ` x${comboMultiplier}`;
-                if (points > 1) feedbackText += ` (+${points})`;
-                feedbackEl.textContent = feedbackText;
-                feedbackEl.className = 'feedback correct';
+                feedbackEl.textContent = '';
+                feedbackEl.className = 'feedback';
                 playSound('correct');
                 haptic('success');
                 gainXP(points); // Gain XP based on points earned
@@ -6932,11 +7262,11 @@
                 }
 
                 // SM-2 spaced repetition update - wrong answer resets the fact
-                if (currentFact) {
+                if (currentFact && currentFact.ef !== undefined) {
                     updateFactSM2(currentFact, 0); // Grade 0 = failed
                 }
 
-                feedbackEl.textContent = 'Try again!';
+                feedbackEl.textContent = '';
                 feedbackEl.className = 'feedback';
                 playSound('wrong');
                 haptic('error');
@@ -6944,10 +7274,12 @@
                 comboMultiplier = 1;
                 $comboDisplay.classList.remove('active');
                 $streak.textContent = 0;
-                updateFireEffect();
+                answerEl.classList.remove('flash-correct','flash-wrong');
+                void answerEl.offsetWidth;
+                answerEl.classList.add('flash-wrong');
+                setTimeout(() => answerEl.classList.remove('flash-wrong'), 300);
                 currentInput = '';
                 updateAnswerDisplay();
-                flashClass(document.body, 'shake', 300);
 
                 // Show strategy hint after wrong answer
                 // Cooldown: at least 10 seconds OR 3 problems since last hint
@@ -7000,13 +7332,15 @@
             bossActive = false;
             hideModal('bossBattleModal');
 
+            // Dismiss strategy overlay if showing
+            if (showingStrategy) dismissStrategyHint(true);
+
             // Clean up orphaned effect elements from animation timeouts
             document.querySelectorAll('.lightning-effect, .helper-message, .coconut-projectile, .ability-flash, .boss-speech, .victory-confetti').forEach(el => el.remove());
 
             streak = 0; bestStreak = 0;
             gameActive = true;
             correctCount = 0;
-            mysteryBoxesOpened = 0;
             bossesDefeated = 0;
             correctSinceLastBox = 0;
             nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
@@ -7032,7 +7366,7 @@
             loadCoins();
             $streak.textContent = 0;
             $feedback.textContent = '';
-            $answerDisplay.classList.remove('correct');
+            $answerDisplay.classList.remove('correct','flash-correct','flash-wrong');
 
             generateProblem();
         }
@@ -7994,6 +8328,201 @@
                 }
             }
 
+            // ===== NEW SCENE EXTRAS =====
+
+            // Rainbow (for Rainbow Falls scene)
+            if (extras.includes('rainbow')) {
+                const rainbowColors = [0xff0000, 0xff7700, 0xffff00, 0x00cc00, 0x0000ff, 0x8b00ff];
+                for (let c = 0; c < rainbowColors.length; c++) {
+                    const radius = 15 + c * 0.8;
+                    for (let a = 0; a < 12; a++) {
+                        const angle = (a / 12) * Math.PI;
+                        const seg = new THREE.Mesh(
+                            new THREE.BoxGeometry(1.5, 0.4, 0.3),
+                            new THREE.MeshBasicMaterial({ color: rainbowColors[c], transparent: true, opacity: 0.7 })
+                        );
+                        seg.position.set(Math.cos(angle) * radius - 5, Math.sin(angle) * radius, -45);
+                        seg.rotation.z = angle + Math.PI / 2;
+                        scene.add(seg);
+                    }
+                }
+            }
+
+            // Waterfall (for Rainbow Falls scene)
+            if (extras.includes('waterfall')) {
+                for (let i = 0; i < 60; i++) {
+                    const drop = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.15, 0.5, 0.15),
+                        new THREE.MeshBasicMaterial({ color: 0xaaddff, transparent: true, opacity: 0.6 })
+                    );
+                    drop.position.set(
+                        15 + (Math.random() - 0.5) * 4,
+                        Math.random() * 15,
+                        -35 + (Math.random() - 0.5) * 2
+                    );
+                    drop.userData = { fallSpeed: 0.15 + Math.random() * 0.1 };
+                    sceneExtras.particles.push(drop);
+                    scene.add(drop);
+                }
+            }
+
+            // Mist (for Rainbow Falls scene)
+            if (extras.includes('mist')) {
+                for (let i = 0; i < 10; i++) {
+                    const mist = new THREE.Mesh(
+                        new THREE.BoxGeometry(3 + Math.random() * 3, 1, 2),
+                        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.15 })
+                    );
+                    mist.position.set(15 + (Math.random() - 0.5) * 10, Math.random() * 3, -30 + Math.random() * 5);
+                    mist.userData = { sway: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(mist);
+                    scene.add(mist);
+                }
+            }
+
+            // Crystals (for Crystal Cave scene)
+            if (extras.includes('crystals')) {
+                const crystalColors = [0x9966ff, 0x66ccff, 0xff66cc, 0x66ffcc, 0xffcc66];
+                for (let i = 0; i < 20; i++) {
+                    const h = 1 + Math.random() * 4;
+                    const crystal = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.5, h, 0.5),
+                        new THREE.MeshBasicMaterial({ color: crystalColors[i % crystalColors.length], transparent: true, opacity: 0.8 })
+                    );
+                    crystal.position.set(
+                        (Math.random() - 0.5) * 40,
+                        h / 2 - 1,
+                        (Math.random() - 0.5) * 40
+                    );
+                    crystal.rotation.z = (Math.random() - 0.5) * 0.3;
+                    crystal.userData = { twinkleOffset: Math.random() * Math.PI * 2 };
+                    sceneExtras.stars.push(crystal); // reuse star twinkling
+                    scene.add(crystal);
+                }
+            }
+
+            // Glowing pools (for Crystal Cave scene)
+            if (extras.includes('glowPools')) {
+                const poolColors = [0x66ccff, 0x66ffcc, 0x9966ff];
+                for (let i = 0; i < 5; i++) {
+                    const pool = new THREE.Mesh(
+                        new THREE.BoxGeometry(3 + Math.random() * 2, 0.2, 2 + Math.random()),
+                        new THREE.MeshBasicMaterial({ color: poolColors[i % poolColors.length], transparent: true, opacity: 0.5 })
+                    );
+                    pool.position.set((Math.random() - 0.5) * 20, -0.85, 5 + Math.random() * 15);
+                    pool.userData = { twinkleOffset: Math.random() * Math.PI * 2 };
+                    sceneExtras.stars.push(pool);
+                    scene.add(pool);
+                }
+            }
+
+            // Lava (for Volcano Island scene)
+            if (extras.includes('lava')) {
+                for (let i = 0; i < 30; i++) {
+                    const lava = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.3, 0.3, 0.3),
+                        new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? 0xff4500 : 0xff6600 })
+                    );
+                    lava.position.set(
+                        (Math.random() - 0.5) * 15,
+                        Math.random() * 10,
+                        -40 + (Math.random() - 0.5) * 10
+                    );
+                    lava.userData = { fallSpeed: 0.05 + Math.random() * 0.05, sway: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(lava);
+                    scene.add(lava);
+                }
+            }
+
+            // Volcano smoke (for Volcano Island scene)
+            if (extras.includes('volcanoSmoke')) {
+                for (let i = 0; i < 15; i++) {
+                    const smoke = new THREE.Mesh(
+                        new THREE.BoxGeometry(1 + Math.random() * 2, 1 + Math.random(), 1),
+                        new THREE.MeshBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.3 })
+                    );
+                    smoke.position.set((Math.random() - 0.5) * 8, 10 + Math.random() * 10, -45);
+                    smoke.userData = { riseSpeed: 0.02 + Math.random() * 0.02, sway: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(smoke);
+                    scene.add(smoke);
+                }
+            }
+
+            // Embers (for Volcano Island scene)
+            if (extras.includes('embers')) {
+                for (let i = 0; i < 40; i++) {
+                    const ember = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.1, 0.1, 0.1),
+                        new THREE.MeshBasicMaterial({ color: i % 3 === 0 ? 0xffcc00 : 0xff4400 })
+                    );
+                    ember.position.set(
+                        (Math.random() - 0.5) * 30,
+                        Math.random() * 20,
+                        (Math.random() - 0.5) * 30
+                    );
+                    ember.userData = { riseSpeed: 0.03 + Math.random() * 0.03, sway: Math.random() * Math.PI * 2 };
+                    sceneExtras.particles.push(ember);
+                    scene.add(ember);
+                }
+            }
+
+            // Two Moons (for Space Beach scene)
+            if (extras.includes('twoMoons')) {
+                const moon1 = new THREE.Mesh(
+                    new THREE.SphereGeometry(3, 8, 8),
+                    new THREE.MeshBasicMaterial({ color: 0xcc99ff })
+                );
+                moon1.position.set(-12, 16, -55);
+                scene.add(moon1);
+                const moon2 = new THREE.Mesh(
+                    new THREE.SphereGeometry(1.5, 6, 6),
+                    new THREE.MeshBasicMaterial({ color: 0x99ccff })
+                );
+                moon2.position.set(18, 20, -60);
+                scene.add(moon2);
+            }
+
+            // Meteor showers (for Space Beach scene)
+            if (extras.includes('meteorShowers')) {
+                for (let i = 0; i < 8; i++) {
+                    const meteor = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.1, 0.1, 2),
+                        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.7 })
+                    );
+                    meteor.position.set(
+                        (Math.random() - 0.5) * 60,
+                        10 + Math.random() * 15,
+                        -40 - Math.random() * 20
+                    );
+                    meteor.rotation.z = -0.7;
+                    meteor.userData = {
+                        speed: 0.3 + Math.random() * 0.2,
+                        meteorAngle: -0.7,
+                        twinkleOffset: Math.random() * Math.PI * 2
+                    };
+                    sceneExtras.particles.push(meteor);
+                    scene.add(meteor);
+                }
+            }
+
+            // Glowing sand (for Space Beach scene)
+            if (extras.includes('glowSand')) {
+                for (let i = 0; i < 30; i++) {
+                    const glow = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.3, 0.05, 0.3),
+                        new THREE.MeshBasicMaterial({ color: 0xaa66ff, transparent: true, opacity: 0.6 })
+                    );
+                    glow.position.set(
+                        (Math.random() - 0.5) * 30,
+                        -0.85,
+                        5 + Math.random() * 20
+                    );
+                    glow.userData = { twinkleOffset: Math.random() * Math.PI * 2 };
+                    sceneExtras.stars.push(glow);
+                    scene.add(glow);
+                }
+            }
+
             // Camera position (beach view looking at ocean)
             camera.position.set(0, 3, 25);
             camera.lookAt(0, 2, -20);
@@ -8087,11 +8616,20 @@
                             p.position.x = (Math.random() - 0.5) * 40;
                         }
                     }
-                    // Horizontal swimming (fish)
-                    if (p.userData.speed && !p.userData.flapOffset) {
+                    // Horizontal swimming (fish) — exclude meteors
+                    if (p.userData.speed && !p.userData.flapOffset && !p.userData.meteorAngle) {
                         p.position.x += p.userData.speed;
                         if (p.position.x > 25) p.position.x = -25;
                         if (p.position.x < -25) p.position.x = 25;
+                    }
+                    // Diagonal meteors
+                    if (p.userData.meteorAngle !== undefined) {
+                        p.position.x += p.userData.speed * Math.cos(p.userData.meteorAngle);
+                        p.position.y += p.userData.speed * Math.sin(p.userData.meteorAngle);
+                        if (p.position.y < -5 || p.position.x > 40) {
+                            p.position.set((Math.random() - 0.5) * 60, 10 + Math.random() * 15, -40 - Math.random() * 20);
+                            p.material.opacity = 0.7;
+                        }
                     }
                     // Flying with flapping (bats)
                     if (p.userData.flapOffset) {
