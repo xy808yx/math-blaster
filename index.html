@@ -66,6 +66,7 @@
                 rgba(170,102,255,0.06) 30%,
                 rgba(0,200,255,0.04) 60%,
                 transparent 100%);
+            background-size: 200% 100%;
             animation: auroraShift 8s ease-in-out infinite alternate;
         }
         @keyframes auroraShift {
@@ -514,11 +515,11 @@
 
         .rarity-rare {
             box-shadow: 0 0 10px rgba(93, 173, 226, 0.6), inset 0 0 5px rgba(93, 173, 226, 0.2);
-            border-color: #5dade2 !important;
+            border-color: #5dade2;
         }
         .rarity-epic {
             box-shadow: 0 0 15px rgba(155, 89, 182, 0.7), inset 0 0 5px rgba(155, 89, 182, 0.3);
-            border-color: #9b59b6 !important;
+            border-color: #9b59b6;
             animation: epicPulse 2s ease-in-out infinite;
         }
         @keyframes epicPulse {
@@ -527,7 +528,7 @@
         }
         .rarity-legendary {
             box-shadow: 0 0 20px rgba(255, 217, 61, 0.8), inset 0 0 8px rgba(255, 217, 61, 0.4);
-            border-color: #ffd93d !important;
+            border-color: #ffd93d;
             animation: legendaryGlow 1.5s ease-in-out infinite;
             position: relative;
         }
@@ -1131,7 +1132,7 @@
             50% { text-shadow: 0 0 40px var(--error), 0 0 60px var(--error); }
         }
 
-        .boss-emoji { font-size: 5rem; display: flex; align-items: center; justify-content: center; margin: 4px 0; flex: 0 1 auto; min-height: 60px; overflow: hidden; }
+        .boss-emoji { font-size: 5rem; display: flex; align-items: center; justify-content: center; margin: 4px 0; flex: 0 1 auto; min-height: 60px; overflow: visible; position: relative; }
         .boss-emoji svg, .boss-emoji .pixel-boss { max-height: 100%; width: auto; }
         .boss-emoji.entrance { animation: bossEnter 0.8s ease-out; }
         @keyframes bossEnter {
@@ -4326,9 +4327,6 @@
             </div>
         </div>
 
-        <!-- Auto-helper overlay (for visual effects) -->
-        <div class="auto-helper-overlay" id="autoHelperOverlay"></div>
-
         <div class="combo-display" id="comboDisplay">x1</div>
 
         <div class="problem-area">
@@ -4352,6 +4350,9 @@
             <button class="submit" onclick="checkAnswer()">GO</button>
         </div>
     </div>
+
+    <!-- Auto-helper overlay (for visual effects) - outside game-container to avoid backdrop-filter containment -->
+    <div class="auto-helper-overlay" id="autoHelperOverlay"></div>
 
     <div class="streak-celebration" id="streakCelebration"></div>
 
@@ -5351,6 +5352,7 @@
             totalScore: 0,
             maxStreak: 0,
             bossesDefeated: 0,
+            mysteryBoxesOpened: 0,
             uniqueBossesDefeated: {},
             scenesUnlocked: ['beach'],
             themesUnlocked: ['tropical']
@@ -5534,7 +5536,7 @@
 
         let _shootingStarsInterval = null;
         function applyWeatherOverlay(themeId) {
-            if (_shootingStarsInterval) { clearInterval(_shootingStarsInterval); _shootingStarsInterval = null; }
+            if (_shootingStarsInterval) { clearTimeout(_shootingStarsInterval); _shootingStarsInterval = null; }
             const overlay = document.getElementById('weatherOverlay');
             if (!overlay) return;
             overlay.className = '';
@@ -5569,10 +5571,9 @@
                     overlay.appendChild(flake);
                 }
             } else if (w === 'shootingstars') {
-                // Spawn shooting stars periodically
-                _shootingStarsInterval = setInterval(() => {
+                // Spawn shooting stars at random intervals
+                function spawnShootingStar() {
                     if (!overlay.classList.contains('weather-shootingstars')) {
-                        clearInterval(_shootingStarsInterval);
                         _shootingStarsInterval = null;
                         return;
                     }
@@ -5582,7 +5583,9 @@
                     star.style.top = Math.random() * 40 + '%';
                     overlay.appendChild(star);
                     setTimeout(() => star.remove(), 1600);
-                }, 2000 + Math.random() * 3000);
+                    _shootingStarsInterval = setTimeout(spawnShootingStar, 2000 + Math.random() * 3000);
+                }
+                _shootingStarsInterval = setTimeout(spawnShootingStar, 2000 + Math.random() * 3000);
             }
             // aurora and goldenhour are pure CSS — no DOM elements needed
         }
@@ -6027,7 +6030,9 @@
 
         function openMysteryBox() {
             mysteryBoxesOpened++;
-            checkAchievement('collector', mysteryBoxesOpened >= 3);
+            cumulativeStats.mysteryBoxesOpened = (cumulativeStats.mysteryBoxesOpened || 0) + 1;
+            saveCumulativeStats();
+            checkAchievement('collector', cumulativeStats.mysteryBoxesOpened >= 3);
 
             document.getElementById('mysteryBox').style.display = 'none';
 
@@ -6350,17 +6355,13 @@
                 generateBossProblem();
             }, 800);
 
-            // Timer with enrage speed support
+            // Timer with enrage speed support (smooth fractional decrement)
             if (bossInterval) clearInterval(bossInterval);
-            let timerAccumulator = 0;
             bossInterval = setInterval(() => {
-                timerAccumulator += bossTimerSpeed;
-                while (timerAccumulator >= 1) {
-                    bossTimer--;
-                    timerAccumulator -= 1;
-                }
+                bossTimer -= bossTimerSpeed;
+                if (bossTimer < 0) bossTimer = 0;
                 const timerEl = document.getElementById('bossTimer');
-                timerEl.textContent = Math.max(0, Math.ceil(bossTimer));
+                timerEl.textContent = Math.ceil(bossTimer);
                 if (bossTimer <= 10) timerEl.classList.add('danger');
                 if (bossTimer <= 0) endBossBattle(false);
             }, 1000);
@@ -6541,7 +6542,9 @@
                 // Show defeat speech
                 showBossSpeech('defeat');
 
-                document.getElementById('bossEmoji').classList.add('defeated');
+                const bossEmojiForDefeat = document.getElementById('bossEmoji');
+                bossEmojiForDefeat.classList.remove('phase-75', 'phase-50', 'phase-25');
+                bossEmojiForDefeat.classList.add('defeated');
                 document.getElementById('bossContainer').style.opacity = '0.3';
                 const victoryEl = document.getElementById('bossVictory');
                 victoryEl.classList.remove('hidden');
@@ -7196,7 +7199,7 @@
             updateAnswerDisplay();
             $feedback.textContent = '';
             $feedback.className = 'feedback';
-            $answerDisplay.classList.remove('correct','flash-correct','flash-wrong');
+            $answerDisplay.classList.remove('flash-correct','flash-wrong');
         }
 
         function checkAnswer() {
@@ -7276,6 +7279,7 @@
 
                 // Mystery box: random between 50-80 correct answers (sticker drop!)
                 correctSinceLastBox++;
+                if (correctSinceLastBox % 5 === 0) saveStickers(); // Persist box progress periodically
                 updateMysteryBoxHint(); // Update hint pulse
                 updateProgressBars(); // Update boss progress bar
 
@@ -7372,7 +7376,15 @@
             if (strategyTimeout) clearTimeout(strategyTimeout);
             if (problemTimeout) clearTimeout(problemTimeout);
             if (bossInterval) clearInterval(bossInterval);
-            if (bossEndTimeout) { clearTimeout(bossEndTimeout); bossEndTimeout = null; }
+            if (bossEndTimeout) {
+                clearTimeout(bossEndTimeout);
+                bossEndTimeout = null;
+                // Restore bossVictory innerHTML in case boss escape overwrote it
+                const bv = document.getElementById('bossVictory');
+                bv.classList.add('hidden');
+                bv.classList.remove('show');
+                bv.innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>';
+            }
             if (toastTimeout) { clearTimeout(toastTimeout); toastTimeout = null; }
             bossActive = false;
             hideModal('bossBattleModal');
@@ -7389,6 +7401,7 @@
             bossesDefeated = 0;
             correctSinceLastBox = 0;
             nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
+            saveStickers(); // Persist box progress reset
 
             // Reset combo
             comboMultiplier = 1;
@@ -7411,7 +7424,7 @@
             loadCoins();
             $streak.textContent = 0;
             $feedback.textContent = '';
-            $answerDisplay.classList.remove('correct','flash-correct','flash-wrong');
+            $answerDisplay.classList.remove('flash-correct','flash-wrong');
 
             generateProblem();
         }
