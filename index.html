@@ -741,10 +741,8 @@
         }
         .modal-item:active { transform: scale(0.95); }
         .modal-item.equipped { border-color: var(--accent); background: rgba(255,217,61,0.15); }
-        .modal-item.active-preview { border-color: #fff; background: rgba(255,255,255,0.22); box-shadow: 0 0 8px rgba(255,255,255,0.3); }
         .modal-item.locked { opacity: 0.5; cursor: not-allowed; }
         .modal-item.locked:active { transform: none; }
-        .modal-item.owned { border-color: var(--success); }
         .modal-item-icon {
             display: flex;
             align-items: center;
@@ -780,7 +778,7 @@
         .costume-preview {
             width: 56px;
             height: 56px;
-            margin: 10px auto 10px;
+            margin: 10px auto 20px;
             position: relative;
             overflow: visible;
         }
@@ -4969,6 +4967,7 @@
         ];
         const DANCE_TYPES = DANCE_MOVES.map(d => d.cssClass);
         let ownedDances = ['dance-wiggle']; // Wiggle is free/default
+        let equippedDance = 'dance-wiggle';
         let currentDance = null;
         let danceTimeout = null;
 
@@ -4994,6 +4993,12 @@
         function loadDances() {
             ownedDances = load('dances', ['dance-wiggle']);
             if (!ownedDances.includes('dance-wiggle')) ownedDances.push('dance-wiggle');
+        }
+
+        function saveEquippedDance() { store('equippedDance', equippedDance); }
+        function loadEquippedDance() {
+            equippedDance = load('equippedDance', 'dance-wiggle');
+            if (!ownedDances.includes(equippedDance)) equippedDance = 'dance-wiggle';
         }
 
         function triggerCelebrationDance(reason, duration = 5000) {
@@ -7505,7 +7510,7 @@
                     const canAfford = score >= dance.price;
                     const rarity = RARITY[dance.rarity];
                     const div = document.createElement('div');
-                    div.className = 'modal-item' + (isOwned ? ' equipped' : '') + (!isOwned && !canAfford ? ' locked' : '');
+                    div.className = 'modal-item' + (isOwned && equippedDance === dance.id ? ' equipped' : '') + (!isOwned && !canAfford ? ' locked' : '');
 
                     // Dance SVG icons
                     const danceIconIds = {
@@ -7534,9 +7539,10 @@
                             if (purchaseDance(dance.id)) {
                                 playSound('purchase');
                                 haptic('success');
+                                equippedDance = dance.id;
+                                saveEquippedDance();
                                 document.getElementById('shopCoinCount').textContent = score;
                                 renderShopGrid();
-                                // Preview the dance
                                 triggerCelebrationDance('achievement');
                             }
                         };
@@ -7550,17 +7556,17 @@
                             haptic('error');
                         };
                     } else {
-                        // Already owned - preview the dance on click
+                        // Already owned - select and preview the dance
                         div.onclick = () => {
+                            equippedDance = dance.id;
+                            saveEquippedDance();
+                            renderShopGrid();
                             const avatar = document.getElementById('mangoAvatar');
                             if (avatar) {
                                 DANCE_TYPES.forEach(d => avatar.classList.remove(d));
                                 avatar.classList.add(dance.cssClass);
                                 setTimeout(() => avatar.classList.remove(dance.cssClass), 2000);
                             }
-                            grid.querySelectorAll('.modal-item').forEach(el => el.classList.remove('active-preview'));
-                            div.classList.add('active-preview');
-                            setTimeout(() => div.classList.remove('active-preview'), 2000);
                         };
                     }
                     grid.appendChild(div);
@@ -7814,6 +7820,7 @@
         loadCoins(); // Load persistent coin balance
         loadPurchasedCostumes(); // Load purchased costumes
         loadDances(); // Load owned dances
+        loadEquippedDance(); // Load selected dance
         loadStickers(); // Load sticker collection
         initializeFactDatabase(); // Initialize spaced repetition fact database
         loadTierProgress(); // Load difficulty tier progress
