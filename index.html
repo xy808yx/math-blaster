@@ -741,6 +741,7 @@
         }
         .modal-item:active { transform: scale(0.95); }
         .modal-item.equipped { border-color: var(--accent); background: rgba(255,217,61,0.15); }
+        .modal-item.active-preview { border-color: #fff; background: rgba(255,255,255,0.22); box-shadow: 0 0 8px rgba(255,255,255,0.3); }
         .modal-item.locked { opacity: 0.5; cursor: not-allowed; }
         .modal-item.locked:active { transform: none; }
         .modal-item.owned { border-color: var(--success); }
@@ -7538,6 +7539,9 @@
                                 avatar.classList.add(dance.cssClass);
                                 setTimeout(() => avatar.classList.remove(dance.cssClass), 2000);
                             }
+                            grid.querySelectorAll('.modal-item').forEach(el => el.classList.remove('active-preview'));
+                            div.classList.add('active-preview');
+                            setTimeout(() => div.classList.remove('active-preview'), 2000);
                         };
                     }
                     grid.appendChild(div);
