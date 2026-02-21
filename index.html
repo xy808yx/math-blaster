@@ -415,11 +415,17 @@
             font-weight: bold;
             font-size: 1rem;
             z-index: 400;
-            transition: transform 0.4s ease-out;
             box-shadow: 0 4px 20px rgba(255, 217, 61, 0.4);
             pointer-events: none;
         }
-        .achievement-toast.show { transform: translateX(-50%) translateY(0); }
+        .achievement-toast.show {
+            animation: toastSlide var(--toast-dur, 2500ms) ease-out forwards;
+        }
+        @keyframes toastSlide {
+            8% { transform: translateX(-50%) translateY(0); }
+            85% { transform: translateX(-50%) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-100px); }
+        }
 
         /* Strategy Hint Overlay - Singapore Math */
         .strategy-overlay {
@@ -1096,7 +1102,8 @@
         }
 
         /* Boss Battle */
-        .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: hidden; touch-action: manipulation; }
+        .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: hidden; touch-action: manipulation; padding-top: env(safe-area-inset-top, 0px); }
+        .boss-modal.combat-active .boss-title { display: none; }
         @keyframes bossFlash {
             0% { background: rgba(255, 0, 0, 0.8); }
             100% { background: rgba(0, 0, 0, 0.95); }
@@ -1124,7 +1131,7 @@
             50% { text-shadow: 0 0 40px var(--error), 0 0 60px var(--error); }
         }
 
-        .boss-emoji { font-size: 5rem; display: flex; align-items: center; justify-content: center; margin: 4px 0; flex: 1 1 auto; min-height: 60px; overflow: hidden; }
+        .boss-emoji { font-size: 5rem; display: flex; align-items: center; justify-content: center; margin: 4px 0; flex: 0 1 auto; min-height: 60px; overflow: hidden; }
         .boss-emoji svg, .boss-emoji .pixel-boss { max-height: 100%; width: auto; }
         .boss-emoji.entrance { animation: bossEnter 0.8s ease-out; }
         @keyframes bossEnter {
@@ -1302,6 +1309,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 6px;
+            width: 100%;
             max-width: 300px;
             margin: 0 auto;
             flex-shrink: 0;
@@ -5485,31 +5493,35 @@
         function flashClass(el, cls, ms) { el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); }
 
         let toastTimeout = null;
-        let toastExpiry = 0;
 
         function showToast(message, duration = 2500) {
             const toast = document.getElementById('achievementToast');
             if (!toast) return;
             if (toastTimeout) clearTimeout(toastTimeout);
+
+            // Force-reset animation for rapid re-triggers
+            toast.classList.remove('show');
+            toast.style.removeProperty('--toast-dur');
+            void toast.offsetWidth; // reflow
+
             toast.textContent = message;
+            toast.style.setProperty('--toast-dur', duration + 'ms');
             toast.classList.add('show');
-            toastExpiry = Date.now() + duration;
+
+            // Primary dismiss: CSS animationend
+            const onEnd = () => {
+                toast.classList.remove('show');
+                toast.removeEventListener('animationend', onEnd);
+            };
+            toast.addEventListener('animationend', onEnd, { once: true });
+
+            // Backup dismiss via setTimeout
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
+                toast.removeEventListener('animationend', onEnd);
                 toastTimeout = null;
-            }, duration);
+            }, duration + 500);
         }
-
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && toastTimeout) {
-                const toast = document.getElementById('achievementToast');
-                if (toast && Date.now() >= toastExpiry) {
-                    toast.classList.remove('show');
-                    clearTimeout(toastTimeout);
-                    toastTimeout = null;
-                }
-            }
-        });
 
         function isItemUnlocked(collection, id) {
             const item = collection.find(x => x.id === id);
@@ -6269,6 +6281,7 @@
         function startBossBattle() {
             bossActive = true;
             bossAnswer = '';
+            document.getElementById('bossBattleModal').classList.remove('combat-active');
 
             const availableBosses = getUnlockedBosses();
             if (!availableBosses.length) {
@@ -6331,6 +6344,7 @@
 
             setTimeout(() => {
                 bossEmojiEl.classList.remove('entrance');
+                document.getElementById('bossBattleModal').classList.add('combat-active');
                 // Show intro speech for bosses with personality
                 showBossSpeech('intro');
                 generateBossProblem();
@@ -6493,6 +6507,7 @@
             bossActive = false;
             clearInterval(bossInterval);
             bossInterval = null;
+            document.getElementById('bossBattleModal').classList.remove('combat-active');
 
             if (victory) {
                 bossesDefeated++;
