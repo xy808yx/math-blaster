@@ -1070,9 +1070,10 @@
         /* Boss Battle */
         .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: auto; touch-action: manipulation; padding-top: env(safe-area-inset-top, 0px); }
         .boss-modal.combat-active .boss-title { display: none; }
+        .boss-modal.show { background: #000; }
         @keyframes bossFlash {
             0% { background: rgba(255, 0, 0, 0.8); }
-            100% { background: rgba(0, 0, 0, 0.95); }
+            100% { background: #000; }
         }
 
         .boss-container { text-align: center; width: 100%; max-width: 380px; display: flex; flex-direction: column; align-items: center; max-height: 100%; }
@@ -1310,7 +1311,10 @@
 
         /* Boss modal victory background glow */
         .boss-modal { transition: background 1s ease-out; }
-        .boss-modal.victory { background: radial-gradient(circle at center, rgba(255,200,50,0.3) 0%, rgba(0,0,0,0.95) 70%); }
+        .boss-modal.victory { background: radial-gradient(circle at center, rgba(255,200,50,0.2) 0%, transparent 50%), #000; }
+
+        .escaped-title { font-size: 2.5rem; font-weight: bold; color: var(--accent); text-shadow: 0 0 30px var(--accent); }
+        .escaped-sub { font-size: 1.2rem; color: var(--text-color); opacity: 0.6; margin-top: 8px; }
 
         .boss-victory {
             position: absolute;
@@ -6691,8 +6695,10 @@
                     };
                 }, 800);
             } else {
-                document.getElementById('bossVictory').innerHTML = '<div style="font-size:2.5rem;font-weight:bold;color:var(--accent);text-shadow:0 0 30px var(--accent);text-align:center;">ESCAPED!</div><div style="font-size:1.2rem;color:var(--text-color);opacity:0.6;margin-top:8px;text-align:center;">Boss fled...</div>';
+                document.getElementById('bossVictory').innerHTML = '<div class="victory-card escaped-card"><div class="escaped-title">ESCAPED!</div><div class="escaped-sub">Boss fled...</div></div>';
                 document.getElementById('bossVictory').classList.remove('hidden');
+                document.getElementById('bossVictory').classList.add('show');
+                document.getElementById('bossContainer').style.opacity = '0.3';
                 playSound('gameover');
 
                 bossEndTimeout = setTimeout(() => {
@@ -6723,6 +6729,7 @@
             bv.classList.remove('show');
             bv.innerHTML = BOSS_VICTORY_HTML;
             document.getElementById('bossBattleModal').classList.remove('victory');
+            document.getElementById('bossContainer').style.opacity = '1';
         }
 
         function cleanupBossVictory() {
@@ -6735,6 +6742,7 @@
             if (btn) { btn.classList.remove('show'); btn.onclick = null; }
             document.getElementById('bossBattleModal').classList.remove('victory');
             document.getElementById('bossContainer').classList.remove('victory-basic', 'victory-simple', 'victory-elite');
+            document.getElementById('bossContainer').style.opacity = '1';
         }
 
         // Save/load cumulative stats
