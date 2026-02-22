@@ -61,31 +61,9 @@
             from { transform: translateY(-10px) rotate(0deg); }
             to { transform: translateY(100vh) rotate(360deg); }
         }
+        /* Aurora uses 3D bands only — no CSS overlay */
         #weatherOverlay.weather-aurora {
-            background:
-                linear-gradient(135deg,
-                    rgba(0,255,136,0.45) 0%,
-                    rgba(170,102,255,0.35) 35%,
-                    rgba(0,200,255,0.30) 65%,
-                    transparent 100%),
-                linear-gradient(200deg,
-                    transparent 0%,
-                    rgba(0,200,255,0.35) 30%,
-                    rgba(170,102,255,0.40) 60%,
-                    rgba(255,102,204,0.30) 100%);
-            background-size: 200% 100%, 200% 100%;
-            z-index: 1;
-            animation: auroraShift 6s ease-in-out infinite alternate, auroraBreathe 10s ease-in-out infinite;
-        }
-        @keyframes auroraShift {
-            0% { background-position: 0% 0%, 100% 0%; }
-            50% { background-position: 50% 0%, 50% 0%; }
-            100% { background-position: 100% 0%, 0% 0%; }
-        }
-        @keyframes auroraBreathe {
-            0% { opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { opacity: 0.8; }
+            background: none;
         }
         #weatherOverlay.weather-shootingstars .shooting-star {
             position: absolute;
@@ -4633,6 +4611,7 @@
     <script>
         // Utility functions
         function randomElement(arr) {
+            if (!arr || arr.length === 0) return undefined;
             return arr[Math.floor(Math.random() * arr.length)];
         }
         function randomInt(min, max) {
@@ -4766,7 +4745,7 @@
                 lowHp: ['Regenerating!', 'Star bright!'],
                 defeat: ['Sinking down...', 'Star light out...']
             },
-            // Ability tier (L26-40)
+            // Simple tier (L26-40)
             'boss-pirate': {
                 intro: ['Ahoy, matey!', 'Prepare to be boarded!', 'X marks the spot!'],
                 hit: ['Shiver me timbers!', 'Blimey!', 'Arrr!'],
@@ -5710,11 +5689,17 @@
             if (!overlay) return;
             overlay.className = '';
             overlay.innerHTML = '';
+            overlay.style.background = '';
             const theme = THEMES.find(t => t.id === themeId);
             if (!theme || !theme.weather) return;
 
             const w = theme.weather;
             overlay.className = 'weather-' + w;
+
+            if (w === 'aurora') {
+                overlay.style.background = 'none';
+                return;
+            }
 
             if (w === 'rain') {
                 for (let i = 0; i < 60; i++) {
@@ -6295,6 +6280,7 @@
         // Coconut projectile attack - thrown from right side toward boss
         function fireCoconutProjectile() {
             const bossEmoji = document.getElementById('bossEmoji');
+            if (!bossEmoji) return;
             const bossRect = bossEmoji.getBoundingClientRect();
             const coconut = document.createElement('div');
             coconut.className = 'coconut-projectile';
@@ -7454,6 +7440,44 @@
                     updateFactSM2(currentFact, calculateGrade(true));
                 }
 
+                // Auto-solved answers skip streak/score/XP to prevent inflation
+                // but still count toward boss battles and mystery boxes
+                if (isAutoSolved) {
+                    correctCount++;
+                    feedbackEl.textContent = '';
+                    feedbackEl.className = 'feedback';
+                    playSound('correct');
+                    answerEl.classList.remove('flash-correct','flash-wrong');
+                    void answerEl.offsetWidth;
+                    answerEl.classList.add('flash-correct');
+                    setTimeout(() => answerEl.classList.remove('flash-correct'), 300);
+
+                    // Boss every 15 correct answers
+                    if (correctCount > 0 && correctCount % 15 === 0) {
+                        if (problemTimeout) clearTimeout(problemTimeout);
+                        problemTimeout = setTimeout(startBossBattle, 400);
+                        return;
+                    }
+
+                    // Mystery box progress
+                    correctSinceLastBox++;
+                    if (correctSinceLastBox % 5 === 0) saveStickers();
+                    updateMysteryBoxHint();
+                    updateProgressBars();
+                    if (correctSinceLastBox >= nextBoxThreshold) {
+                        correctSinceLastBox = 0;
+                        nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
+                        saveStickers();
+                        if (problemTimeout) clearTimeout(problemTimeout);
+                        problemTimeout = setTimeout(showMysteryBox, 400);
+                        return;
+                    }
+
+                    if (problemTimeout) clearTimeout(problemTimeout);
+                    problemTimeout = setTimeout(generateProblem, 400);
+                    return;
+                }
+
                 streak++;
                 correctCount++;
                 if (streak > bestStreak) bestStreak = streak;
@@ -7730,7 +7754,7 @@
             document.getElementById('shopCoinCount').textContent = score;
             $score.textContent = score;
             renderShopGrid();
-            playSound('bonus');
+            playSound('purchase');
         }
 
         function loadPurchasedCostumes() { purchasedCostumes = load('purchased_costumes', []); }
@@ -7888,9 +7912,6 @@
                 return;
             }
 
-            // Reset grid class for other tabs
-            grid.className = 'modal-grid';
-
             const items = COSTUMES[currentCostumeTab] || [];
             const equippedKey = currentCostumeTab === 'hats' ? 'hat' :
                                currentCostumeTab === 'outfits' ? 'outfit' : 'accessory';
@@ -8014,6 +8035,7 @@
         function updateAvatarDisplay() {
             const avatar = AVATARS[selectedAvatar] || AVATARS.mango;
             const avatarContainer = document.getElementById('mangoAvatar');
+            if (!avatarContainer) return;
             const avatarSvg = avatarContainer.querySelector('svg');
             if (avatarSvg) {
                 avatarSvg.innerHTML = `<use href="#${avatar.svgId}"/>`;
@@ -8027,6 +8049,7 @@
             const outfitLayer = document.getElementById('costumeOutfitLayer');
             const accLayer = document.getElementById('costumeAccessoryLayer');
             const avatarEl = document.getElementById('mangoAvatar');
+            if (!hatLayer || !outfitLayer || !accLayer) return;
 
             const hat = COSTUMES.hats.find(h => h.id === equippedCostumes.hat);
             const outfit = COSTUMES.outfits.find(o => o.id === equippedCostumes.outfit);
@@ -8105,6 +8128,7 @@
                 _flushFactState();
                 _flushCumulativeStats();
                 if (_saveCoinsTimer) { clearTimeout(_saveCoinsTimer); _saveCoinsTimer = null; store('coins', score); }
+                saveStickers(); // Flush mystery box progress
             }
         });
 
@@ -8389,13 +8413,6 @@
             }
 
             // ===== BEACH ITEMS =====
-            // Surfboard
-            const surfboardGeo = new THREE.BoxGeometry(0.5, 0.15, 2.5);
-            const surfboard = new THREE.Mesh(surfboardGeo, pixelMat(0xff6b9d));
-            surfboard.position.set(5, -0.8, 12);
-            surfboard.rotation.y = 0.3;
-            scene.add(surfboard);
-
             // Tiki torches
             const tikiFlameParts = [];
             function createTikiTorch(x, z) {
@@ -8929,7 +8946,7 @@
             let animFrameId = null;
 
             function animate() {
-                if (document.hidden) return;
+                if (document.hidden) { animFrameId = null; return; }
                 animFrameId = requestAnimationFrame(animate);
                 time += 0.02;
 
