@@ -4296,11 +4296,11 @@
 
             <div class="settings-panel" id="settingsPanel">
                 <div class="settings-row">
-                    <button id="add" onclick="setOperation('add')">+</button>
-                    <button id="subtract" onclick="setOperation('subtract')">−</button>
-                    <button id="multiply" onclick="setOperation('multiply')">×</button>
-                    <button id="divide" onclick="setOperation('divide')">÷</button>
-                    <button id="mixed" class="active" onclick="setOperation('mixed')">Mix</button>
+                    <button id="add" onclick="toggleOperation('add')">+</button>
+                    <button id="subtract" onclick="toggleOperation('subtract')">−</button>
+                    <button id="multiply" onclick="toggleOperation('multiply')">×</button>
+                    <button id="divide" onclick="toggleOperation('divide')">÷</button>
+                    <button id="mixed" class="active" onclick="toggleOperation('mixed')">Mix</button>
                 </div>
                 <!-- Mode selection removed - Free Play only now -->
             </div>
@@ -5068,7 +5068,7 @@
 
         let num1, num2, correctAnswer, currentOp;
         let score = 0, streak = 0, bestStreak = 0;
-        let operation = 'mixed';
+        let selectedOperations = ['add', 'subtract', 'multiply', 'divide'];
         let gameActive = true, currentInput = '';
         let soundEnabled = true, audioContext = null;
         let correctCount = 0;
@@ -5089,10 +5089,13 @@
             shownRagePhrase: false
         };
 
-        // Adaptive difficulty (hidden from players)
-        let accuracyHistory = []; // Last 100 answers
-        const ACCURACY_WINDOW = 100;
-        let difficultyModifier = 0; // -2 to +2 range
+        // Per-operation accuracy windows for blended tier sampling
+        let opAccuracyWindows = {
+            add: [],
+            subtract: [],
+            multiply: [],
+            divide: []
+        };
 
         // Combo system
         let lastAnswerTime = 0;
@@ -5101,6 +5104,21 @@
 
         // Problem generation timeout (prevents race conditions)
         let problemTimeout = null;
+
+        // Error re-teaching retry queue
+        let retryQueue = [];
+        const MAX_RETRIES = 3;
+        const RETRY_DELAY = 2;
+        let isRetryProblem = false;
+
+        // Graduated re-entry for lapsed play
+        let isReEntrySession = false;
+        let reEntryReviewCount = 0;
+        let reEntryConfidenceCount = 0;
+        const RE_ENTRY_GAP_DAYS = 3;
+        const RE_ENTRY_MAX_REVIEWS = 8;
+        const RE_ENTRY_WARMUP = 4;
+        let sessionProblemCount = 0;
 
         // Auto-Helper System (replaces manual power-ups)
         let struggleState = {
@@ -5428,9 +5446,10 @@
         });
 
         function updateSettingsLabel() {
-            const op = OP_SYMBOLS[operation] || '÷';
-            // Hide tier from kids - just show operation mode
-            document.getElementById('settingsLabel').textContent = `${op} • Free Play`;
+            const allOps = ['add', 'subtract', 'multiply', 'divide'];
+            const isMixed = allOps.every(o => selectedOperations.includes(o));
+            const label = isMixed ? 'Mixed' : selectedOperations.map(o => OP_SYMBOLS[o]).join(' ');
+            document.getElementById('settingsLabel').textContent = `${label} • Free Play`;
         }
 
         // XP and Level System (exponential curve)
@@ -5992,6 +6011,7 @@
         }
 
         function showAchievements() {
+            if (bossActive) return;
             const grid = document.getElementById('achievementsGrid');
             grid.innerHTML = ACHIEVEMENTS.map(a => {
                 const unlocked = unlockedAchievements.includes(a.id);
@@ -6103,9 +6123,11 @@
                     if (collected >= 40) checkAchievement('sticker_40', true);
                     if (collected === STICKERS.length) checkAchievement('sticker_all', true);
                 }
+
+                // Show close button AFTER sticker is revealed, not before
+                document.getElementById('mysteryCloseBtn').classList.remove('hidden');
             }, 300);
 
-            document.getElementById('mysteryCloseBtn').classList.remove('hidden');
             playSound('bonus');
         }
 
@@ -6191,7 +6213,11 @@
                 if (!bossAbilityState.shownRagePhrase) {
                     bossAbilityState.shownRagePhrase = true;
                     showBossSpeech('lowHp');
-                    showAbilityFlash('ENRAGED!');
+                    // Only show "ENRAGED!" flash for bosses that actually have the enrage ability
+                    const abilities = getBossAbilities(bossCurrentBoss);
+                    if (abilities.some(a => a.type === 'enrage')) {
+                        showAbilityFlash('😤 ENRAGED!');
+                    }
                 }
             } else if (hpPercent <= 50) {
                 emoji.classList.add('phase-50');
@@ -6353,35 +6379,33 @@
                 // Show intro speech for bosses with personality
                 showBossSpeech('intro');
                 generateBossProblem();
-            }, 800);
 
-            // Timer with enrage speed support (smooth fractional decrement)
-            if (bossInterval) clearInterval(bossInterval);
-            bossInterval = setInterval(() => {
-                bossTimer -= bossTimerSpeed;
-                if (bossTimer < 0) bossTimer = 0;
-                const timerEl = document.getElementById('bossTimer');
-                timerEl.textContent = Math.ceil(bossTimer);
-                if (bossTimer <= 10) timerEl.classList.add('danger');
-                if (bossTimer <= 0) endBossBattle(false);
-            }, 1000);
+                // Start timer AFTER problem is visible (not during entrance animation)
+                if (bossInterval) clearInterval(bossInterval);
+                bossInterval = setInterval(() => {
+                    bossTimer -= bossTimerSpeed;
+                    if (bossTimer < 0) bossTimer = 0;
+                    const timerEl = document.getElementById('bossTimer');
+                    timerEl.textContent = Math.ceil(bossTimer);
+                    if (bossTimer <= 10) timerEl.classList.add('danger');
+                    if (bossTimer <= 0) endBossBattle(false);
+                }, 1000);
+            }, 800);
         }
 
         function generateBossProblem() {
-            // Boss problems are 1-2 tiers harder than player's current tier
-            const ops = operation === 'mixed' ? ['add', 'subtract', 'multiply', 'divide'] : [operation];
+            // Boss problems use same difficulty as normal play (timer is the challenge)
+            const ops = [...selectedOperations];
             const currentBossOp = ops[Math.floor(Math.random() * ops.length)];
 
-            // Get player's tier for this operation and bump it up for boss difficulty
-            const playerTier = playerTiers[currentBossOp] || 1;
-            const bossTier = Math.min(5, playerTier + (bossCurrentBoss?.tier === 'elite' ? 1 : 0));
+            // Use blended tier sampling (same as normal play, no tier bump)
+            const bossTier = pickBlendedTier(currentBossOp);
             const tierConfig = DIFFICULTY_TIERS[bossTier - 1];
             const maxNum = tierConfig.maxNum;
 
             let num1, num2, display;
 
             if (currentBossOp === 'add') {
-                // Generate numbers appropriate for the boss tier
                 const min = bossTier > 1 ? DIFFICULTY_TIERS[bossTier - 2].maxNum : 1;
                 num1 = Math.floor(Math.random() * (maxNum - min)) + min;
                 num2 = Math.floor(Math.random() * Math.min(maxNum, 100)) + 1;
@@ -6394,14 +6418,12 @@
                 bossCorrectAnswer = num1 - num2;
                 display = `${num1} − ${num2}`;
             } else if (currentBossOp === 'multiply') {
-                // Multiplication uses smaller numbers but scaled by tier
                 const m = Math.min(12, 3 + bossTier * 2);
                 num1 = Math.floor(Math.random() * m) + 1;
                 num2 = Math.floor(Math.random() * m) + 1;
                 bossCorrectAnswer = num1 * num2;
                 display = `${num1} × ${num2}`;
             } else {
-                // Division
                 const m = Math.min(12, 3 + bossTier * 2);
                 num2 = Math.floor(Math.random() * m) + 1;
                 bossCorrectAnswer = Math.floor(Math.random() * m) + 1;
@@ -6411,7 +6433,20 @@
 
             // Confuse ability: briefly show scrambled display, then reveal the real one
             if (bossAbilityState.confuseChance && Math.random() < bossAbilityState.confuseChance) {
-                const scramble = (n) => { const d = String(n).split(''); for (let i = d.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [d[i], d[j]] = [d[j], d[i]]; } return d.join(''); };
+                const scramble = (n) => {
+                    const num = parseInt(n, 10);
+                    // For single-digit or repeated-digit numbers, offset by 1-3 to actually confuse
+                    if (n.length <= 1 || new Set(n.split('')).size === 1) {
+                        const offset = 1 + Math.floor(Math.random() * 3);
+                        return String(Math.max(1, num + (Math.random() < 0.5 ? offset : -offset)));
+                    }
+                    const d = n.split('');
+                    for (let i = d.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [d[i], d[j]] = [d[j], d[i]]; }
+                    // If shuffle produced the same result, swap first two digits
+                    const result = d.join('');
+                    if (result === n) { [d[0], d[1]] = [d[1], d[0]]; return d.join(''); }
+                    return result;
+                };
                 const fakeDisplay = display.replace(/\d+/g, m => scramble(m));
                 document.getElementById('bossProblem').textContent = `${fakeDisplay} = ?`;
                 showAbilityFlash('😵 CONFUSED!');
@@ -6642,43 +6677,31 @@
             playSound('tap'); haptic('light');
         }
 
-        // Adaptive difficulty - hidden from players
-        function trackAccuracy(isCorrect) {
-            accuracyHistory.push(isCorrect ? 1 : 0);
-            if (accuracyHistory.length > ACCURACY_WINDOW) {
-                accuracyHistory.shift();
+        // Track per-operation accuracy for blended tier sampling
+        function trackOpAccuracy(op, isCorrect) {
+            if (!opAccuracyWindows[op]) opAccuracyWindows[op] = [];
+            opAccuracyWindows[op].push(isCorrect);
+            if (opAccuracyWindows[op].length > 20) {
+                opAccuracyWindows[op].shift();
             }
-            // Adjust difficulty every 20 answers
-            if (accuracyHistory.length >= 20 && accuracyHistory.length % 20 === 0) {
-                adjustDifficulty();
-            }
-            // Save periodically
-            if (accuracyHistory.length % 10 === 0) {
-                saveAdaptiveDifficulty();
+            if (opAccuracyWindows[op].length % 5 === 0) {
+                saveOpAccuracyWindows();
             }
         }
 
-        function adjustDifficulty() {
-            if (accuracyHistory.length < 20) return;
-            const recentAccuracy = accuracyHistory.slice(-20).reduce((a, b) => a + b, 0) / 20;
-            // Slowly adjust based on performance
-            if (recentAccuracy > 0.9 && difficultyModifier < 2) {
-                difficultyModifier = Math.min(2, difficultyModifier + 0.2);
-            } else if (recentAccuracy < 0.6 && difficultyModifier > -2) {
-                difficultyModifier = Math.max(-2, difficultyModifier - 0.2);
-            }
+        function getOpAccuracy(op) {
+            const window = opAccuracyWindows[op] || [];
+            if (window.length === 0) return 0.7; // Default: conservative
+            return window.filter(Boolean).length / window.length;
         }
 
-        function saveAdaptiveDifficulty() {
-            store('adaptive', { history: accuracyHistory.slice(-ACCURACY_WINDOW), modifier: difficultyModifier });
+        function saveOpAccuracyWindows() {
+            store('op_accuracy', opAccuracyWindows);
         }
 
-        function loadAdaptiveDifficulty() {
-            const data = load('adaptive', null);
-            if (data) {
-                accuracyHistory = data.history || [];
-                difficultyModifier = data.modifier || 0;
-            }
+        function loadOpAccuracyWindows() {
+            const saved = load('op_accuracy', null);
+            if (saved) opAccuracyWindows = saved;
         }
 
         // ============================================
@@ -6778,7 +6801,7 @@
             return facts;
         }
 
-        // Track tier progress and check for advancement
+        // Track tier progress: advancement and demotion using rolling accuracy
         function trackTierProgress(op, isCorrect) {
             if (!tierTracking[op]) {
                 tierTracking[op] = { correct: 0, total: 0 };
@@ -6793,19 +6816,29 @@
             if (tierTracking[op].total >= TIER_ADVANCE_MINIMUM) {
                 const accuracy = tierTracking[op].correct / tierTracking[op].total;
                 if (accuracy >= TIER_ADVANCE_THRESHOLD && playerTiers[op] < 5) {
-                    // Advance to next tier!
                     playerTiers[op]++;
-                    tierTracking[op] = { correct: 0, total: 0 }; // Reset tracking
+                    tierTracking[op] = { correct: 0, total: 0 };
                     showTierAdvancement(op, playerTiers[op]);
                     saveTierProgress();
                     return true;
                 } else if (accuracy < TIER_ADVANCE_THRESHOLD * 0.6) {
-                    // Reset if accuracy too low (below 45%) - they need more practice
                     tierTracking[op] = { correct: 0, total: 0 };
                 }
             }
 
-            // Save progress periodically (every 5 problems) to prevent loss
+            // Tier demotion: if rolling accuracy drops below 50% for 20+ problems
+            const opWindow = opAccuracyWindows[op] || [];
+            if (opWindow.length >= 20 && playerTiers[op] > 1) {
+                const rollingAccuracy = opWindow.filter(Boolean).length / opWindow.length;
+                if (rollingAccuracy < 0.50) {
+                    playerTiers[op]--;
+                    tierTracking[op] = { correct: 0, total: 0 };
+                    showToast(`${({ add: 'Addition', subtract: 'Subtraction', multiply: 'Multiplication', divide: 'Division' })[op]} adjusted — easier problems incoming!`, 3000);
+                    saveTierProgress();
+                    return false;
+                }
+            }
+
             if (tierTracking[op].total % 5 === 0) {
                 saveTierProgress();
             }
@@ -6835,6 +6868,36 @@
             const savedTracking = load('tier_tracking', null);
             if (savedTiers) playerTiers = savedTiers;
             if (savedTracking) tierTracking = savedTracking;
+        }
+
+        // Graduated re-entry: detect lapsed play and ease back in
+        function checkReEntry() {
+            const lastSession = load('last_session_ts', 0);
+            const now = Date.now();
+            const gapDays = (now - lastSession) / (24 * 60 * 60 * 1000);
+
+            if (lastSession > 0 && gapDays > RE_ENTRY_GAP_DAYS) {
+                isReEntrySession = true;
+                reEntryReviewCount = 0;
+                reEntryConfidenceCount = 0;
+                sessionProblemCount = 0;
+
+                // Decay intervals for overdue facts
+                mathFacts.forEach(fact => {
+                    if (fact.ef !== undefined && fact.nextReview < now) {
+                        fact.interval = Math.max(1, Math.round(fact.interval * 0.5));
+                        fact.nextReview = now + (fact.interval * 24 * 60 * 60 * 1000);
+                    }
+                });
+                saveFactState();
+            }
+
+            // Update session timestamp
+            store('last_session_ts', now);
+        }
+
+        function updateSessionTimestamp() {
+            store('last_session_ts', Date.now());
         }
 
         // ==========================================
@@ -7031,6 +7094,9 @@
 
             document.getElementById('strategyOverlay').classList.add('show');
 
+            // Auto-dismiss after 15 seconds so kids don't get stuck
+            if (strategyTimeout) clearTimeout(strategyTimeout);
+            strategyTimeout = setTimeout(() => dismissStrategyHint(true), 15000);
         }
 
         // Dismiss strategy hint (minimum 5 seconds before tap can dismiss)
@@ -7057,17 +7123,28 @@
             mathFacts = generateMathFacts();
             const savedState = loadFactState();
 
-            // Apply saved SM-2 state to facts
+            // Build ID set for commutative linking
+            const factIds = new Set(mathFacts.map(f => f.id));
+
+            // Apply saved SM-2 state and commutative links
             mathFacts.forEach(fact => {
                 if (savedState[fact.id]) {
                     Object.assign(fact, savedState[fact.id]);
                 } else {
-                    // Default SM-2 state for new facts
-                    fact.ef = 2.5;           // Easiness factor
-                    fact.interval = 1;       // Days until next review
-                    fact.repetitions = 0;    // Successful reviews in a row
-                    fact.nextReview = Date.now(); // Due now
+                    fact.ef = 2.5;
+                    fact.interval = 1;
+                    fact.repetitions = 0;
+                    fact.nextReview = Date.now();
                     fact.lastReview = null;
+                }
+
+                // Add commutative links for add and multiply (not subtract/divide)
+                if (fact.op === 'add' && fact.num1 !== fact.num2) {
+                    const pairId = `add_${fact.num2}_${fact.num1}`;
+                    if (factIds.has(pairId)) fact.commutativeId = pairId;
+                } else if (fact.op === 'multiply' && fact.num1 !== fact.num2) {
+                    const pairId = `mul_${fact.num2}_${fact.num1}`;
+                    if (factIds.has(pairId)) fact.commutativeId = pairId;
                 }
             });
         }
@@ -7084,14 +7161,12 @@
 
         // SM-2 Algorithm: Update fact after answer
         function updateFactSM2(fact, grade) {
-            // grade: 0=wrong, 3=correct-slow, 4=correct-good, 5=correct-fast
+            const oldEf = fact.ef;
 
             if (grade < 3) {
-                // Failed - reset to beginning
                 fact.repetitions = 0;
                 fact.interval = 1;
             } else {
-                // Success - increase interval
                 if (fact.repetitions === 0) {
                     fact.interval = 1;
                 } else if (fact.repetitions === 1) {
@@ -7109,47 +7184,146 @@
             fact.nextReview = Date.now() + (fact.interval * 24 * 60 * 60 * 1000);
             fact.lastReview = Date.now();
 
-            // Save state
+            // Commutative partial credit: apply 30% of EF delta to pair
+            if (fact.commutativeId) {
+                const pair = mathFacts.find(f => f.id === fact.commutativeId);
+                if (pair && pair.ef !== undefined) {
+                    const efDelta = fact.ef - oldEf;
+                    pair.ef = Math.max(1.3, pair.ef + efDelta * 0.3);
+                    if (grade >= 3) {
+                        // Reduce pair's interval by 30% (brings review sooner)
+                        pair.interval = Math.max(1, Math.round(pair.interval * 0.7));
+                        pair.nextReview = Date.now() + (pair.interval * 24 * 60 * 60 * 1000);
+                    } else {
+                        // Apply 30% of penalty: slightly reduce pair interval
+                        pair.interval = Math.max(1, Math.round(pair.interval * 0.85));
+                        pair.nextReview = Date.now() + (pair.interval * 24 * 60 * 60 * 1000);
+                    }
+                }
+            }
+
             saveFactState();
         }
 
-        // Calculate grade based on correctness and response time
-        function calculateGrade(isCorrect, responseTimeMs) {
-            if (!isCorrect) return 0;
-            if (responseTimeMs < 2000) return 5;  // Fast & correct (under 2s)
-            if (responseTimeMs < 4000) return 4;  // Good (2-4s)
-            return 3;  // Correct but slow (over 4s)
+        // Calculate grade: binary correctness only (no time pressure)
+        function calculateGrade(isCorrect) {
+            return isCorrect ? 5 : 0;
         }
 
-        // Get facts filtered by current operation
-        function getFactsForOperation(op) {
-            if (op === 'mixed') {
-                // For mixed mode, filter each operation by its tier
-                return mathFacts.filter(f => f.tier <= (playerTiers[f.op] || 1));
+        // Get tier blend weights based on accuracy
+        function getTierBlendWeights(accuracy) {
+            if (accuracy < 0.55) return { below: 0.60, current: 0.30, above: 0.10 };
+            if (accuracy < 0.70) return { below: 0.30, current: 0.55, above: 0.15 };
+            if (accuracy < 0.85) return { below: 0.15, current: 0.65, above: 0.20 };
+            return { below: 0.10, current: 0.45, above: 0.45 };
+        }
+
+        // Pick a tier for a given operation using blended sampling
+        function pickBlendedTier(op) {
+            const homeTier = playerTiers[op] || 1;
+            const accuracy = getOpAccuracy(op);
+            const weights = getTierBlendWeights(accuracy);
+            const roll = Math.random();
+            let targetTier;
+            if (roll < weights.below) {
+                targetTier = Math.max(1, homeTier - 1);
+            } else if (roll < weights.below + weights.current) {
+                targetTier = homeTier;
+            } else {
+                targetTier = Math.min(5, homeTier + 1);
             }
-            const playerTier = playerTiers[op] || 1;
-            return mathFacts.filter(f => f.op === op && f.tier <= playerTier);
+            return targetTier;
+        }
+
+        // Get facts filtered by selected operations with blended tier sampling
+        function getFactsForOperation(ops) {
+            if (!Array.isArray(ops)) ops = [ops];
+            // Collect facts across all requested ops using blended tier for each
+            let result = [];
+            for (const op of ops) {
+                const tier = pickBlendedTier(op);
+                const opFacts = mathFacts.filter(f => f.op === op && f.tier <= tier);
+                result = result.concat(opFacts);
+            }
+            return result;
+        }
+
+        // Choose which operation to draw from using weakness-weighted selection
+        function pickWeightedOperation() {
+            if (selectedOperations.length <= 1) return selectedOperations;
+            const accuracies = selectedOperations.map(op => ({ op, acc: getOpAccuracy(op) }));
+            const minAcc = Math.min(...accuracies.map(a => a.acc));
+            const maxAcc = Math.max(...accuracies.map(a => a.acc));
+
+            // If all similar (within 10%), distribute evenly
+            if (maxAcc - minAcc < 0.10) {
+                return [selectedOperations[Math.floor(Math.random() * selectedOperations.length)]];
+            }
+
+            // Weakest gets ~40%, rest split 60% proportionally (inverse accuracy)
+            const weakest = accuracies.filter(a => a.acc === minAcc).map(a => a.op);
+            const roll = Math.random();
+            if (roll < 0.40) {
+                return [weakest[Math.floor(Math.random() * weakest.length)]];
+            }
+            // Pick from remaining ops proportional to inverse accuracy
+            const others = accuracies.filter(a => a.acc > minAcc);
+            if (others.length === 0) return [weakest[0]];
+            const totalInv = others.reduce((s, a) => s + (1 - a.acc), 0);
+            let r = Math.random() * totalInv;
+            for (const a of others) {
+                r -= (1 - a.acc);
+                if (r <= 0) return [a.op];
+            }
+            return [others[others.length - 1].op];
         }
 
         // Select next fact using spaced repetition
         function selectNextFact() {
             const now = Date.now();
-            const facts = getFactsForOperation(operation);
+            // In multi-op mode, pick operation first via weakness weighting
+            const opsToUse = selectedOperations.length > 1 ? pickWeightedOperation() : selectedOperations;
+            const facts = getFactsForOperation(opsToUse);
+
+            // Track session problem count for re-entry exit
+            sessionProblemCount++;
+            if (isReEntrySession && sessionProblemCount > 10) {
+                isReEntrySession = false;
+            }
+            // Update session timestamp every 10 problems
+            if (sessionProblemCount % 10 === 0) {
+                updateSessionTimestamp();
+            }
+
+            // Re-entry mode: confidence builders first
+            if (isReEntrySession && reEntryConfidenceCount < RE_ENTRY_WARMUP) {
+                reEntryConfidenceCount++;
+                // Pick easiest mastered facts (highest EF)
+                const mastered = facts.filter(f => f.repetitions > 0).sort((a, b) => b.ef - a.ef);
+                if (mastered.length > 0) {
+                    const top = mastered.slice(0, 5);
+                    return top[Math.floor(Math.random() * top.length)];
+                }
+            }
 
             // Priority 1: Due facts (nextReview <= now), sorted by hardest first
             const dueFacts = facts.filter(f => f.nextReview <= now);
             if (dueFacts.length > 0) {
-                // Sort by lowest EF (hardest), then oldest review
-                dueFacts.sort((a, b) => a.ef - b.ef || a.nextReview - b.nextReview);
-                // Add some randomness among the hardest facts
-                const hardest = dueFacts.filter(f => f.ef <= dueFacts[0].ef + 0.3);
-                return hardest[Math.floor(Math.random() * hardest.length)];
+                // Re-entry cap: limit due reviews per session
+                if (isReEntrySession && reEntryReviewCount >= RE_ENTRY_MAX_REVIEWS) {
+                    // Skip to new/upcoming facts instead
+                } else {
+                    if (isReEntrySession) reEntryReviewCount++;
+                    // Sort by lowest EF (hardest), then oldest review
+                    dueFacts.sort((a, b) => a.ef - b.ef || a.nextReview - b.nextReview);
+                    const hardest = dueFacts.filter(f => f.ef <= dueFacts[0].ef + 0.3);
+                    return hardest[Math.floor(Math.random() * hardest.length)];
+                }
             }
 
             // Priority 2: New facts (never reviewed) - introduce gradually
             const newFacts = facts.filter(f => f.repetitions === 0);
             if (newFacts.length > 0) {
-                // Shuffle to avoid bias toward beginning of array, then pick from first 5
                 for (let i = newFacts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [newFacts[i], newFacts[j]] = [newFacts[j], newFacts[i]]; }
                 return newFacts[Math.floor(Math.random() * Math.min(5, newFacts.length))];
             }
@@ -7161,13 +7335,22 @@
         }
 
         function generateProblem() {
-            // Use spaced repetition to select the next fact
-            currentFact = selectNextFact();
+            // Check retry queue first (error re-teaching)
+            isRetryProblem = false;
+            retryQueue.forEach(entry => entry.problemsUntilRetry--);
+            const readyRetry = retryQueue.findIndex(entry => entry.problemsUntilRetry <= 0);
+            if (readyRetry >= 0) {
+                currentFact = retryQueue.splice(readyRetry, 1)[0].fact;
+                isRetryProblem = true;
+            } else {
+                // Use spaced repetition to select the next fact
+                currentFact = selectNextFact();
+            }
 
             // Safety check - if no facts available, generate a simple problem
             if (!currentFact) {
                 const a = 1 + Math.floor(Math.random() * 10), b = 1 + Math.floor(Math.random() * 10);
-                const fallbackOp = operation === 'mixed' ? 'add' : operation;
+                const fallbackOp = selectedOperations[Math.floor(Math.random() * selectedOperations.length)];
                 if (fallbackOp === 'multiply') currentFact = { num1: a, num2: b, op: fallbackOp, answer: a * b };
                 else if (fallbackOp === 'divide') currentFact = { num1: a * b, num2: a, op: fallbackOp, answer: b };
                 else if (fallbackOp === 'subtract') { const big = Math.max(a, b), sm = Math.min(a, b); currentFact = { num1: big, num2: sm, op: fallbackOp, answer: big - sm }; }
@@ -7217,7 +7400,7 @@
             }
 
             if (userAnswer === correctAnswer) {
-                trackAccuracy(true); // Adaptive difficulty tracking
+                if (currentFact) trackOpAccuracy(currentFact.op, true);
                 updatePlayerSkillLevel(true); // Update auto-helper skill tracking
 
                 // Track tier progress for advancement
@@ -7227,9 +7410,7 @@
 
                 // SM-2 spaced repetition update (skip fallback facts without SM-2 props)
                 if (currentFact && currentFact.ef !== undefined) {
-                    const responseTime = Date.now() - problemStartTime;
-                    const grade = calculateGrade(true, responseTime);
-                    updateFactSM2(currentFact, grade);
+                    updateFactSM2(currentFact, calculateGrade(true));
                 }
 
                 streak++;
@@ -7295,15 +7476,13 @@
                 if (problemTimeout) clearTimeout(problemTimeout);
                 problemTimeout = setTimeout(generateProblem, 400);
             } else {
-                trackAccuracy(false); // Adaptive difficulty tracking
-                updatePlayerSkillLevel(false); // Update auto-helper skill tracking
+                if (currentFact) trackOpAccuracy(currentFact.op, false);
+                updatePlayerSkillLevel(false);
 
-                // Track tier progress for wrong answers
                 if (currentFact) {
                     trackTierProgress(currentFact.op, false);
                 }
 
-                // Track struggle for auto-helper
                 struggleState.wrongAttemptsOnProblem++;
                 if (streak > 0) {
                     struggleState.lastStreakLoss = Date.now();
@@ -7311,11 +7490,9 @@
 
                 // SM-2 spaced repetition update - wrong answer resets the fact
                 if (currentFact && currentFact.ef !== undefined) {
-                    updateFactSM2(currentFact, 0); // Grade 0 = failed
+                    updateFactSM2(currentFact, 0);
                 }
 
-                feedbackEl.textContent = '';
-                feedbackEl.className = 'feedback';
                 playSound('wrong');
                 haptic('error');
                 streak = 0;
@@ -7326,32 +7503,64 @@
                 void answerEl.offsetWidth;
                 answerEl.classList.add('flash-wrong');
                 setTimeout(() => answerEl.classList.remove('flash-wrong'), 300);
+
+                // Show correct answer for 2 seconds (error re-teaching)
+                const correctDisplay = `${num1} ${OP_SYMBOLS[currentOp]} ${num2} = ${correctAnswer}`;
+                feedbackEl.textContent = correctDisplay;
+                feedbackEl.className = 'feedback';
+
+                // Add to retry queue (re-present 2-3 problems later)
+                if (currentFact && currentFact.ef !== undefined) {
+                    const retryDelay = isRetryProblem ? 1 : RETRY_DELAY;
+                    if (retryQueue.length >= MAX_RETRIES) retryQueue.shift();
+                    retryQueue.push({ fact: currentFact, problemsUntilRetry: retryDelay });
+                }
+                isRetryProblem = false;
+
                 currentInput = '';
                 updateAnswerDisplay();
 
-                // Show strategy hint after wrong answer
-                // Cooldown: at least 10 seconds OR 3 problems since last hint
-                // Exception: always show for addition sums > 20
-                const timeSinceHint = Date.now() - lastStrategyTime;
-                const isLargeSum = currentOp === 'add' && correctAnswer > 20;
-                const canShowHint = (isLargeSum || timeSinceHint > 10000 || problemsSinceStrategy >= 3) && !showingStrategy;
+                // After 2s showing correct answer, continue
+                if (problemTimeout) clearTimeout(problemTimeout);
+                problemTimeout = setTimeout(() => {
+                    feedbackEl.textContent = '';
+                    feedbackEl.className = 'feedback';
 
-                if (canShowHint) {
-                    setTimeout(() => {
+                    // Show strategy hint after wrong answer
+                    const timeSinceHint = Date.now() - lastStrategyTime;
+                    const isLargeSum = currentOp === 'add' && correctAnswer > 20;
+                    const canShowHint = (isLargeSum || timeSinceHint > 10000 || problemsSinceStrategy >= 3) && !showingStrategy;
+
+                    if (canShowHint) {
                         showStrategyHint(num1, num2, currentOp, correctAnswer);
-                    }, 500);
-                    return;
-                }
-
-                // Check if player is struggling and needs help
-                checkStruggleAndHelp();
+                    } else {
+                        checkStruggleAndHelp();
+                        generateProblem();
+                    }
+                }, 2000);
             }
         }
 
-        function setOperation(op) {
-            operation = op;
+        function toggleOperation(op) {
+            const allOps = ['add', 'subtract', 'multiply', 'divide'];
+            if (op === 'mixed') {
+                selectedOperations = [...allOps];
+            } else {
+                const idx = selectedOperations.indexOf(op);
+                if (idx >= 0) {
+                    // Don't allow deselecting the last one
+                    if (selectedOperations.length <= 1) return;
+                    selectedOperations.splice(idx, 1);
+                } else {
+                    selectedOperations.push(op);
+                }
+            }
+
+            // Update button highlights
+            const isMixed = allOps.every(o => selectedOperations.includes(o));
             document.querySelectorAll('.settings-row button').forEach(b => {
-                if (['add', 'subtract', 'multiply', 'divide', 'mixed'].includes(b.id)) b.classList.toggle('active', b.id === op);
+                if (allOps.includes(b.id)) b.classList.toggle('active', selectedOperations.includes(b.id));
+                if (b.id === 'mixed') b.classList.toggle('active', isMixed);
             });
 
             const selectedBtn = document.getElementById(op);
@@ -7365,6 +7574,7 @@
                 }, 300);
             }
 
+            store('selected_ops', selectedOperations);
             updateSettingsLabel();
             resetGame();
         }
@@ -7399,6 +7609,8 @@
             gameActive = true;
             correctCount = 0;
             bossesDefeated = 0;
+            retryQueue = [];
+            isRetryProblem = false;
             correctSinceLastBox = 0;
             nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
             saveStickers(); // Persist box progress reset
@@ -7483,6 +7695,7 @@
         function savePurchasedCostumes() { store('purchased_costumes', purchasedCostumes); }
 
         function openShopModal() {
+            if (bossActive) return;
             showModal('shopModal');
             document.getElementById('shopCoinCount').textContent = score;
             showShopTab('hats');
@@ -7836,7 +8049,9 @@
         loadProgression();
         loadCumulativeStats();
         loadScene();
-        loadAdaptiveDifficulty();
+        loadOpAccuracyWindows();
+        selectedOperations = load('selected_ops', ['add', 'subtract', 'multiply', 'divide']);
+        localStorage.removeItem('mathblaster_adaptive'); // Clean up old key
         loadAvatar(); // Load selected avatar (before costumes so offsets are correct)
         loadCostumes(); // Load saved costumes
         loadCoins(); // Load persistent coin balance
@@ -7846,7 +8061,17 @@
         loadStickers(); // Load sticker collection
         initializeFactDatabase(); // Initialize spaced repetition fact database
         loadTierProgress(); // Load difficulty tier progress
+        checkReEntry(); // Check for lapsed play and ease back in
         updateSettingsLabel();
+        // Highlight operation buttons based on loaded selectedOperations
+        {
+            const allOps = ['add', 'subtract', 'multiply', 'divide'];
+            const isMixed = allOps.every(o => selectedOperations.includes(o));
+            document.querySelectorAll('.settings-row button').forEach(b => {
+                if (allOps.includes(b.id)) b.classList.toggle('active', selectedOperations.includes(b.id));
+                if (b.id === 'mixed') b.classList.toggle('active', isMixed);
+            });
+        }
         resetProblemStruggleState(); // Initialize auto-helper state
         generateProblem();
         _initDone = true;
