@@ -8221,7 +8221,7 @@
                     overlayHTML += `<svg class="costume-layer-preview" style="top:${previewPos.eyeY}px;left:50%;transform:translateX(-50%);width:46px;height:20px;"><use href="#${acc.svgId}"/></svg>`;
                 } else if (acc.position === 'tail') {
                     // Tail accessories - extend up-right from mid-body
-                    overlayHTML += `<svg class="costume-layer-preview" style="top:4px;right:-32px;width:36px;height:36px;transform:rotate(-10deg);transform-origin:bottom left;"><use href="#${acc.svgId}"/></svg>`;
+                    overlayHTML += `<svg class="costume-layer-preview" style="top:4px;right:-10px;width:36px;height:36px;transform:rotate(-10deg);transform-origin:bottom left;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
                     // Held accessories (wand, food, balloon) - to the right side
                     overlayHTML += `<svg class="costume-layer-preview" style="top:0px;right:${previewPos.accX}px;width:46px;height:46px;"><use href="#${acc.svgId}"/></svg>`;
@@ -8287,7 +8287,7 @@
                     accLayer.innerHTML = `<svg style="position:absolute;top:${pos.eyeY}px;left:50%;transform:translateX(-50%);width:42px;height:18px;"><use href="#${acc.svgId}"/></svg>`;
                 } else if (acc.position === 'tail') {
                     // Tail accessories - extend up-right from mid-body
-                    accLayer.innerHTML = `<svg style="position:absolute;top:2px;right:-30px;width:34px;height:34px;transform:rotate(-10deg);transform-origin:bottom left;"><use href="#${acc.svgId}"/></svg>`;
+                    accLayer.innerHTML = `<svg style="position:absolute;top:2px;right:-8px;width:34px;height:34px;transform:rotate(-10deg);transform-origin:bottom left;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
                     // Held accessories - to the right side
                     accLayer.innerHTML = `<svg style="position:absolute;top:0px;right:${pos.accX}px;width:44px;height:44px;"><use href="#${acc.svgId}"/></svg>`;
