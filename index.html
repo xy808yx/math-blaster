@@ -131,7 +131,7 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
-            background: rgba(26, 10, 46, 0.75);
+            background: var(--container-bg);
             border-radius: 20px;
             padding: 12px;
             padding-bottom: 20px;
@@ -546,10 +546,11 @@
             letter-spacing: 0.3px;
             white-space: nowrap;
         }
-        .rarity-badge.common { background: #666; color: #fff; }
-        .rarity-badge.rare { background: #5dade2; color: #1a0a2e; }
-        .rarity-badge.epic { background: #9b59b6; color: #fff; }
-        .rarity-badge.legendary { background: linear-gradient(135deg, #ffd93d, #ff6b9d); color: #1a0a2e; }
+        .rarity-badge.rarity-common { background: #666; color: #fff; }
+        .rarity-badge.rarity-uncommon { background: #5dade2; color: #1a0a2e; }
+        .rarity-badge.rarity-rare { background: #5dade2; color: #1a0a2e; }
+        .rarity-badge.rarity-epic { background: #9b59b6; color: #fff; }
+        .rarity-badge.rarity-legendary { background: linear-gradient(135deg, #ffd93d, #ff6b9d); color: #1a0a2e; }
 
         /* Multiple Dance Animations */
         @keyframes avatarDanceWiggle {
@@ -2662,7 +2663,7 @@
         </symbol>
 
         <!-- Accessory: Heart Sunglasses (viewBox cropped to eye area like regular sunglasses) -->
-        <symbol id="costume-acc-heartglasses" viewBox="0 5 16 6">
+        <symbol id="costume-acc-heartglasses" viewBox="0 5 16 8">
             <!-- Left heart lens -->
             <rect x="1" y="7" width="2" height="1" fill="#ff69b4"/>
             <rect x="4" y="7" width="2" height="1" fill="#ff69b4"/>
@@ -3524,8 +3525,8 @@
             <rect x="26" y="20" width="1" height="1" fill="#ce93d8"/>
             <!-- Crown (boss of the sea) -->
             <rect x="12" y="0" width="8" height="2" fill="#ffd700"/>
-            <rect x="14" y="-1" width="2" height="1" fill="#ffc107"/>
-            <rect x="18" y="-1" width="2" height="1" fill="#ffc107"/>
+            <rect x="14" y="0" width="2" height="1" fill="#ffc107"/>
+            <rect x="18" y="0" width="2" height="1" fill="#ffc107"/>
         </symbol>
 
         <!-- ========== STICKERS (80 total) ========== -->
@@ -4470,7 +4471,8 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
         function store(key, val) {
-            localStorage.setItem('mathblaster_' + key, JSON.stringify(val));
+            try { localStorage.setItem('mathblaster_' + key, JSON.stringify(val)); }
+            catch(e) { /* localStorage full — game continues */ }
         }
         function load(key, fallback) {
             try { const s = localStorage.getItem('mathblaster_' + key); return s !== null ? JSON.parse(s) : fallback; }
@@ -5363,7 +5365,6 @@
         // ========== END STICKER SYSTEM ==========
 
         let mysteryBoxesOpened = 0;
-        let bossesDefeated = 0;
 
         // Cumulative stats for tiered achievements (persisted)
         let cumulativeStats = {
@@ -6413,7 +6414,7 @@
                 display = `${num1} + ${num2}`;
             } else if (currentBossOp === 'subtract') {
                 const min = bossTier > 1 ? DIFFICULTY_TIERS[bossTier - 2].maxNum : 1;
-                num1 = Math.floor(Math.random() * (maxNum - min)) + min + 10;
+                num1 = Math.floor(Math.random() * (maxNum - min)) + min + Math.min(10, maxNum);
                 num2 = Math.floor(Math.random() * Math.min(num1 - 1, 50)) + 1;
                 bossCorrectAnswer = num1 - num2;
                 display = `${num1} − ${num2}`;
@@ -6500,7 +6501,7 @@
 
                 // Calculate damage based on boss HP
                 const damage = 34;
-                bossHealth -= damage;
+                bossHealth = Math.max(0, bossHealth - damage);
                 const hpPercent = (bossHealth / bossMaxHealth) * 100;
                 document.getElementById('bossHealthFill').style.width = hpPercent + '%';
 
@@ -6546,7 +6547,6 @@
             document.getElementById('bossBattleModal').classList.remove('combat-active');
 
             if (victory) {
-                bossesDefeated++;
                 cumulativeStats.bossesDefeated++;
 
                 // Track unique boss defeated
@@ -6654,10 +6654,12 @@
         function numPress(num, boss) {
             if (boss) {
                 if (!bossActive || bossAnswer.length >= 4) return;
+                if (num == 0 && bossAnswer === '') return;
                 bossAnswer += num;
                 $bossAnswer.textContent = bossAnswer + '|';
             } else {
                 if (!gameActive || bossActive || currentInput.length >= 5) return;
+                if (num == 0 && currentInput === '') return;
                 currentInput += num;
                 updateAnswerDisplay();
             }
@@ -6690,9 +6692,9 @@
         }
 
         function getOpAccuracy(op) {
-            const window = opAccuracyWindows[op] || [];
-            if (window.length === 0) return 0.7; // Default: conservative
-            return window.filter(Boolean).length / window.length;
+            const samples = opAccuracyWindows[op] || [];
+            if (samples.length === 0) return 0.7; // Default: conservative
+            return samples.filter(Boolean).length / samples.length;
         }
 
         function saveOpAccuracyWindows() {
@@ -6833,6 +6835,7 @@
                 if (rollingAccuracy < 0.50) {
                     playerTiers[op]--;
                     tierTracking[op] = { correct: 0, total: 0 };
+                    opAccuracyWindows[op] = []; // Reset window to prevent cascading demotions
                     showToast(`${({ add: 'Addition', subtract: 'Subtraction', multiply: 'Multiplication', divide: 'Division' })[op]} adjusted — easier problems incoming!`, 3000);
                     saveTierProgress();
                     return false;
@@ -6850,7 +6853,8 @@
         function showTierAdvancement(op, newTier) {
             const opNames = { add: 'Addition', subtract: 'Subtraction', multiply: 'Multiplication', divide: 'Division' };
 
-            showToast(`🎉 ${opNames[op]} Level Up! Harder problems unlocked!`, 3000);
+            const tierName = DIFFICULTY_TIERS[newTier - 1] ? DIFFICULTY_TIERS[newTier - 1].name : `Level ${newTier}`;
+            showToast(`🎉 ${opNames[op]}: ${tierName}! Harder problems unlocked!`, 3000);
             playSound('levelup');
             haptic('heavy');
 
@@ -6998,8 +7002,8 @@
                     });
                 }
 
-                // Compensation for subtraction
-                if (num2 >= 9 && num2 % 10 >= 7) {
+                // Compensation for subtraction (only when intermediate won't be negative)
+                if (num2 >= 9 && num2 % 10 >= 7 && num1 >= Math.ceil(num2 / 10) * 10) {
                     const roundUp = Math.ceil(num2 / 10) * 10;
                     const adjustment = roundUp - num2;
                     strategies.push({
@@ -7113,9 +7117,11 @@
             }
             document.getElementById('strategyOverlay').classList.remove('show');
 
-            // Continue to next problem
-            if (problemTimeout) clearTimeout(problemTimeout);
-            problemTimeout = setTimeout(generateProblem, 200);
+            // Continue to next problem (only if game is still active)
+            if (gameActive) {
+                if (problemTimeout) clearTimeout(problemTimeout);
+                problemTimeout = setTimeout(generateProblem, 200);
+            }
         }
 
         // Initialize fact database with SM-2 defaults
@@ -7403,8 +7409,8 @@
                 if (currentFact) trackOpAccuracy(currentFact.op, true);
                 updatePlayerSkillLevel(true); // Update auto-helper skill tracking
 
-                // Track tier progress for advancement
-                if (currentFact) {
+                // Track tier progress for advancement (skip fallback facts without SM-2 props)
+                if (currentFact && currentFact.ef !== undefined) {
                     trackTierProgress(currentFact.op, true);
                 }
 
@@ -7479,7 +7485,7 @@
                 if (currentFact) trackOpAccuracy(currentFact.op, false);
                 updatePlayerSkillLevel(false);
 
-                if (currentFact) {
+                if (currentFact && currentFact.ef !== undefined) {
                     trackTierProgress(currentFact.op, false);
                 }
 
@@ -7608,17 +7614,25 @@
             streak = 0; bestStreak = 0;
             gameActive = true;
             correctCount = 0;
-            bossesDefeated = 0;
             retryQueue = [];
             isRetryProblem = false;
-            correctSinceLastBox = 0;
             nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
-            saveStickers(); // Persist box progress reset
 
             // Reset combo
             comboMultiplier = 1;
             lastAnswerTime = 0;
             $comboDisplay.classList.remove('active');
+
+            // Reset strategy hint state
+            showingStrategy = false;
+            lastStrategyTime = 0;
+            problemsSinceStrategy = 0;
+
+            // Reset re-entry session state
+            sessionProblemCount = 0;
+            isReEntrySession = false;
+            reEntryReviewCount = 0;
+            reEntryConfidenceCount = 0;
 
             // Reset auto-helper struggle state
             struggleState = {
@@ -8051,6 +8065,9 @@
         loadScene();
         loadOpAccuracyWindows();
         selectedOperations = load('selected_ops', ['add', 'subtract', 'multiply', 'divide']);
+        if (!Array.isArray(selectedOperations) || selectedOperations.length === 0) {
+            selectedOperations = ['add', 'subtract', 'multiply', 'divide'];
+        }
         localStorage.removeItem('mathblaster_adaptive'); // Clean up old key
         loadAvatar(); // Load selected avatar (before costumes so offsets are correct)
         loadCostumes(); // Load saved costumes
@@ -8126,12 +8143,16 @@
             sunLight.position.set(0, 10, -20);
             scene.add(sunLight);
 
-            // Helper to create flat-shaded material
+            // Helper to create flat-shaded material (cached by color)
+            const matCache = {};
             function pixelMat(color) {
-                return new THREE.MeshLambertMaterial({
-                    color: color,
-                    flatShading: true
-                });
+                if (!matCache[color]) {
+                    matCache[color] = new THREE.MeshLambertMaterial({
+                        color: color,
+                        flatShading: true
+                    });
+                }
+                return matCache[color];
             }
 
             // ===== SUN =====
@@ -8844,6 +8865,7 @@
 
             function animate() {
                 requestAnimationFrame(animate);
+                if (document.hidden) return;
                 time += 0.02;
 
                 // Animate waves
@@ -9000,10 +9022,14 @@
             }
 
             // Handle resize
+            let resizeTimer;
             window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                }, 100);
             });
 
             // Listen for scene changes - reload page to apply new scene
