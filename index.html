@@ -61,18 +61,29 @@
             to { transform: translateY(100vh) rotate(360deg); }
         }
         #weatherOverlay.weather-aurora {
-            background: linear-gradient(180deg,
-                rgba(0,255,136,0.08) 0%,
-                rgba(170,102,255,0.06) 30%,
-                rgba(0,200,255,0.04) 60%,
-                transparent 100%);
-            background-size: 200% 100%;
-            animation: auroraShift 8s ease-in-out infinite alternate;
+            background:
+                linear-gradient(135deg,
+                    rgba(0,255,136,0.20) 0%,
+                    rgba(170,102,255,0.15) 35%,
+                    rgba(0,200,255,0.12) 65%,
+                    transparent 100%),
+                linear-gradient(200deg,
+                    transparent 0%,
+                    rgba(0,200,255,0.15) 30%,
+                    rgba(170,102,255,0.18) 60%,
+                    rgba(255,102,204,0.12) 100%);
+            background-size: 200% 100%, 200% 100%;
+            animation: auroraShift 6s ease-in-out infinite alternate, auroraBreathe 10s ease-in-out infinite;
         }
         @keyframes auroraShift {
-            0% { background-position: 0% 0%; opacity: 0.6; }
+            0% { background-position: 0% 0%, 100% 0%; }
+            50% { background-position: 50% 0%, 50% 0%; }
+            100% { background-position: 100% 0%, 0% 0%; }
+        }
+        @keyframes auroraBreathe {
+            0% { opacity: 0.7; }
             50% { opacity: 1; }
-            100% { background-position: 100% 0%; opacity: 0.6; }
+            100% { opacity: 0.7; }
         }
         #weatherOverlay.weather-shootingstars .shooting-star {
             position: absolute;
@@ -5858,6 +5869,7 @@
             document.body.className = theme === 'tropical' ? '' : `theme-${theme}`;
             store('theme', theme);
             applyWeatherOverlay(theme);
+            window.dispatchEvent(new CustomEvent('themeChange', { detail: theme }));
             // Track theme usage for theme_all achievement
             if (!cumulativeStats.themesUnlocked.includes(theme)) {
                 cumulativeStats.themesUnlocked.push(theme);
@@ -8659,7 +8671,7 @@
             scene.add(createTikiTorch(-8, 12));
 
             // ===== SCENE EXTRAS (based on scene variation) =====
-            const sceneExtras = { stars: [], moon: null, particles: [], darkClouds: [] };
+            const sceneExtras = { stars: [], moon: null, particles: [], darkClouds: [], auroraBands: [] };
             const extras = currentSceneVar.extras || [];
 
             // Stars (for night scene)
@@ -9096,6 +9108,39 @@
                 }
             }
 
+            // Aurora bands (theme-based, not scene-based)
+            function createAuroraBands() {
+                const colors = [0x00ff88, 0x00ccaa, 0x00ccff, 0xaa66ff, 0xff66cc];
+                for (let band = 0; band < 5; band++) {
+                    for (let seg = 0; seg < 14; seg++) {
+                        const w = 2.5 + Math.random() * 1.5;
+                        const geo = new THREE.BoxGeometry(w, 0.6, 0.3);
+                        const mat = new THREE.MeshBasicMaterial({
+                            color: colors[band],
+                            transparent: true,
+                            opacity: 0.35 + Math.random() * 0.15
+                        });
+                        const mesh = new THREE.Mesh(geo, mat);
+                        const x = (seg - 7) * 4 + (Math.random() - 0.5) * 2;
+                        const y = 15 + band * 2 + Math.random() * 1.5;
+                        const z = -48 - Math.random() * 7;
+                        mesh.position.set(x, y, z);
+                        mesh.userData = {
+                            waveOffset: seg * 0.5 + band * 0.7,
+                            baseY: y,
+                            baseOpacity: mat.opacity,
+                            pulseOffset: Math.random() * Math.PI * 2
+                        };
+                        sceneExtras.auroraBands.push(mesh);
+                        scene.add(mesh);
+                    }
+                }
+            }
+
+            if (load('theme', 'tropical') === 'aurora') {
+                createAuroraBands();
+            }
+
             // Camera position (beach view looking at ocean)
             camera.position.set(-5, 3, 25);
             camera.lookAt(8, 2, -20);
@@ -9258,6 +9303,14 @@
                     if (cloud.position.x > 40) cloud.position.x = -40;
                 });
 
+                // Aurora bands animation
+                sceneExtras.auroraBands.forEach(band => {
+                    const d = band.userData;
+                    band.position.y = d.baseY + Math.sin(time * 0.8 + d.waveOffset) * 1.5;
+                    band.material.opacity = d.baseOpacity + Math.sin(time * 1.2 + d.pulseOffset) * 0.15;
+                    band.position.x += Math.sin(time * 0.3 + d.waveOffset) * 0.005;
+                });
+
                 renderer.render(scene, camera);
             }
 
@@ -9275,6 +9328,22 @@
             // Listen for scene changes - reload page to apply new scene
             window.addEventListener('sceneChange', () => {
                 location.reload();
+            });
+
+            // Listen for theme changes - add/remove aurora bands dynamically
+            window.addEventListener('themeChange', (e) => {
+                // Remove existing aurora bands
+                sceneExtras.auroraBands.forEach(band => {
+                    scene.remove(band);
+                    band.geometry.dispose();
+                    band.material.dispose();
+                });
+                sceneExtras.auroraBands.length = 0;
+
+                // Recreate if new theme is aurora
+                if (e.detail === 'aurora') {
+                    createAuroraBands();
+                }
             });
 
             animate();
