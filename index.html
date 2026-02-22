@@ -560,22 +560,6 @@
         .mango-avatar.dance-victory { animation: avatarDanceVictory 0.7s ease-in-out infinite !important; }
 
 
-        /* Tier Badge */
-        .tier-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-left: 5px;
-        }
-        .tier-badge.tier-1 { background: #6bcb77; color: #1a0a2e; }
-        .tier-badge.tier-2 { background: #5dade2; color: #1a0a2e; }
-        .tier-badge.tier-3 { background: #9b59b6; color: #fff; }
-        .tier-badge.tier-4 { background: #ff6b9d; color: #1a0a2e; }
-        .tier-badge.tier-5 { background: linear-gradient(135deg, #ffd93d, #ff6b9d); color: #1a0a2e; }
-
         /* Achievements Modal */
         #achievementsModal { padding-top: 30px; padding-bottom: 30px; }
         #achievementsModal h2 { margin-bottom: 15px; }
@@ -728,12 +712,6 @@
             display: flex;
             align-items: center;
             gap: 2px;
-        }
-        .modal-hint {
-            text-align: center;
-            color: var(--accent);
-            font-size: 0.8rem;
-            margin-bottom: 10px;
         }
         .costume-preview {
             width: 56px;
@@ -1068,9 +1046,8 @@
         }
 
         /* Boss Battle */
-        .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: auto; touch-action: manipulation; padding-top: env(safe-area-inset-top, 0px); }
+        .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: auto; touch-action: manipulation; padding-top: env(safe-area-inset-top, 0px); background: #000; }
         .boss-modal.combat-active .boss-title { display: none; }
-        .boss-modal.show { background: #000; }
         @keyframes bossFlash {
             0% { background: rgba(255, 0, 0, 0.8); }
             100% { background: #000; }
@@ -1169,6 +1146,9 @@
             font-size: 1rem;
             font-weight: bold;
             white-space: nowrap;
+            max-width: 80vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             animation: speechPop 2.5s ease-out forwards;
             z-index: 25;
@@ -2570,27 +2550,6 @@
             <rect x="11" y="10" width="1" height="1" fill="#ffffff"/>
         </symbol>
 
-        <!-- Outfit: Aloha Shirt (Rare) - Hawaiian shirt with flower pattern -->
-        <symbol id="costume-outfit-aloha" viewBox="0 0 16 16">
-            <!-- Shirt base -->
-            <rect x="4" y="8" width="8" height="6" fill="#2196f3"/>
-            <rect x="3" y="9" width="10" height="5" fill="#2196f3"/>
-            <!-- Collar -->
-            <rect x="6" y="8" width="4" height="1" fill="#1976d2"/>
-            <rect x="7" y="8" width="2" height="2" fill="#1976d2"/>
-            <!-- Flower pattern -->
-            <rect x="5" y="10" width="1" height="1" fill="#ff69b4"/>
-            <rect x="8" y="9" width="1" height="1" fill="#ffd700"/>
-            <rect x="10" y="11" width="1" height="1" fill="#ff69b4"/>
-            <rect x="4" y="12" width="1" height="1" fill="#ffd700"/>
-            <rect x="7" y="12" width="1" height="1" fill="#e74c3c"/>
-            <rect x="11" y="9" width="1" height="1" fill="#e74c3c"/>
-            <!-- Leaves -->
-            <rect x="5" y="11" width="1" height="1" fill="#2d8a2d"/>
-            <rect x="9" y="10" width="1" height="1" fill="#2d8a2d"/>
-            <rect x="6" y="13" width="1" height="1" fill="#2d8a2d"/>
-        </symbol>
-
         <!-- Outfit: Grass Skirt (Rare) - Green grass fringe -->
         <symbol id="costume-outfit-grass" viewBox="0 0 16 16">
             <!-- Waistband -->
@@ -2663,23 +2622,6 @@
             <!-- Ribbon tails -->
             <rect x="9" y="9" width="1" height="2" fill="#ef5350"/>
             <rect x="12" y="9" width="1" height="2" fill="#ef5350"/>
-        </symbol>
-
-        <!-- Hat: Swim Goggles (Sports/Rare) -->
-        <symbol id="costume-hat-goggles" viewBox="0 0 16 16">
-            <!-- Strap -->
-            <rect x="1" y="7" width="14" height="2" fill="#333333"/>
-            <!-- Left lens -->
-            <rect x="2" y="5" width="5" height="5" fill="#40c4ff"/>
-            <rect x="3" y="6" width="3" height="3" fill="#80d8ff"/>
-            <!-- Right lens -->
-            <rect x="9" y="5" width="5" height="5" fill="#40c4ff"/>
-            <rect x="10" y="6" width="3" height="3" fill="#80d8ff"/>
-            <!-- Bridge -->
-            <rect x="7" y="7" width="2" height="2" fill="#444444"/>
-            <!-- Shine -->
-            <rect x="3" y="6" width="1" height="1" fill="#ffffff"/>
-            <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
         </symbol>
 
         <!-- Accessory: Swim Goggles (face accessory version) -->
@@ -2904,23 +2846,6 @@
             <rect x="8" y="10" width="1" height="1" fill="#ffffff"/>
         </symbol>
 
-        <!-- Outfit: Floral Sundress (Tropical/Rare) -->
-        <symbol id="costume-outfit-sundress" viewBox="0 0 16 16">
-            <!-- Dress -->
-            <rect x="4" y="8" width="8" height="4" fill="#fff176"/>
-            <rect x="3" y="10" width="10" height="4" fill="#ffee58"/>
-            <rect x="2" y="12" width="12" height="3" fill="#fdd835"/>
-            <!-- Flowers -->
-            <rect x="5" y="9" width="1" height="1" fill="#e91e63"/>
-            <rect x="9" y="10" width="1" height="1" fill="#e91e63"/>
-            <rect x="4" y="12" width="1" height="1" fill="#ff5252"/>
-            <rect x="8" y="13" width="1" height="1" fill="#e91e63"/>
-            <rect x="11" y="12" width="1" height="1" fill="#ff5252"/>
-            <!-- Straps -->
-            <rect x="5" y="7" width="2" height="1" fill="#fff176"/>
-            <rect x="9" y="7" width="2" height="1" fill="#fff176"/>
-        </symbol>
-
         <!-- Outfit: Sarong (Tropical/Rare) -->
         <symbol id="costume-outfit-sarong" viewBox="0 0 16 16">
             <!-- Wrap -->
@@ -2992,23 +2917,6 @@
             <rect x="11" y="6" width="2" height="3" fill="#d7ccc8"/>
         </symbol>
 
-        <!-- Accessory: Hoverboard (Sports/Epic) -->
-        <symbol id="costume-acc-hoverboard" viewBox="0 0 16 16">
-            <!-- Board -->
-            <rect x="8" y="10" width="7" height="2" fill="#1a237e"/>
-            <rect x="7" y="11" width="1" height="1" fill="#1a237e"/>
-            <rect x="15" y="11" width="1" height="1" fill="#1a237e"/>
-            <!-- Glow pads -->
-            <rect x="9" y="12" width="2" height="1" fill="#00e5ff"/>
-            <rect x="13" y="12" width="2" height="1" fill="#00e5ff"/>
-            <!-- Top design -->
-            <rect x="9" y="10" width="5" height="1" fill="#283593"/>
-            <rect x="10" y="10" width="3" height="1" fill="#3949ab"/>
-            <!-- Hover glow -->
-            <rect x="9" y="13" width="5" height="1" fill="#00bcd4"/>
-            <rect x="10" y="14" width="3" height="1" fill="#80deea"/>
-        </symbol>
-
         <!-- Accessory: Coconut Drink (Tropical/Common) -->
         <symbol id="costume-acc-coconutdrink" viewBox="0 0 16 16">
             <!-- Coconut shell -->
@@ -3043,24 +2951,6 @@
             <rect x="13" y="0" width="1" height="1" fill="#ffd700"/>
             <!-- Strings -->
             <rect x="12" y="2" width="1" height="6" fill="#e0e0e0"/>
-        </symbol>
-
-        <!-- Accessory: Seashell (Tropical/Common) -->
-        <symbol id="costume-acc-seashell" viewBox="0 0 16 16">
-            <!-- Shell spiral -->
-            <rect x="9" y="3" width="6" height="2" fill="#ffccbc"/>
-            <rect x="8" y="5" width="8" height="4" fill="#ffab91"/>
-            <rect x="9" y="9" width="6" height="2" fill="#ff8a65"/>
-            <!-- Spiral lines -->
-            <rect x="10" y="4" width="1" height="1" fill="#ff7043"/>
-            <rect x="12" y="5" width="1" height="2" fill="#ff7043"/>
-            <rect x="10" y="7" width="2" height="1" fill="#ff7043"/>
-            <rect x="14" y="6" width="1" height="2" fill="#ffccbc"/>
-            <!-- Ridges -->
-            <rect x="9" y="6" width="1" height="1" fill="#ffccbc"/>
-            <rect x="9" y="8" width="1" height="1" fill="#ffccbc"/>
-            <!-- Pearl -->
-            <rect x="11" y="6" width="1" height="1" fill="#ffffff"/>
         </symbol>
 
         <!-- Accessory: Snowflake (Winter/Epic) -->
@@ -4546,7 +4436,6 @@
                     <button id="divide" onclick="toggleOperation('divide')">÷</button>
                     <button id="mixed" class="active" onclick="toggleOperation('mixed')">Mix</button>
                 </div>
-                <!-- Mode selection removed - Free Play only now -->
             </div>
         </div>
 
@@ -4648,22 +4537,9 @@
                 <button class="submit" onclick="bossCheckAnswer()">GO</button>
             </div>
         </div>
-        <div class="boss-victory hidden" id="bossVictory">
-            <div class="victory-card">
-                <div class="victory-sparkles">
-                    <svg class="victory-sparkle s1" style="width:16px;height:16px;"><use href="#pixel-sparkle"/></svg>
-                    <svg class="victory-sparkle s2" style="width:12px;height:12px;"><use href="#pixel-sparkle"/></svg>
-                    <svg class="victory-sparkle s3" style="width:14px;height:14px;"><use href="#pixel-sparkle"/></svg>
-                    <svg class="victory-sparkle s4" style="width:10px;height:10px;"><use href="#pixel-sparkle"/></svg>
-                </div>
-                <div class="victory-title">VICTORY!</div>
-                <div class="victory-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>
-                <button class="victory-continue" id="bossContinueBtn">Continue</button>
-            </div>
-        </div>
+        <div class="boss-victory hidden" id="bossVictory"></div>
     </div>
 
-    <!-- Game Over -->
     <!-- Strategy Hint Overlay -->
     <div class="strategy-overlay" id="strategyOverlay" onclick="dismissStrategyHint()">
         <div class="strategy-label" id="strategyLabel">Making Tens</div>
@@ -4703,10 +4579,6 @@
 
     <script>
         // Utility functions
-        function randomElement(arr) {
-            if (!arr || arr.length === 0) return undefined;
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
         function randomInt(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
@@ -4892,10 +4764,10 @@
 
         // Rarity tiers for items
         const RARITY = {
-            COMMON: { name: 'Common', cssClass: 'rarity-common', color: '#aaaaaa' },
-            RARE: { name: 'Rare', cssClass: 'rarity-rare', color: '#f39c12' },
-            EPIC: { name: 'Epic', cssClass: 'rarity-epic', color: '#9b59b6' },
-            LEGENDARY: { name: 'Legend', cssClass: 'rarity-legendary', color: '#ffd93d' }
+            COMMON: { name: 'Common', cssClass: 'rarity-common' },
+            RARE: { name: 'Rare', cssClass: 'rarity-rare' },
+            EPIC: { name: 'Epic', cssClass: 'rarity-epic' },
+            LEGENDARY: { name: 'Legend', cssClass: 'rarity-legendary' }
         };
 
         // Costume definitions - all pixel art SVGs (coin-based purchases) with rarity
@@ -5089,11 +4961,11 @@
         // DIFFICULTY TIER SYSTEM
         // ==========================================
         const DIFFICULTY_TIERS = [
-            { tier: 1, name: 'Beginner', maxNum: 10, description: '0-10' },
-            { tier: 2, name: 'Explorer', maxNum: 20, description: '0-20' },
-            { tier: 3, name: 'Adventurer', maxNum: 50, description: '0-50' },
-            { tier: 4, name: 'Expert', maxNum: 100, description: '0-100' },
-            { tier: 5, name: 'Master', maxNum: 200, description: '0-200+' }
+            { name: 'Beginner', maxNum: 10 },
+            { name: 'Explorer', maxNum: 20 },
+            { name: 'Adventurer', maxNum: 50 },
+            { name: 'Expert', maxNum: 100 },
+            { name: 'Master', maxNum: 200 }
         ];
 
         // Player's current tier per operation (track separately)
@@ -5119,10 +4991,10 @@
         // DANCE SYSTEM - Purchasable dance types
         // ==========================================
         const DANCE_MOVES = [
-            { id: 'dance-wiggle', name: 'Wiggle', cssClass: 'dance-wiggle', price: 0, rarity: 'COMMON', description: 'Classic happy wiggle!' },
-            { id: 'dance-spin', name: 'Spin', cssClass: 'dance-spin', price: 2000, rarity: 'EPIC', description: 'Twirl around with joy!' },
-            { id: 'dance-bounce', name: 'Bounce', cssClass: 'dance-bounce', price: 3500, rarity: 'EPIC', description: 'Bouncy celebration!' },
-            { id: 'dance-victory', name: 'Victory', cssClass: 'dance-victory', price: 6000, rarity: 'LEGENDARY', description: 'Champion pose!' }
+            { id: 'dance-wiggle', name: 'Wiggle', cssClass: 'dance-wiggle', price: 0, rarity: 'COMMON' },
+            { id: 'dance-spin', name: 'Spin', cssClass: 'dance-spin', price: 2000, rarity: 'EPIC' },
+            { id: 'dance-bounce', name: 'Bounce', cssClass: 'dance-bounce', price: 3500, rarity: 'EPIC' },
+            { id: 'dance-victory', name: 'Victory', cssClass: 'dance-victory', price: 6000, rarity: 'LEGENDARY' }
         ];
         const DANCE_TYPES = DANCE_MOVES.map(d => d.cssClass);
         let ownedDances = ['dance-wiggle']; // Wiggle is free/default
@@ -5221,7 +5093,7 @@
         }
 
         let num1, num2, correctAnswer, currentOp;
-        let score = 0, streak = 0, bestStreak = 0;
+        let score = 0, streak = 0;
         let selectedOperations = ['add', 'subtract', 'multiply', 'divide'];
         let gameActive = true, currentInput = '', isAutoSolved = false;
         let soundEnabled = true, audioContext = null;
@@ -5274,53 +5146,40 @@
             accuracyHistory: []     // Last 20 answers
         };
 
-        // Achievements - now with tiered achievements that STACK (collect all tiers)
+        // Achievements - tiered achievements STACK (collect all tiers)
         const ACHIEVEMENTS = [
-            // Original achievements
-            { id: 'first_correct', emoji: '🌟', name: 'First Star', desc: 'Get your first answer right', category: 'basic' },
-            { id: 'boss_slayer', emoji: '⚔️', name: 'Boss Slayer', desc: 'Defeat a boss', category: 'basic' },
-            { id: 'speed_demon', emoji: '⚡', name: 'Speed Demon', desc: 'Get a 3x combo', category: 'basic' },
-            { id: 'collector', emoji: '🎁', name: 'Collector', desc: 'Open 3 mystery boxes', category: 'basic' },
-            { id: 'powerup_user', emoji: '💪', name: 'Powered Up', desc: 'Use a power-up', category: 'basic' },
-
-            // TIERED: Streak achievements (all stack)
-            { id: 'streak_5', emoji: '🔥', name: 'Streak 5', desc: '5 in a row', category: 'streak', tier: 1 },
-            { id: 'streak_10', emoji: '🔥', name: 'Streak 10', desc: '10 in a row', category: 'streak', tier: 2 },
-            { id: 'streak_20', emoji: '💥', name: 'Streak 20', desc: '20 in a row', category: 'streak', tier: 3 },
-            { id: 'streak_50', emoji: '🌋', name: 'Streak 50', desc: '50 in a row', category: 'streak', tier: 4 },
-            { id: 'streak_100', emoji: '☄️', name: 'Streak 100', desc: '100 in a row', category: 'streak', tier: 5 },
-            { id: 'streak_250', emoji: '🌠', name: 'Streak 250', desc: '250 in a row!', category: 'streak', tier: 6 },
-
-            // TIERED: Score achievements (all stack)
-            { id: 'score_25', emoji: '🥉', name: 'Score 25', desc: 'Reach 25 points', category: 'score', tier: 1 },
-            { id: 'score_50', emoji: '🥈', name: 'Score 50', desc: 'Reach 50 points', category: 'score', tier: 2 },
-            { id: 'score_100', emoji: '🥇', name: 'Score 100', desc: 'Reach 100 points', category: 'score', tier: 3 },
-            { id: 'score_250', emoji: '🏆', name: 'Score 250', desc: 'Reach 250 points', category: 'score', tier: 4 },
-            { id: 'score_500', emoji: '👑', name: 'Score 500', desc: 'Reach 500 points', category: 'score', tier: 5 },
-
-            // TIERED: Level achievements (all stack)
-            { id: 'level_5', emoji: '📈', name: 'Level 5', desc: 'Reach level 5', category: 'level', tier: 1 },
-            { id: 'level_10', emoji: '📊', name: 'Level 10', desc: 'Reach level 10', category: 'level', tier: 2 },
-            { id: 'level_25', emoji: '🌟', name: 'Level 25', desc: 'Reach level 25', category: 'level', tier: 3 },
-            { id: 'level_50', emoji: '⭐', name: 'Level 50', desc: 'Reach level 50', category: 'level', tier: 4 },
-            { id: 'level_100', emoji: '🌙', name: 'Level 100', desc: 'Reach level 100', category: 'level', tier: 5 },
-
-            // TIERED: Boss achievements (all stack)
-            { id: 'bosses_5', emoji: '⚔️', name: '5 Bosses', desc: 'Defeat 5 bosses', category: 'boss', tier: 1 },
-            { id: 'bosses_15', emoji: '⚔️', name: '15 Bosses', desc: 'Defeat 15 bosses', category: 'boss', tier: 2 },
-            { id: 'bosses_30', emoji: '🗡️', name: '30 Bosses', desc: 'Defeat 30 bosses', category: 'boss', tier: 3 },
-            { id: 'bosses_50', emoji: '🗡️', name: '50 Bosses', desc: 'Defeat 50 bosses', category: 'boss', tier: 4 },
-            { id: 'bosses_100', emoji: '👹', name: '100 Bosses', desc: 'Defeat 100 bosses', category: 'boss', tier: 5 },
-
-            // NEW: Collection achievements
-            { id: 'scene_all', emoji: '🎨', name: 'Scene Collector', desc: 'Unlock all scene variations', category: 'collection' },
-            { id: 'boss_unique_all', emoji: '🦑', name: 'Boss Hunter', desc: 'Defeat every unique boss', category: 'collection' },
-            { id: 'theme_all', emoji: '🌈', name: 'Theme Master', desc: 'Unlock all color themes', category: 'collection' },
-
-            // NEW: Sticker collection achievements
-            { id: 'sticker_10', emoji: '🎟️', name: 'Sticker Starter', desc: 'Collect 10 stickers', category: 'collection' },
-            { id: 'sticker_40', emoji: '📒', name: 'Sticker Fan', desc: 'Collect 40 stickers', category: 'collection' },
-            { id: 'sticker_all', emoji: '📕', name: 'Sticker Master', desc: 'Collect all 80 stickers', category: 'collection' }
+            { id: 'first_correct', emoji: '🌟', name: 'First Star' },
+            { id: 'boss_slayer', emoji: '⚔️', name: 'Boss Slayer' },
+            { id: 'speed_demon', emoji: '⚡', name: 'Speed Demon' },
+            { id: 'collector', emoji: '🎁', name: 'Collector' },
+            { id: 'powerup_user', emoji: '💪', name: 'Powered Up' },
+            { id: 'streak_5', emoji: '🔥', name: 'Streak 5' },
+            { id: 'streak_10', emoji: '🔥', name: 'Streak 10' },
+            { id: 'streak_20', emoji: '💥', name: 'Streak 20' },
+            { id: 'streak_50', emoji: '🌋', name: 'Streak 50' },
+            { id: 'streak_100', emoji: '☄️', name: 'Streak 100' },
+            { id: 'streak_250', emoji: '🌠', name: 'Streak 250' },
+            { id: 'score_25', emoji: '🥉', name: 'Score 25' },
+            { id: 'score_50', emoji: '🥈', name: 'Score 50' },
+            { id: 'score_100', emoji: '🥇', name: 'Score 100' },
+            { id: 'score_250', emoji: '🏆', name: 'Score 250' },
+            { id: 'score_500', emoji: '👑', name: 'Score 500' },
+            { id: 'level_5', emoji: '📈', name: 'Level 5' },
+            { id: 'level_10', emoji: '📊', name: 'Level 10' },
+            { id: 'level_25', emoji: '🌟', name: 'Level 25' },
+            { id: 'level_50', emoji: '⭐', name: 'Level 50' },
+            { id: 'level_100', emoji: '🌙', name: 'Level 100' },
+            { id: 'bosses_5', emoji: '⚔️', name: '5 Bosses' },
+            { id: 'bosses_15', emoji: '⚔️', name: '15 Bosses' },
+            { id: 'bosses_30', emoji: '🗡️', name: '30 Bosses' },
+            { id: 'bosses_50', emoji: '🗡️', name: '50 Bosses' },
+            { id: 'bosses_100', emoji: '👹', name: '100 Bosses' },
+            { id: 'scene_all', emoji: '🎨', name: 'Scene Collector' },
+            { id: 'boss_unique_all', emoji: '🦑', name: 'Boss Hunter' },
+            { id: 'theme_all', emoji: '🌈', name: 'Theme Master' },
+            { id: 'sticker_10', emoji: '🎟️', name: 'Sticker Starter' },
+            { id: 'sticker_40', emoji: '📒', name: 'Sticker Fan' },
+            { id: 'sticker_all', emoji: '📕', name: 'Sticker Master' }
         ];
         let unlockedAchievements = [];
 
@@ -5501,8 +5360,6 @@
 
         // Cumulative stats for tiered achievements (persisted)
         let cumulativeStats = {
-            peakScore: 0,
-            maxStreak: 0,
             bossesDefeated: 0,
             mysteryBoxesOpened: 0,
             uniqueBossesDefeated: {},
@@ -6089,7 +5946,6 @@
             document.getElementById('bossProgress').style.width = bossProgress + '%';
         }
 
-        // Fire flicker removed — answer box flash replaces it
 
         // Combo system
         function updateCombo() {
@@ -6183,8 +6039,7 @@
                     currentInput = String(answerToSolve);
                     updateAnswerDisplay();
                     isAutoSolved = true;
-                    checkAnswer();
-                    isAutoSolved = false;
+                    try { checkAnswer(); } finally { isAutoSolved = false; }
                 }
             }, 300);
 
@@ -6470,6 +6325,7 @@
         function startBossBattle() {
             bossActive = true;
             bossAnswer = '';
+            if (comboTimeout) { clearTimeout(comboTimeout); comboTimeout = null; }
             document.getElementById('bossBattleModal').classList.remove('combat-active');
 
             const availableBosses = getUnlockedBosses();
@@ -6575,7 +6431,7 @@
         function bossDeletePress() { deletePress(true); }
 
         function bossCheckAnswer() {
-            if (!bossActive || bossAnswer === '') return;
+            if (!bossActive || bossAnswer === '' || !document.getElementById('bossBattleModal').classList.contains('combat-active')) return;
 
             const parsedAnswer = parseInt(bossAnswer, 10);
             if (isNaN(parsedAnswer)) {
@@ -6787,7 +6643,7 @@
 
         function numPress(num, boss) {
             if (boss) {
-                if (!bossActive || bossAnswer.length >= 4) return;
+                if (!bossActive || bossAnswer.length >= 4 || !document.getElementById('bossBattleModal').classList.contains('combat-active')) return;
                 if (num == 0 && bossAnswer === '') return;
                 bossAnswer += num;
                 $bossAnswer.textContent = bossAnswer + '|';
@@ -6802,7 +6658,7 @@
 
         function deletePress(boss) {
             if (boss) {
-                if (!bossActive) return;
+                if (!bossActive || !document.getElementById('bossBattleModal').classList.contains('combat-active')) return;
                 bossAnswer = bossAnswer.slice(0, -1);
                 $bossAnswer.textContent = bossAnswer + '|';
             } else {
@@ -7219,8 +7075,8 @@
         function showStrategyHint(num1, num2, op, answer) {
             const strategy = getStrategyHint(num1, num2, op, answer);
             if (!strategy) {
-                checkStruggleAndHelp();
                 generateProblem();
+                checkStruggleAndHelp();
                 return;
             }
 
@@ -7615,7 +7471,6 @@
 
                 streak++;
                 correctCount++;
-                if (streak > bestStreak) bestStreak = streak;
 
                 // Combo multiplier
                 updateCombo();
@@ -7634,11 +7489,6 @@
                 checkAchievement('first_correct', correctCount >= 1);
                 [5,10,20,50,100,250].forEach(n => checkAchievement('streak_'+n, streak >= n));
                 [25,50,100,250,500].forEach(n => checkAchievement('score_'+n, score >= n));
-                // Update cumulative stats
-                if (streak > cumulativeStats.maxStreak) {
-                    cumulativeStats.maxStreak = streak;
-                }
-                cumulativeStats.peakScore = Math.max(cumulativeStats.peakScore, score);
                 saveCumulativeStats();
 
                 if (streak === 5 || streak === 10 || streak === 15 || streak === 20 || (streak > 20 && streak % 10 === 0)) {
@@ -7735,8 +7585,8 @@
                     if (canShowHint) {
                         showStrategyHint(num1, num2, currentOp, correctAnswer);
                     } else {
-                        checkStruggleAndHelp();
                         generateProblem();
+                        checkStruggleAndHelp();
                     }
                 }, 2000);
             }
@@ -7804,7 +7654,7 @@
             // Clean up orphaned effect elements from animation timeouts
             document.querySelectorAll('.lightning-effect, .helper-message, .coconut-projectile, .boss-speech, .victory-confetti').forEach(el => el.remove());
 
-            streak = 0; bestStreak = 0;
+            streak = 0;
             gameActive = true;
             correctCount = 0;
             retryQueue = [];
