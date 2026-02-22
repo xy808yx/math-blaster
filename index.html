@@ -892,25 +892,35 @@
             min-height: 1.5rem;
         }
 
-        /* Streak Celebration */
+        /* Streak Celebration - top slide-down pill */
         .streak-celebration {
             position: fixed;
-            top: 50%;
+            top: 20px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(2rem, 8vw, 4rem);
+            transform: translateX(-50%) translateY(-60px);
+            font-size: clamp(0.9rem, 3.5vw, 1.2rem);
             font-weight: bold;
-            color: var(--accent);
-            text-shadow: 0 0 30px var(--accent);
-            z-index: 100;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 150, 50, 0.3);
+            white-space: nowrap;
+            z-index: 400;
             pointer-events: none;
-            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(255, 100, 0, 0.25);
         }
-        .streak-celebration.show { animation: streakPop 1s ease-out forwards; }
-        @keyframes streakPop {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) translateY(-30px); }
+        .streak-celebration.show { animation: streakToast 1.5s ease-out forwards; }
+        @keyframes streakToast {
+            0% { transform: translateX(-50%) translateY(-60px); opacity: 0; }
+            12% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            75% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(-60px); opacity: 0; }
         }
 
         /* Number Pad */
@@ -1298,24 +1308,94 @@
             .boss-numpad button { height: 42px; font-size: 1.2rem; }
         }
 
+        /* Boss modal victory background glow */
+        .boss-modal { transition: background 1s ease-out; }
+        .boss-modal.victory { background: radial-gradient(circle at center, rgba(255,200,50,0.3) 0%, rgba(0,0,0,0.95) 70%); }
+
         .boss-victory {
             position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--accent);
-            text-shadow: 0 0 30px var(--accent);
-            text-align: center;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 10;
         }
-        .boss-victory.show { animation: victoryPop 1s ease-out; }
-        @keyframes victoryPop {
-            0% { transform: translate(-50%, -50%) scale(0); }
-            50% { transform: translate(-50%, -50%) scale(1.3); }
-            100% { transform: translate(-50%, -50%) scale(1); }
+
+        /* Victory card - frosted glass */
+        .victory-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 32px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .boss-reward { font-size: 1.5rem; color: var(--success); margin-top: 10px; }
+        .boss-victory.show .victory-card {
+            animation: victoryCardIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes victoryCardIn {
+            0% { transform: scale(0.6); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Victory sparkles - decorative positioned SVGs */
+        .victory-sparkles { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; }
+        .victory-sparkle { position: absolute; image-rendering: pixelated; opacity: 0; }
+        .boss-victory.show .victory-sparkle { animation: sparkleFloat 2s ease-in-out infinite; }
+        .victory-sparkle.s1 { top: 8px; left: 12px; animation-delay: 0s; }
+        .victory-sparkle.s2 { top: 14px; right: 16px; animation-delay: 0.4s; }
+        .victory-sparkle.s3 { bottom: 12px; left: 20px; animation-delay: 0.7s; }
+        .victory-sparkle.s4 { bottom: 16px; right: 14px; animation-delay: 1.1s; }
+        @keyframes sparkleFloat {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .victory-title {
+            font-size: clamp(2rem, 7vw, 2.8rem);
+            font-weight: 900;
+            color: #ffd93d;
+            text-shadow: 0 0 20px rgba(255, 217, 61, 0.5), 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .victory-reward {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--success);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+        .victory-reward.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .victory-continue {
+            margin-top: 20px;
+            padding: 12px 36px;
+            background: transparent;
+            border: 2px solid rgba(255, 217, 61, 0.6);
+            color: #ffd93d;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.15s, background 0.15s;
+            opacity: 0;
+        }
+        .victory-continue.show {
+            opacity: 1;
+            transition: opacity 0.4s ease-out, transform 0.15s, background 0.15s;
+        }
+        .victory-continue:active { transform: scale(0.95); background: rgba(255, 217, 61, 0.1); }
 
         .hidden { display: none !important; }
 
@@ -4565,8 +4645,17 @@
             </div>
         </div>
         <div class="boss-victory hidden" id="bossVictory">
-            <div>🎉 VICTORY! 🎉</div>
-            <div class="boss-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>
+            <div class="victory-card">
+                <div class="victory-sparkles">
+                    <svg class="victory-sparkle s1" style="width:16px;height:16px;"><use href="#pixel-sparkle"/></svg>
+                    <svg class="victory-sparkle s2" style="width:12px;height:12px;"><use href="#pixel-sparkle"/></svg>
+                    <svg class="victory-sparkle s3" style="width:14px;height:14px;"><use href="#pixel-sparkle"/></svg>
+                    <svg class="victory-sparkle s4" style="width:10px;height:10px;"><use href="#pixel-sparkle"/></svg>
+                </div>
+                <div class="victory-title">VICTORY!</div>
+                <div class="victory-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>
+                <button class="victory-continue" id="bossContinueBtn">Continue</button>
+            </div>
         </div>
     </div>
 
@@ -6168,7 +6257,7 @@
 
         function showStreakCelebration(num) {
             const el = document.getElementById('streakCelebration');
-            el.innerHTML = `<svg style="width:24px;height:24px;image-rendering:pixelated;vertical-align:middle;"><use href="#pixel-sparkle"/></svg> ${num} STREAK! <svg style="width:24px;height:24px;image-rendering:pixelated;vertical-align:middle;"><use href="#pixel-sparkle"/></svg>`;
+            el.innerHTML = `<svg style="width:20px;height:20px;image-rendering:pixelated;flex-shrink:0;"><use href="#pixel-fire"/></svg><span>${num} STREAK</span>`;
             el.classList.remove('show');
             void el.offsetWidth;
             el.classList.add('show');
@@ -6397,6 +6486,7 @@
             // Clear any previous phase classes
             document.getElementById('bossEmoji').classList.remove('phase-75', 'phase-50', 'phase-25');
             document.getElementById('bossContainer').classList.remove('victory-basic', 'victory-simple', 'victory-elite');
+            resetBossVictoryHTML();
 
             const bossEmojiEl = document.getElementById('bossEmoji');
             const bossUseEl = document.getElementById('bossUse');
@@ -6407,7 +6497,6 @@
             document.getElementById('bossTimer').textContent = bossTimer;
             document.getElementById('bossTimer').classList.remove('danger');
             $bossAnswer.textContent = '|';
-            document.getElementById('bossVictory').classList.add('hidden');
             document.getElementById('bossContainer').style.opacity = '1';
             showModal('bossBattleModal');
 
@@ -6564,6 +6653,7 @@
                 const victoryEl = document.getElementById('bossVictory');
                 victoryEl.classList.remove('hidden');
                 victoryEl.classList.add('show');
+                document.getElementById('bossBattleModal').classList.add('victory');
                 playSound('bosswin');
                 haptic('heavy');
                 gainXP(10); // Bonus XP for defeating boss
@@ -6579,35 +6669,72 @@
 
                 // Play tiered victory celebration
                 const tier = bossCurrentBoss.tier || 'basic';
-                const victoryDuration = playVictoryCelebration(tier);
+                playVictoryCelebration(tier);
 
                 // Start avatar celebration dance based on boss tier
                 const danceDuration = tier === 'elite' ? 8000 : 4000;
                 triggerCelebrationDance('boss', danceDuration);
 
-                bossEndTimeout = setTimeout(() => {
-                    bossEndTimeout = null;
-                    hideModal('bossBattleModal');
-                    victoryEl.classList.remove('show');
-                    victoryEl.classList.add('hidden');
-                    if (problemTimeout) clearTimeout(problemTimeout);
-                    problemTimeout = setTimeout(generateProblem, 200);
-                }, victoryDuration);
+                // Delayed reveal: reward after 500ms, continue button after 800ms
+                setTimeout(() => {
+                    document.getElementById('bossReward').classList.add('show');
+                }, 500);
+                setTimeout(() => {
+                    const btn = document.getElementById('bossContinueBtn');
+                    btn.classList.add('show');
+                    btn.onclick = function() {
+                        btn.onclick = null;
+                        cleanupBossVictory();
+                        hideModal('bossBattleModal');
+                        if (problemTimeout) clearTimeout(problemTimeout);
+                        problemTimeout = setTimeout(generateProblem, 200);
+                    };
+                }, 800);
             } else {
-                document.getElementById('bossVictory').innerHTML = '<div>💀 ESCAPED!</div><div class="boss-reward">Boss fled...</div>';
+                document.getElementById('bossVictory').innerHTML = '<div style="font-size:2.5rem;font-weight:bold;color:var(--accent);text-shadow:0 0 30px var(--accent);text-align:center;">ESCAPED!</div><div style="font-size:1.2rem;color:var(--text-color);opacity:0.6;margin-top:8px;text-align:center;">Boss fled...</div>';
                 document.getElementById('bossVictory').classList.remove('hidden');
                 playSound('gameover');
 
                 bossEndTimeout = setTimeout(() => {
                     bossEndTimeout = null;
                     hideModal('bossBattleModal');
-                    document.getElementById('bossVictory').classList.add('hidden');
-                    // Reset victory HTML for next boss battle
-                    document.getElementById('bossVictory').innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>';
+                    resetBossVictoryHTML();
                     if (problemTimeout) clearTimeout(problemTimeout);
                     problemTimeout = setTimeout(generateProblem, 200);
                 }, 1500);
             }
+        }
+
+        const BOSS_VICTORY_HTML = `<div class="victory-card">
+                <div class="victory-sparkles">
+                    <svg class="victory-sparkle s1" style="width:16px;height:16px;"><use href="#pixel-sparkle"/></svg>
+                    <svg class="victory-sparkle s2" style="width:12px;height:12px;"><use href="#pixel-sparkle"/></svg>
+                    <svg class="victory-sparkle s3" style="width:14px;height:14px;"><use href="#pixel-sparkle"/></svg>
+                    <svg class="victory-sparkle s4" style="width:10px;height:10px;"><use href="#pixel-sparkle"/></svg>
+                </div>
+                <div class="victory-title">VICTORY!</div>
+                <div class="victory-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>
+                <button class="victory-continue" id="bossContinueBtn">Continue</button>
+            </div>`;
+
+        function resetBossVictoryHTML() {
+            const bv = document.getElementById('bossVictory');
+            bv.classList.add('hidden');
+            bv.classList.remove('show');
+            bv.innerHTML = BOSS_VICTORY_HTML;
+            document.getElementById('bossBattleModal').classList.remove('victory');
+        }
+
+        function cleanupBossVictory() {
+            const bv = document.getElementById('bossVictory');
+            bv.classList.remove('show');
+            bv.classList.add('hidden');
+            const reward = document.getElementById('bossReward');
+            if (reward) reward.classList.remove('show');
+            const btn = document.getElementById('bossContinueBtn');
+            if (btn) { btn.classList.remove('show'); btn.onclick = null; }
+            document.getElementById('bossBattleModal').classList.remove('victory');
+            document.getElementById('bossContainer').classList.remove('victory-basic', 'victory-simple', 'victory-elite');
         }
 
         // Save/load cumulative stats
@@ -7657,12 +7784,8 @@
             if (bossEndTimeout) {
                 clearTimeout(bossEndTimeout);
                 bossEndTimeout = null;
-                // Restore bossVictory innerHTML in case boss escape overwrote it
-                const bv = document.getElementById('bossVictory');
-                bv.classList.add('hidden');
-                bv.classList.remove('show');
-                bv.innerHTML = '<div>🎉 VICTORY! 🎉</div><div class="boss-reward" id="bossReward">+10 <svg class="pixel-coin" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"><use href="#pixel-coin"/></svg></div>';
             }
+            resetBossVictoryHTML();
             if (toastTimeout) { clearTimeout(toastTimeout); toastTimeout = null; }
             bossActive = false;
             hideModal('bossBattleModal');
