@@ -583,30 +583,6 @@
         .mango-avatar.dance-bounce { animation: avatarDanceBounce 0.6s ease-in-out infinite !important; }
         .mango-avatar.dance-victory { animation: avatarDanceVictory 0.7s ease-in-out infinite !important; }
 
-        /* Set Bonus Effects */
-        @keyframes setSparkle {
-            0%, 100% { filter: drop-shadow(0 0 3px #ffd700) drop-shadow(0 0 6px #ff69b4); }
-            50% { filter: drop-shadow(0 0 8px #ffd700) drop-shadow(0 0 12px #ff69b4); }
-        }
-        @keyframes setGlow {
-            0%, 100% { filter: drop-shadow(0 0 5px var(--set-color, #ff69b4)); }
-            50% { filter: drop-shadow(0 0 15px var(--set-color, #ff69b4)) drop-shadow(0 0 20px var(--set-color, #ff69b4)); }
-        }
-        @keyframes setFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-        .mango-avatar.set-bonus-sparkle { animation: setSparkle 1.5s ease-in-out infinite; }
-        .mango-avatar.set-bonus-glow { animation: setGlow 2s ease-in-out infinite; }
-        .mango-avatar.set-bonus-float { animation: setFloat 2s ease-in-out infinite; }
-        .mango-avatar.set-fairy { --set-color: #da70d6; }
-        .mango-avatar.set-princess { --set-color: #ff69b4; }
-        .mango-avatar.set-nature { --set-color: #6bcb77; }
-        .mango-avatar.set-ocean { --set-color: #5dade2; }
-        .mango-avatar.set-space { --set-color: #9b59b6; }
-        .mango-avatar.set-unicorn { --set-color: #ff9ed2; }
-        .mango-avatar.set-sweet { --set-color: #ffb6c1; }
-        .mango-avatar.set-kitty { --set-color: #ffc0cb; }
 
         /* Tier Badge */
         .tier-badge {
@@ -1955,27 +1931,6 @@
             <rect x="10" y="10" width="1" height="1" fill="#0066ff"/>
         </symbol>
 
-        <!-- Hat: Wizard Hat -->
-        <symbol id="costume-hat-wizard" viewBox="0 0 16 16">
-            <rect x="4" y="10" width="8" height="2" fill="#4a2c7a"/>
-            <rect x="5" y="8" width="6" height="2" fill="#5a3c8a"/>
-            <rect x="6" y="5" width="4" height="3" fill="#4a2c7a"/>
-            <rect x="7" y="2" width="2" height="3" fill="#5a3c8a"/>
-            <!-- Stars -->
-            <rect x="5" y="9" width="1" height="1" fill="#ffd700"/>
-            <rect x="8" y="6" width="1" height="1" fill="#ffd700"/>
-            <rect x="10" y="10" width="1" height="1" fill="#ffd700"/>
-        </symbol>
-
-        <!-- Hat: Party Hat -->
-        <symbol id="costume-hat-party" viewBox="0 0 16 16">
-            <rect x="5" y="10" width="6" height="2" fill="#ff6b9d"/>
-            <rect x="6" y="7" width="4" height="3" fill="#ffd93d"/>
-            <rect x="7" y="4" width="2" height="3" fill="#6bcb77"/>
-            <rect x="7" y="2" width="2" height="2" fill="#ff6b9d"/>
-            <!-- Pom pom -->
-            <rect x="7" y="1" width="2" height="1" fill="#ffffff"/>
-        </symbol>
 
         <!-- Hat: Santa Hat -->
         <symbol id="costume-hat-santa" viewBox="0 0 16 16">
@@ -1988,33 +1943,6 @@
             <rect x="11" y="1" width="2" height="2" fill="#ffffff"/>
         </symbol>
 
-        <!-- Outfit: Bow Tie -->
-        <symbol id="costume-outfit-bowtie" viewBox="0 0 16 16">
-            <rect x="5" y="10" width="2" height="2" fill="#cc0000"/>
-            <rect x="9" y="10" width="2" height="2" fill="#cc0000"/>
-            <rect x="7" y="10" width="2" height="2" fill="#ff0000"/>
-            <rect x="7" y="11" width="2" height="1" fill="#990000"/>
-        </symbol>
-
-        <!-- Outfit: Cape -->
-        <symbol id="costume-outfit-cape" viewBox="0 0 16 16">
-            <rect x="2" y="8" width="2" height="6" fill="#cc0000"/>
-            <rect x="12" y="8" width="2" height="6" fill="#cc0000"/>
-            <rect x="3" y="9" width="1" height="5" fill="#ff0000"/>
-            <rect x="12" y="9" width="1" height="5" fill="#ff0000"/>
-            <!-- Cape flowing behind -->
-            <rect x="1" y="12" width="2" height="3" fill="#990000"/>
-            <rect x="13" y="12" width="2" height="3" fill="#990000"/>
-        </symbol>
-
-        <!-- Outfit: Knight Armor -->
-        <symbol id="costume-outfit-armor" viewBox="0 0 16 16">
-            <rect x="4" y="9" width="8" height="5" fill="#a0a0a0"/>
-            <rect x="5" y="10" width="6" height="3" fill="#c0c0c0"/>
-            <rect x="6" y="9" width="4" height="1" fill="#808080"/>
-            <!-- Chest emblem -->
-            <rect x="7" y="11" width="2" height="2" fill="#ffd700"/>
-        </symbol>
 
         <!-- Outfit: Scarf -->
         <symbol id="costume-outfit-scarf" viewBox="0 0 16 16">
@@ -2095,15 +2023,6 @@
         </symbol>
 
         <!-- NEW HATS -->
-        <symbol id="costume-hat-beanie" viewBox="0 0 16 16">
-            <rect x="4" y="4" width="8" height="6" fill="#2d8a8a"/>
-            <rect x="5" y="3" width="6" height="1" fill="#2d8a8a"/>
-            <rect x="6" y="2" width="4" height="1" fill="#2d8a8a"/>
-            <rect x="7" y="1" width="2" height="1" fill="#ff6b9d"/>
-            <rect x="4" y="5" width="8" height="1" fill="#3a9a9a"/>
-            <rect x="4" y="7" width="8" height="1" fill="#3a9a9a"/>
-            <rect x="3" y="9" width="10" height="1" fill="#1a6a6a"/>
-        </symbol>
 
         <symbol id="costume-hat-headphones" viewBox="0 0 16 16">
             <rect x="2" y="4" width="2" height="6" fill="#333333"/>
@@ -2137,19 +2056,6 @@
             <rect x="4" y="7" width="8" height="1" fill="#654321"/>
         </symbol>
 
-        <symbol id="costume-hat-ballcap" viewBox="0 0 16 16">
-            <!-- Cap body -->
-            <rect x="3" y="6" width="10" height="4" fill="#ffffff"/>
-            <rect x="4" y="5" width="8" height="1" fill="#ffffff"/>
-            <rect x="5" y="4" width="6" height="1" fill="#f5f5f5"/>
-            <!-- Brim -->
-            <rect x="1" y="10" width="14" height="2" fill="#f0f0f0"/>
-            <rect x="2" y="9" width="12" height="1" fill="#ffffff"/>
-            <!-- Stitching detail -->
-            <rect x="7" y="5" width="2" height="4" fill="#e8e8e8"/>
-            <!-- Button on top -->
-            <rect x="7" y="4" width="2" height="1" fill="#cccccc"/>
-        </symbol>
 
         <symbol id="costume-hat-cowboy" viewBox="0 0 16 16">
             <!-- Wide brim -->
@@ -2167,44 +2073,8 @@
             <rect x="1" y="10" width="14" height="1" fill="#7a5c12"/>
         </symbol>
 
-        <!-- NEW OUTFITS -->
-        <symbol id="costume-outfit-hoodie" viewBox="0 0 16 16">
-            <rect x="4" y="10" width="8" height="5" fill="#5a5a8a"/>
-            <rect x="3" y="11" width="2" height="4" fill="#5a5a8a"/>
-            <rect x="11" y="11" width="2" height="4" fill="#5a5a8a"/>
-            <rect x="6" y="9" width="4" height="2" fill="#4a4a7a"/>
-            <rect x="7" y="10" width="2" height="3" fill="#3a3a6a"/>
-            <rect x="5" y="12" width="1" height="2" fill="#ffffff"/>
-            <rect x="10" y="12" width="1" height="2" fill="#ffffff"/>
-        </symbol>
-
-        <symbol id="costume-outfit-medal" viewBox="0 0 16 16">
-            <rect x="6" y="8" width="4" height="1" fill="#cc0000"/>
-            <rect x="5" y="9" width="6" height="1" fill="#cc0000"/>
-            <rect x="6" y="10" width="4" height="4" fill="#ffd700"/>
-            <rect x="7" y="11" width="2" height="2" fill="#ffec8b"/>
-            <rect x="5" y="10" width="1" height="3" fill="#ffd700"/>
-            <rect x="10" y="10" width="1" height="3" fill="#ffd700"/>
-        </symbol>
-
-        <symbol id="costume-outfit-heart" viewBox="0 0 16 16">
-            <rect x="7" y="9" width="2" height="1" fill="#c0c0c0"/>
-            <rect x="5" y="10" width="2" height="2" fill="#ff6b9d"/>
-            <rect x="9" y="10" width="2" height="2" fill="#ff6b9d"/>
-            <rect x="6" y="11" width="4" height="2" fill="#ff6b9d"/>
-            <rect x="7" y="13" width="2" height="1" fill="#ff6b9d"/>
-            <rect x="6" y="10" width="1" height="1" fill="#ffaacc"/>
-        </symbol>
 
         <!-- NEW ACCESSORIES -->
-        <symbol id="costume-acc-flower" viewBox="0 0 16 16">
-            <rect x="10" y="3" width="2" height="2" fill="#ffffff"/>
-            <rect x="12" y="5" width="2" height="2" fill="#ffffff"/>
-            <rect x="10" y="7" width="2" height="2" fill="#ffffff"/>
-            <rect x="8" y="5" width="2" height="2" fill="#ffffff"/>
-            <rect x="10" y="5" width="2" height="2" fill="#ffdd44"/>
-            <rect x="12" y="8" width="1" height="3" fill="#2d5a1d"/>
-        </symbol>
 
         <symbol id="costume-acc-icecream" viewBox="0 0 16 16">
             <!-- Ice cream scoops -->
@@ -2407,29 +2277,6 @@
             <rect x="12" y="3" width="1" height="1" fill="#ffffff"/>
         </symbol>
 
-        <!-- Outfit: Dragon Armor (Legendary) - Scaly armor with dragon motif -->
-        <symbol id="costume-outfit-dragon" viewBox="0 0 16 16">
-            <!-- Main armor plates - green scales -->
-            <rect x="4" y="10" width="8" height="4" fill="#1a5a1a"/>
-            <rect x="5" y="8" width="6" height="2" fill="#2d8a2d"/>
-            <!-- Scale pattern -->
-            <rect x="5" y="11" width="2" height="2" fill="#2d8a2d"/>
-            <rect x="7" y="10" width="2" height="2" fill="#3da33d"/>
-            <rect x="9" y="11" width="2" height="2" fill="#2d8a2d"/>
-            <rect x="6" y="13" width="2" height="1" fill="#3da33d"/>
-            <rect x="8" y="12" width="2" height="2" fill="#1a5a1a"/>
-            <!-- Dragon emblem on chest - red -->
-            <rect x="7" y="8" width="2" height="2" fill="#cc0000"/>
-            <rect x="6" y="9" width="1" height="1" fill="#ff4444"/>
-            <rect x="9" y="9" width="1" height="1" fill="#ff4444"/>
-            <!-- Shoulder spikes -->
-            <rect x="3" y="9" width="2" height="2" fill="#1a5a1a"/>
-            <rect x="2" y="8" width="1" height="2" fill="#cc0000"/>
-            <rect x="11" y="9" width="2" height="2" fill="#1a5a1a"/>
-            <rect x="13" y="8" width="1" height="2" fill="#cc0000"/>
-            <!-- Gold trim -->
-            <rect x="4" y="10" width="8" height="1" fill="#ffd700"/>
-        </symbol>
 
         <!-- Outfit: Phoenix Wings (Legendary) - Fiery feathered wings -->
         <symbol id="costume-outfit-phoenix" viewBox="0 0 16 16">
@@ -2629,25 +2476,6 @@
             <rect x="11" y="11" width="1" height="1" fill="#ffffff"/>
         </symbol>
 
-        <!-- Accessory: Magic Wand -->
-        <symbol id="costume-acc-wand" viewBox="0 0 16 16">
-            <!-- Star -->
-            <rect x="11" y="0" width="3" height="1" fill="#ffd700"/>
-            <rect x="10" y="1" width="5" height="1" fill="#ffd700"/>
-            <rect x="9" y="2" width="7" height="2" fill="#ffd700"/>
-            <rect x="10" y="4" width="5" height="1" fill="#ffd700"/>
-            <rect x="11" y="5" width="3" height="1" fill="#ffd700"/>
-            <!-- Star center -->
-            <rect x="12" y="2" width="1" height="2" fill="#ffffff"/>
-            <!-- Wand stick -->
-            <rect x="12" y="6" width="1" height="2" fill="#ff69b4"/>
-            <rect x="11" y="8" width="1" height="2" fill="#ff69b4"/>
-            <rect x="10" y="10" width="1" height="2" fill="#ff69b4"/>
-            <rect x="9" y="12" width="1" height="3" fill="#ff69b4"/>
-            <!-- Sparkles -->
-            <rect x="8" y="1" width="1" height="1" fill="#ffffff"/>
-            <rect x="14" y="4" width="1" height="1" fill="#ffffff"/>
-        </symbol>
 
         <!-- Accessory: Cupcake -->
         <symbol id="costume-acc-cupcake" viewBox="0 0 16 16">
@@ -2735,28 +2563,6 @@
             <rect x="9" y="2" width="1" height="2" fill="#ffec8b"/>
         </symbol>
 
-        <!-- Accessory: Ladybug -->
-        <symbol id="costume-acc-ladybug" viewBox="0 0 16 16">
-            <!-- Body -->
-            <rect x="9" y="4" width="6" height="2" fill="#cc0000"/>
-            <rect x="8" y="6" width="8" height="4" fill="#cc0000"/>
-            <rect x="9" y="10" width="6" height="2" fill="#cc0000"/>
-            <!-- Head -->
-            <rect x="10" y="2" width="4" height="3" fill="#1a1a1a"/>
-            <!-- Center line -->
-            <rect x="12" y="5" width="1" height="6" fill="#1a1a1a"/>
-            <!-- Spots -->
-            <rect x="9" y="6" width="2" height="2" fill="#1a1a1a"/>
-            <rect x="14" y="6" width="2" height="2" fill="#1a1a1a"/>
-            <rect x="10" y="9" width="1" height="1" fill="#1a1a1a"/>
-            <rect x="14" y="9" width="1" height="1" fill="#1a1a1a"/>
-            <!-- Eyes -->
-            <rect x="10" y="3" width="1" height="1" fill="#ffffff"/>
-            <rect x="13" y="3" width="1" height="1" fill="#ffffff"/>
-            <!-- Antennae -->
-            <rect x="10" y="1" width="1" height="1" fill="#1a1a1a"/>
-            <rect x="13" y="1" width="1" height="1" fill="#1a1a1a"/>
-        </symbol>
 
         <!-- Accessory: Pikachu Tail (Legendary) - Lightning bolt extending up-right -->
         <symbol id="costume-acc-tail" viewBox="0 0 16 16">
@@ -2841,8 +2647,8 @@
             <rect x="11" y="14" width="1" height="1" fill="#90ee90"/>
         </symbol>
 
-        <!-- Outfit: Surfboard (Epic) - Board held beside avatar -->
-        <symbol id="costume-outfit-surfboard" viewBox="0 0 16 16">
+        <!-- Accessory: Surfboard (Epic) - Board held beside avatar -->
+        <symbol id="costume-acc-surfboard" viewBox="0 0 16 16">
             <!-- Board body -->
             <rect x="1" y="3" width="3" height="10" fill="#1e90ff"/>
             <rect x="2" y="2" width="1" height="1" fill="#1e90ff"/>
@@ -2859,27 +2665,443 @@
             <rect x="0" y="9" width="1" height="1" fill="#87ceeb"/>
         </symbol>
 
-        <!-- Outfit: Tiki Vest (Epic) - Vest with tiki mask motif -->
-        <symbol id="costume-outfit-tiki" viewBox="0 0 16 16">
-            <!-- Vest base - warm brown -->
-            <rect x="4" y="8" width="8" height="6" fill="#8B4513"/>
-            <rect x="3" y="9" width="10" height="5" fill="#8B4513"/>
-            <!-- Open front -->
-            <rect x="7" y="9" width="2" height="5" fill="#a0522d"/>
-            <!-- Tiki mask motif on chest -->
-            <rect x="5" y="9" width="2" height="3" fill="#daa520"/>
-            <rect x="9" y="9" width="2" height="3" fill="#daa520"/>
-            <!-- Tiki eyes -->
-            <rect x="5" y="10" width="1" height="1" fill="#1a1a1a"/>
-            <rect x="10" y="10" width="1" height="1" fill="#1a1a1a"/>
-            <!-- Tiki mouth -->
-            <rect x="5" y="11" width="2" height="1" fill="#e74c3c"/>
-            <rect x="9" y="11" width="2" height="1" fill="#e74c3c"/>
-            <!-- Fringe bottom -->
-            <rect x="4" y="13" width="1" height="1" fill="#a0522d"/>
-            <rect x="6" y="13" width="1" height="1" fill="#a0522d"/>
-            <rect x="9" y="13" width="1" height="1" fill="#a0522d"/>
-            <rect x="11" y="13" width="1" height="1" fill="#a0522d"/>
+
+        <!-- ========== NEW THEMED ITEMS ========== -->
+
+        <!-- Hat: Frog Hat (Cute/Common) -->
+        <symbol id="costume-hat-frog" viewBox="0 0 16 16">
+            <rect x="3" y="6" width="10" height="5" fill="#4caf50"/>
+            <rect x="4" y="5" width="8" height="1" fill="#66bb6a"/>
+            <!-- Big eyes -->
+            <rect x="3" y="3" width="3" height="3" fill="#ffffff"/>
+            <rect x="10" y="3" width="3" height="3" fill="#ffffff"/>
+            <rect x="4" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="11" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <!-- Mouth -->
+            <rect x="5" y="9" width="6" height="1" fill="#388e3c"/>
+            <rect x="6" y="10" width="1" height="1" fill="#ff5252"/>
+        </symbol>
+
+        <!-- Hat: Bow Headband (Cute/Common) -->
+        <symbol id="costume-hat-bow" viewBox="0 0 16 16">
+            <rect x="3" y="9" width="10" height="2" fill="#ff69b4"/>
+            <!-- Left bow loop -->
+            <rect x="4" y="5" width="3" height="4" fill="#ff69b4"/>
+            <rect x="5" y="4" width="2" height="1" fill="#ffb6c1"/>
+            <rect x="5" y="6" width="1" height="2" fill="#ff1493"/>
+            <!-- Right bow loop -->
+            <rect x="9" y="5" width="3" height="4" fill="#ff69b4"/>
+            <rect x="9" y="4" width="2" height="1" fill="#ffb6c1"/>
+            <rect x="10" y="6" width="1" height="2" fill="#ff1493"/>
+            <!-- Center knot -->
+            <rect x="7" y="7" width="2" height="3" fill="#ff1493"/>
+        </symbol>
+
+        <!-- Hat: Swim Goggles (Sports/Rare) -->
+        <symbol id="costume-hat-goggles" viewBox="0 0 16 16">
+            <!-- Strap -->
+            <rect x="1" y="7" width="14" height="2" fill="#333333"/>
+            <!-- Left lens -->
+            <rect x="2" y="5" width="5" height="5" fill="#40c4ff"/>
+            <rect x="3" y="6" width="3" height="3" fill="#80d8ff"/>
+            <!-- Right lens -->
+            <rect x="9" y="5" width="5" height="5" fill="#40c4ff"/>
+            <rect x="10" y="6" width="3" height="3" fill="#80d8ff"/>
+            <!-- Bridge -->
+            <rect x="7" y="7" width="2" height="2" fill="#444444"/>
+            <!-- Shine -->
+            <rect x="3" y="6" width="1" height="1" fill="#ffffff"/>
+            <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Hat: Snorkel Mask (Sports/Rare) -->
+        <symbol id="costume-hat-snorkel" viewBox="0 0 16 16">
+            <!-- Mask -->
+            <rect x="3" y="5" width="10" height="6" fill="#1565c0"/>
+            <rect x="4" y="6" width="8" height="4" fill="#42a5f5"/>
+            <!-- Glass -->
+            <rect x="5" y="7" width="6" height="2" fill="#bbdefb"/>
+            <rect x="5" y="7" width="2" height="1" fill="#ffffff"/>
+            <!-- Snorkel tube -->
+            <rect x="13" y="2" width="2" height="6" fill="#ffeb3b"/>
+            <rect x="14" y="1" width="2" height="2" fill="#ffeb3b"/>
+            <!-- Snorkel top -->
+            <rect x="14" y="0" width="2" height="1" fill="#f44336"/>
+        </symbol>
+
+        <!-- Hat: Straw Hat (Tropical/Rare) -->
+        <symbol id="costume-hat-straw" viewBox="0 0 16 16">
+            <!-- Wide brim -->
+            <rect x="0" y="9" width="16" height="2" fill="#deb887"/>
+            <rect x="1" y="8" width="14" height="1" fill="#d2a679"/>
+            <!-- Crown -->
+            <rect x="4" y="4" width="8" height="4" fill="#f5deb3"/>
+            <rect x="5" y="3" width="6" height="1" fill="#deb887"/>
+            <rect x="6" y="2" width="4" height="1" fill="#d2a679"/>
+            <!-- Band -->
+            <rect x="4" y="7" width="8" height="1" fill="#e74c3c"/>
+            <!-- Weave texture -->
+            <rect x="5" y="5" width="2" height="1" fill="#deb887"/>
+            <rect x="9" y="5" width="2" height="1" fill="#deb887"/>
+        </symbol>
+
+        <!-- Hat: Hibiscus Clip (Tropical/Common) -->
+        <symbol id="costume-hat-hibiscus" viewBox="0 0 16 16">
+            <!-- Petals -->
+            <rect x="8" y="4" width="3" height="2" fill="#ff1744"/>
+            <rect x="6" y="4" width="2" height="3" fill="#ff1744"/>
+            <rect x="10" y="6" width="2" height="3" fill="#ff1744"/>
+            <rect x="7" y="8" width="3" height="2" fill="#ff1744"/>
+            <rect x="5" y="6" width="2" height="2" fill="#ff5252"/>
+            <!-- Center -->
+            <rect x="8" y="6" width="2" height="2" fill="#ffeb3b"/>
+            <rect x="8" y="6" width="1" height="1" fill="#fff176"/>
+            <!-- Stem/clip -->
+            <rect x="7" y="10" width="1" height="1" fill="#2e7d32"/>
+            <rect x="6" y="9" width="1" height="1" fill="#2e7d32"/>
+        </symbol>
+
+        <!-- Hat: Dolphin Fin (Tropical/Epic) -->
+        <symbol id="costume-hat-dolphin" viewBox="0 0 16 16">
+            <!-- Dorsal fin shape -->
+            <rect x="6" y="2" width="4" height="2" fill="#42a5f5"/>
+            <rect x="5" y="4" width="6" height="2" fill="#1e88e5"/>
+            <rect x="4" y="6" width="8" height="3" fill="#1565c0"/>
+            <rect x="3" y="9" width="10" height="2" fill="#0d47a1"/>
+            <!-- Fin curve highlight -->
+            <rect x="7" y="2" width="1" height="2" fill="#90caf9"/>
+            <rect x="6" y="4" width="1" height="2" fill="#64b5f6"/>
+            <!-- Eye -->
+            <rect x="5" y="8" width="1" height="1" fill="#1a1a1a"/>
+            <!-- Belly -->
+            <rect x="5" y="10" width="6" height="1" fill="#bbdefb"/>
+        </symbol>
+
+        <!-- Hat: Coconut Hat (Tropical/Rare) -->
+        <symbol id="costume-hat-coconut" viewBox="0 0 16 16">
+            <!-- Coconut shell -->
+            <rect x="4" y="4" width="8" height="5" fill="#795548"/>
+            <rect x="5" y="3" width="6" height="1" fill="#6d4c41"/>
+            <rect x="3" y="9" width="10" height="2" fill="#5d4037"/>
+            <!-- Shell texture -->
+            <rect x="6" y="5" width="2" height="1" fill="#8d6e63"/>
+            <rect x="9" y="6" width="2" height="1" fill="#8d6e63"/>
+            <!-- Palm leaf on top -->
+            <rect x="6" y="2" width="4" height="2" fill="#4caf50"/>
+            <rect x="5" y="1" width="2" height="1" fill="#66bb6a"/>
+            <rect x="9" y="1" width="2" height="1" fill="#66bb6a"/>
+        </symbol>
+
+        <!-- Outfit: Polka Dot Dress (Cute/Common) -->
+        <symbol id="costume-outfit-polkadot" viewBox="0 0 16 16">
+            <!-- Dress body -->
+            <rect x="4" y="8" width="8" height="6" fill="#e91e63"/>
+            <rect x="3" y="10" width="10" height="4" fill="#e91e63"/>
+            <rect x="2" y="12" width="12" height="3" fill="#c2185b"/>
+            <!-- Polka dots -->
+            <rect x="5" y="9" width="1" height="1" fill="#ffffff"/>
+            <rect x="8" y="9" width="1" height="1" fill="#ffffff"/>
+            <rect x="10" y="10" width="1" height="1" fill="#ffffff"/>
+            <rect x="4" y="11" width="1" height="1" fill="#ffffff"/>
+            <rect x="7" y="12" width="1" height="1" fill="#ffffff"/>
+            <rect x="10" y="13" width="1" height="1" fill="#ffffff"/>
+            <!-- Collar -->
+            <rect x="6" y="8" width="4" height="1" fill="#f48fb1"/>
+        </symbol>
+
+        <!-- Outfit: Dino Onesie (Cute/Rare) -->
+        <symbol id="costume-outfit-onesie" viewBox="0 0 16 16">
+            <!-- Body -->
+            <rect x="4" y="8" width="8" height="6" fill="#66bb6a"/>
+            <rect x="3" y="9" width="10" height="5" fill="#4caf50"/>
+            <!-- Hood -->
+            <rect x="5" y="7" width="6" height="2" fill="#66bb6a"/>
+            <!-- Belly -->
+            <rect x="6" y="10" width="4" height="3" fill="#c8e6c9"/>
+            <!-- Spines -->
+            <rect x="7" y="6" width="2" height="1" fill="#388e3c"/>
+            <rect x="7" y="7" width="1" height="1" fill="#2e7d32"/>
+            <!-- Eyes on hood -->
+            <rect x="6" y="7" width="1" height="1" fill="#ffffff"/>
+            <rect x="9" y="7" width="1" height="1" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Outfit: Jersey (Sports/Rare) -->
+        <symbol id="costume-outfit-jersey" viewBox="0 0 16 16">
+            <!-- Shirt body -->
+            <rect x="4" y="8" width="8" height="6" fill="#1565c0"/>
+            <rect x="3" y="9" width="10" height="5" fill="#1976d2"/>
+            <!-- Sleeves -->
+            <rect x="2" y="9" width="2" height="3" fill="#1565c0"/>
+            <rect x="12" y="9" width="2" height="3" fill="#1565c0"/>
+            <!-- Number -->
+            <rect x="6" y="10" width="1" height="3" fill="#ffffff"/>
+            <rect x="7" y="10" width="2" height="1" fill="#ffffff"/>
+            <rect x="7" y="11" width="2" height="1" fill="#ffffff"/>
+            <rect x="9" y="10" width="1" height="3" fill="#ffffff"/>
+            <!-- Collar -->
+            <rect x="6" y="8" width="4" height="1" fill="#0d47a1"/>
+        </symbol>
+
+        <!-- Outfit: Life Jacket (Sports/Rare) -->
+        <symbol id="costume-outfit-lifejacket" viewBox="0 0 16 16">
+            <!-- Jacket body -->
+            <rect x="4" y="8" width="8" height="6" fill="#ff6f00"/>
+            <rect x="3" y="9" width="10" height="5" fill="#ff8f00"/>
+            <!-- Panels -->
+            <rect x="5" y="9" width="2" height="4" fill="#ffb300"/>
+            <rect x="9" y="9" width="2" height="4" fill="#ffb300"/>
+            <!-- Buckle -->
+            <rect x="7" y="10" width="2" height="1" fill="#333333"/>
+            <rect x="7" y="12" width="2" height="1" fill="#333333"/>
+            <!-- Reflective strip -->
+            <rect x="4" y="13" width="8" height="1" fill="#e0e0e0"/>
+        </symbol>
+
+        <!-- Outfit: Track Suit (Sports/Rare) -->
+        <symbol id="costume-outfit-tracksuit" viewBox="0 0 16 16">
+            <!-- Jacket -->
+            <rect x="4" y="8" width="8" height="6" fill="#d32f2f"/>
+            <rect x="3" y="9" width="10" height="5" fill="#e53935"/>
+            <!-- White stripes -->
+            <rect x="3" y="9" width="1" height="5" fill="#ffffff"/>
+            <rect x="12" y="9" width="1" height="5" fill="#ffffff"/>
+            <!-- Zipper -->
+            <rect x="7" y="8" width="2" height="6" fill="#b71c1c"/>
+            <rect x="8" y="9" width="1" height="4" fill="#ffd700"/>
+            <!-- Collar -->
+            <rect x="6" y="8" width="4" height="1" fill="#b71c1c"/>
+        </symbol>
+
+        <!-- Outfit: Snowsuit (Winter Sports/Epic) -->
+        <symbol id="costume-outfit-snowsuit" viewBox="0 0 16 16">
+            <!-- Puffy body -->
+            <rect x="3" y="8" width="10" height="6" fill="#e3f2fd"/>
+            <rect x="4" y="7" width="8" height="1" fill="#bbdefb"/>
+            <!-- Puffy arms -->
+            <rect x="2" y="9" width="2" height="4" fill="#e3f2fd"/>
+            <rect x="12" y="9" width="2" height="4" fill="#e3f2fd"/>
+            <!-- Zipper -->
+            <rect x="7" y="8" width="2" height="6" fill="#90caf9"/>
+            <rect x="8" y="9" width="1" height="4" fill="#64b5f6"/>
+            <!-- Fur trim -->
+            <rect x="5" y="7" width="6" height="1" fill="#ffffff"/>
+            <!-- Pockets -->
+            <rect x="4" y="11" width="2" height="2" fill="#bbdefb"/>
+            <rect x="10" y="11" width="2" height="2" fill="#bbdefb"/>
+        </symbol>
+
+        <!-- Outfit: Board Shorts (Tropical/Common) -->
+        <symbol id="costume-outfit-boardshorts" viewBox="0 0 16 16">
+            <!-- Shorts -->
+            <rect x="4" y="10" width="8" height="4" fill="#00bcd4"/>
+            <rect x="3" y="11" width="10" height="3" fill="#0097a7"/>
+            <!-- Flower print -->
+            <rect x="5" y="11" width="1" height="1" fill="#ffeb3b"/>
+            <rect x="8" y="12" width="1" height="1" fill="#ff5252"/>
+            <rect x="10" y="11" width="1" height="1" fill="#ffeb3b"/>
+            <!-- Drawstring -->
+            <rect x="6" y="10" width="4" height="1" fill="#00838f"/>
+            <rect x="7" y="10" width="1" height="1" fill="#ffffff"/>
+            <rect x="8" y="10" width="1" height="1" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Outfit: Floral Sundress (Tropical/Rare) -->
+        <symbol id="costume-outfit-sundress" viewBox="0 0 16 16">
+            <!-- Dress -->
+            <rect x="4" y="8" width="8" height="4" fill="#fff176"/>
+            <rect x="3" y="10" width="10" height="4" fill="#ffee58"/>
+            <rect x="2" y="12" width="12" height="3" fill="#fdd835"/>
+            <!-- Flowers -->
+            <rect x="5" y="9" width="1" height="1" fill="#e91e63"/>
+            <rect x="9" y="10" width="1" height="1" fill="#e91e63"/>
+            <rect x="4" y="12" width="1" height="1" fill="#ff5252"/>
+            <rect x="8" y="13" width="1" height="1" fill="#e91e63"/>
+            <rect x="11" y="12" width="1" height="1" fill="#ff5252"/>
+            <!-- Straps -->
+            <rect x="5" y="7" width="2" height="1" fill="#fff176"/>
+            <rect x="9" y="7" width="2" height="1" fill="#fff176"/>
+        </symbol>
+
+        <!-- Outfit: Sarong (Tropical/Rare) -->
+        <symbol id="costume-outfit-sarong" viewBox="0 0 16 16">
+            <!-- Wrap -->
+            <rect x="4" y="10" width="8" height="4" fill="#ab47bc"/>
+            <rect x="3" y="11" width="10" height="3" fill="#8e24aa"/>
+            <!-- Pattern -->
+            <rect x="5" y="11" width="2" height="1" fill="#e1bee7"/>
+            <rect x="8" y="12" width="2" height="1" fill="#e1bee7"/>
+            <rect x="5" y="13" width="2" height="1" fill="#ce93d8"/>
+            <!-- Tie knot -->
+            <rect x="4" y="10" width="2" height="2" fill="#7b1fa2"/>
+            <rect x="3" y="12" width="1" height="2" fill="#ab47bc"/>
+        </symbol>
+
+        <!-- Outfit: Tiki Outfit (Tropical/Epic) -->
+        <symbol id="costume-outfit-tikicostume" viewBox="0 0 16 16">
+            <!-- Body wrap -->
+            <rect x="4" y="8" width="8" height="6" fill="#8d6e63"/>
+            <rect x="3" y="9" width="10" height="5" fill="#795548"/>
+            <!-- Tiki face on chest -->
+            <rect x="6" y="9" width="4" height="3" fill="#daa520"/>
+            <rect x="7" y="9" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="8" y="9" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="6" y="11" width="4" height="1" fill="#d32f2f"/>
+            <!-- Leaf fringe -->
+            <rect x="4" y="13" width="1" height="1" fill="#4caf50"/>
+            <rect x="6" y="13" width="1" height="1" fill="#66bb6a"/>
+            <rect x="8" y="13" width="1" height="1" fill="#4caf50"/>
+            <rect x="10" y="13" width="1" height="1" fill="#66bb6a"/>
+            <!-- Bone necklace -->
+            <rect x="5" y="8" width="6" height="1" fill="#e0e0e0"/>
+        </symbol>
+
+        <!-- Outfit: Hawaiian Muumuu (Tropical/Epic) -->
+        <symbol id="costume-outfit-muumuu" viewBox="0 0 16 16">
+            <!-- Flowing dress -->
+            <rect x="3" y="8" width="10" height="6" fill="#ff7043"/>
+            <rect x="2" y="10" width="12" height="4" fill="#f4511e"/>
+            <rect x="2" y="12" width="12" height="3" fill="#e64a19"/>
+            <!-- Hibiscus print -->
+            <rect x="4" y="9" width="2" height="2" fill="#ffffff"/>
+            <rect x="5" y="9" width="1" height="1" fill="#ffeb3b"/>
+            <rect x="8" y="11" width="2" height="2" fill="#ffffff"/>
+            <rect x="9" y="11" width="1" height="1" fill="#ffeb3b"/>
+            <rect x="4" y="13" width="2" height="1" fill="#ffffff"/>
+            <!-- Collar ruffle -->
+            <rect x="5" y="8" width="6" height="1" fill="#ff8a65"/>
+        </symbol>
+
+        <!-- Accessory: Teddy Bear (Cute/Rare) -->
+        <symbol id="costume-acc-teddy" viewBox="0 0 16 16">
+            <!-- Head -->
+            <rect x="10" y="1" width="4" height="4" fill="#a1887f"/>
+            <!-- Ears -->
+            <rect x="9" y="0" width="2" height="2" fill="#8d6e63"/>
+            <rect x="13" y="0" width="2" height="2" fill="#8d6e63"/>
+            <rect x="10" y="1" width="1" height="1" fill="#bcaaa4"/>
+            <rect x="13" y="1" width="1" height="1" fill="#bcaaa4"/>
+            <!-- Body -->
+            <rect x="10" y="5" width="4" height="5" fill="#a1887f"/>
+            <!-- Arms -->
+            <rect x="9" y="6" width="1" height="3" fill="#8d6e63"/>
+            <rect x="14" y="6" width="1" height="3" fill="#8d6e63"/>
+            <!-- Face -->
+            <rect x="11" y="2" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="13" y="2" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="12" y="3" width="1" height="1" fill="#5d4037"/>
+            <!-- Belly -->
+            <rect x="11" y="6" width="2" height="3" fill="#d7ccc8"/>
+        </symbol>
+
+        <!-- Accessory: Hoverboard (Sports/Epic) -->
+        <symbol id="costume-acc-hoverboard" viewBox="0 0 16 16">
+            <!-- Board -->
+            <rect x="8" y="10" width="7" height="2" fill="#1a237e"/>
+            <rect x="7" y="11" width="1" height="1" fill="#1a237e"/>
+            <rect x="15" y="11" width="1" height="1" fill="#1a237e"/>
+            <!-- Glow pads -->
+            <rect x="9" y="12" width="2" height="1" fill="#00e5ff"/>
+            <rect x="13" y="12" width="2" height="1" fill="#00e5ff"/>
+            <!-- Top design -->
+            <rect x="9" y="10" width="5" height="1" fill="#283593"/>
+            <rect x="10" y="10" width="3" height="1" fill="#3949ab"/>
+            <!-- Hover glow -->
+            <rect x="9" y="13" width="5" height="1" fill="#00bcd4"/>
+            <rect x="10" y="14" width="3" height="1" fill="#80deea"/>
+        </symbol>
+
+        <!-- Accessory: Coconut Drink (Tropical/Common) -->
+        <symbol id="costume-acc-coconutdrink" viewBox="0 0 16 16">
+            <!-- Coconut shell -->
+            <rect x="9" y="5" width="6" height="4" fill="#795548"/>
+            <rect x="10" y="4" width="4" height="1" fill="#6d4c41"/>
+            <rect x="10" y="9" width="4" height="1" fill="#5d4037"/>
+            <!-- Drink inside -->
+            <rect x="10" y="5" width="4" height="2" fill="#ffffff"/>
+            <!-- Straw -->
+            <rect x="13" y="1" width="1" height="6" fill="#ff5252"/>
+            <rect x="14" y="1" width="1" height="1" fill="#ff5252"/>
+            <!-- Umbrella -->
+            <rect x="10" y="1" width="4" height="1" fill="#ffeb3b"/>
+            <rect x="11" y="2" width="2" height="1" fill="#fdd835"/>
+            <rect x="12" y="2" width="1" height="2" fill="#795548"/>
+        </symbol>
+
+        <!-- Accessory: Ukulele (Tropical/Rare) -->
+        <symbol id="costume-acc-ukulele" viewBox="0 0 16 16">
+            <!-- Body -->
+            <rect x="10" y="6" width="5" height="4" fill="#d2691e"/>
+            <rect x="11" y="5" width="3" height="1" fill="#cd853f"/>
+            <rect x="11" y="10" width="3" height="1" fill="#cd853f"/>
+            <!-- Sound hole -->
+            <rect x="12" y="7" width="1" height="2" fill="#3e2723"/>
+            <!-- Neck -->
+            <rect x="12" y="1" width="1" height="4" fill="#8d6e63"/>
+            <!-- Head -->
+            <rect x="11" y="0" width="3" height="1" fill="#5d4037"/>
+            <!-- Tuning pegs -->
+            <rect x="11" y="0" width="1" height="1" fill="#ffd700"/>
+            <rect x="13" y="0" width="1" height="1" fill="#ffd700"/>
+            <!-- Strings -->
+            <rect x="12" y="2" width="1" height="6" fill="#e0e0e0"/>
+        </symbol>
+
+        <!-- Accessory: Seashell (Tropical/Common) -->
+        <symbol id="costume-acc-seashell" viewBox="0 0 16 16">
+            <!-- Shell spiral -->
+            <rect x="9" y="3" width="6" height="2" fill="#ffccbc"/>
+            <rect x="8" y="5" width="8" height="4" fill="#ffab91"/>
+            <rect x="9" y="9" width="6" height="2" fill="#ff8a65"/>
+            <!-- Spiral lines -->
+            <rect x="10" y="4" width="1" height="1" fill="#ff7043"/>
+            <rect x="12" y="5" width="1" height="2" fill="#ff7043"/>
+            <rect x="10" y="7" width="2" height="1" fill="#ff7043"/>
+            <rect x="14" y="6" width="1" height="2" fill="#ffccbc"/>
+            <!-- Ridges -->
+            <rect x="9" y="6" width="1" height="1" fill="#ffccbc"/>
+            <rect x="9" y="8" width="1" height="1" fill="#ffccbc"/>
+            <!-- Pearl -->
+            <rect x="11" y="6" width="1" height="1" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Accessory: Snowflake (Winter/Epic) -->
+        <symbol id="costume-acc-snowflake" viewBox="0 0 16 16">
+            <!-- Vertical bar -->
+            <rect x="12" y="1" width="1" height="11" fill="#e3f2fd"/>
+            <!-- Horizontal bar -->
+            <rect x="8" y="6" width="9" height="1" fill="#e3f2fd"/>
+            <!-- Diagonal branches -->
+            <rect x="9" y="3" width="1" height="1" fill="#bbdefb"/>
+            <rect x="10" y="4" width="1" height="1" fill="#bbdefb"/>
+            <rect x="14" y="4" width="1" height="1" fill="#bbdefb"/>
+            <rect x="15" y="3" width="1" height="1" fill="#bbdefb"/>
+            <rect x="9" y="9" width="1" height="1" fill="#bbdefb"/>
+            <rect x="10" y="8" width="1" height="1" fill="#bbdefb"/>
+            <rect x="14" y="8" width="1" height="1" fill="#bbdefb"/>
+            <rect x="15" y="9" width="1" height="1" fill="#bbdefb"/>
+            <!-- Center crystal -->
+            <rect x="11" y="5" width="3" height="3" fill="#90caf9"/>
+            <rect x="12" y="6" width="1" height="1" fill="#ffffff"/>
+        </symbol>
+
+        <!-- Accessory: S'mores (Winter/Rare) -->
+        <symbol id="costume-acc-smores" viewBox="0 0 16 16">
+            <!-- Bottom graham cracker -->
+            <rect x="9" y="8" width="6" height="2" fill="#d2691e"/>
+            <rect x="10" y="9" width="1" height="1" fill="#cd853f"/>
+            <rect x="13" y="9" width="1" height="1" fill="#cd853f"/>
+            <!-- Chocolate -->
+            <rect x="9" y="6" width="6" height="2" fill="#5d4037"/>
+            <rect x="10" y="7" width="1" height="1" fill="#6d4c41"/>
+            <!-- Marshmallow -->
+            <rect x="9" y="3" width="6" height="3" fill="#ffffff"/>
+            <rect x="10" y="2" width="4" height="1" fill="#f5f5f5"/>
+            <!-- Toasted top -->
+            <rect x="10" y="3" width="4" height="1" fill="#ffcc80"/>
+            <rect x="11" y="4" width="2" height="1" fill="#ffab40"/>
+            <!-- Top graham cracker -->
+            <rect x="9" y="1" width="6" height="1" fill="#d2691e"/>
         </symbol>
 
         <!-- ========== END COSTUME PIECES ========== -->
@@ -4708,24 +4930,28 @@
             hats: [
                 { id: 'hat-none', name: 'None', svgId: null, price: 0, rarity: 'COMMON' },
                 // Common (30-100)
-                { id: 'hat-beanie', name: 'Beanie', svgId: 'costume-hat-beanie', price: 50, rarity: 'COMMON' },
-                { id: 'hat-ballcap', name: 'Ball Cap', svgId: 'costume-hat-ballcap', price: 75, rarity: 'COMMON' },
-                { id: 'hat-party', name: 'Party Hat', svgId: 'costume-hat-party', price: 100, rarity: 'COMMON' },
+                { id: 'hat-hibiscus', name: 'Hibiscus Clip', svgId: 'costume-hat-hibiscus', price: 60, rarity: 'COMMON' },
+                { id: 'hat-frog', name: 'Frog Hat', svgId: 'costume-hat-frog', price: 75, rarity: 'COMMON' },
+                { id: 'hat-bow', name: 'Bow Headband', svgId: 'costume-hat-bow', price: 100, rarity: 'COMMON' },
                 // Rare (250-500)
                 { id: 'hat-pirate', name: 'Pirate Hat', svgId: 'costume-hat-pirate', price: 300, rarity: 'RARE' },
+                { id: 'hat-goggles', name: 'Swim Goggles', svgId: 'costume-hat-goggles', price: 300, rarity: 'RARE' },
+                { id: 'hat-straw', name: 'Straw Hat', svgId: 'costume-hat-straw', price: 350, rarity: 'RARE' },
                 { id: 'hat-headphones', name: 'Headphones', svgId: 'costume-hat-headphones', price: 350, rarity: 'RARE' },
                 { id: 'hat-flowercrown', name: 'Flower Crown', svgId: 'costume-hat-flowercrown', price: 400, rarity: 'RARE' },
+                { id: 'hat-cowboy', name: 'Cowboy Hat', svgId: 'costume-hat-cowboy', price: 400, rarity: 'RARE' },
+                { id: 'hat-coconut', name: 'Coconut Hat', svgId: 'costume-hat-coconut', price: 400, rarity: 'RARE' },
                 { id: 'hat-bunny', name: 'Bunny Ears', svgId: 'costume-hat-bunny', price: 450, rarity: 'RARE' },
                 { id: 'hat-catears', name: 'Cat Ears', svgId: 'costume-hat-catears', price: 450, rarity: 'RARE' },
-                { id: 'hat-cowboy', name: 'Cowboy Hat', svgId: 'costume-hat-cowboy', price: 400, rarity: 'RARE' },
                 { id: 'hat-hula', name: 'Hula Hat', svgId: 'costume-hat-hula', price: 450, rarity: 'RARE' },
+                { id: 'hat-snorkel', name: 'Snorkel Mask', svgId: 'costume-hat-snorkel', price: 450, rarity: 'RARE' },
                 { id: 'hat-santa', name: 'Santa Hat', svgId: 'costume-hat-santa', price: 500, rarity: 'RARE' },
                 // Epic (1000-2500)
                 { id: 'hat-crown', name: 'Crown', svgId: 'costume-hat-crown', price: 1200, rarity: 'EPIC' },
                 { id: 'hat-halo', name: 'Halo', svgId: 'costume-hat-halo', price: 1500, rarity: 'EPIC' },
+                { id: 'hat-dolphin', name: 'Dolphin Fin', svgId: 'costume-hat-dolphin', price: 1500, rarity: 'EPIC' },
                 { id: 'hat-tiara', name: 'Tiara', svgId: 'costume-hat-tiara', price: 1800, rarity: 'EPIC' },
                 { id: 'hat-unicorn', name: 'Unicorn Horn', svgId: 'costume-hat-unicorn', price: 2200, rarity: 'EPIC' },
-                { id: 'hat-wizard', name: 'Wizard Hat', svgId: 'costume-hat-wizard', price: 2000, rarity: 'EPIC' },
                 // Legendary (5000-15000)
                 { id: 'hat-viking', name: 'Viking Helm', svgId: 'costume-hat-viking', price: 5000, rarity: 'LEGENDARY' },
                 { id: 'hat-emperor', name: 'Emperor Crown', svgId: 'costume-hat-emperor', price: 8000, rarity: 'LEGENDARY' },
@@ -4734,49 +4960,56 @@
             outfits: [
                 { id: 'outfit-none', name: 'None', svgId: null, price: 0, rarity: 'COMMON' },
                 // Common (30-100)
-                { id: 'outfit-bowtie', name: 'Bow Tie', svgId: 'costume-outfit-bowtie', price: 50, rarity: 'COMMON' },
-                { id: 'outfit-hoodie', name: 'Hoodie', svgId: 'costume-outfit-hoodie', price: 75, rarity: 'COMMON' },
+                { id: 'outfit-boardshorts', name: 'Board Shorts', svgId: 'costume-outfit-boardshorts', price: 75, rarity: 'COMMON' },
                 { id: 'outfit-scarf', name: 'Scarf', svgId: 'costume-outfit-scarf', price: 100, rarity: 'COMMON' },
+                { id: 'outfit-polkadot', name: 'Polka Dot Dress', svgId: 'costume-outfit-polkadot', price: 100, rarity: 'COMMON' },
                 { id: 'outfit-lei', name: 'Lei', svgId: 'costume-outfit-lei', price: 120, rarity: 'COMMON' },
                 // Rare (250-500)
                 { id: 'outfit-aloha', name: 'Aloha Shirt', svgId: 'costume-outfit-aloha', price: 250, rarity: 'RARE' },
-                { id: 'outfit-cape', name: 'Cape', svgId: 'costume-outfit-cape', price: 350, rarity: 'RARE' },
-                { id: 'outfit-medal', name: 'Medal', svgId: 'costume-outfit-medal', price: 400, rarity: 'RARE' },
+                { id: 'outfit-jersey', name: 'Jersey', svgId: 'costume-outfit-jersey', price: 250, rarity: 'RARE' },
+                { id: 'outfit-sarong', name: 'Sarong', svgId: 'costume-outfit-sarong', price: 300, rarity: 'RARE' },
+                { id: 'outfit-tracksuit', name: 'Track Suit', svgId: 'costume-outfit-tracksuit', price: 350, rarity: 'RARE' },
+                { id: 'outfit-lifejacket', name: 'Life Jacket', svgId: 'costume-outfit-lifejacket', price: 400, rarity: 'RARE' },
                 { id: 'outfit-grass', name: 'Grass Skirt', svgId: 'costume-outfit-grass', price: 450, rarity: 'RARE' },
-                { id: 'outfit-heart', name: 'Heart Locket', svgId: 'costume-outfit-heart', price: 500, rarity: 'RARE' },
+                { id: 'outfit-sundress', name: 'Floral Sundress', svgId: 'costume-outfit-sundress', price: 450, rarity: 'RARE' },
+                { id: 'outfit-onesie', name: 'Dino Onesie', svgId: 'costume-outfit-onesie', price: 500, rarity: 'RARE' },
                 // Epic (1000-2500)
-                { id: 'outfit-armor', name: 'Armor', svgId: 'costume-outfit-armor', price: 1500, rarity: 'EPIC' },
-                { id: 'outfit-surfboard', name: 'Surfboard', svgId: 'costume-outfit-surfboard', price: 1600, rarity: 'EPIC' },
+                { id: 'outfit-muumuu', name: 'Hawaiian Muumuu', svgId: 'costume-outfit-muumuu', price: 1500, rarity: 'EPIC' },
+                { id: 'outfit-snowsuit', name: 'Snowsuit', svgId: 'costume-outfit-snowsuit', price: 1800, rarity: 'EPIC' },
                 { id: 'outfit-tutu', name: 'Ballet Tutu', svgId: 'costume-outfit-tutu', price: 1800, rarity: 'EPIC' },
                 { id: 'outfit-wings', name: 'Fairy Wings', svgId: 'costume-outfit-wings', price: 2000, rarity: 'EPIC' },
                 { id: 'outfit-butterfly', name: 'Butterfly Wings', svgId: 'costume-outfit-butterfly', price: 2200, rarity: 'EPIC' },
+                { id: 'outfit-tikicostume', name: 'Tiki Outfit', svgId: 'costume-outfit-tikicostume', price: 2500, rarity: 'EPIC' },
                 { id: 'outfit-mermaid', name: 'Mermaid Tail', svgId: 'costume-outfit-mermaid', price: 2500, rarity: 'EPIC' },
-                { id: 'outfit-tiki', name: 'Tiki Vest', svgId: 'costume-outfit-tiki', price: 2800, rarity: 'EPIC' },
                 // Legendary (5000-15000)
                 { id: 'outfit-princess', name: 'Princess Dress', svgId: 'costume-outfit-princess', price: 6000, rarity: 'LEGENDARY' },
-                { id: 'outfit-dragon', name: 'Dragon Armor', svgId: 'costume-outfit-dragon', price: 7500, rarity: 'LEGENDARY' },
                 { id: 'outfit-phoenix', name: 'Phoenix Wings', svgId: 'costume-outfit-phoenix', price: 12000, rarity: 'LEGENDARY' }
             ],
             accessories: [
                 { id: 'acc-none', name: 'None', svgId: null, price: 0, rarity: 'COMMON' },
                 // Common (30-100)
                 { id: 'acc-sunglasses', name: 'Sunglasses', svgId: 'costume-acc-sunglasses', price: 50, position: 'face', rarity: 'COMMON' },
-                { id: 'acc-flower', name: 'Flower', svgId: 'costume-acc-flower', price: 60, rarity: 'COMMON' },
+                { id: 'acc-seashell', name: 'Seashell', svgId: 'costume-acc-seashell', price: 60, rarity: 'COMMON' },
                 { id: 'acc-icecream', name: 'Ice Cream', svgId: 'costume-acc-icecream', price: 75, rarity: 'COMMON' },
+                { id: 'acc-coconutdrink', name: 'Coconut Drink', svgId: 'costume-acc-coconutdrink', price: 80, rarity: 'COMMON' },
                 { id: 'acc-cupcake', name: 'Cupcake', svgId: 'costume-acc-cupcake', price: 80, rarity: 'COMMON' },
                 { id: 'acc-balloon', name: 'Balloon', svgId: 'costume-acc-balloon', price: 100, rarity: 'COMMON' },
                 // Rare (250-500)
                 { id: 'acc-bengbeng', name: 'BengBeng', svgId: 'costume-acc-bengbeng', price: 300, rarity: 'RARE' },
+                { id: 'acc-teddy', name: 'Teddy Bear', svgId: 'costume-acc-teddy', price: 300, rarity: 'RARE' },
                 { id: 'acc-donut', name: 'Donut', svgId: 'costume-acc-donut', price: 320, rarity: 'RARE' },
                 { id: 'acc-onigiri', name: 'Onigiri', svgId: 'costume-acc-onigiri', price: 350, rarity: 'RARE' },
-                { id: 'acc-wand', name: 'Magic Wand', svgId: 'costume-acc-wand', price: 400, rarity: 'RARE' },
-                { id: 'acc-heartglasses', name: 'Heart Glasses', svgId: 'costume-acc-heartglasses', price: 420, position: 'face', rarity: 'RARE' },
+                { id: 'acc-smores', name: "S'mores", svgId: 'costume-acc-smores', price: 350, rarity: 'RARE' },
                 { id: 'acc-sushi', name: 'Sushi', svgId: 'costume-acc-sushi', price: 400, rarity: 'RARE' },
-                { id: 'acc-ladybug', name: 'Ladybug', svgId: 'costume-acc-ladybug', price: 450, rarity: 'RARE' },
+                { id: 'acc-heartglasses', name: 'Heart Glasses', svgId: 'costume-acc-heartglasses', price: 420, position: 'face', rarity: 'RARE' },
+                { id: 'acc-ukulele', name: 'Ukulele', svgId: 'costume-acc-ukulele', price: 450, rarity: 'RARE' },
                 { id: 'acc-pizza', name: 'Pizza', svgId: 'costume-acc-pizza', price: 500, rarity: 'RARE' },
                 // Epic (1000-2500)
                 { id: 'acc-soccer', name: 'Soccer Ball', svgId: 'costume-acc-soccer', price: 1200, rarity: 'EPIC' },
+                { id: 'acc-snowflake', name: 'Snowflake', svgId: 'costume-acc-snowflake', price: 1200, rarity: 'EPIC' },
                 { id: 'acc-basketball', name: 'Basketball', svgId: 'costume-acc-basketball', price: 1500, rarity: 'EPIC' },
+                { id: 'acc-surfboard', name: 'Surfboard', svgId: 'costume-acc-surfboard', price: 1600, rarity: 'EPIC' },
+                { id: 'acc-hoverboard', name: 'Hoverboard', svgId: 'costume-acc-hoverboard', price: 1800, rarity: 'EPIC' },
                 { id: 'acc-football', name: 'Football', svgId: 'costume-acc-football', price: 2000, rarity: 'EPIC' },
                 // Legendary (5000-15000)
                 { id: 'acc-trophy', name: 'Gold Trophy', svgId: 'costume-acc-trophy', price: 6000, rarity: 'LEGENDARY' },
@@ -4784,78 +5017,6 @@
                 { id: 'acc-tail', name: 'Tail', svgId: 'costume-acc-tail', price: 15000, position: 'tail', rarity: 'LEGENDARY' }
             ]
         };
-
-        // Themed costume sets with bonus effects
-        const COSTUME_SETS = [
-            {
-                id: 'fairy',
-                name: 'Fairy Set',
-                items: { hat: 'hat-tiara', outfit: 'outfit-wings', accessory: 'acc-wand' },
-                effect: 'sparkle',
-                cssClass: 'set-fairy'
-            },
-            {
-                id: 'princess',
-                name: 'Princess Set',
-                items: { hat: 'hat-crown', outfit: 'outfit-princess', accessory: 'acc-tail' },
-                effect: 'glow',
-                cssClass: 'set-princess'
-            },
-            {
-                id: 'unicorn',
-                name: 'Unicorn Set',
-                items: { hat: 'hat-unicorn', outfit: 'outfit-butterfly', accessory: 'acc-rainbow' },
-                effect: 'sparkle',
-                cssClass: 'set-unicorn'
-            },
-            {
-                id: 'ocean',
-                name: 'Ocean Set',
-                items: { hat: 'hat-flowercrown', outfit: 'outfit-mermaid', accessory: 'acc-flower' },
-                effect: 'glow',
-                cssClass: 'set-ocean'
-            },
-            {
-                id: 'nature',
-                name: 'Nature Set',
-                items: { hat: 'hat-bunny', outfit: 'outfit-butterfly', accessory: 'acc-ladybug' },
-                effect: 'float',
-                cssClass: 'set-nature'
-            },
-            {
-                id: 'space',
-                name: 'Space Set',
-                items: { hat: 'hat-galaxy', outfit: 'outfit-phoenix', accessory: 'acc-tail' },
-                effect: 'glow',
-                cssClass: 'set-space'
-            },
-            {
-                id: 'sweet',
-                name: 'Sweet Treats Set',
-                items: { hat: 'hat-party', outfit: 'outfit-tutu', accessory: 'acc-cupcake' },
-                effect: 'sparkle',
-                cssClass: 'set-sweet'
-            },
-            {
-                id: 'kitty',
-                name: 'Kitty Set',
-                items: { hat: 'hat-catears', outfit: 'outfit-heart', accessory: 'acc-heartglasses' },
-                effect: 'float',
-                cssClass: 'set-kitty'
-            }
-        ];
-
-        // Check if player has a complete set equipped
-        function getEquippedSet() {
-            for (const set of COSTUME_SETS) {
-                if (equippedCostumes.hat === set.items.hat &&
-                    equippedCostumes.outfit === set.items.outfit &&
-                    equippedCostumes.accessory === set.items.accessory) {
-                    return set;
-                }
-            }
-            return null;
-        }
 
         let purchasedCostumes = []; // Costumes bought with coins
 
@@ -5490,6 +5651,50 @@
             } else {
                 playerXP = load('xp', 0);
                 playerLevel = levelFromXP(playerXP);
+            }
+            if (version < 3) {
+                // Shop overhaul: refund removed items, migrate surfboard to accessory
+                const REMOVED_ITEMS = {
+                    'hat-beanie': 50, 'hat-ballcap': 75, 'hat-party': 100, 'hat-wizard': 2000,
+                    'outfit-bowtie': 50, 'outfit-hoodie': 75, 'outfit-cape': 350,
+                    'outfit-medal': 400, 'outfit-heart': 500, 'outfit-armor': 1500,
+                    'outfit-tiki': 2800, 'outfit-dragon': 7500,
+                    'acc-flower': 60, 'acc-wand': 400, 'acc-ladybug': 450
+                };
+                let purchased = load('purchased_costumes', []);
+                let coins = load('coins', 0);
+                let refunded = 0;
+                for (const [id, price] of Object.entries(REMOVED_ITEMS)) {
+                    if (purchased.includes(id)) {
+                        refunded += price;
+                    }
+                }
+                coins += refunded;
+                purchased = purchased.filter(id => !REMOVED_ITEMS[id]);
+                // Migrate surfboard from outfit to accessory
+                if (purchased.includes('outfit-surfboard')) {
+                    purchased = purchased.filter(id => id !== 'outfit-surfboard');
+                    if (!purchased.includes('acc-surfboard')) purchased.push('acc-surfboard');
+                }
+                store('purchased_costumes', purchased);
+                store('coins', coins);
+                // Reset equipped costumes that reference removed items
+                const equipped = load('costumes', { hat: 'hat-none', outfit: 'outfit-none', accessory: 'acc-none' });
+                if (REMOVED_ITEMS[equipped.hat]) equipped.hat = 'hat-none';
+                if (REMOVED_ITEMS[equipped.outfit] || equipped.outfit === 'outfit-surfboard') {
+                    if (equipped.outfit === 'outfit-surfboard' && equipped.accessory === 'acc-none') {
+                        equipped.accessory = 'acc-surfboard';
+                    }
+                    if (equipped.outfit === 'outfit-surfboard' || REMOVED_ITEMS[equipped.outfit]) {
+                        equipped.outfit = 'outfit-none';
+                    }
+                }
+                if (REMOVED_ITEMS[equipped.accessory]) equipped.accessory = 'acc-none';
+                store('costumes', equipped);
+                store('version', 3);
+                if (refunded > 0) {
+                    setTimeout(() => showToast(`Shop refreshed! ${refunded} coins refunded for retired items.`, 4000), 1500);
+                }
             }
             updateLevelDisplay();
         }
@@ -8056,27 +8261,6 @@
                 accLayer.innerHTML = '';
             }
 
-            // Check for complete set and apply bonus effect
-            if (avatarEl) {
-                // Remove any existing set bonus classes
-                avatarEl.classList.remove('set-bonus-sparkle', 'set-bonus-glow', 'set-bonus-float');
-                COSTUME_SETS.forEach(s => avatarEl.classList.remove(s.cssClass));
-
-                const equippedSet = getEquippedSet();
-                if (equippedSet) {
-                    // Apply set bonus effect
-                    avatarEl.classList.add(`set-bonus-${equippedSet.effect}`);
-                    avatarEl.classList.add(equippedSet.cssClass);
-
-                    // Show set bonus notification (only once per set, not on page load)
-                    if (_initDone && (!avatarEl.dataset.currentSet || avatarEl.dataset.currentSet !== equippedSet.id)) {
-                        showToast(`✨ ${equippedSet.name} Complete! Bonus effect active!`, 2500);
-                    }
-                    avatarEl.dataset.currentSet = equippedSet.id;
-                } else {
-                    avatarEl.dataset.currentSet = '';
-                }
-            }
         }
 
         const $score = document.getElementById('score');
