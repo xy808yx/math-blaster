@@ -7788,7 +7788,7 @@
             if (problemTimeout) clearTimeout(problemTimeout);
             if (bossInterval) clearInterval(bossInterval);
             if (bossEntranceTimeout) { clearTimeout(bossEntranceTimeout); bossEntranceTimeout = null; }
-            if (_settingsCloseTimeout) { clearTimeout(_settingsCloseTimeout); _settingsCloseTimeout = null; }
+            if (_settingsCloseTimeout) { clearTimeout(_settingsCloseTimeout); _settingsCloseTimeout = null; document.querySelectorAll('.settings-row button.flash').forEach(b => b.classList.remove('flash')); }
             if (bossEndTimeout) {
                 clearTimeout(bossEndTimeout);
                 bossEndTimeout = null;
