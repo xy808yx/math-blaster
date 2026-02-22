@@ -548,7 +548,7 @@
         }
         .rarity-badge.rarity-common { background: #666; color: #fff; }
         .rarity-badge.rarity-uncommon { background: #5dade2; color: #1a0a2e; }
-        .rarity-badge.rarity-rare { background: #5dade2; color: #1a0a2e; }
+        .rarity-badge.rarity-rare { background: #f39c12; color: #1a0a2e; }
         .rarity-badge.rarity-epic { background: #9b59b6; color: #fff; }
         .rarity-badge.rarity-legendary { background: linear-gradient(135deg, #ffd93d, #ff6b9d); color: #1a0a2e; }
 
@@ -663,9 +663,6 @@
         }
         .mango-avatar:hover { transform: scale(1.1); }
         .mango-avatar:active { transform: scale(0.95); }
-        .mango-avatar.dancing {
-            animation: avatarDanceWiggle 0.5s ease-in-out infinite;
-        }
         .mango-avatar .costume-layer {
             position: absolute;
             top: 0;
@@ -820,8 +817,10 @@
         }
         .sticker-item.uncollected .sticker-item-name { color: #666; }
         /* Sticker rarity effects */
+        .sticker-item.rarity-common.collected { border-color: #888; box-shadow: 0 0 4px rgba(136, 136, 136, 0.3); }
         .sticker-item.rarity-uncommon.collected { border-color: #5dade2; box-shadow: 0 0 5px rgba(93, 173, 226, 0.4); }
-        .sticker-item.rarity-rare.collected { border-color: #ffd700; box-shadow: 0 0 8px rgba(255, 215, 0, 0.5); }
+        .sticker-item.rarity-rare.collected { border-color: #f39c12; box-shadow: 0 0 8px rgba(243, 156, 18, 0.5); }
+        .sticker-item.rarity-epic.collected { border-color: #9b59b6; box-shadow: 0 0 10px rgba(155, 89, 182, 0.5); }
         .sticker-item.rarity-legendary.collected {
             border-color: #ff6b9d;
             box-shadow: 0 0 12px rgba(255, 107, 157, 0.6);
@@ -1388,28 +1387,6 @@
             100% { transform: translate(-50%, -50%) scale(1); }
         }
         .boss-reward { font-size: 1.5rem; color: var(--success); margin-top: 10px; }
-
-        /* Game Over */
-        .game-over {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 300;
-            padding: 20px;
-            cursor: pointer;
-        }
-        .game-over.show { display: flex; }
-        .game-over h2 { font-size: 2.5rem; color: var(--accent); margin-bottom: 25px; }
-        .game-over-stats { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .final-stat { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
-        .new-record { color: var(--accent); font-weight: bold; animation: recordGlow 0.5s infinite; }
-        @keyframes recordGlow { 50% { text-shadow: 0 0 20px var(--accent); } }
-        .tap-restart { font-size: 1rem; color: var(--primary); opacity: 0.7; animation: tapFade 2s infinite; }
-        @keyframes tapFade { 50% { opacity: 1; } }
 
         .hidden { display: none !important; }
 
@@ -4666,18 +4643,6 @@
     </div>
 
     <!-- Game Over -->
-    <div class="game-over" id="gameOver" onclick="restartGame()">
-        <h2>TIME'S UP!</h2>
-        <div id="newRecordBanner"></div>
-        <div class="game-over-stats">
-            <div class="final-stat"><svg class="pixel-coin" style="width:24px;height:24px;vertical-align:middle;"><use href="#pixel-coin"/></svg> Score: <span id="finalScore">0</span></div>
-            <div class="final-stat"><svg class="pixel-fire" style="width:24px;height:24px;vertical-align:middle;"><use href="#pixel-fire"/></svg> Best Streak: <span id="bestStreak">0</span></div>
-            <div class="final-stat">✓ Accuracy: <span id="accuracy">0%</span></div>
-            <div class="final-stat">📝 Problems: <span id="totalProblems">0</span></div>
-        </div>
-        <div class="tap-restart">Tap anywhere to play again</div>
-    </div>
-
     <!-- Strategy Hint Overlay -->
     <div class="strategy-overlay" id="strategyOverlay" onclick="dismissStrategyHint()">
         <div class="strategy-label" id="strategyLabel">Making Tens</div>
@@ -5037,22 +5002,22 @@
         const AVATARS = {
             // Fruits (top row)
             mango: { id: 'mango', name: 'Mango', svgId: 'pixel-mango', unlocked: true,
-                costume: { hatY: -10, eyeY: 12, outfitY: -8, accX: -12 } },
+                costume: { hatY: -10, eyeY: 16, outfitY: -8, accX: -12 } },
             watermelon: { id: 'watermelon', name: 'Watermelon', svgId: 'pixel-watermelon', unlocked: true,
-                costume: { hatY: -12, eyeY: 10, outfitY: -4, accX: -12 } },
+                costume: { hatY: -12, eyeY: 13, outfitY: -4, accX: -12 } },
             pineapple: { id: 'pineapple', name: 'Pineapple', svgId: 'pixel-pineapple', unlocked: true,
-                costume: { hatY: -14, eyeY: 12, outfitY: -6, accX: -12 } },
+                costume: { hatY: -14, eyeY: 16, outfitY: -6, accX: -12 } },
             banana: { id: 'banana', name: 'Banana', svgId: 'pixel-banana', unlocked: true,
-                costume: { hatY: -12, eyeY: 16, outfitY: -4, accX: -10 } },
+                costume: { hatY: -12, eyeY: 19, outfitY: -4, accX: -10 } },
             // Animals (bottom row)
             panda: { id: 'panda', name: 'Taio', svgId: 'pixel-panda', unlocked: true,
-                costume: { hatY: -10, eyeY: 10, outfitY: -6, accX: -12 } },
+                costume: { hatY: -10, eyeY: 13, outfitY: -6, accX: -12 } },
             hippo: { id: 'hippo', name: 'Hippy', svgId: 'pixel-hippo', unlocked: true,
-                costume: { hatY: -10, eyeY: 12, outfitY: -10, accX: -12 } },
+                costume: { hatY: -10, eyeY: 16, outfitY: -10, accX: -12 } },
             lion: { id: 'lion', name: 'Shasha', svgId: 'pixel-lion', unlocked: true,
-                costume: { hatY: -12, eyeY: 10, outfitY: -6, accX: -14 } },
+                costume: { hatY: -12, eyeY: 13, outfitY: -6, accX: -14 } },
             unicorn: { id: 'unicorn', name: 'Uncorn', svgId: 'pixel-unicorn', unlocked: true,
-                costume: { hatY: -10, eyeY: 10, outfitY: -6, accX: -12 } }
+                costume: { hatY: -10, eyeY: 16, outfitY: -6, accX: -12 } }
         };
         let selectedAvatar = 'mango';
 
@@ -5139,7 +5104,7 @@
             divide: 1
         };
 
-        // Tier advancement tracking (need 80%+ accuracy on 20+ problems to advance)
+        // Tier advancement tracking (need 75%+ accuracy on 15+ problems to advance)
         let tierTracking = {
             add: { correct: 0, total: 0 },
             subtract: { correct: 0, total: 0 },
@@ -5162,7 +5127,6 @@
         const DANCE_TYPES = DANCE_MOVES.map(d => d.cssClass);
         let ownedDances = ['dance-wiggle']; // Wiggle is free/default
         let equippedDance = 'dance-wiggle';
-        let currentDance = null;
         let danceTimeout = null;
 
         function getOwnedDances() {
@@ -5212,18 +5176,17 @@
                 default: duration = 3000;
             }
 
-            // Randomly select from owned dances
+            // Use equipped dance if owned, otherwise random from owned
             const owned = getOwnedDances();
             if (!owned.length) return;
-            const randomDance = owned[Math.floor(Math.random() * owned.length)];
-            const danceType = randomDance.cssClass;
+            const equipped = owned.find(d => d.cssClass === equippedDance);
+            const dance = equipped || owned[Math.floor(Math.random() * owned.length)];
+            const danceType = dance.cssClass;
 
             avatar.classList.add(danceType);
-            currentDance = danceType;
 
             danceTimeout = setTimeout(() => {
                 avatar.classList.remove(danceType);
-                currentDance = null;
             }, duration);
         }
 
@@ -5248,7 +5211,7 @@
             if (typeof totalXP !== 'number' || !isFinite(totalXP) || totalXP < 0) return 1;
             let level = 1;
             let cumulative = 0;
-            while (true) {
+            while (level < 500) {
                 const needed = xpForLevel(level);
                 if (cumulative + needed > totalXP) break;
                 cumulative += needed;
@@ -5264,8 +5227,8 @@
         let soundEnabled = true, audioContext = null;
         let correctCount = 0;
 
-        let _initDone = false;
         let bossActive = false, bossHealth = 100, bossTimer = 30;
+        let bossConfused = false;
         let bossInterval = null, bossEndTimeout = null, bossAnswer = '', bossCorrectAnswer;
         // NEW: Boss ability system state
         let bossMaxHealth = 100, bossTimerSpeed = 1;
@@ -5553,11 +5516,9 @@
         }
         // ========== END STICKER SYSTEM ==========
 
-        let mysteryBoxesOpened = 0;
-
         // Cumulative stats for tiered achievements (persisted)
         let cumulativeStats = {
-            totalScore: 0,
+            peakScore: 0,
             maxStreak: 0,
             bossesDefeated: 0,
             mysteryBoxesOpened: 0,
@@ -5782,7 +5743,7 @@
             el.classList.remove('show');
             setTimeout(() => el.classList.remove('hiding'), 200);
         }
-        function flashClass(el, cls, ms) { el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); }
+
 
         let toastTimeout = null;
 
@@ -6320,7 +6281,6 @@
         }
 
         function openMysteryBox() {
-            mysteryBoxesOpened++;
             cumulativeStats.mysteryBoxesOpened = (cumulativeStats.mysteryBoxesOpened || 0) + 1;
             saveCumulativeStats();
             checkAchievement('collector', cumulativeStats.mysteryBoxesOpened >= 3);
@@ -6713,16 +6673,26 @@
                     }
                     const d = n.split('');
                     for (let i = d.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [d[i], d[j]] = [d[j], d[i]]; }
-                    // If shuffle produced the same result, swap first two digits
-                    const result = d.join('');
-                    if (result === n) { [d[0], d[1]] = [d[1], d[0]]; return d.join(''); }
+                    let result = d.join('');
+                    if (result === n) { [d[0], d[1]] = [d[1], d[0]]; result = d.join(''); }
+                    // Prevent leading zeros from shuffle (e.g. "01" from "10")
+                    if (result.length > 1 && result[0] === '0') {
+                        const firstNonZero = result.split('').findIndex(c => c !== '0');
+                        if (firstNonZero > 0) {
+                            const chars = result.split('');
+                            [chars[0], chars[firstNonZero]] = [chars[firstNonZero], chars[0]];
+                            result = chars.join('');
+                        }
+                    }
                     return result;
                 };
                 const fakeDisplay = display.replace(/\d+/g, m => scramble(m));
                 document.getElementById('bossProblem').textContent = `${fakeDisplay} = ?`;
                 showAbilityFlash('😵 CONFUSED!');
+                bossConfused = true;
                 setTimeout(() => {
                     if (bossActive) document.getElementById('bossProblem').textContent = `${display} = ?`;
+                    bossConfused = false;
                 }, 1500);
             } else {
                 document.getElementById('bossProblem').textContent = `${display} = ?`;
@@ -6812,6 +6782,7 @@
         function endBossBattle(victory) {
             if (!bossActive) return;
             bossActive = false;
+            bossConfused = false;
             clearInterval(bossInterval);
             bossInterval = null;
             document.getElementById('bossBattleModal').classList.remove('combat-active');
@@ -6923,7 +6894,7 @@
 
         function numPress(num, boss) {
             if (boss) {
-                if (!bossActive || bossAnswer.length >= 4) return;
+                if (!bossActive || bossConfused || bossAnswer.length >= 4) return;
                 if (num == 0 && bossAnswer === '') return;
                 bossAnswer += num;
                 $bossAnswer.textContent = bossAnswer + '|';
@@ -7414,13 +7385,22 @@
                     fact.lastReview = null;
                 }
 
-                // Add commutative links for add and multiply (not subtract/divide)
+                // Add commutative links for add and multiply (bidirectional)
                 if (fact.op === 'add' && fact.num1 !== fact.num2) {
                     const pairId = `add_${fact.num2}_${fact.num1}`;
-                    if (factIds.has(pairId)) fact.commutativeId = pairId;
+                    if (factIds.has(pairId)) {
+                        fact.commutativeId = pairId;
+                    } else {
+                        // Reverse pair doesn't exist as separate fact; find the canonical form
+                        const canonId = fact.num1 < fact.num2 ? `add_${fact.num1}_${fact.num2}` : `add_${fact.num2}_${fact.num1}`;
+                        if (canonId !== fact.id && factIds.has(canonId)) fact.commutativeId = canonId;
+                    }
                 } else if (fact.op === 'multiply' && fact.num1 !== fact.num2) {
-                    const pairId = `mul_${fact.num2}_${fact.num1}`;
-                    if (factIds.has(pairId)) fact.commutativeId = pairId;
+                    // Facts generated with b >= a, so canonical form is min_max
+                    const lo = Math.min(fact.num1, fact.num2);
+                    const hi = Math.max(fact.num1, fact.num2);
+                    const canonId = `mul_${lo}_${hi}`;
+                    if (canonId !== fact.id && factIds.has(canonId)) fact.commutativeId = canonId;
                 }
             });
         }
@@ -7714,7 +7694,7 @@
                 if (streak > cumulativeStats.maxStreak) {
                     cumulativeStats.maxStreak = streak;
                 }
-                cumulativeStats.totalScore = Math.max(cumulativeStats.totalScore, score);
+                cumulativeStats.peakScore = Math.max(cumulativeStats.peakScore, score);
                 saveCumulativeStats();
 
                 if (streak === 5 || streak === 10 || streak === 15 || streak === 20 || (streak > 20 && streak % 10 === 0)) {
@@ -7873,6 +7853,7 @@
             }
             if (toastTimeout) { clearTimeout(toastTimeout); toastTimeout = null; }
             bossActive = false;
+            bossConfused = false;
             hideModal('bossBattleModal');
 
             // Dismiss strategy overlay if showing
@@ -7886,7 +7867,6 @@
             correctCount = 0;
             retryQueue = [];
             isRetryProblem = false;
-            nextBoxThreshold = 50 + Math.floor(Math.random() * 31);
 
             // Reset combo
             comboMultiplier = 1;
@@ -7925,21 +7905,12 @@
             generateProblem();
         }
 
-        function restartGame() {
-            document.getElementById('gameOver').classList.remove('show');
-            resetGame();
-        }
-
         document.addEventListener('keydown', function(e) {
             if (showingStrategy) return;
             if (bossActive) {
                 if (e.key >= '0' && e.key <= '9') bossNumPress(e.key);
                 else if (e.key === 'Backspace') { e.preventDefault(); bossDeletePress(); }
                 else if (e.key === 'Enter') bossCheckAnswer();
-                return;
-            }
-            if (!gameActive) {
-                if (e.key === 'Enter' || e.key === ' ') restartGame();
                 return;
             }
             if (e.key >= '0' && e.key <= '9') numPress(e.key);
@@ -8104,13 +8075,6 @@
 
                 // Group stickers by category for display
                 const categories = ['fruits', 'animals', 'vibes', 'bosses', 'special'];
-                const categoryNames = {
-                    fruits: '🍎 Tropical Fruits',
-                    animals: '🐠 Island Animals',
-                    vibes: '🌴 Tropical Vibes',
-                    bosses: '👹 Mini Bosses',
-                    special: '✨ Special'
-                };
 
                 categories.forEach(category => {
                     const categoryStickers = STICKERS.filter(s => s.category === category);
@@ -8205,7 +8169,7 @@
             const acc = COSTUMES.accessories.find(a => a.id === equippedCostumes.accessory);
 
             // Get avatar-specific positioning (scaled for 56px preview vs 48px main)
-            const pos = avatar.costume || { hatY: -10, eyeY: 12, outfitY: -8, accX: -12 };
+            const pos = avatar.costume || { hatY: -10, eyeY: 16, outfitY: -8, accX: -12 };
             const scale = 56 / 48; // Preview is 56px, main is 48px
             const previewPos = {
                 hatY: Math.round(pos.hatY * scale),
@@ -8228,7 +8192,7 @@
                     overlayHTML += `<svg class="costume-layer-preview" style="top:${previewPos.eyeY}px;left:50%;transform:translateX(-50%);width:46px;height:20px;"><use href="#${acc.svgId}"/></svg>`;
                 } else if (acc.position === 'tail') {
                     // Tail accessories - extend up-right from mid-body
-                    overlayHTML += `<svg class="costume-layer-preview" style="top:10px;right:-18px;width:36px;height:36px;transform:rotate(-10deg);transform-origin:bottom left;"><use href="#${acc.svgId}"/></svg>`;
+                    overlayHTML += `<svg class="costume-layer-preview" style="top:10px;right:-22px;width:36px;height:36px;transform:rotate(-10deg);transform-origin:bottom left;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
                     // Held accessories (wand, food, balloon) - to the right side
                     overlayHTML += `<svg class="costume-layer-preview" style="top:0px;right:${previewPos.accX}px;width:46px;height:46px;"><use href="#${acc.svgId}"/></svg>`;
@@ -8282,7 +8246,7 @@
 
             // Get avatar-specific positioning
             const avatar = AVATARS[selectedAvatar] || AVATARS.mango;
-            const pos = avatar.costume || { hatY: -10, eyeY: 12, outfitY: -8, accX: -12 };
+            const pos = avatar.costume || { hatY: -10, eyeY: 16, outfitY: -8, accX: -12 };
 
             hatLayer.innerHTML = hat && hat.svgId ?
                 `<svg style="position:absolute;top:${pos.hatY}px;left:50%;transform:translateX(-50%);width:40px;height:40px;"><use href="#${hat.svgId}"/></svg>` : '';
@@ -8294,7 +8258,7 @@
                     accLayer.innerHTML = `<svg style="position:absolute;top:${pos.eyeY}px;left:50%;transform:translateX(-50%);width:42px;height:18px;"><use href="#${acc.svgId}"/></svg>`;
                 } else if (acc.position === 'tail') {
                     // Tail accessories - extend up-right from mid-body
-                    accLayer.innerHTML = `<svg style="position:absolute;top:8px;right:-16px;width:34px;height:34px;transform:rotate(-10deg);transform-origin:bottom left;"><use href="#${acc.svgId}"/></svg>`;
+                    accLayer.innerHTML = `<svg style="position:absolute;top:8px;right:-20px;width:34px;height:34px;transform:rotate(-10deg);transform-origin:bottom left;"><use href="#${acc.svgId}"/></svg>`;
                 } else {
                     // Held accessories - to the right side
                     accLayer.innerHTML = `<svg style="position:absolute;top:0px;right:${pos.accX}px;width:44px;height:44px;"><use href="#${acc.svgId}"/></svg>`;
@@ -8346,7 +8310,6 @@
         }
         resetProblemStruggleState(); // Initialize auto-helper state
         generateProblem();
-        _initDone = true;
 
         // ============================================
         // THREE.JS PIXEL ART LANIKAI BEACH SCENE
