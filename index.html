@@ -5228,7 +5228,7 @@
         let correctCount = 0;
 
         let bossActive = false, bossHealth = 100, bossTimer = 30;
-        let bossConfused = false;
+        let bossConfused = false, bossConfuseTimeout = null;
         let bossInterval = null, bossEndTimeout = null, bossAnswer = '', bossCorrectAnswer;
         // NEW: Boss ability system state
         let bossMaxHealth = 100, bossTimerSpeed = 1;
@@ -5608,12 +5608,19 @@
             // Soft reset migration: detect pre-update save
             const version = load('version', 0);
             if (version < 2) {
-                // First load after XP curve update — soft reset to L25
-                playerXP = cumulativeXPForLevel(25);
-                playerLevel = 25;
+                const existingXP = load('xp', null);
+                if (existingXP !== null) {
+                    // Existing pre-version player — migrate to L25
+                    playerXP = cumulativeXPForLevel(25);
+                    playerLevel = 25;
+                    setTimeout(() => showToast('New Season! Levels recalibrated — new challenges ahead!', 4000), 1000);
+                } else {
+                    // Brand new player — start fresh
+                    playerXP = 0;
+                    playerLevel = 1;
+                }
                 store('version', 2);
                 saveProgression();
-                setTimeout(() => showToast('New Season! Levels recalibrated — new challenges ahead!', 4000), 1000);
             } else {
                 playerXP = load('xp', 0);
                 playerLevel = levelFromXP(playerXP);
@@ -6177,10 +6184,13 @@
             // Show helper message
             showHelperMessage('Magic solved it!');
 
+            // Capture the current answer before any generateProblem() call changes it
+            const answerToSolve = correctAnswer;
+
             // Auto-solve the current problem
             setTimeout(() => {
                 if (gameActive && !bossActive) {
-                    currentInput = String(correctAnswer);
+                    currentInput = String(answerToSolve);
                     $answerDisplay.textContent = currentInput;
                     checkAnswer();
                 }
@@ -6494,13 +6504,14 @@
                         bossAbilityState.usedAbilities.push('shield');
                         showAbilityFlash(`🛡️ SHIELDED! (${ability.charges})`);
                         break;
-                    case 'heal':
+                    case 'heal': {
                         const healAmount = ability.amount || 25;
                         bossHealth = Math.min(bossMaxHealth, bossHealth + healAmount);
                         document.getElementById('bossHealthFill').style.width = (bossHealth / bossMaxHealth * 100) + '%';
                         bossAbilityState.usedAbilities.push('heal');
                         showAbilityFlash(`💚 HEALED +${healAmount}!`);
                         break;
+                    }
                     case 'enrage':
                         bossTimerSpeed = ability.speedBoost || 1.5;
                         bossAbilityState.usedAbilities.push('enrage');
@@ -6690,7 +6701,9 @@
                 document.getElementById('bossProblem').textContent = `${fakeDisplay} = ?`;
                 showAbilityFlash('😵 CONFUSED!');
                 bossConfused = true;
-                setTimeout(() => {
+                if (bossConfuseTimeout) clearTimeout(bossConfuseTimeout);
+                bossConfuseTimeout = setTimeout(() => {
+                    bossConfuseTimeout = null;
                     if (bossActive) document.getElementById('bossProblem').textContent = `${display} = ?`;
                     bossConfused = false;
                 }, 1500);
@@ -6783,6 +6796,7 @@
             if (!bossActive) return;
             bossActive = false;
             bossConfused = false;
+            if (bossConfuseTimeout) { clearTimeout(bossConfuseTimeout); bossConfuseTimeout = null; }
             clearInterval(bossInterval);
             bossInterval = null;
             document.getElementById('bossBattleModal').classList.remove('combat-active');
@@ -6850,6 +6864,7 @@
                     bossEndTimeout = null;
                     hideModal('bossBattleModal');
                     victoryEl.classList.remove('show');
+                    victoryEl.classList.add('hidden');
                     if (problemTimeout) clearTimeout(problemTimeout);
                     problemTimeout = setTimeout(generateProblem, 200);
                 }, victoryDuration);
@@ -6954,7 +6969,6 @@
         // Fact database - generated once, SM-2 state stored in localStorage
         let mathFacts = [];
         let currentFact = null;
-        let problemStartTime = 0;
 
         // Generate math facts with tier information (optimized for memory)
         function generateMathFacts() {
@@ -7064,7 +7078,7 @@
                     showTierAdvancement(op, playerTiers[op]);
                     saveTierProgress();
                     return true;
-                } else if (accuracy < TIER_ADVANCE_THRESHOLD * 0.6) {
+                } else if (accuracy < TIER_ADVANCE_THRESHOLD * 0.6 || tierTracking[op].total >= TIER_ADVANCE_MINIMUM * 3) {
                     tierTracking[op] = { correct: 0, total: 0 };
                 }
             }
@@ -7077,6 +7091,7 @@
                     playerTiers[op]--;
                     tierTracking[op] = { correct: 0, total: 0 };
                     opAccuracyWindows[op] = []; // Reset window to prevent cascading demotions
+                    saveOpAccuracyWindows();
                     showToast(`${({ add: 'Addition', subtract: 'Subtraction', multiply: 'Multiplication', divide: 'Division' })[op]} adjusted — easier problems incoming!`, 3000);
                     saveTierProgress();
                     return false;
@@ -7325,7 +7340,11 @@
         // Show strategy hint overlay
         function showStrategyHint(num1, num2, op, answer) {
             const strategy = getStrategyHint(num1, num2, op, answer);
-            if (!strategy) return;
+            if (!strategy) {
+                checkStruggleAndHelp();
+                generateProblem();
+                return;
+            }
 
             showingStrategy = true;
             lastStrategyTime = Date.now(); // Track when hint was shown
@@ -7613,7 +7632,7 @@
                 else currentFact = { num1: a, num2: b, op: fallbackOp, answer: a + b };
             }
 
-            problemStartTime = Date.now();
+            if (currentFact) currentFact._gradedThisPresentation = false;
             problemsSinceStrategy++; // Track problems since last strategy hint
 
             // Reset struggle state for new problem
@@ -7675,7 +7694,7 @@
 
                 // Combo multiplier
                 updateCombo();
-                const points = comboMultiplier + 1;
+                const points = comboMultiplier;
                 score += points;
                 saveCoins();
 
@@ -7744,8 +7763,9 @@
                     struggleState.lastStreakLoss = Date.now();
                 }
 
-                // SM-2 spaced repetition update - wrong answer resets the fact
-                if (currentFact && currentFact.ef !== undefined) {
+                // SM-2 spaced repetition update - wrong answer resets the fact (once per presentation)
+                if (currentFact && currentFact.ef !== undefined && !currentFact._gradedThisPresentation) {
+                    currentFact._gradedThisPresentation = true;
                     updateFactSM2(currentFact, 0);
                 }
 
@@ -7854,6 +7874,7 @@
             if (toastTimeout) { clearTimeout(toastTimeout); toastTimeout = null; }
             bossActive = false;
             bossConfused = false;
+            if (bossConfuseTimeout) { clearTimeout(bossConfuseTimeout); bossConfuseTimeout = null; }
             hideModal('bossBattleModal');
 
             // Dismiss strategy overlay if showing
@@ -7902,6 +7923,7 @@
             $feedback.textContent = '';
             $answerDisplay.classList.remove('flash-correct','flash-wrong');
 
+            if (problemTimeout) clearTimeout(problemTimeout);
             generateProblem();
         }
 
@@ -9232,7 +9254,7 @@
 
                 // Dark clouds drift
                 sceneExtras.darkClouds.forEach(cloud => {
-                    cloud.position.x += 0.015;
+                    cloud.position.x += cloud.userData.speed;
                     if (cloud.position.x > 40) cloud.position.x = -40;
                 });
 
@@ -9258,7 +9280,7 @@
             animate();
         })();
         } catch (e) {
-            // Three.js initialization failed - game continues without 3D background
+            console.error('Three.js initialization failed:', e);
             const canvas = document.getElementById('three-canvas');
             if (canvas) canvas.style.background = 'linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%)';
         }
