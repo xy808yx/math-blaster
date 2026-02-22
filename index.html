@@ -24,9 +24,10 @@
             --error: #ff6b6b;
             --card-bg: rgba(0, 0, 0, 0.4);
             --container-bg: rgba(10, 10, 30, 0.7);
+            --text-color: #ffffff;
         }
         .theme-rain { --bg-gradient: linear-gradient(135deg, #1a2a3a, #2a3a4a, #3a4a5a); --primary: #7fdbff; --accent: #aaddff; --container-bg: rgba(26, 42, 58, 0.8); }
-        .theme-snow { --bg-gradient: linear-gradient(135deg, #d0e8f0, #e8f4f8, #f0f8ff); --primary: #4a90d9; --accent: #87ceeb; --container-bg: rgba(200, 220, 240, 0.7); }
+        .theme-snow { --bg-gradient: linear-gradient(135deg, #d0e8f0, #e8f4f8, #f0f8ff); --primary: #2a6cb8; --accent: #2171b5; --container-bg: rgba(200, 220, 240, 0.7); --text-color: #1a2a3a; }
         .theme-aurora { --bg-gradient: linear-gradient(135deg, #0a0a2a, #1a1a4a, #0a2a2a); --primary: #00ff88; --accent: #aa66ff; --container-bg: rgba(10, 10, 42, 0.8); }
         .theme-shootingstars { --bg-gradient: linear-gradient(135deg, #0a0020, #1a0040, #0a0030); --primary: #cc99ff; --accent: #ffcc66; --container-bg: rgba(10, 0, 32, 0.8); }
         .theme-goldenhour { --bg-gradient: linear-gradient(135deg, #4a2800, #6a3a00, #8a4a10); --primary: #ffd700; --accent: #ffaa00; --container-bg: rgba(74, 40, 0, 0.8); }
@@ -63,16 +64,17 @@
         #weatherOverlay.weather-aurora {
             background:
                 linear-gradient(135deg,
-                    rgba(0,255,136,0.20) 0%,
-                    rgba(170,102,255,0.15) 35%,
-                    rgba(0,200,255,0.12) 65%,
+                    rgba(0,255,136,0.45) 0%,
+                    rgba(170,102,255,0.35) 35%,
+                    rgba(0,200,255,0.30) 65%,
                     transparent 100%),
                 linear-gradient(200deg,
                     transparent 0%,
-                    rgba(0,200,255,0.15) 30%,
-                    rgba(170,102,255,0.18) 60%,
-                    rgba(255,102,204,0.12) 100%);
+                    rgba(0,200,255,0.35) 30%,
+                    rgba(170,102,255,0.40) 60%,
+                    rgba(255,102,204,0.30) 100%);
             background-size: 200% 100%, 200% 100%;
+            z-index: 1;
             animation: auroraShift 6s ease-in-out infinite alternate, auroraBreathe 10s ease-in-out infinite;
         }
         @keyframes auroraShift {
@@ -81,9 +83,9 @@
             100% { background-position: 100% 0%, 0% 0%; }
         }
         @keyframes auroraBreathe {
-            0% { opacity: 0.7; }
+            0% { opacity: 0.8; }
             50% { opacity: 1; }
-            100% { opacity: 0.7; }
+            100% { opacity: 0.8; }
         }
         #weatherOverlay.weather-shootingstars .shooting-star {
             position: absolute;
@@ -119,7 +121,7 @@
         }
 
         body {
-            background: transparent;
+            background: var(--bg-gradient);
             color: var(--primary);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             display: flex;
@@ -150,7 +152,8 @@
             -webkit-backdrop-filter: blur(8px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             margin-bottom: env(safe-area-inset-bottom, 0px);
             -webkit-user-select: none;
             user-select: none;
@@ -323,22 +326,6 @@
         }
         .progress-fill.boss { background: linear-gradient(90deg, #ff6b6b, #ff0000); }
 
-        /* Coin Animation */
-        .coin-burst {
-            position: absolute;
-            animation: coinBurst 0.4s ease-out forwards;
-        }
-        @keyframes coinBurst {
-            0% { transform: translateY(0) scale(0.5); opacity: 0; }
-            50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
-            100% { transform: translateY(-25px) scale(1); opacity: 1; }
-        }
-        .coin-fly {
-            animation: coinFly 0.6s ease-in forwards;
-        }
-        @keyframes coinFly {
-            to { transform: translate(var(--fly-x), var(--fly-y)) scale(0.3); opacity: 0; }
-        }
 
         /* Combo Multiplier */
         .combo-display {
@@ -525,8 +512,8 @@
         /* Item Rarity Effects */
 
         .rarity-rare {
-            box-shadow: 0 0 10px rgba(93, 173, 226, 0.6), inset 0 0 5px rgba(93, 173, 226, 0.2);
-            border-color: #5dade2;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.6), inset 0 0 5px rgba(243, 156, 18, 0.2);
+            border-color: #f39c12;
         }
         .rarity-epic {
             box-shadow: 0 0 15px rgba(155, 89, 182, 0.7), inset 0 0 5px rgba(155, 89, 182, 0.3);
@@ -534,8 +521,8 @@
             animation: epicPulse 2s ease-in-out infinite;
         }
         @keyframes epicPulse {
-            0%, 100% { box-shadow: 0 0 15px rgba(155, 89, 182, 0.7); }
-            50% { box-shadow: 0 0 25px rgba(155, 89, 182, 0.9); }
+            0%, 100% { box-shadow: 0 0 15px rgba(155, 89, 182, 0.7), inset 0 0 5px rgba(155, 89, 182, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(155, 89, 182, 0.9), inset 0 0 5px rgba(155, 89, 182, 0.3); }
         }
         .rarity-legendary {
             box-shadow: 0 0 20px rgba(255, 217, 61, 0.8), inset 0 0 8px rgba(255, 217, 61, 0.4);
@@ -544,8 +531,8 @@
             position: relative;
         }
         @keyframes legendaryGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 217, 61, 0.8), 0 0 40px rgba(255, 107, 157, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(255, 217, 61, 1), 0 0 60px rgba(255, 107, 157, 0.6); }
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 217, 61, 0.8), 0 0 40px rgba(255, 107, 157, 0.4), inset 0 0 8px rgba(255, 217, 61, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(255, 217, 61, 1), 0 0 60px rgba(255, 107, 157, 0.6), inset 0 0 8px rgba(255, 217, 61, 0.4); }
         }
         .rarity-badge {
             display: inline-block;
@@ -693,10 +680,13 @@
             max-width: 340px;
         }
         .modal-tab {
-            padding: 6px 10px;
+            padding: 10px 14px;
             background: var(--card-bg);
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
             -webkit-tap-highlight-color: transparent;
         }
         .modal-tab.active {
@@ -884,13 +874,13 @@
         .problem {
             font-size: clamp(2.5rem, 10vw, 4rem);
             font-weight: bold;
-            color: #ffffff;
+            color: var(--text-color);
         }
 
         .answer-display {
             font-size: clamp(2rem, 8vw, 3rem);
             font-weight: bold;
-            color: #ffffff;
+            color: var(--text-color);
             background: var(--card-bg);
             border: 3px solid var(--primary);
             border-radius: 12px;
@@ -1090,7 +1080,7 @@
         }
 
         /* Boss Battle */
-        .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: hidden; touch-action: manipulation; padding-top: env(safe-area-inset-top, 0px); }
+        .boss-modal.show { animation: bossFlash 0.5s ease-out; justify-content: center; overflow-y: auto; touch-action: manipulation; padding-top: env(safe-area-inset-top, 0px); }
         .boss-modal.combat-active .boss-title { display: none; }
         @keyframes bossFlash {
             0% { background: rgba(255, 0, 0, 0.8); }
@@ -1127,7 +1117,7 @@
             60% { transform: scale(1.3) rotate(10deg); }
             100% { transform: scale(1) rotate(0); opacity: 1; }
         }
-        .boss-emoji.hit { animation: bossHit 0.3s ease-out; }
+        .boss-emoji.hit { animation: bossHit 0.3s ease-out !important; }
         @keyframes bossHit {
             50% { transform: scale(0.8) rotate(-10deg); filter: brightness(3); }
         }
@@ -1215,7 +1205,6 @@
         /* Enhanced Victory Effects */
         .boss-container.victory-basic { animation: victoryBasic 1.5s ease-out; }
         .boss-container.victory-simple { animation: victorySimple 2s ease-out; }
-        .boss-container.victory-ability { animation: victoryAbility 2.5s ease-out; }
         .boss-container.victory-elite { animation: victoryElite 3.5s ease-out; }
         @keyframes victoryBasic {
             0% { transform: scale(1); }
@@ -1226,13 +1215,6 @@
             0%, 100% { transform: rotate(0); }
             25% { transform: rotate(-5deg); }
             75% { transform: rotate(5deg); }
-        }
-        @keyframes victoryAbility {
-            0% { transform: scale(1) rotate(0); }
-            25% { transform: scale(1.15) rotate(-3deg); }
-            50% { transform: scale(1.1) rotate(3deg); }
-            75% { transform: scale(1.05) rotate(-2deg); }
-            100% { transform: scale(1) rotate(0); }
         }
         @keyframes victoryElite {
             0% { transform: scale(1) rotate(0); filter: brightness(1); }
@@ -1337,48 +1319,6 @@
             .boss-numpad { gap: 3px; }
             .boss-numpad button { height: 42px; font-size: 1.2rem; }
         }
-
-        /* Boss ability system */
-        .ability-flash {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent);
-            text-shadow: 0 0 20px var(--accent), 0 2px 4px rgba(0,0,0,0.5);
-            animation: abilityPop 1.5s ease-out forwards;
-            z-index: 10;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-        @keyframes abilityPop {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-            30% { transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -70%) scale(1); }
-        }
-
-        .boss-info-card {
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid var(--error);
-            border-radius: 12px;
-            padding: 10px 15px;
-            font-size: 0.85rem;
-            color: #fff;
-            text-align: left;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 5;
-            max-width: 90%;
-        }
-        .boss-info-card.show { opacity: 1; }
-        .boss-ability-icon { margin-right: 6px; }
 
         .boss-victory {
             position: absolute;
@@ -4621,7 +4561,6 @@
     <div class="modal boss-modal" id="bossBattleModal">
         <div class="boss-title"><svg style="width:16px;height:16px;vertical-align:middle;transform:scaleX(-1)"><use href="#pixel-sword"/></svg> BOSS BATTLE <svg style="width:16px;height:16px;vertical-align:middle"><use href="#pixel-sword"/></svg></div>
         <div class="boss-container" id="bossContainer">
-            <div class="boss-info-card" id="bossInfoCard"></div>
             <div class="boss-emoji" id="bossEmoji">
                 <svg class="pixel-boss" style="width:160px;height:160px;"><use href="#boss-tiki" id="bossUse"/></svg>
             </div>
@@ -4711,9 +4650,9 @@
         const OP_SYMBOLS = { add: '+', subtract: '−', multiply: '×', divide: '÷', mixed: 'Mixed' };
 
         // Bosses with unlock levels
-        // Tiers: 'basic' = original stats, 'simple' = stat variations, 'ability' = single ability, 'elite' = multi-ability
+        // Tiers: 'basic' = default stats, 'simple' = stat variations, 'elite' = tougher stats + elite victory
         const BOSSES = [
-            // Original bosses (basic tier)
+            // Basic tier (L1-15)
             { svg: 'boss-tiki', name: 'Tiki Mask', unlockLevel: 1, tier: 'basic', loot: { min: 8, max: 12 } },
             { svg: 'boss-crab', name: 'Coconut Crab', unlockLevel: 1, tier: 'basic', loot: { min: 8, max: 12 } },
             { svg: 'boss-puffer', name: 'Pufferfish', unlockLevel: 3, tier: 'basic', loot: { min: 10, max: 14 } },
@@ -4723,43 +4662,21 @@
             { svg: 'boss-volcano', name: 'Volcano Spirit', unlockLevel: 12, tier: 'basic', loot: { min: 14, max: 18 } },
             { svg: 'boss-coconut', name: 'Coconut Monster', unlockLevel: 15, tier: 'basic', loot: { min: 14, max: 18 } },
 
-            // Simple tier (L16-25) - stat variations only
+            // Simple tier (L16-40) - stat variations
             { svg: 'boss-octopus', name: 'Octopus', unlockLevel: 16, tier: 'simple', hp: 120, time: 28, loot: { min: 15, max: 20 } },
             { svg: 'boss-turtle', name: 'Sea Turtle', unlockLevel: 18, tier: 'simple', hp: 140, time: 35, loot: { min: 16, max: 22 } },
             { svg: 'boss-hermitcrab', name: 'Hermit Crab', unlockLevel: 20, tier: 'simple', hp: 100, time: 25, loot: { min: 15, max: 20 } },
             { svg: 'boss-starfish', name: 'Starfish', unlockLevel: 23, tier: 'simple', hp: 150, time: 32, loot: { min: 18, max: 24 } },
+            { svg: 'boss-pirate', name: 'Pirate Captain', unlockLevel: 26, tier: 'simple', hp: 130, time: 28, loot: { min: 20, max: 28 } },
+            { svg: 'boss-mermaid', name: 'Mermaid', unlockLevel: 30, tier: 'simple', hp: 140, time: 30, loot: { min: 22, max: 30 } },
+            { svg: 'boss-stingray', name: 'Stingray', unlockLevel: 34, tier: 'simple', hp: 150, time: 28, loot: { min: 24, max: 32 } },
+            { svg: 'boss-pelican', name: 'Pelican', unlockLevel: 38, tier: 'simple', hp: 160, time: 30, loot: { min: 24, max: 32 } },
 
-            // Ability tier (L26-40) - single special ability
-            { svg: 'boss-pirate', name: 'Pirate Captain', unlockLevel: 26, tier: 'ability', loot: { min: 20, max: 28 },
-              ability: { type: 'shield', trigger: 'start', charges: 1, desc: 'Blocks first hit' } },
-            { svg: 'boss-mermaid', name: 'Mermaid', unlockLevel: 30, tier: 'ability', loot: { min: 22, max: 30 },
-              ability: { type: 'heal', trigger: 'hp50', amount: 25, desc: 'Heals at 50% HP' } },
-            { svg: 'boss-stingray', name: 'Stingray', unlockLevel: 34, tier: 'ability', loot: { min: 24, max: 32 },
-              ability: { type: 'enrage', trigger: 'hp25', speedBoost: 1.5, desc: 'Timer speeds up below 25% HP' } },
-            { svg: 'boss-pelican', name: 'Pelican', unlockLevel: 38, tier: 'ability', loot: { min: 24, max: 32 },
-              ability: { type: 'dodge', trigger: 'random', chance: 0.2, desc: '20% chance to dodge' } },
-
-            // Elite tier (L41+) - multiple abilities or complex mechanics
-            { svg: 'boss-whale', name: 'Whale', unlockLevel: 42, tier: 'elite', hp: 200, time: 40, loot: { min: 30, max: 40 },
-              abilities: [
-                { type: 'shield', trigger: 'start', charges: 2, desc: 'Blocks 2 hits' },
-                { type: 'heal', trigger: 'hp25', amount: 50, desc: 'Big heal at 25% HP' }
-              ] },
-            { svg: 'boss-serpent', name: 'Sea Serpent', unlockLevel: 48, tier: 'elite', hp: 180, time: 35, loot: { min: 32, max: 42 },
-              abilities: [
-                { type: 'enrage', trigger: 'hp50', speedBoost: 1.3, desc: 'Gets faster at 50% HP' },
-                { type: 'dodge', trigger: 'random', chance: 0.15, desc: '15% dodge chance' }
-              ] },
-            { svg: 'boss-mimic', name: 'Treasure Mimic', unlockLevel: 55, tier: 'elite', hp: 150, time: 30, loot: { min: 35, max: 50 },
-              abilities: [
-                { type: 'confuse', trigger: 'random', chance: 0.25, desc: 'Scrambles numbers sometimes' }
-              ] },
-            { svg: 'boss-kraken', name: 'Kraken', unlockLevel: 60, tier: 'elite', hp: 250, time: 45, loot: { min: 40, max: 60 },
-              abilities: [
-                { type: 'shield', trigger: 'start', charges: 3, desc: 'Blocks 3 hits' },
-                { type: 'heal', trigger: 'hp50', amount: 50, desc: 'Heals at 50% HP' },
-                { type: 'enrage', trigger: 'hp25', speedBoost: 2, desc: 'Double speed below 25% HP' }
-              ] }
+            // Elite tier (L41+) - tougher stats + elite victory celebration
+            { svg: 'boss-whale', name: 'Whale', unlockLevel: 42, tier: 'elite', hp: 200, time: 40, loot: { min: 30, max: 40 } },
+            { svg: 'boss-serpent', name: 'Sea Serpent', unlockLevel: 48, tier: 'elite', hp: 180, time: 35, loot: { min: 32, max: 42 } },
+            { svg: 'boss-mimic', name: 'Treasure Mimic', unlockLevel: 55, tier: 'elite', hp: 150, time: 30, loot: { min: 35, max: 50 } },
+            { svg: 'boss-kraken', name: 'Kraken', unlockLevel: 60, tier: 'elite', hp: 250, time: 45, loot: { min: 40, max: 60 } }
         ];
 
         // Themes with unlock levels
@@ -4904,7 +4821,7 @@
         // Rarity tiers for items
         const RARITY = {
             COMMON: { name: 'Common', cssClass: 'rarity-common', color: '#aaaaaa' },
-            RARE: { name: 'Rare', cssClass: 'rarity-rare', color: '#5dade2' },
+            RARE: { name: 'Rare', cssClass: 'rarity-rare', color: '#f39c12' },
             EPIC: { name: 'Epic', cssClass: 'rarity-epic', color: '#9b59b6' },
             LEGENDARY: { name: 'Legend', cssClass: 'rarity-legendary', color: '#ffd93d' }
         };
@@ -5234,25 +5151,15 @@
         let num1, num2, correctAnswer, currentOp;
         let score = 0, streak = 0, bestStreak = 0;
         let selectedOperations = ['add', 'subtract', 'multiply', 'divide'];
-        let gameActive = true, currentInput = '';
+        let gameActive = true, currentInput = '', isAutoSolved = false;
         let soundEnabled = true, audioContext = null;
         let correctCount = 0;
 
         let bossActive = false, bossHealth = 100, bossTimer = 30;
-        let bossConfused = false, bossConfuseTimeout = null;
-        let bossInterval = null, bossEndTimeout = null, bossAnswer = '', bossCorrectAnswer;
-        // NEW: Boss ability system state
-        let bossMaxHealth = 100, bossTimerSpeed = 1;
+        let bossInterval = null, bossEndTimeout = null, bossEntranceTimeout = null, bossAnswer = '', bossCorrectAnswer;
+        let bossMaxHealth = 100;
         let bossCurrentBoss = null;
-        let bossAbilityState = {
-            shieldCharges: 0,
-            hasHealed: false,
-            hasEnraged: false,
-            dodgeChance: 0,
-            confuseChance: 0,
-            usedAbilities: [],
-            shownRagePhrase: false
-        };
+        let shownRagePhrase = false;
 
         // Per-operation accuracy windows for blended tier sampling
         let opAccuracyWindows = {
@@ -5337,13 +5244,6 @@
             { id: 'scene_all', emoji: '🎨', name: 'Scene Collector', desc: 'Unlock all scene variations', category: 'collection' },
             { id: 'boss_unique_all', emoji: '🦑', name: 'Boss Hunter', desc: 'Defeat every unique boss', category: 'collection' },
             { id: 'theme_all', emoji: '🌈', name: 'Theme Master', desc: 'Unlock all color themes', category: 'collection' },
-
-            // NEW: Ability survivor achievements
-            { id: 'ability_shield', emoji: '🛡️', name: 'Shield Breaker', desc: 'Beat a shielded boss', category: 'ability' },
-            { id: 'ability_heal', emoji: '💚', name: 'Heal Stopper', desc: 'Beat a healing boss', category: 'ability' },
-            { id: 'ability_enrage', emoji: '😤', name: 'Rage Survivor', desc: 'Beat an enraged boss', category: 'ability' },
-            { id: 'ability_dodge', emoji: '💨', name: 'Dodge Master', desc: 'Beat a dodging boss', category: 'ability' },
-            { id: 'ability_confuse', emoji: '😵', name: 'Clear Mind', desc: 'Beat a confusing boss', category: 'ability' },
 
             // NEW: Sticker collection achievements
             { id: 'sticker_10', emoji: '🎟️', name: 'Sticker Starter', desc: 'Collect 10 stickers', category: 'collection' },
@@ -6203,8 +6103,10 @@
             setTimeout(() => {
                 if (gameActive && !bossActive) {
                     currentInput = String(answerToSolve);
-                    $answerDisplay.textContent = currentInput;
+                    updateAnswerDisplay();
+                    isAutoSolved = true;
                     checkAnswer();
+                    isAutoSolved = false;
                 }
             }, 300);
 
@@ -6390,22 +6292,6 @@
             problemTimeout = setTimeout(generateProblem, 200);
         }
 
-        // Boss ability helper functions
-        function getBossAbilities(boss) {
-            if (boss.abilities) return boss.abilities;
-            if (boss.ability) return [boss.ability];
-            return [];
-        }
-
-        function showAbilityFlash(text) {
-            const flash = document.createElement('div');
-            flash.className = 'ability-flash';
-            flash.textContent = text;
-            document.getElementById('bossContainer').appendChild(flash);
-            setTimeout(() => flash.remove(), 1500);
-            haptic('medium');
-        }
-
         // Coconut projectile attack - thrown from right side toward boss
         function fireCoconutProjectile() {
             const bossEmoji = document.getElementById('bossEmoji');
@@ -6463,14 +6349,9 @@
 
             if (hpPercent <= 25) {
                 emoji.classList.add('phase-25');
-                if (!bossAbilityState.shownRagePhrase) {
-                    bossAbilityState.shownRagePhrase = true;
+                if (!shownRagePhrase) {
+                    shownRagePhrase = true;
                     showBossSpeech('lowHp');
-                    // Only show "ENRAGED!" flash for bosses that actually have the enrage ability
-                    const abilities = getBossAbilities(bossCurrentBoss);
-                    if (abilities.some(a => a.type === 'enrage')) {
-                        showAbilityFlash('😤 ENRAGED!');
-                    }
                 }
             } else if (hpPercent <= 50) {
                 emoji.classList.add('phase-50');
@@ -6503,64 +6384,8 @@
             }
 
             // Get victory duration based on tier
-            const durations = { basic: 1500, simple: 2000, ability: 2500, elite: 3500 };
+            const durations = { basic: 1500, simple: 2000, elite: 3500 };
             return durations[tier] || 2000;
-        }
-
-        function applyBossAbilities(trigger) {
-            const abilities = getBossAbilities(bossCurrentBoss);
-            abilities.filter(a => a.trigger === trigger).forEach(ability => {
-                switch (ability.type) {
-                    case 'shield':
-                        bossAbilityState.shieldCharges = ability.charges;
-                        bossAbilityState.usedAbilities.push('shield');
-                        showAbilityFlash(`🛡️ SHIELDED! (${ability.charges})`);
-                        break;
-                    case 'heal': {
-                        const healAmount = ability.amount || 25;
-                        bossHealth = Math.min(bossMaxHealth, bossHealth + healAmount);
-                        document.getElementById('bossHealthFill').style.width = (bossHealth / bossMaxHealth * 100) + '%';
-                        bossAbilityState.usedAbilities.push('heal');
-                        showAbilityFlash(`💚 HEALED +${healAmount}!`);
-                        break;
-                    }
-                    case 'enrage':
-                        bossTimerSpeed = ability.speedBoost || 1.5;
-                        bossAbilityState.usedAbilities.push('enrage');
-                        showAbilityFlash('😤 ENRAGED!');
-                        break;
-                    case 'dodge':
-                        bossAbilityState.dodgeChance = ability.chance || 0.2;
-                        bossAbilityState.usedAbilities.push('dodge');
-                        break;
-                    case 'confuse':
-                        bossAbilityState.confuseChance = ability.chance || 0.25;
-                        bossAbilityState.usedAbilities.push('confuse');
-                        break;
-                }
-            });
-        }
-
-        function showBossInfoCard(boss) {
-            const abilities = getBossAbilities(boss);
-            if (abilities.length === 0) return;
-
-            const infoCard = document.getElementById('bossInfoCard');
-            if (!infoCard) return;
-
-            const abilityIcons = {
-                shield: '🛡️',
-                heal: '💚',
-                enrage: '😤',
-                dodge: '💨',
-                confuse: '😵'
-            };
-
-            infoCard.innerHTML = abilities.map(a =>
-                `<span class="boss-ability-icon">${abilityIcons[a.type] || '⚡'}</span>${a.desc || a.type}`
-            ).join('<br>');
-            infoCard.classList.add('show');
-            setTimeout(() => infoCard.classList.remove('show'), 2500);
         }
 
         function startBossBattle() {
@@ -6571,6 +6396,7 @@
             const availableBosses = getUnlockedBosses();
             if (!availableBosses.length) {
                 bossActive = false;
+                generateProblem();
                 return;
             }
             const boss = availableBosses[Math.floor(Math.random() * availableBosses.length)];
@@ -6579,33 +6405,12 @@
             // Set boss-specific stats with defaults
             bossMaxHealth = boss.hp || 100;
             bossHealth = bossMaxHealth;
-            bossTimer = (boss.time || 30) + 5;
-            bossTimerSpeed = 1;
-
-            // Reset ability state
-            bossAbilityState = {
-                shieldCharges: 0,
-                hasHealed: false,
-                hasEnraged: false,
-                dodgeChance: 0,
-                confuseChance: 0,
-                usedAbilities: [],
-                shownRagePhrase: false
-            };
+            bossTimer = boss.time || 30;
+            shownRagePhrase = false;
 
             // Clear any previous phase classes
             document.getElementById('bossEmoji').classList.remove('phase-75', 'phase-50', 'phase-25');
-            document.getElementById('bossContainer').classList.remove('victory-basic', 'victory-simple', 'victory-ability', 'victory-elite');
-
-            // Apply start-trigger abilities
-            applyBossAbilities('start');
-
-            // Apply random-trigger abilities (dodge, confuse)
-            const abilities = getBossAbilities(boss);
-            abilities.filter(a => a.trigger === 'random').forEach(ability => {
-                if (ability.type === 'dodge') bossAbilityState.dodgeChance = ability.chance;
-                if (ability.type === 'confuse') bossAbilityState.confuseChance = ability.chance;
-            });
+            document.getElementById('bossContainer').classList.remove('victory-basic', 'victory-simple', 'victory-elite');
 
             const bossEmojiEl = document.getElementById('bossEmoji');
             const bossUseEl = document.getElementById('bossUse');
@@ -6620,14 +6425,11 @@
             document.getElementById('bossContainer').style.opacity = '1';
             showModal('bossBattleModal');
 
-            // Show ability info for ability/elite tier bosses
-            if (boss.tier === 'ability' || boss.tier === 'elite') {
-                showBossInfoCard(boss);
-            }
-
             playSound('bossappear');
 
-            setTimeout(() => {
+            bossEntranceTimeout = setTimeout(() => {
+                bossEntranceTimeout = null;
+                if (!bossActive) return; // Guard: battle may have ended during entrance
                 bossEmojiEl.classList.remove('entrance');
                 document.getElementById('bossBattleModal').classList.add('combat-active');
                 // Show intro speech for bosses with personality
@@ -6637,7 +6439,7 @@
                 // Start timer AFTER problem is visible (not during entrance animation)
                 if (bossInterval) clearInterval(bossInterval);
                 bossInterval = setInterval(() => {
-                    bossTimer -= bossTimerSpeed;
+                    bossTimer -= 1;
                     if (bossTimer < 0) bossTimer = 0;
                     const timerEl = document.getElementById('bossTimer');
                     timerEl.textContent = Math.ceil(bossTimer);
@@ -6685,43 +6487,7 @@
                 display = `${num1} ÷ ${num2}`;
             }
 
-            // Confuse ability: briefly show scrambled display, then reveal the real one
-            if (bossAbilityState.confuseChance && Math.random() < bossAbilityState.confuseChance) {
-                const scramble = (n) => {
-                    const num = parseInt(n, 10);
-                    // For single-digit or repeated-digit numbers, offset by 1-3 to actually confuse
-                    if (n.length <= 1 || new Set(n.split('')).size === 1) {
-                        const offset = 1 + Math.floor(Math.random() * 3);
-                        return String(Math.max(1, num + (Math.random() < 0.5 ? offset : -offset)));
-                    }
-                    const d = n.split('');
-                    for (let i = d.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [d[i], d[j]] = [d[j], d[i]]; }
-                    let result = d.join('');
-                    if (result === n) { [d[0], d[1]] = [d[1], d[0]]; result = d.join(''); }
-                    // Prevent leading zeros from shuffle (e.g. "01" from "10")
-                    if (result.length > 1 && result[0] === '0') {
-                        const firstNonZero = result.split('').findIndex(c => c !== '0');
-                        if (firstNonZero > 0) {
-                            const chars = result.split('');
-                            [chars[0], chars[firstNonZero]] = [chars[firstNonZero], chars[0]];
-                            result = chars.join('');
-                        }
-                    }
-                    return result;
-                };
-                const fakeDisplay = display.replace(/\d+/g, m => scramble(m));
-                document.getElementById('bossProblem').textContent = `${fakeDisplay} = ?`;
-                showAbilityFlash('😵 CONFUSED!');
-                bossConfused = true;
-                if (bossConfuseTimeout) clearTimeout(bossConfuseTimeout);
-                bossConfuseTimeout = setTimeout(() => {
-                    bossConfuseTimeout = null;
-                    if (bossActive) document.getElementById('bossProblem').textContent = `${display} = ?`;
-                    bossConfused = false;
-                }, 1500);
-            } else {
-                document.getElementById('bossProblem').textContent = `${display} = ?`;
-            }
+            document.getElementById('bossProblem').textContent = `${display} = ?`;
             bossAnswer = '';
             $bossAnswer.textContent = '|';
         }
@@ -6740,27 +6506,6 @@
             }
 
             if (parsedAnswer === bossCorrectAnswer) {
-                // Check dodge first
-                if (bossAbilityState.dodgeChance > 0 && Math.random() < bossAbilityState.dodgeChance) {
-                    showAbilityFlash('💨 DODGED!');
-                    playSound('tap');
-                    bossAnswer = '';
-                    $bossAnswer.textContent = '|';
-                    generateBossProblem();
-                    return;
-                }
-
-                // Check shield
-                if (bossAbilityState.shieldCharges > 0) {
-                    bossAbilityState.shieldCharges--;
-                    showAbilityFlash(`🛡️ BLOCKED! (${bossAbilityState.shieldCharges} left)`);
-                    playSound('tap');
-                    bossAnswer = '';
-                    $bossAnswer.textContent = '|';
-                    generateBossProblem();
-                    return;
-                }
-
                 // Fire coconut projectile!
                 fireCoconutProjectile();
 
@@ -6784,18 +6529,9 @@
                 // Update phase visual based on HP
                 updateBossPhase(hpPercent);
 
-                // Check HP-triggered abilities
-                if (hpPercent <= 50 && !bossAbilityState.hasHealed) {
-                    bossAbilityState.hasHealed = true;
-                    applyBossAbilities('hp50');
-                }
-                if (hpPercent <= 25 && !bossAbilityState.hasEnraged) {
-                    bossAbilityState.hasEnraged = true;
-                    applyBossAbilities('hp25');
-                }
+                if (bossHealth <= 0) { endBossBattle(true); return; }
 
-                if (bossHealth <= 0) endBossBattle(true);
-                else generateBossProblem();
+                generateBossProblem();
             } else {
                 bossAnswer = '';
                 $bossAnswer.textContent = '|';
@@ -6807,8 +6543,6 @@
         function endBossBattle(victory) {
             if (!bossActive) return;
             bossActive = false;
-            bossConfused = false;
-            if (bossConfuseTimeout) { clearTimeout(bossConfuseTimeout); bossConfuseTimeout = null; }
             clearInterval(bossInterval);
             bossInterval = null;
             document.getElementById('bossBattleModal').classList.remove('combat-active');
@@ -6833,13 +6567,6 @@
                 // Check Boss Hunter achievement (defeated all unique bosses)
                 const uniqueCount = Object.keys(cumulativeStats.uniqueBossesDefeated).length;
                 checkAchievement('boss_unique_all', uniqueCount >= BOSSES.length);
-
-                // Check ability survivor achievements
-                ['shield', 'heal', 'enrage', 'dodge', 'confuse'].forEach(ability => {
-                    if (bossAbilityState.usedAbilities.includes(ability)) {
-                        checkAchievement('ability_' + ability, true);
-                    }
-                });
 
                 // Show defeat speech
                 showBossSpeech('defeat');
@@ -6869,7 +6596,7 @@
                 const victoryDuration = playVictoryCelebration(tier);
 
                 // Start avatar celebration dance based on boss tier
-                const danceDuration = tier === 'elite' ? 8000 : tier === 'ability' ? 6000 : 4000;
+                const danceDuration = tier === 'elite' ? 8000 : 4000;
                 triggerCelebrationDance('boss', danceDuration);
 
                 bossEndTimeout = setTimeout(() => {
@@ -6903,7 +6630,18 @@
             if (saved) cumulativeStats = { ...cumulativeStats, ...saved };
         }
 
-        function saveCumulativeStats() { store('stats', cumulativeStats); }
+        let _saveStatsTimer = null;
+        function saveCumulativeStats() {
+            if (_saveStatsTimer) return;
+            _saveStatsTimer = setTimeout(() => {
+                _saveStatsTimer = null;
+                _flushCumulativeStats();
+            }, 3000);
+        }
+        function _flushCumulativeStats() {
+            if (_saveStatsTimer) { clearTimeout(_saveStatsTimer); _saveStatsTimer = null; }
+            store('stats', cumulativeStats);
+        }
 
         // Coin persistence
         function loadCoins() {
@@ -6912,7 +6650,14 @@
             $score.textContent = score;
         }
 
-        function saveCoins() { store('coins', score); }
+        let _saveCoinsTimer = null;
+        function saveCoins() {
+            if (_saveCoinsTimer) return;
+            _saveCoinsTimer = setTimeout(() => {
+                _saveCoinsTimer = null;
+                store('coins', score);
+            }, 3000);
+        }
 
         function updateAnswerDisplay() {
             $answerDisplay.innerHTML =
@@ -6921,7 +6666,7 @@
 
         function numPress(num, boss) {
             if (boss) {
-                if (!bossActive || bossConfused || bossAnswer.length >= 4) return;
+                if (!bossActive || bossAnswer.length >= 4) return;
                 if (num == 0 && bossAnswer === '') return;
                 bossAnswer += num;
                 $bossAnswer.textContent = bossAnswer + '|';
@@ -7438,7 +7183,16 @@
 
         function loadFactState() { return load('facts_sm2', {}); }
 
+        let _saveFactTimer = null;
         function saveFactState() {
+            if (_saveFactTimer) return;
+            _saveFactTimer = setTimeout(() => {
+                _saveFactTimer = null;
+                _flushFactState();
+            }, 3000);
+        }
+        function _flushFactState() {
+            if (_saveFactTimer) { clearTimeout(_saveFactTimer); _saveFactTimer = null; }
             const state = {};
             mathFacts.forEach(fact => {
                 state[fact.id] = { ef: fact.ef, interval: fact.interval, repetitions: fact.repetitions, nextReview: fact.nextReview, lastReview: fact.lastReview };
@@ -7695,8 +7449,8 @@
                     trackTierProgress(currentFact.op, true);
                 }
 
-                // SM-2 spaced repetition update (skip fallback facts without SM-2 props)
-                if (currentFact && currentFact.ef !== undefined) {
+                // SM-2 spaced repetition update (skip auto-solved and fallback facts)
+                if (currentFact && currentFact.ef !== undefined && !isAutoSolved) {
                     updateFactSM2(currentFact, calculateGrade(true));
                 }
 
@@ -7874,6 +7628,8 @@
             if (strategyTimeout) clearTimeout(strategyTimeout);
             if (problemTimeout) clearTimeout(problemTimeout);
             if (bossInterval) clearInterval(bossInterval);
+            if (bossEntranceTimeout) { clearTimeout(bossEntranceTimeout); bossEntranceTimeout = null; }
+            if (_settingsCloseTimeout) { clearTimeout(_settingsCloseTimeout); _settingsCloseTimeout = null; }
             if (bossEndTimeout) {
                 clearTimeout(bossEndTimeout);
                 bossEndTimeout = null;
@@ -7885,15 +7641,13 @@
             }
             if (toastTimeout) { clearTimeout(toastTimeout); toastTimeout = null; }
             bossActive = false;
-            bossConfused = false;
-            if (bossConfuseTimeout) { clearTimeout(bossConfuseTimeout); bossConfuseTimeout = null; }
             hideModal('bossBattleModal');
 
             // Dismiss strategy overlay if showing
             if (showingStrategy) dismissStrategyHint(true);
 
             // Clean up orphaned effect elements from animation timeouts
-            document.querySelectorAll('.lightning-effect, .helper-message, .coconut-projectile, .ability-flash, .boss-speech, .victory-confetti').forEach(el => el.remove());
+            document.querySelectorAll('.lightning-effect, .helper-message, .coconut-projectile, .boss-speech, .victory-confetti').forEach(el => el.remove());
 
             streak = 0; bestStreak = 0;
             gameActive = true;
@@ -8345,6 +8099,15 @@
         resetProblemStruggleState(); // Initialize auto-helper state
         generateProblem();
 
+        // Flush debounced saves when tab/app goes hidden (prevents data loss)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                _flushFactState();
+                _flushCumulativeStats();
+                if (_saveCoinsTimer) { clearTimeout(_saveCoinsTimer); _saveCoinsTimer = null; store('coins', score); }
+            }
+        });
+
         // ============================================
         // THREE.JS PIXEL ART LANIKAI BEACH SCENE
         // ============================================
@@ -8674,11 +8437,48 @@
             const sceneExtras = { stars: [], moon: null, particles: [], darkClouds: [], auroraBands: [] };
             const extras = currentSceneVar.extras || [];
 
+            // Shared geometries/materials for particle systems
+            const sharedGeo = {
+                star: new THREE.BoxGeometry(0.15, 0.15, 0.1),
+                snow: new THREE.BoxGeometry(0.2, 0.2, 0.2),
+                rain: new THREE.BoxGeometry(0.05, 0.4, 0.05),
+                petal: new THREE.BoxGeometry(0.25, 0.1, 0.15),
+                confetti: new THREE.BoxGeometry(0.15, 0.15, 0.02),
+                waterfall: new THREE.BoxGeometry(0.15, 0.5, 0.15),
+                lava: new THREE.BoxGeometry(0.3, 0.3, 0.3),
+                ember: new THREE.BoxGeometry(0.1, 0.1, 0.1),
+                crab: new THREE.BoxGeometry(0.4, 0.2, 0.5),
+                ghost: new THREE.BoxGeometry(1.2, 1.8, 0.5),
+                pumpkin: new THREE.BoxGeometry(1, 0.8, 1),
+                batBody: new THREE.BoxGeometry(0.3, 0.2, 0.2),
+                batWing: new THREE.BoxGeometry(0.4, 0.15, 0.1),
+                fishBody: new THREE.BoxGeometry(0.8, 0.4, 0.3),
+                fishTail: new THREE.BoxGeometry(0.3, 0.5, 0.2),
+                rainbowSeg: new THREE.BoxGeometry(1.5, 0.4, 0.3),
+            };
+            const sharedMat = {
+                white: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true }),
+                whiteSolid: new THREE.MeshBasicMaterial({ color: 0xffffff }),
+                rain: new THREE.MeshBasicMaterial({ color: 0x8888aa, transparent: true, opacity: 0.7 }),
+                petal: new THREE.MeshBasicMaterial({ color: 0xffb7c5 }),
+                waterfall: new THREE.MeshBasicMaterial({ color: 0xaaddff, transparent: true, opacity: 0.6 }),
+                lavaA: new THREE.MeshBasicMaterial({ color: 0xff4500 }),
+                lavaB: new THREE.MeshBasicMaterial({ color: 0xff6600 }),
+                ember: new THREE.MeshBasicMaterial({ color: 0xff8800, transparent: true }),
+                crab: new THREE.MeshBasicMaterial({ color: 0xff4500 }),
+                ghost: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 }),
+                pumpkin: new THREE.MeshBasicMaterial({ color: 0xff6600 }),
+                batBody: new THREE.MeshBasicMaterial({ color: 0x1a1a1a }),
+                batWing: new THREE.MeshBasicMaterial({ color: 0x2d2d2d }),
+                bubble: new THREE.MeshBasicMaterial({ color: 0xaaddff, transparent: true, opacity: 0.5 }),
+                mist: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.15 }),
+                smoke: new THREE.MeshBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.3 }),
+            };
+
             // Stars (for night scene)
             if (extras.includes('stars')) {
                 for (let i = 0; i < 60; i++) {
-                    const starGeo = new THREE.BoxGeometry(0.15, 0.15, 0.1);
-                    const star = new THREE.Mesh(starGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true }));
+                    const star = new THREE.Mesh(sharedGeo.star, sharedMat.white);
                     star.position.set(
                         (Math.random() - 0.5) * 80,
                         5 + Math.random() * 20,
@@ -8702,8 +8502,7 @@
             // Snowflakes (for winter scene)
             if (extras.includes('snowflakes')) {
                 for (let i = 0; i < 80; i++) {
-                    const snowGeo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-                    const snow = new THREE.Mesh(snowGeo, new THREE.MeshBasicMaterial({ color: 0xffffff }));
+                    const snow = new THREE.Mesh(sharedGeo.snow, sharedMat.whiteSolid);
                     snow.position.set(
                         (Math.random() - 0.5) * 60,
                         Math.random() * 30,
@@ -8718,8 +8517,7 @@
             // Rain (for stormy scene)
             if (extras.includes('rain')) {
                 for (let i = 0; i < 120; i++) {
-                    const rainGeo = new THREE.BoxGeometry(0.05, 0.4, 0.05);
-                    const rain = new THREE.Mesh(rainGeo, new THREE.MeshBasicMaterial({ color: 0x8888aa, transparent: true, opacity: 0.7 }));
+                    const rain = new THREE.Mesh(sharedGeo.rain, sharedMat.rain);
                     rain.position.set(
                         (Math.random() - 0.5) * 60,
                         Math.random() * 30,
@@ -8751,8 +8549,7 @@
             // Petals (for sakura scene)
             if (extras.includes('petals')) {
                 for (let i = 0; i < 50; i++) {
-                    const petalGeo = new THREE.BoxGeometry(0.25, 0.1, 0.15);
-                    const petal = new THREE.Mesh(petalGeo, new THREE.MeshBasicMaterial({ color: 0xffb7c5 }));
+                    const petal = new THREE.Mesh(sharedGeo.petal, sharedMat.petal);
                     petal.position.set(
                         (Math.random() - 0.5) * 50,
                         Math.random() * 25,
@@ -8770,14 +8567,13 @@
 
             // Fish (for underwater scene)
             if (extras.includes('fish')) {
+                const fishColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90];
+                const fishMats = fishColors.map(c => new THREE.MeshBasicMaterial({ color: c }));
                 for (let i = 0; i < 15; i++) {
                     const fishGroup = new THREE.Group();
-                    const bodyGeo = new THREE.BoxGeometry(0.8, 0.4, 0.3);
-                    const fishColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90];
-                    const fishColor = fishColors[Math.floor(Math.random() * fishColors.length)];
-                    const body = new THREE.Mesh(bodyGeo, new THREE.MeshBasicMaterial({ color: fishColor }));
-                    const tailGeo = new THREE.BoxGeometry(0.3, 0.5, 0.2);
-                    const tail = new THREE.Mesh(tailGeo, new THREE.MeshBasicMaterial({ color: fishColor }));
+                    const mat = fishMats[Math.floor(Math.random() * fishMats.length)];
+                    const body = new THREE.Mesh(sharedGeo.fishBody, mat);
+                    const tail = new THREE.Mesh(sharedGeo.fishTail, mat);
                     tail.position.x = -0.5;
                     fishGroup.add(body);
                     fishGroup.add(tail);
@@ -8794,9 +8590,9 @@
 
             // Bubbles (for underwater scene)
             if (extras.includes('bubbles')) {
+                const bubbleGeos = [0.1, 0.15, 0.2, 0.25].map(r => new THREE.SphereGeometry(r, 4, 4));
                 for (let i = 0; i < 40; i++) {
-                    const bubbleGeo = new THREE.SphereGeometry(0.1 + Math.random() * 0.15, 4, 4);
-                    const bubble = new THREE.Mesh(bubbleGeo, new THREE.MeshBasicMaterial({ color: 0xaaddff, transparent: true, opacity: 0.5 }));
+                    const bubble = new THREE.Mesh(bubbleGeos[Math.floor(Math.random() * bubbleGeos.length)], sharedMat.bubble);
                     bubble.position.set(
                         (Math.random() - 0.5) * 50,
                         Math.random() * 20 - 10,
@@ -8812,11 +8608,9 @@
             if (extras.includes('bats')) {
                 for (let i = 0; i < 8; i++) {
                     const batGroup = new THREE.Group();
-                    const bodyGeo = new THREE.BoxGeometry(0.3, 0.2, 0.2);
-                    const body = new THREE.Mesh(bodyGeo, new THREE.MeshBasicMaterial({ color: 0x1a1a1a }));
-                    const wingGeo = new THREE.BoxGeometry(0.4, 0.15, 0.1);
-                    const leftWing = new THREE.Mesh(wingGeo, new THREE.MeshBasicMaterial({ color: 0x2d2d2d }));
-                    const rightWing = new THREE.Mesh(wingGeo, new THREE.MeshBasicMaterial({ color: 0x2d2d2d }));
+                    const body = new THREE.Mesh(sharedGeo.batBody, sharedMat.batBody);
+                    const leftWing = new THREE.Mesh(sharedGeo.batWing, sharedMat.batWing);
+                    const rightWing = new THREE.Mesh(sharedGeo.batWing, sharedMat.batWing);
                     leftWing.position.set(-0.35, 0, 0);
                     rightWing.position.set(0.35, 0, 0);
                     batGroup.add(body);
@@ -8836,8 +8630,7 @@
             // Ghosts (for spooky scene)
             if (extras.includes('ghosts')) {
                 for (let i = 0; i < 4; i++) {
-                    const ghostGeo = new THREE.BoxGeometry(1.2, 1.8, 0.5);
-                    const ghost = new THREE.Mesh(ghostGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 }));
+                    const ghost = new THREE.Mesh(sharedGeo.ghost, sharedMat.ghost);
                     ghost.position.set(
                         (Math.random() - 0.5) * 30,
                         3 + Math.random() * 5,
@@ -8852,8 +8645,7 @@
             // Pumpkins (for spooky scene)
             if (extras.includes('pumpkins')) {
                 for (let i = 0; i < 6; i++) {
-                    const pumpkinGeo = new THREE.BoxGeometry(1, 0.8, 1);
-                    const pumpkin = new THREE.Mesh(pumpkinGeo, new THREE.MeshBasicMaterial({ color: 0xff6600 }));
+                    const pumpkin = new THREE.Mesh(sharedGeo.pumpkin, sharedMat.pumpkin);
                     pumpkin.position.set(
                         (Math.random() - 0.5) * 20,
                         -0.6,
@@ -8865,10 +8657,11 @@
 
             // Balloons (for party scene)
             if (extras.includes('balloons')) {
+                const balloonGeo = new THREE.SphereGeometry(0.5, 6, 6);
+                const balloonColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90, 0xdda0dd];
+                const balloonMats = balloonColors.map(c => new THREE.MeshBasicMaterial({ color: c }));
                 for (let i = 0; i < 12; i++) {
-                    const balloonGeo = new THREE.SphereGeometry(0.5, 6, 6);
-                    const balloonColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90, 0xdda0dd];
-                    const balloon = new THREE.Mesh(balloonGeo, new THREE.MeshBasicMaterial({ color: balloonColors[i % balloonColors.length] }));
+                    const balloon = new THREE.Mesh(balloonGeo, balloonMats[i % balloonMats.length]);
                     balloon.position.set(
                         (Math.random() - 0.5) * 40,
                         5 + Math.random() * 15,
@@ -8882,10 +8675,10 @@
 
             // Confetti (for party scene)
             if (extras.includes('confetti')) {
+                const confettiColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90];
+                const confettiMats = confettiColors.map(c => new THREE.MeshBasicMaterial({ color: c }));
                 for (let i = 0; i < 60; i++) {
-                    const confettiGeo = new THREE.BoxGeometry(0.15, 0.15, 0.02);
-                    const confettiColors = [0xff6b6b, 0xffd93d, 0x64c8ff, 0xff69b4, 0x90ee90];
-                    const confetti = new THREE.Mesh(confettiGeo, new THREE.MeshBasicMaterial({ color: confettiColors[Math.floor(Math.random() * confettiColors.length)] }));
+                    const confetti = new THREE.Mesh(sharedGeo.confetti, confettiMats[Math.floor(Math.random() * confettiMats.length)]);
                     confetti.position.set(
                         (Math.random() - 0.5) * 50,
                         Math.random() * 25,
@@ -8900,8 +8693,7 @@
             // Crabs (for tide pools scene)
             if (extras.includes('crabs')) {
                 for (let i = 0; i < 5; i++) {
-                    const crabGeo = new THREE.BoxGeometry(0.4, 0.2, 0.5);
-                    const crab = new THREE.Mesh(crabGeo, new THREE.MeshBasicMaterial({ color: 0xff4500 }));
+                    const crab = new THREE.Mesh(sharedGeo.crab, sharedMat.crab);
                     crab.position.set(
                         (Math.random() - 0.5) * 15,
                         -0.8,
@@ -8918,14 +8710,12 @@
             // Rainbow (for Rainbow Falls scene)
             if (extras.includes('rainbow')) {
                 const rainbowColors = [0xff0000, 0xff7700, 0xffff00, 0x00cc00, 0x0000ff, 0x8b00ff];
+                const rainbowMats = rainbowColors.map(c => new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.7 }));
                 for (let c = 0; c < rainbowColors.length; c++) {
                     const radius = 15 + c * 0.8;
                     for (let a = 0; a < 12; a++) {
                         const angle = (a / 12) * Math.PI;
-                        const seg = new THREE.Mesh(
-                            new THREE.BoxGeometry(1.5, 0.4, 0.3),
-                            new THREE.MeshBasicMaterial({ color: rainbowColors[c], transparent: true, opacity: 0.7 })
-                        );
+                        const seg = new THREE.Mesh(sharedGeo.rainbowSeg, rainbowMats[c]);
                         seg.position.set(Math.cos(angle) * radius - 5, Math.sin(angle) * radius, -45);
                         seg.rotation.z = angle + Math.PI / 2;
                         scene.add(seg);
@@ -8936,10 +8726,7 @@
             // Waterfall (for Rainbow Falls scene)
             if (extras.includes('waterfall')) {
                 for (let i = 0; i < 60; i++) {
-                    const drop = new THREE.Mesh(
-                        new THREE.BoxGeometry(0.15, 0.5, 0.15),
-                        new THREE.MeshBasicMaterial({ color: 0xaaddff, transparent: true, opacity: 0.6 })
-                    );
+                    const drop = new THREE.Mesh(sharedGeo.waterfall, sharedMat.waterfall);
                     drop.position.set(
                         15 + (Math.random() - 0.5) * 4,
                         Math.random() * 15,
@@ -8954,10 +8741,8 @@
             // Mist (for Rainbow Falls scene)
             if (extras.includes('mist')) {
                 for (let i = 0; i < 10; i++) {
-                    const mist = new THREE.Mesh(
-                        new THREE.BoxGeometry(3 + Math.random() * 3, 1, 2),
-                        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.15 })
-                    );
+                    const mistGeo = new THREE.BoxGeometry(3 + Math.random() * 3, 1, 2);
+                    const mist = new THREE.Mesh(mistGeo, sharedMat.mist);
                     mist.position.set(15 + (Math.random() - 0.5) * 10, Math.random() * 3, -30 + Math.random() * 5);
                     mist.userData = { sway: Math.random() * Math.PI * 2 };
                     sceneExtras.particles.push(mist);
@@ -9004,10 +8789,7 @@
             // Lava (for Volcano Island scene)
             if (extras.includes('lava')) {
                 for (let i = 0; i < 30; i++) {
-                    const lava = new THREE.Mesh(
-                        new THREE.BoxGeometry(0.3, 0.3, 0.3),
-                        new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? 0xff4500 : 0xff6600 })
-                    );
+                    const lava = new THREE.Mesh(sharedGeo.lava, i % 2 === 0 ? sharedMat.lavaA : sharedMat.lavaB);
                     lava.position.set(
                         (Math.random() - 0.5) * 15,
                         Math.random() * 10,
@@ -9022,10 +8804,8 @@
             // Volcano smoke (for Volcano Island scene)
             if (extras.includes('volcanoSmoke')) {
                 for (let i = 0; i < 15; i++) {
-                    const smoke = new THREE.Mesh(
-                        new THREE.BoxGeometry(1 + Math.random() * 2, 1 + Math.random(), 1),
-                        new THREE.MeshBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.3 })
-                    );
+                    const smokeGeo = new THREE.BoxGeometry(1 + Math.random() * 2, 1 + Math.random(), 1);
+                    const smoke = new THREE.Mesh(smokeGeo, sharedMat.smoke);
                     smoke.position.set((Math.random() - 0.5) * 8, 10 + Math.random() * 10, -45);
                     smoke.userData = { riseSpeed: 0.02 + Math.random() * 0.02, sway: Math.random() * Math.PI * 2 };
                     sceneExtras.particles.push(smoke);
@@ -9035,11 +8815,10 @@
 
             // Embers (for Volcano Island scene)
             if (extras.includes('embers')) {
+                const emberMatB = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
+                const emberMatA = new THREE.MeshBasicMaterial({ color: 0xff4400 });
                 for (let i = 0; i < 40; i++) {
-                    const ember = new THREE.Mesh(
-                        new THREE.BoxGeometry(0.1, 0.1, 0.1),
-                        new THREE.MeshBasicMaterial({ color: i % 3 === 0 ? 0xffcc00 : 0xff4400 })
-                    );
+                    const ember = new THREE.Mesh(sharedGeo.ember, i % 3 === 0 ? emberMatB : emberMatA);
                     ember.position.set(
                         (Math.random() - 0.5) * 30,
                         Math.random() * 20,
@@ -9147,10 +8926,11 @@
 
             // Animation
             let time = 0;
+            let animFrameId = null;
 
             function animate() {
-                requestAnimationFrame(animate);
                 if (document.hidden) return;
+                animFrameId = requestAnimationFrame(animate);
                 time += 0.02;
 
                 // Animate waves
@@ -9313,6 +9093,11 @@
 
                 renderer.render(scene, camera);
             }
+
+            // Resume animation when tab becomes visible again
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden && !animFrameId) animate();
+            });
 
             // Handle resize
             let resizeTimer;
