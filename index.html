@@ -121,17 +121,16 @@
             max-height: calc(100% - 20px);
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
             background: var(--container-bg);
             border-radius: 20px;
             padding: 12px;
-            padding-bottom: 20px;
+            padding-bottom: 16px;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
             margin-bottom: env(safe-area-inset-bottom, 0px);
             -webkit-user-select: none;
             user-select: none;
@@ -142,6 +141,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 6px;
         }
 
         h1 {
@@ -149,26 +149,27 @@
             text-shadow: 0 0 15px var(--primary);
         }
 
-        .top-buttons { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+        .top-buttons { display: flex; gap: 4px; flex-wrap: nowrap; justify-content: flex-end; }
 
         .icon-btn {
-            width: 48px;
-            height: 48px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: var(--card-bg);
             border: 2px solid var(--primary);
             color: var(--primary);
-            font-size: 1.1rem;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            flex-shrink: 0;
             -webkit-tap-highlight-color: transparent;
             transition: transform 0.15s;
         }
         .icon-btn:active { transform: scale(0.9); }
         .icon-btn.muted { opacity: 0.5; }
-        .btn-icon { width: 24px; height: 24px; }
+        .btn-icon { width: 20px; height: 20px; }
 
         /* Settings */
         .settings-wrapper {
@@ -257,7 +258,9 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            padding: 8px 0;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
         }
 
         .stat-item {
@@ -281,8 +284,11 @@
         .progress-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            padding: 0 10px;
+            align-items: center;
+            gap: 14px;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
         }
         .progress-item {
             display: flex;
@@ -291,8 +297,8 @@
             font-size: 0.85rem;
         }
         .progress-bar {
-            width: 60px;
-            height: 8px;
+            width: 70px;
+            height: 7px;
             background: rgba(255,255,255,0.1);
             border-radius: 4px;
             overflow: hidden;
@@ -587,14 +593,15 @@
         .level-display {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 5px;
+            font-size: 0.85rem;
             font-weight: bold;
             color: var(--accent);
+            flex-shrink: 0;
         }
-        .level-num { min-width: 45px; }
+        .level-num { min-width: 36px; }
         .xp-bar {
-            width: 60px;
+            width: 48px;
             height: 6px;
             background: rgba(255,255,255,0.1);
             border-radius: 3px;
@@ -824,13 +831,15 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            min-height: 150px;
+            min-height: 130px;
+            min-width: 0;
         }
 
         .problem {
-            font-size: clamp(2.5rem, 10vw, 4rem);
+            font-size: clamp(2rem, 8vw, 3.2rem);
             font-weight: bold;
             color: var(--text-color);
+            letter-spacing: 0.02em;
         }
 
         .answer-display {
@@ -1411,6 +1420,138 @@
             .numpad { max-width: 180px; gap: 4px; }
             .numpad button { height: 38px; font-size: 1.1rem; }
         }
+
+        .trail-particle {
+            position: fixed;
+            pointer-events: none;
+            width: 14px;
+            height: 14px;
+            z-index: 350;
+            will-change: transform, opacity;
+            animation: trailFly 700ms cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
+        }
+        .trail-particle svg { width: 100%; height: 100%; image-rendering: pixelated; }
+        @keyframes trailFly {
+            0%   { transform: translate(0,0) scale(0.4) rotate(0deg); opacity: 1; }
+            60%  { opacity: 1; }
+            100% { transform: translate(var(--tx,0), var(--ty,-80px)) scale(1) rotate(var(--tr,180deg)); opacity: 0; }
+        }
+        .trail-particle.heart { color: #ff6b9d; }
+        .trail-particle.bubble { color: #5bc0eb; }
+        .trail-particle.flame { color: #ff8c42; }
+        .trail-particle.sparkle { color: #ffd93d; }
+
+        .pet-buddy {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .pet-buddy svg { width: 28px; height: 28px; image-rendering: pixelated; }
+        .pet-buddy.idle svg { animation: petBob 2.4s ease-in-out infinite; }
+        @keyframes petBob {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50%      { transform: translateY(-3px) scale(1.04); }
+        }
+        .pet-buddy.cheer svg { animation: petCheer 0.6s ease-out; }
+        @keyframes petCheer {
+            0%   { transform: translateY(0) scale(1) rotate(0); }
+            30%  { transform: translateY(-12px) scale(1.25) rotate(-12deg); }
+            55%  { transform: translateY(-14px) scale(1.25) rotate(12deg); }
+            100% { transform: translateY(0) scale(1) rotate(0); }
+        }
+        .pet-buddy.sad svg { animation: petSad 0.6s ease-out; }
+        @keyframes petSad {
+            0%, 100% { transform: translateY(0) scale(1); filter: none; }
+            40%      { transform: translateY(2px) scale(0.92); filter: grayscale(0.4); }
+        }
+        .pet-buddy.empty {
+            opacity: 0.35;
+            border: 2px dashed rgba(255,255,255,0.35);
+            border-radius: 8px;
+        }
+        .pet-buddy.empty::before {
+            content: '+';
+            color: rgba(255,255,255,0.7);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .mastery-modal { padding-top: 30px; }
+        .mastery-modal h2,
+        .mastery-modal .modal-tabs,
+        .mastery-modal .mastery-grid,
+        .mastery-modal .mastery-legend,
+        .mastery-modal .close-btn { max-width: 380px; width: 100%; }
+        .mastery-modal h2 { text-align: center; margin-bottom: 4px; }
+        .mastery-summary {
+            text-align: center;
+            color: rgba(255,255,255,0.75);
+            font-size: 0.85rem;
+            margin: 4px 0 10px;
+        }
+        .mastery-summary strong { color: var(--accent); }
+        .mastery-grid {
+            display: grid;
+            gap: 3px;
+            margin: 0 auto 10px;
+            padding: 8px;
+            background: rgba(0,0,0,0.35);
+            border-radius: 10px;
+        }
+        .mastery-cell {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.55);
+            line-height: 1.05;
+            border: 1px solid transparent;
+            overflow: hidden;
+            min-width: 0;
+        }
+        .mastery-cell .mc-num { font-size: clamp(0.5rem, 2.4vw, 0.72rem); line-height: 1; white-space: nowrap; }
+        .mastery-cell .mc-time { font-size: clamp(0.42rem, 2vw, 0.6rem); opacity: 0.85; margin-top: 1px; white-space: nowrap; }
+        .mastery-cell.lv-new      { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.45); }
+        .mastery-cell.lv-learning { background: rgba(91, 192, 235, 0.18); color: #cfe9f7; border-color: rgba(91, 192, 235, 0.4); }
+        .mastery-cell.lv-bronze   { background: linear-gradient(135deg, #8a5a2e, #6b3f1c); color: #ffe2c0; border-color: #c98a4d; }
+        .mastery-cell.lv-silver   { background: linear-gradient(135deg, #b8c0c8, #6f7a85); color: #fff; border-color: #d8dee5; }
+        .mastery-cell.lv-gold     { background: linear-gradient(135deg, #ffd93d, #d99a1a); color: #3a2200; border-color: #fff3a0; box-shadow: 0 0 6px rgba(255, 217, 61, 0.5); }
+        .mastery-cell.lv-gold .mc-time { color: #5c3b00; }
+        .mastery-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            justify-content: center;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 12px;
+        }
+        .mastery-legend .leg {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .mastery-legend .leg::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .leg.l-new::before      { background: rgba(255,255,255,0.15); }
+        .leg.l-learning::before { background: rgba(91, 192, 235, 0.5); }
+        .leg.l-bronze::before   { background: linear-gradient(135deg, #8a5a2e, #6b3f1c); }
+        .leg.l-silver::before   { background: linear-gradient(135deg, #b8c0c8, #6f7a85); }
+        .leg.l-gold::before     { background: linear-gradient(135deg, #ffd93d, #d99a1a); }
     </style>
 </head>
 <body>
@@ -4403,6 +4544,157 @@
             <rect x="4" y="11" width="3" height="2" fill="#ffd93d"/>
             <rect x="3" y="13" width="3" height="3" fill="#ffd93d"/>
         </symbol>
+
+        <!-- Trail particle shapes (use currentColor) -->
+        <symbol id="trail-heart" viewBox="0 0 16 16">
+            <rect x="2" y="3" width="4" height="3" fill="currentColor"/>
+            <rect x="10" y="3" width="4" height="3" fill="currentColor"/>
+            <rect x="1" y="6" width="14" height="3" fill="currentColor"/>
+            <rect x="3" y="9" width="10" height="2" fill="currentColor"/>
+            <rect x="5" y="11" width="6" height="2" fill="currentColor"/>
+            <rect x="7" y="13" width="2" height="2" fill="currentColor"/>
+        </symbol>
+        <symbol id="trail-bubble" viewBox="0 0 16 16">
+            <rect x="5" y="2" width="6" height="2" fill="currentColor" opacity="0.9"/>
+            <rect x="3" y="4" width="10" height="2" fill="currentColor" opacity="0.9"/>
+            <rect x="2" y="6" width="12" height="4" fill="currentColor" opacity="0.9"/>
+            <rect x="3" y="10" width="10" height="2" fill="currentColor" opacity="0.9"/>
+            <rect x="5" y="12" width="6" height="2" fill="currentColor" opacity="0.9"/>
+            <rect x="5" y="4" width="2" height="2" fill="#ffffff" opacity="0.8"/>
+        </symbol>
+        <symbol id="trail-flame" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="2" fill="currentColor"/>
+            <rect x="6" y="3" width="4" height="2" fill="currentColor"/>
+            <rect x="5" y="5" width="6" height="3" fill="currentColor"/>
+            <rect x="4" y="8" width="8" height="3" fill="currentColor"/>
+            <rect x="5" y="11" width="6" height="2" fill="currentColor"/>
+            <rect x="6" y="13" width="4" height="2" fill="currentColor"/>
+            <rect x="7" y="6" width="2" height="3" fill="#ffffff" opacity="0.6"/>
+        </symbol>
+        <symbol id="trail-sparkle" viewBox="0 0 16 16">
+            <rect x="7" y="0" width="2" height="6" fill="currentColor"/>
+            <rect x="7" y="10" width="2" height="6" fill="currentColor"/>
+            <rect x="0" y="7" width="6" height="2" fill="currentColor"/>
+            <rect x="10" y="7" width="6" height="2" fill="currentColor"/>
+            <rect x="6" y="6" width="4" height="4" fill="currentColor"/>
+        </symbol>
+        <symbol id="trail-star" viewBox="0 0 16 16">
+            <rect x="7" y="2" width="2" height="2" fill="currentColor"/>
+            <rect x="6" y="4" width="4" height="2" fill="currentColor"/>
+            <rect x="2" y="6" width="12" height="3" fill="currentColor"/>
+            <rect x="4" y="9" width="8" height="2" fill="currentColor"/>
+            <rect x="3" y="11" width="3" height="3" fill="currentColor"/>
+            <rect x="10" y="11" width="3" height="3" fill="currentColor"/>
+        </symbol>
+
+        <!-- Pet companions -->
+        <symbol id="pet-butterfly" viewBox="0 0 16 16">
+            <rect x="7" y="4" width="2" height="8" fill="#3a2a4a"/>
+            <rect x="7" y="3" width="2" height="1" fill="#3a2a4a"/>
+            <rect x="6" y="2" width="1" height="2" fill="#3a2a4a"/>
+            <rect x="9" y="2" width="1" height="2" fill="#3a2a4a"/>
+            <rect x="3" y="4" width="4" height="3" fill="#ff6b9d"/>
+            <rect x="2" y="5" width="5" height="3" fill="#ff6b9d"/>
+            <rect x="3" y="8" width="4" height="3" fill="#c084fc"/>
+            <rect x="2" y="9" width="5" height="2" fill="#c084fc"/>
+            <rect x="9" y="4" width="4" height="3" fill="#ff6b9d"/>
+            <rect x="9" y="5" width="5" height="3" fill="#ff6b9d"/>
+            <rect x="9" y="8" width="4" height="3" fill="#c084fc"/>
+            <rect x="9" y="9" width="5" height="2" fill="#c084fc"/>
+            <rect x="3" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="11" y="6" width="1" height="1" fill="#fff"/>
+        </symbol>
+        <symbol id="pet-bee" viewBox="0 0 16 16">
+            <rect x="5" y="3" width="2" height="1" fill="#3a2a1a"/>
+            <rect x="9" y="3" width="2" height="1" fill="#3a2a1a"/>
+            <rect x="4" y="4" width="8" height="2" fill="#ffd93d"/>
+            <rect x="3" y="6" width="10" height="2" fill="#3a2a1a"/>
+            <rect x="3" y="8" width="10" height="2" fill="#ffd93d"/>
+            <rect x="3" y="10" width="10" height="2" fill="#3a2a1a"/>
+            <rect x="4" y="12" width="8" height="1" fill="#ffd93d"/>
+            <rect x="1" y="5" width="3" height="3" fill="#ffffff" opacity="0.7"/>
+            <rect x="12" y="5" width="3" height="3" fill="#ffffff" opacity="0.7"/>
+            <rect x="5" y="7" width="1" height="1" fill="#ffffff"/>
+            <rect x="10" y="7" width="1" height="1" fill="#ffffff"/>
+        </symbol>
+        <symbol id="pet-fish" viewBox="0 0 16 16">
+            <rect x="2" y="6" width="2" height="4" fill="#ff8c42"/>
+            <rect x="3" y="5" width="2" height="6" fill="#ff8c42"/>
+            <rect x="4" y="4" width="8" height="8" fill="#ff8c42"/>
+            <rect x="5" y="3" width="6" height="10" fill="#ff8c42"/>
+            <rect x="12" y="5" width="2" height="6" fill="#ff8c42"/>
+            <rect x="13" y="6" width="2" height="4" fill="#ff8c42"/>
+            <rect x="6" y="5" width="4" height="2" fill="#ffb347"/>
+            <rect x="6" y="9" width="4" height="2" fill="#ffb347"/>
+            <rect x="11" y="6" width="1" height="1" fill="#ffffff"/>
+            <rect x="11" y="7" width="1" height="1" fill="#222"/>
+        </symbol>
+        <symbol id="pet-ghost" viewBox="0 0 16 16">
+            <rect x="4" y="2" width="8" height="2" fill="#e8e8ff"/>
+            <rect x="3" y="4" width="10" height="8" fill="#e8e8ff"/>
+            <rect x="3" y="12" width="2" height="2" fill="#e8e8ff"/>
+            <rect x="6" y="12" width="2" height="2" fill="#e8e8ff"/>
+            <rect x="9" y="12" width="2" height="2" fill="#e8e8ff"/>
+            <rect x="12" y="12" width="1" height="2" fill="#e8e8ff"/>
+            <rect x="5" y="6" width="2" height="2" fill="#222"/>
+            <rect x="9" y="6" width="2" height="2" fill="#222"/>
+            <rect x="6" y="9" width="4" height="2" fill="#ff6b9d"/>
+        </symbol>
+        <symbol id="pet-robot" viewBox="0 0 16 16">
+            <rect x="7" y="0" width="2" height="2" fill="#9aa5b1"/>
+            <rect x="6" y="2" width="4" height="1" fill="#9aa5b1"/>
+            <rect x="3" y="3" width="10" height="7" fill="#cfd8e3"/>
+            <rect x="4" y="5" width="3" height="3" fill="#5bc0eb"/>
+            <rect x="9" y="5" width="3" height="3" fill="#5bc0eb"/>
+            <rect x="5" y="6" width="1" height="1" fill="#ffffff"/>
+            <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
+            <rect x="6" y="9" width="4" height="1" fill="#222"/>
+            <rect x="3" y="10" width="10" height="3" fill="#9aa5b1"/>
+            <rect x="2" y="11" width="2" height="2" fill="#5bc0eb"/>
+            <rect x="12" y="11" width="2" height="2" fill="#5bc0eb"/>
+            <rect x="5" y="13" width="2" height="2" fill="#9aa5b1"/>
+            <rect x="9" y="13" width="2" height="2" fill="#9aa5b1"/>
+        </symbol>
+        <symbol id="pet-dragon" viewBox="0 0 16 16">
+            <rect x="2" y="6" width="2" height="3" fill="#6bcb77"/>
+            <rect x="3" y="5" width="3" height="5" fill="#6bcb77"/>
+            <rect x="4" y="4" width="8" height="7" fill="#6bcb77"/>
+            <rect x="5" y="3" width="3" height="2" fill="#6bcb77"/>
+            <rect x="11" y="5" width="3" height="2" fill="#6bcb77"/>
+            <rect x="12" y="3" width="2" height="3" fill="#6bcb77"/>
+            <rect x="13" y="2" width="1" height="2" fill="#ff6b9d"/>
+            <rect x="6" y="6" width="1" height="2" fill="#ffd93d"/>
+            <rect x="9" y="6" width="1" height="2" fill="#ffd93d"/>
+            <rect x="6" y="7" width="1" height="1" fill="#222"/>
+            <rect x="9" y="7" width="1" height="1" fill="#222"/>
+            <rect x="5" y="11" width="2" height="2" fill="#6bcb77"/>
+            <rect x="9" y="11" width="2" height="2" fill="#6bcb77"/>
+            <rect x="2" y="12" width="2" height="1" fill="#ff6b9d"/>
+        </symbol>
+        <symbol id="pet-phoenix" viewBox="0 0 16 16">
+            <rect x="7" y="1" width="2" height="2" fill="#ffd93d"/>
+            <rect x="6" y="3" width="4" height="2" fill="#ff8c42"/>
+            <rect x="5" y="5" width="6" height="3" fill="#ff6b6b"/>
+            <rect x="2" y="6" width="3" height="3" fill="#ff8c42"/>
+            <rect x="11" y="6" width="3" height="3" fill="#ff8c42"/>
+            <rect x="1" y="7" width="2" height="2" fill="#ffd93d"/>
+            <rect x="13" y="7" width="2" height="2" fill="#ffd93d"/>
+            <rect x="4" y="8" width="8" height="3" fill="#ff6b6b"/>
+            <rect x="6" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="9" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="5" y="11" width="2" height="3" fill="#ff8c42"/>
+            <rect x="9" y="11" width="2" height="3" fill="#ff8c42"/>
+            <rect x="6" y="14" width="1" height="1" fill="#ffd93d"/>
+            <rect x="9" y="14" width="1" height="1" fill="#ffd93d"/>
+        </symbol>
+        <symbol id="icon-mastery" viewBox="0 0 16 16">
+            <rect x="3" y="2" width="10" height="2" fill="currentColor"/>
+            <rect x="3" y="6" width="10" height="2" fill="currentColor"/>
+            <rect x="3" y="10" width="10" height="2" fill="currentColor"/>
+            <rect x="2" y="2" width="2" height="10" fill="currentColor"/>
+            <rect x="12" y="2" width="2" height="10" fill="currentColor"/>
+            <rect x="6" y="13" width="4" height="2" fill="currentColor"/>
+        </symbol>
     </svg>
 
     <div class="game-container">
@@ -4413,9 +4705,11 @@
                 <div class="costume-layer" id="costumeOutfitLayer"></div>
                 <div class="costume-layer" id="costumeAccessoryLayer"></div>
             </div>
+            <div class="pet-buddy idle empty" id="petBuddy" onclick="openShopModal('pets')" title="Pet companion"></div>
             <div class="level-display" id="levelDisplay">Lv.1</div>
             <div class="top-buttons">
                 <button class="icon-btn" id="soundBtn" onclick="toggleSound()"><svg class="btn-icon"><use href="#icon-sound-on"/></svg></button>
+                <button class="icon-btn" onclick="showMasteryWall()" title="Fact Mastery Wall"><svg class="btn-icon"><use href="#icon-mastery"/></svg></button>
                 <button class="icon-btn" onclick="showAchievements()"><svg class="btn-icon"><use href="#icon-trophy"/></svg></button>
                 <button class="icon-btn" onclick="showThemePicker()"><svg class="btn-icon"><use href="#icon-theme"/></svg></button>
             </div>
@@ -4558,6 +4852,27 @@
         <button class="close-btn" onclick="hideAchievements()">Done</button>
     </div>
 
+    <!-- Fact Mastery Wall -->
+    <div class="modal mastery-modal" id="masteryModal">
+        <h2 style="color: var(--accent);">Fact Mastery Wall</h2>
+        <div class="mastery-summary" id="masterySummary"></div>
+        <div class="modal-tabs" id="masteryTabs">
+            <button class="modal-tab active" data-mtab="multiply" onclick="showMasteryTab('multiply')">×</button>
+            <button class="modal-tab" data-mtab="add" onclick="showMasteryTab('add')">+</button>
+            <button class="modal-tab" data-mtab="subtract" onclick="showMasteryTab('subtract')">−</button>
+            <button class="modal-tab" data-mtab="divide" onclick="showMasteryTab('divide')">÷</button>
+        </div>
+        <div class="mastery-grid" id="masteryGrid"></div>
+        <div class="mastery-legend">
+            <span class="leg l-new">New</span>
+            <span class="leg l-learning">Learning</span>
+            <span class="leg l-bronze">Bronze &lt;6s</span>
+            <span class="leg l-silver">Silver &lt;3s</span>
+            <span class="leg l-gold">Gold &lt;2s</span>
+        </div>
+        <button class="close-btn" onclick="hideMasteryWall()">Done</button>
+    </div>
+
     <!-- Achievement Toast -->
     <div class="achievement-toast" id="achievementToast"></div>
 
@@ -4570,6 +4885,8 @@
             <button class="modal-tab active" data-tab="hats" onclick="showShopTab('hats')">Hats</button>
             <button class="modal-tab" data-tab="outfits" onclick="showShopTab('outfits')">Outfits</button>
             <button class="modal-tab" data-tab="accessories" onclick="showShopTab('accessories')">Acc</button>
+            <button class="modal-tab" data-tab="pets" onclick="showShopTab('pets')">Pets</button>
+            <button class="modal-tab" data-tab="trails" onclick="showShopTab('trails')">Trails</button>
             <button class="modal-tab" data-tab="dances" onclick="showShopTab('dances')">Dances</button>
             <button class="modal-tab" data-tab="stickers" onclick="showShopTab('stickers')">Stickers</button>
         </div>
@@ -5030,6 +5347,133 @@
             equippedDance = load('equippedDance', 'dance-wiggle');
             if (!ownedDances.includes(equippedDance)) equippedDance = 'dance-wiggle';
         }
+
+        const TRAILS = [
+            { id: 'trail-none',    name: 'None',     symbol: null,            price: 0,    rarity: 'COMMON',    cls: 'sparkle', color: null },
+            { id: 'trail-hearts',  name: 'Hearts',   symbol: 'trail-heart',   price: 400,  rarity: 'COMMON',    cls: 'heart',   color: '#ff6b9d' },
+            { id: 'trail-bubbles', name: 'Bubbles',  symbol: 'trail-bubble',  price: 600,  rarity: 'COMMON',    cls: 'bubble',  color: '#5bc0eb' },
+            { id: 'trail-flames',  name: 'Fireball', symbol: 'trail-flame',   price: 1500, rarity: 'RARE',      cls: 'flame',   color: '#ff8c42' },
+            { id: 'trail-stars',   name: 'Starshow', symbol: 'trail-star',    price: 2200, rarity: 'EPIC',      cls: 'sparkle', color: '#ffd93d' },
+            { id: 'trail-rainbow', name: 'Rainbow',  symbol: 'trail-sparkle', price: 5000, rarity: 'LEGENDARY', cls: 'rainbow', color: '#ff6b6b' },
+            { id: 'trail-galaxy',  name: 'Galaxy',   symbol: 'trail-sparkle', price: 9000, rarity: 'LEGENDARY', cls: 'galaxy',  color: '#c084fc' }
+        ];
+        let ownedTrails = ['trail-none'];
+        let equippedTrail = 'trail-none';
+
+        function purchaseTrail(id) {
+            const t = TRAILS.find(x => x.id === id);
+            if (!t || ownedTrails.includes(id) || score < t.price) return false;
+            score -= t.price;
+            ownedTrails.push(id);
+            saveCoins();
+            store('trails', ownedTrails);
+            $score.textContent = score;
+            return true;
+        }
+        function loadTrails() {
+            ownedTrails = load('trails', ['trail-none']);
+            if (!ownedTrails.includes('trail-none')) ownedTrails.push('trail-none');
+            equippedTrail = load('equippedTrail', 'trail-none');
+            if (!ownedTrails.includes(equippedTrail)) equippedTrail = 'trail-none';
+        }
+        function saveEquippedTrail() { store('equippedTrail', equippedTrail); }
+
+        const TRAIL_PALETTES = {
+            rainbow: ['#ff6b6b', '#ffb347', '#ffd93d', '#6bcb77', '#5bc0eb', '#c084fc'],
+            galaxy:  ['#c084fc', '#5bc0eb', '#ffffff']
+        };
+        function spawnAnswerTrail(count = 12) {
+            const trail = TRAILS.find(t => t.id === equippedTrail);
+            if (!trail || !trail.symbol) return;
+            const el = document.getElementById('answerDisplay');
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const palette = TRAIL_PALETTES[trail.cls];
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = `trail-particle ${trail.cls}`;
+                const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4);
+                const dist = 50 + Math.random() * 70;
+                const tx = Math.cos(angle) * dist;
+                const ty = Math.sin(angle) * dist - 30;
+                const tr = (Math.random() * 360) - 180;
+                const size = 10 + Math.random() * 8;
+                p.style.left = (cx - size / 2) + 'px';
+                p.style.top = (cy - size / 2) + 'px';
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.setProperty('--tx', tx + 'px');
+                p.style.setProperty('--ty', ty + 'px');
+                p.style.setProperty('--tr', tr + 'deg');
+                if (palette) p.style.color = palette[i % palette.length];
+                p.innerHTML = `<svg viewBox="0 0 16 16"><use href="#${trail.symbol}"/></svg>`;
+                frag.appendChild(p);
+                setTimeout(() => p.remove(), 750);
+            }
+            document.body.appendChild(frag);
+        }
+
+        const PETS = [
+            { id: 'pet-none',      name: 'No Pet',    svgId: null,           price: 0,    rarity: 'COMMON' },
+            { id: 'pet-butterfly', name: 'Butterfly', svgId: 'pet-butterfly', price: 250,  rarity: 'COMMON' },
+            { id: 'pet-bee',       name: 'Buzzy',     svgId: 'pet-bee',       price: 400,  rarity: 'COMMON' },
+            { id: 'pet-fish',      name: 'Goldie',    svgId: 'pet-fish',      price: 800,  rarity: 'RARE' },
+            { id: 'pet-ghost',     name: 'Boo',       svgId: 'pet-ghost',     price: 1200, rarity: 'RARE' },
+            { id: 'pet-robot',     name: 'Bolt',      svgId: 'pet-robot',     price: 2500, rarity: 'EPIC' },
+            { id: 'pet-dragon',    name: 'Dragonling',svgId: 'pet-dragon',    price: 4000, rarity: 'EPIC' },
+            { id: 'pet-phoenix',   name: 'Phoenix',   svgId: 'pet-phoenix',   price: 9000, rarity: 'LEGENDARY' }
+        ];
+        let ownedPets = ['pet-none'];
+        let equippedPet = 'pet-none';
+        let _petReactionTimer = null;
+
+        function purchasePet(id) {
+            const p = PETS.find(x => x.id === id);
+            if (!p || ownedPets.includes(id) || score < p.price) return false;
+            score -= p.price;
+            ownedPets.push(id);
+            saveCoins();
+            store('pets', ownedPets);
+            $score.textContent = score;
+            return true;
+        }
+        function loadPets() {
+            ownedPets = load('pets', ['pet-none']);
+            if (!ownedPets.includes('pet-none')) ownedPets.push('pet-none');
+            equippedPet = load('equippedPet', 'pet-none');
+            if (!ownedPets.includes(equippedPet)) equippedPet = 'pet-none';
+            updatePetDisplay();
+        }
+        function saveEquippedPet() { store('equippedPet', equippedPet); }
+
+        function updatePetDisplay() {
+            const el = document.getElementById('petBuddy');
+            if (!el) return;
+            const pet = PETS.find(p => p.id === equippedPet);
+            if (!pet || !pet.svgId) {
+                el.classList.add('empty');
+                el.innerHTML = '';
+                return;
+            }
+            el.classList.remove('empty');
+            el.innerHTML = `<svg viewBox="0 0 16 16"><use href="#${pet.svgId}"/></svg>`;
+        }
+
+        function triggerPetReaction(kind) {
+            const el = document.getElementById('petBuddy');
+            if (!el || el.classList.contains('empty')) return;
+            if (_petReactionTimer) clearTimeout(_petReactionTimer);
+            el.classList.remove('cheer', 'sad');
+            void el.offsetWidth;
+            el.classList.add(kind === 'wrong' ? 'sad' : 'cheer');
+            _petReactionTimer = setTimeout(() => {
+                el.classList.remove('cheer', 'sad');
+            }, 650);
+        }
+
 
         function triggerCelebrationDance(reason, duration = 5000) {
             const avatar = document.getElementById('mangoAvatar');
@@ -7172,9 +7616,27 @@
             if (_saveFactTimer) { clearTimeout(_saveFactTimer); _saveFactTimer = null; }
             const state = {};
             mathFacts.forEach(fact => {
-                state[fact.id] = { ef: fact.ef, interval: fact.interval, repetitions: fact.repetitions, nextReview: fact.nextReview, lastReview: fact.lastReview };
+                state[fact.id] = {
+                    ef: fact.ef, interval: fact.interval, repetitions: fact.repetitions,
+                    nextReview: fact.nextReview, lastReview: fact.lastReview,
+                    avgMs: fact.avgMs, attempts: fact.attempts, correctCount: fact.correctCount
+                };
             });
             store('facts_sm2', state);
+        }
+
+        // EWMA on response time so recent answers weigh more; cap at 15s to ignore distractions.
+        // updateFactSM2 already triggers the debounced save, so we don't call saveFactState here.
+        function recordFactTiming(fact, isCorrect) {
+            const start = struggleState.problemStartTime || 0;
+            const elapsed = start ? Math.min(15000, Date.now() - start) : 0;
+            fact.attempts = (fact.attempts || 0) + 1;
+            if (isCorrect) {
+                fact.correctCount = (fact.correctCount || 0) + 1;
+                if (elapsed > 0) {
+                    fact.avgMs = fact.avgMs ? Math.round(fact.avgMs * 0.7 + elapsed * 0.3) : elapsed;
+                }
+            }
         }
 
         // SM-2 Algorithm: Update fact after answer
@@ -7429,6 +7891,7 @@
                 // SM-2 spaced repetition update (skip auto-solved and fallback facts)
                 if (currentFact && currentFact.ef !== undefined && !isAutoSolved) {
                     updateFactSM2(currentFact, calculateGrade(true));
+                    recordFactTiming(currentFact, true);
                 }
 
                 // Auto-solved answers skip streak/score/XP to prevent inflation
@@ -7484,6 +7947,9 @@
                 void answerEl.offsetWidth;
                 answerEl.classList.add('flash-correct');
                 setTimeout(() => answerEl.classList.remove('flash-correct'), 300);
+
+                spawnAnswerTrail();
+                triggerPetReaction('correct');
 
                 // Check achievements (including tiered achievements that stack)
                 checkAchievement('first_correct', correctCount >= 1);
@@ -7542,10 +8008,12 @@
                 if (currentFact && currentFact.ef !== undefined && !currentFact._gradedThisPresentation) {
                     currentFact._gradedThisPresentation = true;
                     updateFactSM2(currentFact, 0);
+                    if (!isAutoSolved) recordFactTiming(currentFact, false);
                 }
 
                 playSound('wrong');
                 haptic('error');
+                triggerPetReaction('wrong');
                 streak = 0;
                 comboMultiplier = 1;
                 $comboDisplay.classList.remove('active');
@@ -7742,15 +8210,116 @@
 
         function savePurchasedCostumes() { store('purchased_costumes', purchasedCostumes); }
 
-        function openShopModal() {
+        function openShopModal(initialTab) {
             if (bossActive) return;
             showModal('shopModal');
             document.getElementById('shopCoinCount').textContent = score;
-            showShopTab('hats');
+            const validTabs = ['avatars','hats','outfits','accessories','pets','trails','dances','stickers'];
+            const tab = validTabs.includes(initialTab) ? initialTab : 'hats';
+            showShopTab(tab);
             updateCostumePreview();
         }
 
         function closeShopModal() { hideModal('shopModal'); }
+
+        let currentMasteryOp = 'multiply';
+        const MASTERY_FACT_LOOKUP = {
+            add:      (m, a, b) => m[`add_${a}_${b}`] || m[`add_${b}_${a}`],
+            subtract: (m, a, b) => a < b ? null : m[`sub_${a}_${b}`],
+            multiply: (m, a, b) => m[`mul_${Math.min(a, b)}_${Math.max(a, b)}`],
+            divide:   (m, a, b) => m[`div_${a * b}_${b}`] || m[`div_${a * b}_${a}`]
+        };
+
+        // Gold <2s, silver <3s, bronze <6s. Requires >=3 correct + >=70% accuracy.
+        function masteryLevel(fact) {
+            const correct = fact.correctCount || 0;
+            const attempts = fact.attempts || 0;
+            if (attempts === 0) return 'new';
+            if (correct < 3) return 'learning';
+            const acc = correct / attempts;
+            if (acc < 0.7) return 'learning';
+            const ms = fact.avgMs || 99999;
+            if (ms < 2000) return 'gold';
+            if (ms < 3000) return 'silver';
+            if (ms < 6000) return 'bronze';
+            return 'learning';
+        }
+
+        function showMasteryWall() {
+            if (bossActive) return;
+            // Hide tabs for ops the player isn't currently practicing
+            const tabs = document.querySelectorAll('#masteryTabs .modal-tab');
+            tabs.forEach(t => {
+                t.style.display = selectedOperations.includes(t.dataset.mtab) ? '' : 'none';
+            });
+            if (!selectedOperations.includes(currentMasteryOp)) {
+                currentMasteryOp = selectedOperations[0] || 'multiply';
+            }
+            showModal('masteryModal');
+            showMasteryTab(currentMasteryOp);
+        }
+        function hideMasteryWall() { hideModal('masteryModal'); }
+
+        function showMasteryTab(op) {
+            currentMasteryOp = op;
+            document.querySelectorAll('#masteryTabs .modal-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.mtab === op);
+            });
+            renderMasteryGrid();
+        }
+
+        function renderMasteryGrid() {
+            const grid = document.getElementById('masteryGrid');
+            const summary = document.getElementById('masterySummary');
+            if (!grid) return;
+
+            const facts = mathFacts.filter(f => f.op === currentMasteryOp);
+            // 12×12 keeps cell sizes phone-friendly and skips the trivial ×0/+0 row & column.
+            const sym = OP_SYMBOLS[currentMasteryOp];
+            const cols = 12;
+            grid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+            grid.innerHTML = '';
+
+            const factById = {};
+            facts.forEach(f => { factById[f.id] = f; });
+            const lookupFact = MASTERY_FACT_LOOKUP[currentMasteryOp];
+
+            const counts = { new: 0, learning: 0, bronze: 0, silver: 0, gold: 0 };
+            const isSubtract = currentMasteryOp === 'subtract';
+            for (let a = 1; a <= 12; a++) {
+                for (let b = 1; b <= 12; b++) {
+                    const cell = document.createElement('div');
+                    // Subtraction: hide impossible cells (a < b) so the grid renders as a triangle.
+                    if (isSubtract && a < b) {
+                        cell.className = 'mastery-cell';
+                        cell.style.visibility = 'hidden';
+                        grid.appendChild(cell);
+                        continue;
+                    }
+                    const fact = lookupFact ? lookupFact(factById, a, b) : null;
+                    if (!fact) {
+                        cell.className = 'mastery-cell lv-new';
+                        cell.style.opacity = '0.25';
+                        cell.innerHTML = `<span class="mc-num">${a}${sym}${b}</span>`;
+                    } else {
+                        const lvl = masteryLevel(fact);
+                        counts[lvl]++;
+                        cell.className = `mastery-cell lv-${lvl}`;
+                        const ms = fact.avgMs;
+                        const timeStr = (lvl === 'new' || lvl === 'learning' || !ms) ? '' :
+                            `<span class="mc-time">${(ms / 1000).toFixed(1)}s</span>`;
+                        cell.innerHTML = `<span class="mc-num">${a}${sym}${b}</span>${timeStr}`;
+                        cell.title = `${a} ${sym} ${b} = ${fact.answer} · ${fact.correctCount || 0}/${fact.attempts || 0} correct${ms ? ` · avg ${(ms/1000).toFixed(1)}s` : ''}`;
+                    }
+                    grid.appendChild(cell);
+                }
+            }
+
+            const totalReal = counts.new + counts.learning + counts.bronze + counts.silver + counts.gold;
+            const earned = counts.bronze + counts.silver + counts.gold;
+            summary.innerHTML = totalReal === 0 ? '' :
+                `<strong>${counts.gold}</strong> gold · <strong>${counts.silver}</strong> silver · <strong>${counts.bronze}</strong> bronze · ${earned}/${totalReal} mastered`;
+        }
 
         function showShopTab(tab) {
             currentCostumeTab = tab;
@@ -7850,6 +8419,133 @@
                                 avatar.classList.add(dance.cssClass);
                                 setTimeout(() => avatar.classList.remove(dance.cssClass), 2000);
                             }
+                        };
+                    }
+                    grid.appendChild(div);
+                });
+                return;
+            }
+
+            // Handle pets tab
+            if (currentCostumeTab === 'pets') {
+                updateCostumePreview();
+                grid.innerHTML = '';
+                PETS.forEach(pet => {
+                    const isOwned = ownedPets.includes(pet.id);
+                    const isEquipped = equippedPet === pet.id;
+                    const canAfford = score >= pet.price;
+                    const rarity = RARITY[pet.rarity];
+                    const div = document.createElement('div');
+                    div.className = 'modal-item' + (isEquipped ? ' equipped' : '') + (!isOwned && !canAfford ? ' locked' : '');
+                    const iconHTML = pet.svgId
+                        ? `<svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#${pet.svgId}"/></svg>`
+                        : `<svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#icon-none"/></svg>`;
+                    let infoText;
+                    if (isOwned) {
+                        infoText = isEquipped
+                            ? '<svg style="width:12px;height:12px;vertical-align:middle;"><use href="#icon-checkmark"/></svg> Equipped'
+                            : 'Owned';
+                    } else {
+                        infoText = `<svg style="width:12px;height:12px;vertical-align:middle;"><use href="#pixel-coin"/></svg> ${pet.price}`;
+                    }
+                    div.innerHTML = `
+                        <span class="modal-item-icon">${iconHTML}</span>
+                        <span class="modal-item-name">${pet.name}</span>
+                        <span class="rarity-badge ${rarity.cssClass}">${rarity.name}</span>
+                        <span class="modal-item-info" style="color:${isOwned ? 'var(--accent)' : (canAfford ? '#ffd93d' : '#888')}">${infoText}</span>
+                    `;
+                    if (isOwned) {
+                        div.onclick = () => {
+                            equippedPet = pet.id;
+                            saveEquippedPet();
+                            updatePetDisplay();
+                            triggerPetReaction('correct');
+                            renderShopGrid();
+                            playSound('tap');
+                        };
+                    } else if (canAfford) {
+                        div.onclick = () => {
+                            if (purchasePet(pet.id)) {
+                                playSound('purchase');
+                                haptic('success');
+                                equippedPet = pet.id;
+                                saveEquippedPet();
+                                updatePetDisplay();
+                                document.getElementById('shopCoinCount').textContent = score;
+                                renderShopGrid();
+                            }
+                        };
+                    } else {
+                        div.onclick = () => {
+                            const needed = pet.price - score;
+                            div.classList.add('shake');
+                            setTimeout(() => div.classList.remove('shake'), 300);
+                            showToast(`Need ${needed} more coins!`, 2000);
+                            playSound('wrong');
+                            haptic('error');
+                        };
+                    }
+                    grid.appendChild(div);
+                });
+                return;
+            }
+
+            // Handle trails tab
+            if (currentCostumeTab === 'trails') {
+                updateCostumePreview();
+                grid.innerHTML = '';
+                TRAILS.forEach(trail => {
+                    const isOwned = ownedTrails.includes(trail.id);
+                    const isEquipped = equippedTrail === trail.id;
+                    const canAfford = score >= trail.price;
+                    const rarity = RARITY[trail.rarity];
+                    const div = document.createElement('div');
+                    div.className = 'modal-item' + (isEquipped ? ' equipped' : '') + (!isOwned && !canAfford ? ' locked' : '');
+                    const iconHTML = trail.symbol
+                        ? `<span class="modal-item-icon" style="color:${trail.color};"><svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#${trail.symbol}"/></svg></span>`
+                        : `<span class="modal-item-icon"><svg style="width:32px;height:32px;image-rendering:pixelated;"><use href="#icon-none"/></svg></span>`;
+                    let infoText;
+                    if (isOwned) {
+                        infoText = isEquipped
+                            ? '<svg style="width:12px;height:12px;vertical-align:middle;"><use href="#icon-checkmark"/></svg> Equipped'
+                            : 'Owned';
+                    } else {
+                        infoText = `<svg style="width:12px;height:12px;vertical-align:middle;"><use href="#pixel-coin"/></svg> ${trail.price}`;
+                    }
+                    div.innerHTML = `
+                        ${iconHTML}
+                        <span class="modal-item-name">${trail.name}</span>
+                        <span class="rarity-badge ${rarity.cssClass}">${rarity.name}</span>
+                        <span class="modal-item-info" style="color:${isOwned ? 'var(--accent)' : (canAfford ? '#ffd93d' : '#888')}">${infoText}</span>
+                    `;
+                    if (isOwned) {
+                        div.onclick = () => {
+                            equippedTrail = trail.id;
+                            saveEquippedTrail();
+                            renderShopGrid();
+                            playSound('tap');
+                            spawnAnswerTrail(); // preview burst
+                        };
+                    } else if (canAfford) {
+                        div.onclick = () => {
+                            if (purchaseTrail(trail.id)) {
+                                playSound('purchase');
+                                haptic('success');
+                                equippedTrail = trail.id;
+                                saveEquippedTrail();
+                                document.getElementById('shopCoinCount').textContent = score;
+                                renderShopGrid();
+                                spawnAnswerTrail();
+                            }
+                        };
+                    } else {
+                        div.onclick = () => {
+                            const needed = trail.price - score;
+                            div.classList.add('shake');
+                            setTimeout(() => div.classList.remove('shake'), 300);
+                            showToast(`Need ${needed} more coins!`, 2000);
+                            playSound('wrong');
+                            haptic('error');
                         };
                     }
                     grid.appendChild(div);
@@ -8086,6 +8782,8 @@
         loadPurchasedCostumes(); // Load purchased costumes
         loadDances(); // Load owned dances
         loadEquippedDance(); // Load selected dance
+        loadTrails();
+        loadPets();
         loadStickers(); // Load sticker collection
         initializeFactDatabase(); // Initialize spaced repetition fact database
         loadTierProgress(); // Load difficulty tier progress
